@@ -1,0 +1,479 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# Jublia Agenda
+
+The Jublia Agenda API is used by both the Agenda Builder and Viewer components for data 
+persistence. 
+
+## Request and response format
+
+### Requests 
+
+All requests to the API should be encoded as JSON, with the `content-type` header 
+set to `application/json`. The correct HTTP verb should also be observed. In general:
+
+- `GET`: Obtain index or one or more records
+- `POST`: Creating one or more new records
+- `PUT`: Replace existing record overwriting all existing data
+- `PATCH`: Update existing record without affecting unspecified fields
+- `DELETE`: Delete one or more records 
+
+`GET` and `PUT` requests can be considered by the client to be idempotent. 
+
+#### Deletion 
+
+TODO: Use Soft delete? 
+
+### Responses 
+
+All API responses are also be encoded as JSON. A 2xx status code is returned in 
+the case of successful requests. 
+
+All successful `POST` requests creating a new resource will return a `Location` header 
+representing the URL of the newly created resource. 
+
+#### Datetime format 
+
+All date and time are returned as ISO 8601 dates. This can be parsed 
+directly by [all modern browsers (IE9+)][date].
+
+[date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#Browser_compatibility
+
+### Errors 
+
+Response with 4xx or 5xx status codes indicate something went 
+wrong with the request. 4xx errors indicate a problem with the request, 
+and will carry a debugging message for the developer. This should 
+**not** be displayed to the end user. 
+
+    {
+        "error": "Record not found"
+    }
+
+#### Common error codes 
+
+- 403 Forbidden - the API endpoint requires authentication, and the request either did not
+provide authentication, provided invalid authentication or does not have authorization  
+- 404 Not Found - the specified record was not found. Note that this can also be returned
+if the API route is invalid 
+- 422 Unprocessable Entity - the request was not valid JSON, or did not pass 
+server-side validation
+
+#### Validation 
+
+TODO - Document HTTP 422 errors and the fields where validation errors can be found
+
+## Pagination, Filtering and Sorting
+
+TODO - For large API requests and lists we will definitely need to support filtering and pagination
+
+# Group Authentication
+
+This represents the authentication system for event organizers using the Builder. 
+
+Authentication will be done using JWT. All API endpoints marked as **Authentication Required** will require 
+an `Authorization` header (see: https://jwt.io/introduction/#how-do-json-web-tokens-work-). 
+
+The sign up process is - 
+
+1. User enters information and submits form 
+2. Frontend makes request to `/users/sign_up`
+3. Frontend ask user to check their email 
+4. User clicks on verification link to `/users/verify/{token}`
+5. User is redirected to homepage with JWT in query parameter
+
+The password reset process is - 
+
+1. User enters email on forget password page 
+2. Frontend makes request to `/users/reset`
+3. Frontend ask user to check their email 
+4. User clicks on verification link to `/users/reset/{token}`
+5. User get redirected to password reset page
+6. User enters password 
+7. Frontend makes request to `/users/reset/{token}`
+8. Frontend gets back JWT to allow the user to sign in
+
+## POST /users/sign_up
+
+Allow new users to sign up. After getting back a success response please prompt 
+the user to visit their email to click on the verification link. After they 
+have clicked on the verification link in the email, they will be redirected 
+to the homepage with the JWT as a URL query parameter (see `/users/verify` below).
+
+TODO: Include password requirements
+
++ Request
+
+    + Attributes
+        + Include User
+        + password (string, required)
+        + event_name: JSConf.Asia (string) - The name of the event the new user is organizing. This will be turned into an agenda that the user can start working with immediately after signing up
+
++ Response 201
+
++ Response 422
+
+    + Attributes (Error)
+
+## POST /users/auth
+
+User login using email and password. If successful a JWT will be returned 
+which can be used to call endpoints that require authentication. 
+
++ Request
+
+    + Attributes 
+        + email: john.doe@example.com (string, required)
+        + password (string, required)
+
++ Response 200
+
+    + Attributes
+        + token (JWT)
+        + Include User
+
++ Response 422
+
+    + Attributes (Error)
+
+## GET /users/verify/{token}
+
+This is not a REST API endpoint, but rather the URL sent to 
+the user in the verification email. The frontend should **not** access this directly. 
+
+After the user visits this URL they will be redirected to the root of the 
+website with a JWT in the URL query parameters.
+
+TODO - What should happen if the token is invalid or expired? 
+
++ Parameters
+    - token: cfawe03s1 (string, required)
+
++ Response 301
+
+    + Attributes
+        + jwt (JWT)
+
+## POST /users/reset 
+
+If the provided email exists in the database, a password reset email will be sent to it. 
+Note that for security reasons this endpoint will always return 204 **regardless of whether 
+the email exists** in the database. It will only return 422 when the provided 
+email is not a valid email. 
+
++ Request
+
+    + Attributes
+        + email: john.doe@example.com (string, required)
+
++ Response 204
+        
+## Password Reset [/users/reset/{token}]
+
+### Password Reset Link [GET]
+
+This is not a REST API endpoint, but rather the URL sent to 
+the user in the reset password email. The frontend should **not** access this directly. 
+
+After the user visits this URL they will be redirected to the password reset page 
+with the token in the query parameters (TODO: Which page?) 
+so that they can enter a new password. 
+
+TODO - What should happen if the token is invalid or expired? 
+
++ Parameters
+    - token: 8avh7g62s (string, required)
+
++ Response 301
+
+    + Attributes
+        + token: 8avh7g62s (string, required) - the same token given to the server
+
+### Password Reset [POST]
+
+Resets user password. If successful the response returned will be the same as the 
+user signing in - a JWT which can be used to make authenticated API calls. 
+
++ Parameters
+    - token: 8avh7g62s (string, required) - the same token
+    
++ Request
+
+    + Attributes
+        + password (string, required)
+
++ Response 200
+
+    + Attributes
+        + jwt (JWT)
+        + Include User
+
+## User profile [/users/me]
+
+### Get User Profile [GET]
+
+**Authentication Required.** Get profile information about a user. 
+
++ Response 200 
+    + Attributes (User)
+
+### Update User Profile [PATCH]
+
+**Authentication Required.** Updates the user's profile information. This can be 
+used on the user's profile page. 
+
+TODO: Need something different for password and email changes because both should 
+result in email verification or notification for security reasons.
+
++ Request
+
+    + Attributes
+        + company: Stinky Bottom's Discount Hat Emporium (string)
+    
++ Response 204
+
+# Group Agenda
+
+Represents the agenda of an event. The agenda object contains information regarding 
+the event itself as well as the sessions - the things that are happening - under the events. 
+
+## Agenda Collection [/agendas]
+
+### List User's Event Agendas [GET]
+
+**Authentication required.** Lists all event agendas created by the user. 
+
++ Response 200
+
+    + Attributes (Page)
+        + agendas (array[Agenda Item])
+
+### Create New Event Agenda [POST]
+
+**Authentication required.** Creates a new event agenda under the user. 
+
++ Request
+
+    + Attributes (Agenda)
+
++ Response 201
+    + Headers
+    
+            Location: /1
+
+## Agenda [/{agenda_id}]
+
+### Get Event Agenda [GET]
+
+Returns a specific event's aganda. This can be used by both the agenda viewer 
+and agenda builder. 
+
++ Response 200
+
+    + Attributes (Agenda Item)
+
+### Update Event Information [PATCH]
+
+**Authentication required.** Updates the agenda with new event information. 
+
++ Request
+    
+        {
+            "name": "CSSConf Asia"
+        }
+
++ Response 204
+
+### Delete Agenda [DELETE]
+
+**Authentication required.** Deletes the specified agenda.
+
++ Response 204
+
+# Group Session
+
+A session represents something happening at a specific time at the event. 
+It could be administrative, like registration or lunch, a workshop or a talk with 
+one or more speakers, or even some specific timing like the submission
+deadline for a hackathon. 
+
+## Session Collection [/{agenda_id}/sessions]
+
+### Get All Sessions From Event [GET]
+
+Returns a paginated list of all sessions from a event. 
+
++ Response 200
+    + Attributes (Page)
+        + sessions (array[Session Item])
+
+### Create New Session [POST]
+
+**Authentication required.** Creates a new session at an event. 
+
++ Request
+
+    + Attributes
+        + Include Session
+        + speakers (array[number]) - one or more speakers at the session
+        + categories (array[Category]) - one or more categories which the session belongs to
+
++ Response 204
+    + Headers
+    
+            Location: /1/session/1
+
+## Session [/{agenda_id}/sessions/{session_id}]
+
+### Get Session Informaton [GET]
+
++ Response 200
+
+    + Attributes (Session)
+
+### Synchronize Session Information [PUT]
+
+**Authentication required.**. Replace the stored session information with the 
+one specified in the request. 
+
++ Request
+
+    + Attribute (Session)
+
++ Response 204
+
+### Update Session Information [PATCH]
+
+**Authentication required.** Update the stored session information with the 
+one specified in the request.
+
++ Request
+
+        {
+            "name": "My Wonderful New Session Name"
+        }
+
++ Response 204
+
+### Delete Session [DELETE]
+
+**Authentication required.** Deletes the specified session.
+
++ Response 204
+
+# Group Category
+
+## Category Collection [/{agenda_id}/categories]
+
+### Create Session Category [POST]
+
+**Authentication required.** Creates a new category for sessions, and optionally 
+some tags to go under it. 
+
++ Request
+
+    + Attributes (Category)
+
++ Response 204
+    + Header
+            
+            Location: /1/categories/1
+
+## Category [/{agenda_id}/categories/{category_id}]
+
+### Update Category [PATCH]
+
+**Authentication required.** Replace the category in the database with the one in the request.
+
++ Request
+
+    + Attributes (Category)
+
++ Response 204
+
+# Group Speaker
+
+Represents the host or speaker at a session. This information is partly provided by Jublia. 
+
+## Speaker Collection [/{agenda_id}/speakers]
+
+### Get All Speakers at an Event [GET]
+
+Retrieve all speakers at an event. This can be used for a speakers listing 
+or guest of honor page. 
+
++ Response 200
+
+    + Attributes (Page)
+        + speakers (array[Speaker])
+
+# Group Venue 
+
+Represents a specific location at the event. This is used to tag sessions. 
+
+## Data Structures 
+
+### date (string)
+    + Sample: `2016-09-28`
+
+### datetime (string)
+    + Sample: `2016-09-28T11:18:06+00:00`
+    
+### JWT (string)
+
+### Item
++ id: 1 (number, required)
++ updated_at (datetime, required) - When this item was last updated
++ created_at (datetime, required) - When this item was created
+
+### Error
++ error: "Invalid data" (string, required) - Description of the problem for the developer. This is for debugging purpose only and may change at any time. It is not meant to be displayed to the user.
+
+### Page
++ count: 4 (number) - Number of items on this page
+
+### User
++ email: john.doe@example.com (string, required)
++ company: Happy Cogs (string) - Name of the event organizer's company
+
+### Agenda
++ name: JSConf Asia 2016 (string, required) - Name of the event
++ description (string) - Long description of the event 
++ location: Suntec City Hall 2A (string) - Where the event is happening
++ date (date) - When the event is starting
+
+### Session
++ name: The real story behind JS performance in mobile web and hybrid apps (string, required) - Name of the session
++ description (string) - Long description of the session
++ categories (array[Category])
++ start_at (datetime) - Time at which the session starts
++ end_at (datetime) - Time at which the session ends. Leave out to create something that happens at a specific point in time, such as a deadline
+
+### Category
++ name: Technology Covered (string, required)
++ tags: JavaScript, CSS3, HTML5 (array[string])
+
+### Speaker
++ name (string, required)
++ company (string, required)
++ position (string, required)
++ email (string, required)
++ phone_number (string)
++ company_description (string)
++ company_url (string)
+
+### User Item (User)
++ Include Item
++ agendas (array[Agenda Item])
+
+### Agenda Item (Agenda)
++ Include Item
++ sessions (array[Session Item])
+
+### Session Item (Session)
++ Include Item
++ speakers (array[Speaker Item])
+
+### Speaker Item (Speaker)
++ Include Item

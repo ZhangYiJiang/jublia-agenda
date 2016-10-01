@@ -40,6 +40,11 @@ directly by [all modern browsers (IE9+)][date].
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#Browser_compatibility
 
+#### Content Safety 
+
+Unless otherwise specified, all strings returned by the API should be considered unsafe and should be 
+XSS filtered by the consumer.
+
 ### Errors 
 
 Response with 4xx or 5xx status codes indicate something went 
@@ -57,6 +62,7 @@ and will carry a debugging message for the developer. This should
 provide authentication, provided invalid authentication or does not have authorization  
 - 404 Not Found - the specified record was not found. Note that this can also be returned
 if the API route is invalid 
+- 408 Method Not Allowed - the request method (POST, PUT, etc.) is not accepted on this route
 - 422 Unprocessable Entity - the request was not valid JSON, or did not pass 
 server-side validation
 
@@ -68,7 +74,7 @@ TODO - Document HTTP 422 errors and the fields where validation errors can be fo
 
 TODO - For large API requests and lists we will definitely need to support filtering and pagination
 
-# Group Authentication
+# Group Event Organizers
 
 This represents the authentication system for event organizers using the Builder. 
 
@@ -169,9 +175,7 @@ email is not a valid email.
 
 + Response 204
         
-## Password Reset [/users/reset/{token}]
-
-### Password Reset Link [GET]
+## GET /users/reset/{token}
 
 This is not a REST API endpoint, but rather the URL sent to 
 the user in the reset password email. The frontend should **not** access this directly. 
@@ -190,7 +194,7 @@ TODO - What should happen if the token is invalid or expired?
     + Attributes
         + token: 8avh7g62s (string, required) - the same token given to the server
 
-### Password Reset [POST]
+## POST /users/reset/{token}
 
 Resets user password. If successful the response returned will be the same as the 
 user signing in - a JWT which can be used to make authenticated API calls. 
@@ -209,16 +213,14 @@ user signing in - a JWT which can be used to make authenticated API calls.
         + jwt (JWT)
         + Include User
 
-## User profile [/users/me]
+## GET /users/me
 
-### Get User Profile [GET]
-
-**Authentication Required.** Get profile information about a user. 
+**Authentication Required.** Get profile information about the currently authenticated user. 
 
 + Response 200 
     + Attributes (User)
 
-### Update User Profile [PATCH]
+## PATCH /users/me
 
 **Authentication Required.** Updates the user's profile information. This can be 
 used on the user's profile page. 
@@ -233,14 +235,17 @@ result in email verification or notification for security reasons.
     
 + Response 204
 
-# Group Agenda
+# Group Event Agenda
 
 Represents the agenda of an event. The agenda object contains information regarding 
-the event itself as well as the sessions - the things that are happening - under the events. 
+the event itself, such as start date and location, as well as the sessions - 
+the things that are happening - under the events. 
 
-## Agenda Collection [/agendas]
+Agendas are created unpublished. This allows organizers to plan out their agendas in advance. 
+Once they are published the agenda becomes public and event attendees can view the agenda, 
+pick sessions they want to go for and register interest in them. 
 
-### List User's Event Agendas [GET]
+## GET /agendas
 
 **Authentication required.** Lists all event agendas created by the user. 
 
@@ -249,7 +254,7 @@ the event itself as well as the sessions - the things that are happening - under
     + Attributes (Page)
         + agendas (array[Agenda Item])
 
-### Create New Event Agenda [POST]
+## POST /agendas
 
 **Authentication required.** Creates a new event agenda under the user. 
 
@@ -262,9 +267,7 @@ the event itself as well as the sessions - the things that are happening - under
     
             Location: /1
 
-## Agenda [/{agenda_id}]
-
-### Get Event Agenda [GET]
+## GET /{agenda_id}
 
 Returns a specific event's aganda. This can be used by both the agenda viewer 
 and agenda builder. 
@@ -273,7 +276,7 @@ and agenda builder.
 
     + Attributes (Agenda Item)
 
-### Update Event Information [PATCH]
+## PATCH /{agenda_id}
 
 **Authentication required.** Updates the agenda with new event information. 
 
@@ -285,22 +288,20 @@ and agenda builder.
 
 + Response 204
 
-### Delete Agenda [DELETE]
+## DELETE /{agenda_id}
 
 **Authentication required.** Deletes the specified agenda.
 
 + Response 204
 
-# Group Session
+# Group Event Session
 
 A session represents something happening at a specific time at the event. 
 It could be administrative, like registration or lunch, a workshop or a talk with 
 one or more speakers, or even some specific timing like the submission
 deadline for a hackathon. 
 
-## Session Collection [/{agenda_id}/sessions]
-
-### Get All Sessions From Event [GET]
+## GET /{agenda_id}/sessions
 
 Returns a paginated list of all sessions from a event. 
 
@@ -308,7 +309,7 @@ Returns a paginated list of all sessions from a event.
     + Attributes (Page)
         + sessions (array[Session Item])
 
-### Create New Session [POST]
+## POST /{agenda_id}/sessions
 
 **Authentication required.** Creates a new session at an event. 
 
@@ -324,15 +325,15 @@ Returns a paginated list of all sessions from a event.
     
             Location: /1/session/1
 
-## Session [/{agenda_id}/sessions/{session_id}]
+## GET /{agenda_id}/sessions/{session_id}
 
-### Get Session Informaton [GET]
+Get information about a specific session from an event. 
 
 + Response 200
 
     + Attributes (Session)
 
-### Synchronize Session Information [PUT]
+## PUT /{agenda_id}/sessions/{session_id}
 
 **Authentication required.**. Replace the stored session information with the 
 one specified in the request. 
@@ -343,7 +344,7 @@ one specified in the request.
 
 + Response 204
 
-### Update Session Information [PATCH]
+## PATCH /{agenda_id}/sessions/{session_id}
 
 **Authentication required.** Update the stored session information with the 
 one specified in the request.
@@ -356,49 +357,99 @@ one specified in the request.
 
 + Response 204
 
-### Delete Session [DELETE]
+## DELETE /{agenda_id}/sessions/{session_id}
 
 **Authentication required.** Deletes the specified session.
 
 + Response 204
 
-# Group Category
+# Group Session Metadata
 
-## Category Collection [/{agenda_id}/categories]
+The following are endpoints for working with the metadata that can be attached to individual sessions. 
 
-### Create Session Category [POST]
+## Session Tags and Tag Categories 
 
-**Authentication required.** Creates a new category for sessions, and optionally 
-some tags to go under it. 
+Sessions are organized by tags. A tag is simply a string that must belong to a tag category. Each
+session can have many tags from each category attached to them. Viewers can than use this 
+to filter sessions they are interested in. 
+
+Examples of tag categories, and the tags that can go under them:
+
+ - Venue: Ballroom 1, Ballroom 2, Seminar Room 1A
+ - Technology Covered: JavaScript, CSS, HTML 
+ - Format: Networking, Seminar, Workshop 
+ 
+
+## Speakers 
+
+A speaker can represent the host, speaker or guest of honor at a specific session. 
+This information is provided by Jublia. 
+
+
+### GET /{agenda_id}/categories
+
+Get all session tag categories for an event. This can be used to allow viewers to filter sessions by category tags.
+
++ Response 200
+
+    + Attributes
+        
+        + categories (array[Category Item])
+
+
+### POST /{agenda_id}/categories
+
+**Authentication required.** Creates a new tag category for sessions, and optionally 
+an array of tags to be created under it. 
 
 + Request
 
     + Attributes (Category)
+        + tags: JavaScript, HTML, CSS (array[string])
 
 + Response 204
     + Header
             
             Location: /1/categories/1
 
-## Category [/{agenda_id}/categories/{category_id}]
+### PATCH /{agenda_id}/categories/{category_id}
 
-### Update Category [PATCH]
-
-**Authentication required.** Replace the category in the database with the one in the request.
+**Authentication required.** Update tag category. Currently this is only used for renaming.
 
 + Request
 
-    + Attributes (Category)
+    + Attributes
+        
+        + name: Session Type (string)
 
 + Response 204
 
-# Group Speaker
+### POST /{agenda_id}/categories/{category_id}/tags
 
-Represents the host or speaker at a session. This information is partly provided by Jublia. 
+**Authentication required.** Creates a new tag under the category. 
 
-## Speaker Collection [/{agenda_id}/speakers]
++ Request 
 
-### Get All Speakers at an Event [GET]
+    + Attributes (Tag)
+
++ Response 204
+    + Header
+    
+            Location: /1/categories/1/tags/1
+
+### PATCH /{agenda_id}/categories/category_id/tags/{tag_id}
+
+**Authentication required.** Renames the specified tag. 
+
++ Request
+
+    + Attributes 
+        
+        + name: JavaScript (string)
+
++ Response 204
+
+### GET /{agenda_id}/speakers
 
 Retrieve all speakers at an event. This can be used for a speakers listing 
 or guest of honor page. 
@@ -407,10 +458,6 @@ or guest of honor page.
 
     + Attributes (Page)
         + speakers (array[Speaker])
-
-# Group Venue 
-
-Represents a specific location at the event. This is used to tag sessions. 
 
 ## Data Structures 
 
@@ -441,18 +488,20 @@ Represents a specific location at the event. This is used to tag sessions.
 + name: JSConf Asia 2016 (string, required) - Name of the event
 + description (string) - Long description of the event 
 + location: Suntec City Hall 2A (string) - Where the event is happening
++ published: false (boolean, default) - Is the agenda publicly visible
 + date (date) - When the event is starting
 
 ### Session
 + name: The real story behind JS performance in mobile web and hybrid apps (string, required) - Name of the session
 + description (string) - Long description of the session
-+ categories (array[Category])
 + start_at (datetime) - Time at which the session starts
 + end_at (datetime) - Time at which the session ends. Leave out to create something that happens at a specific point in time, such as a deadline
 
 ### Category
 + name: Technology Covered (string, required)
-+ tags: JavaScript, CSS3, HTML5 (array[string])
+
+### Tag
++ name: JavaScript (string, required)
 
 ### Speaker
 + name (string, required)
@@ -474,6 +523,14 @@ Represents a specific location at the event. This is used to tag sessions.
 ### Session Item (Session)
 + Include Item
 + speakers (array[Speaker Item])
++ categories (array[Category Item])
+
+### Category Item (Category)
++ Include Item
++ tags (array[Tag Item])
+
+### Tag Item (Tag)
++ Include Item
 
 ### Speaker Item (Speaker)
 + Include Item

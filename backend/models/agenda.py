@@ -11,4 +11,4 @@ class Agenda(BaseModel):
     sessions = models.OneToOneField(Session)
 
     def __str__(self):
-        return self
+        return self.name

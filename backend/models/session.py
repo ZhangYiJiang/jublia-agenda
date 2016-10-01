@@ -7,3 +7,6 @@ class Session(BaseModel):
     description = models.TextField(blank=True)
     start_at = models.DateTimeField(blank=True, null=True)
     end_at = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name

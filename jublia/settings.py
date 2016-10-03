@@ -111,8 +111,13 @@ REST_FRAMEWORK = {
     ),
 
     'URL_FORMAT_OVERRIDE': False,
+
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
+JWT_AUTH = {
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer'
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

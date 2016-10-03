@@ -1,7 +1,8 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from rest_framework_jwt.settings import api_settings
 
 from backend.serializers import UserSerializer
@@ -10,7 +11,8 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
-@api_view
+@api_view(('POST',))
+@permission_classes((AllowAny,))
 def sign_up(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid(True):

@@ -6,15 +6,20 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from backend.models import Profile
+from .base import HideFieldsMixin
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(HideFieldsMixin, ModelSerializer):
     company = serializers.CharField(source='profile.company', allow_blank=True, required=False)
 
     def validate(self, attrs):
         # Strip out profile here so that User(**attrs) will not choke
         # We'll add it back at the end of the validate function
         profile = attrs.pop('profile', {})
+
+        # Slightly hacky way to get Username = Email
+        if 'email' in attrs:
+            attrs['username'] = attrs['email']
 
         # Only validate password if it is in the set of data
         # If password does not exist during user creation then it will
@@ -63,3 +68,4 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = ('email', 'password', 'company',)
         profile_fields = ('company',)
+        hidden_fields = ('password',)

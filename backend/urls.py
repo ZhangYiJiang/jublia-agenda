@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^users/refresh', refresh_jwt_token),
 
     url(r'^users/sign_up', views.sign_up),
+    url(r'^users/me', views.UserDetail.as_view()),
 
     url(r'^users/password', password_reset),
     url(r'^users/password_done', password_reset_done, name='password_reset_done'),

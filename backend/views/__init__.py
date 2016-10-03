@@ -1,1 +1,1 @@
-from .users import sign_up
+from .users import sign_up, UserDetail

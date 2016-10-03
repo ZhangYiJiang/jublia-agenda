@@ -1,32 +1,49 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.test import APITestCase
 
-from backend.tests.data import user_data
-
-factory = APIRequestFactory()
+from backend.tests.data import user_data, agenda_data
 
 
-class UserViewTest(APITestCase):
-    def _sign_up(self, data):
+class BaseAPITestCase(APITestCase):
+    def _authenticate(self):
         url = reverse('sign_up')
-        return self.client.post(url, data)
+        response = self.client.post(url, user_data)
+        self.client.credentials(HTTP_AUTHORIZATION='bearer ' + response.data['token'])
+
+
+class UserViewTest(BaseAPITestCase):
+    def setUp(self):
+        self.url = reverse('user')
 
     def test_sign_up(self):
-        response = self._sign_up(user_data)
+        url = reverse('sign_up')
+        response = self.client.post(url, user_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue('token' in response.data)
 
     def test_get_user(self):
-        sign_up = self._sign_up(user_data)
-        self.client.credentials(HTTP_AUTHORIZATION='bearer ' + sign_up.data['token'])
-        url = reverse('user')
-        response = self.client.get(url)
+        self._authenticate()
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse('password' in response.data)
 
     def test_unauthenticated(self):
-        url = reverse('user')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class AgendaListTest(BaseAPITestCase):
+    def setUp(self):
+        self.url = reverse('agenda_list')
+
+    def test_create(self):
+        self._authenticate()
+        response = self.client.post(self.url, agenda_data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_unauthenticated(self):
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

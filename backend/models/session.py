@@ -33,8 +33,7 @@ class Category(BaseModel):
         :param tags An iterable of tags represented by strings. Duplicates will be ignored
         """
         tags = set(tags)
-        category_tags = list(self.tag_set.filter(name__in=tags))
-        existing = set(t.name for t in category_tags)
+        existing = set(t.name for t in self.tag_set.all())
         for name in tags - existing:
             self.tag_set.add(Tag.objects.create(name=name, category=self))
 
@@ -44,11 +43,12 @@ class Category(BaseModel):
         :param tags An iterable of tags represented by strings. Duplicates will be ignored
         """
         tags = set(tags)
-        category_tags = list(self.tag_set.filter(name__in=tags))
-        existing = set(t.name for t in category_tags)
+        existing = set(t.name for t in self.tag_set.all())
+        # Delete tags that does not appear in the new tag list
+        self.tag_set.filter(name__in=existing - tags).delete()
+        # Add tags which didn't exist before
         for name in tags - existing:
-            category_tags.append(Tag.objects.create(name=name, category=self))
-        self.tag_set.set(category_tags)
+            self.tag_set.add(Tag.objects.create(name=name, category=self))
 
     def __str__(self):
         return self.name

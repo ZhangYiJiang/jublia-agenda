@@ -11,12 +11,12 @@ class CategorySerializer(ModelSerializer):
     def create(self, validated_data):
         tags = validated_data.pop('tags', [])
         category = super().create(validated_data)
-        self._update_tags(category, tags)
+        return self._update_tags(category, tags)
 
     @atomic
     def update(self, instance, validated_data):
         self._update_tags(instance, validated_data.pop('tags', []))
-        super().update(instance, validated_data)
+        return super().update(instance, validated_data)
 
     @staticmethod
     def _update_tags(category, tags):
@@ -29,10 +29,11 @@ class CategorySerializer(ModelSerializer):
 
 class SessionSerializer(ModelSerializer):
     def create(self, validated_data):
-        super().create(validated_data)
+        validated_data['agenda'] = self.context['agenda']
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        super().update(instance, validated_data)
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Session

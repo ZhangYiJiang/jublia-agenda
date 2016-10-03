@@ -8,7 +8,12 @@ from backend.tests import data
 
 class SerializerTestCase(TestCase):
     def _create_default_user(self):
-        return self._create_user(data.user)
+        if not hasattr(self, 'user'):
+            self.user = self._create_user(data.user)
+        return self.user
+
+    def _create_default_agenda(self):
+        return self._create_agenda(data.agenda)
 
     def _create_user(self, data):
         s = UserSerializer(data=data)
@@ -96,3 +101,15 @@ class AgendaSerializerTest(SerializerTestCase):
         self._patch_agenda(agenda, data={
             'location': '',
         })
+
+
+class SessionSerializerTest(SerializerTestCase):
+    def _create_session(self, data):
+        agenda = self._create_default_agenda()
+        s = SessionSerializer(data=data, context={'agenda': agenda})
+        s.is_valid(True)
+        return s.save()
+
+    def test_create_session(self):
+        self._create_session(data.session)
+        self._create_session(data.full_session)

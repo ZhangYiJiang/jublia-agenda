@@ -1,8 +1,7 @@
 from rest_framework.serializers import ModelSerializer, StringRelatedField
 from django.db.transaction import atomic
 
-from backend.models import Category
-from backend.models import Session
+from backend.models import Session, Category
 
 
 class CategorySerializer(ModelSerializer):

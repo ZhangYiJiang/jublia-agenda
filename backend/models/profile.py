@@ -1,6 +1,6 @@
 from django.db import models
-from .base import BaseModel
 from django.conf import settings
+from .base import BaseModel
 
 
 class Profile(BaseModel):

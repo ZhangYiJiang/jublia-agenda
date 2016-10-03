@@ -33,6 +33,8 @@ INSTALLED_APPS = [
 
     'backend.apps.BackendConfig',
     'rest_framework',
+
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

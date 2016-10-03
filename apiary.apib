@@ -85,20 +85,15 @@ The sign up process is -
 
 1. User enters information and submits form 
 2. Frontend makes request to `/users/sign_up`
-3. Frontend ask user to check their email 
+3. Frontend ask user to check their email **(Not Currently Implemented)** - API currently immediately returns JWT immediately
 4. User clicks on verification link to `/users/verify/{token}`
 5. User is redirected to homepage with JWT in query parameter
 
 The password reset process is - 
 
-1. User enters email on forget password page 
-2. Frontend makes request to `/users/reset`
-3. Frontend ask user to check their email 
-4. User clicks on verification link to `/users/reset/{token}`
-5. User get redirected to password reset page
-6. User enters password 
-7. Frontend makes request to `/users/reset/{token}`
-8. Frontend gets back JWT to allow the user to sign in
+1. Redirect the user to the password reset page 
+2. Wait for user to do password reset 
+3. Redirects user to homepage with JWT in query parameter
 
 ## POST /users/sign_up
 
@@ -143,6 +138,20 @@ which can be used to call endpoints that require authentication.
 
     + Attributes (Error)
 
+## POST /users/refresh
+
+Exchange an existing token for a fresh one. The existing token must not have expired. 
+
++ Request
+
+    + Attributes
+        + token (JWT)
+
++ Response 200
+
+    + Attributes
+        + token (JWT)
+
 ## GET /users/verify/{token}
 
 This is not a REST API endpoint, but rather the URL sent to 
@@ -161,57 +170,10 @@ TODO - What should happen if the token is invalid or expired?
     + Attributes
         + jwt (JWT)
 
-## POST /users/reset 
+## GET /users/password
 
-If the provided email exists in the database, a password reset email will be sent to it. 
-Note that for security reasons this endpoint will always return 204 **regardless of whether 
-the email exists** in the database. It will only return 422 when the provided 
-email is not a valid email. 
-
-+ Request
-
-    + Attributes
-        + email: john.doe@example.com (string, required)
-
-+ Response 204
-        
-## GET /users/reset/{token}
-
-This is not a REST API endpoint, but rather the URL sent to 
-the user in the reset password email. The frontend should **not** access this directly. 
-
-After the user visits this URL they will be redirected to the password reset page 
-with the token in the query parameters (TODO: Which page?) 
-so that they can enter a new password. 
-
-TODO - What should happen if the token is invalid or expired? 
-
-+ Parameters
-    - token: 8avh7g62s (string, required)
-
-+ Response 301
-
-    + Attributes
-        + token: 8avh7g62s (string, required) - the same token given to the server
-
-## POST /users/reset/{token}
-
-Resets user password. If successful the response returned will be the same as the 
-user signing in - a JWT which can be used to make authenticated API calls. 
-
-+ Parameters
-    - token: 8avh7g62s (string, required) - the same token
-    
-+ Request
-
-    + Attributes
-        + password (string, required)
-
-+ Response 200
-
-    + Attributes
-        + jwt (JWT)
-        + Include User
+This is not a REST API endpoint, but rather the password reset page. You should redirect 
+the user here when they ask to reset their password.
 
 ## GET /users/me
 

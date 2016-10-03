@@ -5,17 +5,17 @@ today = date.today()
 now = datetime.now()
 later = now + timedelta(hours=2)
 
-user_data = {
+user = {
     'email': 'test@example.com',
     'password': 'password12345',
 }
 
-agenda_data = {
+agenda = {
     'name': 'Test Conf. 2016',
 }
 
-full_agenda_data = {
-    **agenda_data,
+full_agenda = {
+    **agenda,
     'location': 'Test Hotel',
     'description': """Sint velit eveniet. Rerum atque repellat voluptatem quia
     rerum. Numquam excepturi beatae sint laudantium consequatur. Magni occaecati
@@ -24,12 +24,12 @@ full_agenda_data = {
     'date': today.isoformat(),
 }
 
-session_data = {
+session = {
     'name': 'The Real Story Behind JS Performance in Mobile Web and Hybrid Apps',
 }
 
-full_session_data = {
-    **session_data,
+full_session = {
+    **session,
     'description': """Sint velit eveniet. Rerum atque repellat voluptatem quia
     rerum. Numquam excepturi beatae sint laudantium consequatur. Magni occaecati
     itaque sint et sit tempore. Nesciunt amet quidem. Iusto deleniti cum autem

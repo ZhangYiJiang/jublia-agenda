@@ -2,13 +2,13 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
-from backend.tests.data import user_data, agenda_data
+from backend.tests import data
 
 
 class BaseAPITestCase(APITestCase):
     def _authenticate(self):
         url = reverse('sign_up')
-        response = self.client.post(url, user_data)
+        response = self.client.post(url, data.user)
         self.client.credentials(HTTP_AUTHORIZATION='bearer ' + response.data['token'])
 
 
@@ -18,7 +18,7 @@ class UserViewTest(BaseAPITestCase):
 
     def test_sign_up(self):
         url = reverse('sign_up')
-        response = self.client.post(url, user_data)
+        response = self.client.post(url, data.user)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue('token' in response.data)
 
@@ -40,7 +40,7 @@ class AgendaListTest(BaseAPITestCase):
 
     def test_create(self):
         self._authenticate()
-        response = self.client.post(self.url, agenda_data)
+        response = self.client.post(self.url, data.agenda)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

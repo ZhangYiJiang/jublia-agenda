@@ -1,22 +1,25 @@
 from django.test import TestCase
-from django.utils.datetime_safe import date
 from rest_framework.exceptions import ValidationError
 
 from backend.serializers import *
 from backend.models import *
-from backend.tests.data import user_data, agenda_data
+from backend.tests import data
 
 
 class SerializerTestCase(TestCase):
     def _create_default_user(self):
-        return self._create_user(user_data)
+        return self._create_user(data.user)
 
     def _create_user(self, data):
         s = UserSerializer(data=data)
         s.is_valid(raise_exception=True)
-        user = s.save()
-        self.assertIsInstance(user.profile, Profile, 'Profile object not created with user')
-        return user
+        return s.save()
+
+    def _create_agenda(self, data):
+        user = self._create_default_user()
+        s = AgendaSerializer(data=data, context={'user': user})
+        s.is_valid(True)
+        return s.save()
 
 
 class UserSerializerTest(SerializerTestCase):
@@ -26,11 +29,12 @@ class UserSerializerTest(SerializerTestCase):
         return s.save()
 
     def test_create_user(self):
-        self._create_user(user_data)
+        user = self._create_user(data.user)
+        self.assertIsInstance(user.profile, Profile, 'Profile object not created with user')
 
     def test_create_user_with_profile(self):
         self._create_user({
-            **user_data,
+            **data.user,
             'company': 'Hello World Corp.'
         })
 
@@ -48,7 +52,7 @@ class UserSerializerTest(SerializerTestCase):
             })
 
     def test_update_user(self):
-        u = self._create_user(user_data)
+        u = self._create_user(data.user)
         u = self._patch_user(u, {'company': 'Test Company'})
         self.assertEqual(u.profile.company, 'Test Company')
 
@@ -59,41 +63,34 @@ class UserSerializerTest(SerializerTestCase):
         self.assertEqual(u.profile.company, '')
 
     def test_invalid_update(self):
-        u = self._create_user(user_data)
+        u = self._create_user(data.user)
 
         with self.assertRaises(ValidationError):
             self._patch_user(u, {'email': 'invalid-email'})
 
 
 class AgendaSerializerTest(SerializerTestCase):
-    def _create_agenda(self, data):
-        user = self._create_default_user()
-        s = AgendaSerializer(data=data, context={'user': user})
-        s.is_valid(True)
-        return s.save()
-
     def _patch_agenda(self, agenda, data):
         s = AgendaSerializer(instance=agenda, data=data, partial=True)
         s.is_valid(True)
         return s.save()
 
     def test_create_agenda(self):
-        self._create_agenda(agenda_data)
+        self._create_agenda(data.agenda)
 
     def test_update_agenda(self):
-        agenda = self._create_agenda(agenda_data)
+        agenda = self._create_agenda(data.agenda)
 
         agenda = self._patch_agenda(agenda, {
             'name': 'Changed Event Name',
         })
         self.assertEqual(agenda.name, 'Changed Event Name')
 
-        now = date.today()
         agenda = self._patch_agenda(agenda, {
             'location': 'Shelton Hotel',
-            'date': now.isoformat(),
+            'date': data.today.isoformat(),
         })
-        self.assertEqual(agenda.date, now)
+        self.assertEqual(agenda.date, data.today)
         self.assertEqual(agenda.location, 'Shelton Hotel')
 
         self._patch_agenda(agenda, data={

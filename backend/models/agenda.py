@@ -10,5 +10,9 @@ class Agenda(BaseModel):
     published = models.BooleanField(default=False)
     date = models.DateField(blank=True, null=True)
 
+    @property
+    def owner(self):
+        return self.profile.user
+
     def __str__(self):
         return self.name

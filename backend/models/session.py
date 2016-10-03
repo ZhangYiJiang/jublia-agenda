@@ -19,6 +19,10 @@ class Session(BaseModel):
     agenda = models.ForeignKey(Agenda)
     tags = models.ManyToManyField(Tag)
 
+    @property
+    def owner(self):
+        return self.agenda.owner
+
     def __str__(self):
         return self.name
 

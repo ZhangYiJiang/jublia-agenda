@@ -1,6 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 
 from backend.models import Agenda
+from backend.permissions import IsOwnerOrReadOnly
 from backend.serializers import AgendaSerializer
 from .base import UserContextMixin
 
@@ -13,4 +14,7 @@ class AgendaList(UserContextMixin, ListCreateAPIView):
 
 
 class AgendaDetail(RetrieveUpdateAPIView):
+    queryset = Agenda.objects.all()
+
+    permission_classes = (IsOwnerOrReadOnly,)
     serializer_class = AgendaSerializer

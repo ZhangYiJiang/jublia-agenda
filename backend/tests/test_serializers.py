@@ -25,7 +25,9 @@ class UserSerializerTest(TestCase):
         return user
 
     def _patch_user(self, user, data):
-        s = UserSerializer(user, data)
+        s = UserSerializer(user, data, partial=True)
+        s.is_valid(raise_exception=True)
+        return s.save()
 
     def test_create_user(self):
         self._create_user(self.data)
@@ -45,3 +47,14 @@ class UserSerializerTest(TestCase):
                 'email': 'exmaple@example.com',
                 'password': '',
             })
+
+    def test_update_user(self):
+        u = self._create_user(self.data)
+        u = self._patch_user(u, {'company': 'Test Company'})
+        self.assertEqual(u.profile.company, 'Test Company')
+
+        u = self._patch_user(u, {'company': 'Changed Company'})
+        self.assertEqual(u.profile.company, 'Changed Company')
+
+        u = self._patch_user(u, {'company': ''})
+        self.assertEqual(u.profile.company, '')

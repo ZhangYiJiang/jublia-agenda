@@ -9,7 +9,7 @@ from backend.models import Profile
 
 
 class UserSerializer(ModelSerializer):
-    company = serializers.CharField(source='profile.company', required=False)
+    company = serializers.CharField(source='profile.company', allow_blank=True, required=False)
 
     def validate(self, attrs):
         # Strip out profile here so that User(**attrs) will not choke

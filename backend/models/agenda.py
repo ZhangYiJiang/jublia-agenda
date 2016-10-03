@@ -8,7 +8,7 @@ class Agenda(BaseModel):
     profile = models.ForeignKey(Profile)
     location = models.CharField(blank=True, max_length=255)
     published = models.BooleanField(default=False)
-    date = models.DateTimeField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.name

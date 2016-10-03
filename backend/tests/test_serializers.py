@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils.datetime_safe import date
 from rest_framework.exceptions import ValidationError
 
 from backend.serializers import *
@@ -57,6 +58,12 @@ class UserSerializerTest(SerializerTestCase):
         u = self._patch_user(u, {'company': ''})
         self.assertEqual(u.profile.company, '')
 
+    def test_invalid_update(self):
+        u = self._create_user(user_data)
+
+        with self.assertRaises(ValidationError):
+            self._patch_user(u, {'email': 'invalid-email'})
+
 
 class AgendaSerializerTest(SerializerTestCase):
     def _create_agenda(self, data):
@@ -65,5 +72,30 @@ class AgendaSerializerTest(SerializerTestCase):
         s.is_valid(True)
         return s.save()
 
+    def _patch_agenda(self, agenda, data):
+        s = AgendaSerializer(instance=agenda, data=data, partial=True)
+        s.is_valid(True)
+        return s.save()
+
     def test_create_agenda(self):
         self._create_agenda(agenda_data)
+
+    def test_update_agenda(self):
+        agenda = self._create_agenda(agenda_data)
+
+        agenda = self._patch_agenda(agenda, {
+            'name': 'Changed Event Name',
+        })
+        self.assertEqual(agenda.name, 'Changed Event Name')
+
+        now = date.today()
+        agenda = self._patch_agenda(agenda, {
+            'location': 'Shelton Hotel',
+            'date': now.isoformat(),
+        })
+        self.assertEqual(agenda.date, now)
+        self.assertEqual(agenda.location, 'Shelton Hotel')
+
+        self._patch_agenda(agenda, data={
+            'location': '',
+        })

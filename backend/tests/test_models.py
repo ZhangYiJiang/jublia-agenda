@@ -1,16 +1,8 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 
-from django.contrib.auth.models import User
 from backend.models import *
-
-user_data = {
-    'email': 'test@example.com',
-    'password': 'password12345',
-}
-
-agenda_data = {
-    'name': 'Test Conf. 2016',
-}
+from backend.tests.data import user_data, agenda_data
 
 
 class CategoryTest(TestCase):

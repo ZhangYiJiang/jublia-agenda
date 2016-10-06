@@ -4,13 +4,13 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 from backend.helper import get_token
-from backend.tests import data
+from backend.tests import factory
 
 
 class BaseAPITestCase(APITestCase):
     def _authenticate(self):
         url = reverse('sign_up')
-        response = self.client.post(url, data.user)
+        response = self.client.post(url, factory.user())
         self.credentials(response.data['token'])
 
     def _login(self, user):
@@ -35,15 +35,14 @@ class UserViewTest(BaseAPITestCase):
     sign_up_url = reverse('sign_up')
 
     def test_sign_up(self):
-        response = self.client.post(self.sign_up_url, data.user)
+        response = self.client.post(self.sign_up_url, factory.user())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue('token' in response.data)
 
     def test_sign_up_with_event(self):
-        user_with_event = {
-            **data.user,
+        user_with_event = factory.user({
             'event_name': 'JSConf.asia',
-        }
+        })
         user_response = self.client.post(self.sign_up_url, user_with_event)
         self.assertEqual(user_response.status_code, status.HTTP_201_CREATED)
 

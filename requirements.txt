@@ -3,5 +3,7 @@ django-extensions==1.7.4
 django-filters==0.2.1
 djangorestframework==3.4.7
 djangorestframework-jwt==1.8.0
+Faker==0.7.3
 PyJWT==1.4.2
+python-dateutil==2.5.3
 six==1.10.0

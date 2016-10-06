@@ -2,14 +2,14 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from backend.models import *
-from backend.tests import data
+from . import factory
 
 
 class CategoryTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create(**data.user)
+        self.user = User.objects.create(**factory.user())
         self.profile = Profile.objects.create(user=self.user)
-        self.agenda = Agenda.objects.create(profile=self.profile, **data.agenda)
+        self.agenda = Agenda.objects.create(profile=self.profile, **factory.agenda())
         self.category = Category.objects.create(agenda=self.agenda, name='test')
 
     def assertTagsEqual(self, category, tags, msg=None):

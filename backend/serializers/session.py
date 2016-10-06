@@ -1,5 +1,6 @@
-from rest_framework.serializers import ModelSerializer, StringRelatedField
 from django.db.transaction import atomic
+from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import StringRelatedField
 
 from backend.models import Session, Category
 from .base import BaseSerializer
@@ -29,6 +30,10 @@ class CategorySerializer(BaseSerializer):
 
 
 class SessionSerializer(BaseSerializer):
+    def validate_duration(self, value):
+        if value <= 0:
+            raise ValidationError("Session duration can't be less than or equal to zero")
+
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']
         return super().create(validated_data)
@@ -38,4 +43,4 @@ class SessionSerializer(BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('name', 'description', 'start_at', 'end_at',)
+        fields = ('name', 'description', 'start_at', 'duration',)

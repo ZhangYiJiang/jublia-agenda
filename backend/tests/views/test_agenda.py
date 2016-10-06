@@ -1,34 +1,35 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from backend.tests import data
-from backend.tests.helper import create_default_user, create_default_agenda, create_user, create_agenda
+from backend.tests import factory
+from backend.tests.helper import create_user, create_agenda
 from backend.tests.views.test_views import BaseAPITestCase
 
 
 class AgendaListTest(BaseAPITestCase):
     url = reverse('agenda_list')
 
-    def test_list(self):
-        user = create_default_user()
-        create_agenda(data.agenda)
-        create_agenda(data.full_agenda)
+    def setUp(self):
+        self.user = create_user(factory.user())
 
-        self._login(user)
+    def test_list(self):
+        create_agenda(self.user, factory.agenda())
+        create_agenda(self.user, factory.agenda(full=True))
+
+        self._login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
 
     def test_list_empty(self):
-        user = create_default_user()
-        self._login(user)
+        self._login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data))
 
     def test_create(self):
         self._authenticate()
-        response = self.client.post(self.url, data.agenda)
+        response = self.client.post(self.url, factory.agenda())
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(response.has_header('location'))
@@ -41,14 +42,15 @@ class AgendaListTest(BaseAPITestCase):
 
 class AgendaDetailTest(BaseAPITestCase):
     def setUp(self):
-        self.user = create_default_user()
-        self.agenda = create_default_agenda()
+        self.user = create_user(factory.user())
+        self.agenda_data = factory.agenda()
+        self.agenda = create_agenda(self.user, self.agenda_data)
         self.url = reverse('agenda_detail', [self.agenda.pk])
 
     def test_retrieve(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], data.agenda['name'])
+        self.assertEqual(response.data['name'], self.agenda_data['name'])
         self.assertNoEmptyFields(response.data)
 
     def test_delete(self):

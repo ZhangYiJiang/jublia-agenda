@@ -16,8 +16,8 @@ class Tag(BaseModel):
 class Session(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    start_at = models.DateTimeField(blank=True, null=True)
-    end_at = models.DateTimeField(blank=True, null=True)
+    start_at = models.IntegerField(blank=True, null=True)
+    duration = models.IntegerField(blank=True, null=True)
     agenda = models.ForeignKey(Agenda)
     tags = models.ManyToManyField(Tag)
 

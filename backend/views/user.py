@@ -3,12 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework_jwt.settings import api_settings
 
+from backend.helper import get_token
 from backend.serializers import UserSerializer
-
-jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
 @api_view(('POST',))
@@ -17,8 +14,7 @@ def sign_up(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid(True):
         user = serializer.save()
-        payload = jwt_payload_handler(user)
-        token = jwt_encode_handler(payload)
+        token = get_token(user)
         return Response({'token': token}, status=status.HTTP_201_CREATED)
 
 

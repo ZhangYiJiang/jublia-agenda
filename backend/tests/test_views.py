@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 
 from backend.helper import get_token
 from backend.tests import data
-from backend.tests.test_serializers import create_default_agenda, create_default_user
+from backend.tests.helper import create_user, create_default_user, create_default_agenda
 
 
 class BaseAPITestCase(APITestCase):

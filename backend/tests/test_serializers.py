@@ -1,4 +1,4 @@
-from functools import lru_cache
+from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.exceptions import ValidationError
 
@@ -13,8 +13,10 @@ def create_user(data):
     return s.save()
 
 
-@lru_cache(maxsize=None)
 def create_default_user():
+    user = User.objects.filter(email=data.user['email']).first()
+    if user:
+        return user
     return create_user(data.user)
 
 
@@ -108,6 +110,7 @@ class AgendaSerializerTest(SerializerTestCase):
         self._patch_agenda(agenda, data={
             'location': '',
         })
+        self.assertEqual(agenda.location, '')
 
 
 class SessionSerializerTest(SerializerTestCase):

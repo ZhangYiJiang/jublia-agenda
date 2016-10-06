@@ -1,4 +1,4 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from backend.models import Agenda
 from backend.permissions import IsOwnerOrReadOnly
@@ -13,7 +13,7 @@ class AgendaList(UserContextMixin, ListCreateAPIView):
         return Agenda.objects.filter(profile__user=self.request.user)
 
 
-class AgendaDetail(RetrieveUpdateAPIView):
+class AgendaDetail(RetrieveUpdateDestroyAPIView):
     queryset = Agenda.objects.all()
 
     permission_classes = (IsOwnerOrReadOnly,)

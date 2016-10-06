@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     # For JWT authentication
-    url(r'^users/auth', obtain_jwt_token),
+    url(r'^users/auth', obtain_jwt_token, name='auth'),
     url(r'^users/refresh', refresh_jwt_token),
 
     # User create, retrieve, update, password reset
@@ -20,5 +20,5 @@ urlpatterns = [
 
     # Agenda list, detail
     url(r'^agenda', views.AgendaList.as_view(), name='agenda_list'),
-    url(r'^[1-9][0-9]*', views.AgendaDetail.as_view(), name='agenda_detail'),
+    url(r'^(?P<pk>[1-9][0-9]*)', views.AgendaDetail.as_view(), name='agenda_detail'),
 ]

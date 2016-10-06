@@ -115,9 +115,18 @@ class SessionSerializerTest(SerializerTestCase):
 
     def test_update_session(self):
         s = create_session(self.agenda, factory.session())
+
         self.update_session(s, {
             'duration': 45,
+            'start_at': 600,
         })
+        self.assertEqual(45, s.duration)
+        self.assertEqual(600, s.start_at)
+
+        self.update_session(s, {
+            'name': 'The most amazing session ever',
+        })
+        self.assertEqual('The most amazing session ever', s.name)
 
     def test_invalid_session(self):
         with self.assertRaises(ValidationError):

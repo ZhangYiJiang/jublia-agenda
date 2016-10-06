@@ -38,13 +38,11 @@ class SessionSerializer(BaseSerializer):
     def validate_duration(self, value):
         if value <= 0:
             raise ValidationError("Session duration can't be less than or equal to zero")
+        return value
 
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']
         return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
 
     class Meta:
         model = Session

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 
-from backend.serializers import UserSerializer, AgendaSerializer
-from backend.tests import data
+from backend.serializers import UserSerializer, AgendaSerializer, SessionSerializer
+from backend.tests import data as test_data
 
 
 def create_user(data):
@@ -11,10 +11,10 @@ def create_user(data):
 
 
 def create_default_user():
-    user = User.objects.filter(email=data.user['email']).first()
+    user = User.objects.filter(email=test_data.user['email']).first()
     if user:
         return user
-    return create_user(data.user)
+    return create_user(test_data.user)
 
 
 def create_agenda(data):
@@ -25,4 +25,10 @@ def create_agenda(data):
 
 
 def create_default_agenda():
-    return create_agenda(data.agenda)
+    return create_agenda(test_data.agenda)
+
+
+def create_session(agenda, data):
+    s = SessionSerializer(data=data, context={'agenda': agenda})
+    s.is_valid(True)
+    return s.save()

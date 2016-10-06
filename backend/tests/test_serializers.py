@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError
 from backend.models import *
 from backend.serializers import *
 from backend.tests import data
-from backend.tests.helper import create_user, create_agenda, create_default_agenda
+from backend.tests.helper import create_user, create_agenda, create_default_agenda, create_session
 
 
 class SerializerTestCase(TestCase):
@@ -92,9 +92,7 @@ class AgendaSerializerTest(SerializerTestCase):
 class SessionSerializerTest(SerializerTestCase):
     def _create_session(self, data):
         agenda = create_default_agenda()
-        s = SessionSerializer(data=data, context={'agenda': agenda})
-        s.is_valid(True)
-        return s.save()
+        return create_session(agenda, data)
 
     def test_create_session(self):
         self._create_session(data.session)

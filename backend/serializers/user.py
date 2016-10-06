@@ -12,10 +12,6 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
     company = serializers.CharField(source='profile.company', allow_blank=True, required=False)
 
     def validate(self, attrs):
-        # Strip out profile here so that User(**attrs) will not choke
-        # We'll add it back at the end of the validate function
-        profile = attrs.pop('profile', {})
-
         # Slightly hacky way to get Username = Email
         if 'email' in attrs:
             attrs['username'] = attrs['email']
@@ -27,7 +23,11 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
             if self.instance:
                 user = self.instance
             else:
+                # Strip out profile here so that User(**attrs) will not choke
+                # and add it back afterwards
+                profile = attrs.pop('profile', {})
                 user = User(**attrs)
+                attrs['profile'] = profile
 
             password = attrs.get('password')
             errors = {}
@@ -40,7 +40,6 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
             if errors:
                 raise serializers.ValidationError(errors)
 
-        attrs['profile'] = profile
         return super().validate(attrs)
 
     @atomic

@@ -70,3 +70,27 @@ class AgendaDetailTest(BaseAPITestCase):
         self._login(self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_patch(self):
+        self._login(self.user)
+        response = self.client.patch(self.url, {
+            'name': 'New Conference Name'
+        })
+        self.assertTrue(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['name'], 'New Conference Name')
+
+    def test_delete_unauthenticated(self):
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_unauthorized(self):
+        user = create_user({
+            'email': 'another-user@example.com',
+            'password': 'another test password'
+        })
+        self._login(user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

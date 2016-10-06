@@ -30,6 +30,11 @@ class CategorySerializer(BaseSerializer):
 
 
 class SessionSerializer(BaseSerializer):
+    def validate(self, attrs):
+        if 'start_at' in attrs and 'duration' not in attrs and 'duration' not in self.instance:
+            raise ValidationError("Start time can only be added when the duration is defined")
+        return attrs
+
     def validate_duration(self, value):
         if value <= 0:
             raise ValidationError("Session duration can't be less than or equal to zero")

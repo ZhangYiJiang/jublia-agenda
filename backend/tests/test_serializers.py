@@ -91,18 +91,49 @@ class AgendaSerializerTest(SerializerTestCase):
 
 
 class SessionSerializerTest(SerializerTestCase):
+    # Invalid test cases
+    negative_duration = {
+        'duration': -30,
+    }
+
+    start_without_duration = {
+        'start_at': factory.now.isoformat()
+    }
+
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
+
+    def update_session(self, session, data):
+        s = SessionSerializer(data=data, instance=session, partial=True)
+        s.is_valid(True)
+        return s.save()
 
     def test_create_session(self):
         create_session(self.agenda, factory.session())
         create_session(self.agenda, factory.session(full=True))
 
-    def test_invalid_session(self):
-        negative_duration = factory.session({
-            'duration': -30,
+    def test_update_session(self):
+        s = create_session(self.agenda, factory.session())
+        self.update_session(s, {
+            'duration': 45,
         })
 
+    def test_invalid_session(self):
         with self.assertRaises(ValidationError):
-            create_session(self.agenda, negative_duration)
+            create_session(self.agenda, self.negative_duration)
+
+        with self.assertRaises(ValidationError):
+            create_session(self.agenda, self.start_without_duration)
+
+    def test_invalid_update(self):
+        s = create_session(self.agenda, factory.session())
+
+        with self.assertRaises(ValidationError):
+            self.update_session(s, self.negative_duration)
+
+        with self.assertRaises(ValidationError):
+            self.update_session(s, self.start_without_duration)
+
+
+

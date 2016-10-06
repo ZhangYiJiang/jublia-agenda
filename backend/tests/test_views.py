@@ -49,6 +49,7 @@ class AgendaListTest(BaseAPITestCase):
         response = self.client.post(self.url, data.agenda)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.has_header('location'))
 
     def test_unauthenticated(self):
         response = self.client.get(self.url)
@@ -110,6 +111,7 @@ class SessionListTest(BaseAPITestCase):
         self._login(self.user)
         response = self.client.post(self.url, data.session)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.has_header('location'))
 
     def test_create_unauthenticated(self):
         response = self.client.post(self.url, data.session)

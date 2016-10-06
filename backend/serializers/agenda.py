@@ -1,10 +1,9 @@
-from rest_framework.serializers import ModelSerializer
-
 from backend.models import Agenda
-from backend.serializers.session import SessionSerializer
+from .base import BaseSerializer
+from .session import SessionSerializer
 
 
-class AgendaSerializer(ModelSerializer):
+class AgendaSerializer(BaseSerializer):
     sessions = SessionSerializer(many=True, required=False)
 
     def create(self, validated_data):

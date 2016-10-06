@@ -1,4 +1,6 @@
 from django.db import models
+from rest_framework.reverse import reverse
+
 from .base import BaseModel
 from .profile import Profile
 
@@ -13,6 +15,9 @@ class Agenda(BaseModel):
     @property
     def owner(self):
         return self.profile.user
+
+    def get_absolute_url(self):
+        return reverse('agenda_detail', (self.pk,))
 
     def __str__(self):
         return self.name

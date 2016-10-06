@@ -2,9 +2,10 @@ from rest_framework.serializers import ModelSerializer, StringRelatedField
 from django.db.transaction import atomic
 
 from backend.models import Session, Category
+from .base import BaseSerializer
 
 
-class CategorySerializer(ModelSerializer):
+class CategorySerializer(BaseSerializer):
     tags = StringRelatedField(many=True)
 
     @atomic
@@ -27,7 +28,7 @@ class CategorySerializer(ModelSerializer):
         fields = ('name', 'tags',)
 
 
-class SessionSerializer(ModelSerializer):
+class SessionSerializer(BaseSerializer):
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']
         return super().create(validated_data)

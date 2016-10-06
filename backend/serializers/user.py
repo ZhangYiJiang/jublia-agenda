@@ -3,13 +3,12 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db.transaction import atomic
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
 
 from backend.models import Profile
-from .base import HideFieldsMixin
+from .base import HideFieldsMixin, BaseSerializer
 
 
-class UserSerializer(HideFieldsMixin, ModelSerializer):
+class UserSerializer(HideFieldsMixin, BaseSerializer):
     company = serializers.CharField(source='profile.company', allow_blank=True, required=False)
 
     def validate(self, attrs):

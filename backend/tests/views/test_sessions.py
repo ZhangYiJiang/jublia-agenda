@@ -13,14 +13,23 @@ class SessionListTest(BaseAPITestCase):
         self.user = create_default_user()
 
     def test_list(self):
+        self.agenda.session_set.create(**data.session)
+        self.agenda.session_set.create(**data.session)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data))
+
+    def test_list_empty(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(0, len(response.data))
 
     def test_create(self):
         self._login(self.user)
         response = self.client.post(self.url, data.session)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(response.has_header('location'))
+        self.assertNoEmptyFields(response.data)
 
     def test_create_unauthenticated(self):
         response = self.client.post(self.url, data.session)
@@ -38,6 +47,7 @@ class SessionDetailTest(BaseAPITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], data.session['name'])
+        self.assertNoEmptyFields(response.data)
 
     def test_delete(self):
         self._login(self.user)
@@ -54,6 +64,7 @@ class SessionDetailTest(BaseAPITestCase):
         })
         self.assertTrue(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['name'], 'New Conference Name')
+        self.assertNoEmptyFields(response.data)
 
     def test_delete_unauthenticated(self):
         response = self.client.delete(self.url)

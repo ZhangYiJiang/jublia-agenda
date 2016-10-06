@@ -18,6 +18,14 @@ class BaseAPITestCase(APITestCase):
         token = get_token(user)
         self.client.credentials(HTTP_AUTHORIZATION='bearer ' + token)
 
+    def assertNoEmptyFields(self, obj):
+        for key, value in obj.items():
+            try:
+                if len(value) == 0:
+                    raise AssertionError("AssertionError: '{}' key is empty".format(key))
+            except TypeError:
+                pass
+
 
 class UserViewTest(BaseAPITestCase):
     url = reverse('user')

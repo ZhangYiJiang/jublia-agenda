@@ -14,6 +14,12 @@ def sign_up(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid(True):
         user = serializer.save()
+
+        # Create and attach a new agenda if 'event_name' is included in the
+        # request so that the user can get started with the app immediately
+        if 'event_name' in request.data:
+            user.profile.agenda_set.create(name=request.data['event_name'])
+
         token = get_token(user)
         return Response({'token': token}, status=status.HTTP_201_CREATED)
 

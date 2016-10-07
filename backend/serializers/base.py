@@ -24,6 +24,15 @@ class BaseSerializer(ModelSerializer):
 
         return filtered_obj
 
+    def update(self, instance, validated_data):
+        # For non-partial (PUT) requests, reset to initial any fields
+        # which are not present in the request
+        if not self.partial:
+            for name, field in self.fields.items():
+                if name not in validated_data:
+                    validated_data[name] = field.initial
+        return super().update(instance, validated_data)
+
 
 class HideFieldsMixin:
     def to_representation(self, instance):

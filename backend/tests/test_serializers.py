@@ -109,9 +109,22 @@ class SessionSerializerTest(SerializerTestCase):
         s.is_valid(True)
         return s.save()
 
+    def replace_session(self, session, data):
+        s = SessionSerializer(data=data, instance=session)
+        s.is_valid(True)
+        return s.save()
+
     def test_create_session(self):
-        create_session(self.agenda, factory.session())
-        create_session(self.agenda, factory.session(full=True))
+        data = factory.session()
+        s = create_session(self.agenda, data)
+        self.assertEqual(s.name, data['name'])
+
+        data = factory.session(full=True)
+        s = create_session(self.agenda, data)
+        self.assertEqual(s.name, data['name'])
+        self.assertEqual(s.start_at, data['start_at'])
+        self.assertEqual(s.duration, data['duration'])
+        self.assertEqual(s.description, data['description'])
 
     def test_update_session(self):
         s = create_session(self.agenda, factory.session())
@@ -127,6 +140,15 @@ class SessionSerializerTest(SerializerTestCase):
             'name': 'The most amazing session ever',
         })
         self.assertEqual('The most amazing session ever', s.name)
+
+    def test_put_session(self):
+        s = create_session(self.agenda, factory.session(full=True))
+        data = factory.session()
+        self.replace_session(s, data)
+        self.assertEqual(s.name, data['name'])
+        self.assertIsNone(s.start_at)
+        self.assertIsNone(s.duration)
+        self.assertEqual(s.description, '')
 
     def test_invalid_session(self):
         with self.assertRaises(ValidationError):

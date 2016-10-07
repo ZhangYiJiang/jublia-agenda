@@ -9,9 +9,9 @@ class Speaker(BaseModel):
     company = models.CharField(max_length=255)
     position = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20)
-    company_description = models.TextField()
-    company_url = models.URLField()
+    phone_number = models.CharField(max_length=20, blank=True)
+    company_description = models.TextField(blank=True)
+    company_url = models.URLField(blank=True)
 
     agenda = models.ForeignKey(Agenda)
 

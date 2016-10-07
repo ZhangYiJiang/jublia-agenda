@@ -1,8 +1,9 @@
 from django.db import models
 from rest_framework.reverse import reverse
 
-from .base import BaseModel
+from backend.models.speaker import Speaker
 from .agenda import Agenda
+from .base import BaseModel
 
 
 class Tag(BaseModel):
@@ -20,6 +21,8 @@ class Session(BaseModel):
     duration = models.IntegerField(blank=True, null=True)
     agenda = models.ForeignKey(Agenda)
     tags = models.ManyToManyField(Tag)
+
+    speakers = models.ManyToManyField(Speaker)
 
     @property
     def owner(self):

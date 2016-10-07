@@ -64,3 +64,25 @@ def session(data=None, full=False):
         }
 
     return {**session, **data}
+
+
+def speaker(data=None, full=False):
+    if data is None:
+        data = {}
+
+    speaker = {
+        'name': fake.name(),
+        'company': fake.company(),
+        'position': fake.job(),
+        'email': fake.email(),
+    }
+
+    if full:
+        speaker = {
+            **speaker,
+            'phone_number': fake.phone_number(),
+            'company_description': fake.catch_phrase(),
+            'company_url': fake.url(),
+        }
+
+    return {**speaker, **data}

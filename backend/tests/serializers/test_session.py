@@ -69,11 +69,18 @@ class SessionSerializerTest(SerializerTestCase):
         self.assertEqual(s.description, '')
 
     def test_speaker_field(self):
-        speaker = create_speaker(self.agenda, factory.speaker())
+        speakers = [
+            create_speaker(self.agenda, factory.speaker()).pk,
+            create_speaker(self.agenda, factory.speaker()).pk,
+            create_speaker(self.agenda, factory.speaker()).pk,
+        ]
+
         session = create_session(self.agenda, {
             **factory.session(full=True),
-            'speakers': [speaker.pk],
+            'speakers': speakers,
         })
+
+        self.assertEquals(3, session.speakers.count())
 
     def test_invalid_session(self):
         with self.assertRaises(ValidationError):

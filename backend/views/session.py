@@ -18,7 +18,6 @@ class SessionViewMixin(AgendaContextMixin):
 
 
 class SessionList(SessionViewMixin, ListCreateAPIView):
-    serializer_class = SessionUpdateSerializer
     permission_classes = (IsAgendaOwnerOrReadOnly,)
 
 

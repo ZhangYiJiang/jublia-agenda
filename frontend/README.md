@@ -15,5 +15,8 @@
 - `cd dist`
 - server the folder using any backend server
 
-## Reference Guide:
+## Set-up Reference:
 - https://angular.io/docs/ts/latest/guide/webpack.html
+
+## Style Guide Reference:
+- https://angular.io/docs/ts/latest/guide/style-guide.html

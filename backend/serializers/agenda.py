@@ -1,10 +1,10 @@
 from backend.models import Agenda
 from .base import BaseSerializer
-from .session import SessionSerializer
+from .session import SessionViewSerializer
 
 
 class AgendaSerializer(BaseSerializer):
-    sessions = SessionSerializer(many=True, required=False)
+    sessions = SessionViewSerializer(many=True, required=False)
 
     def create(self, validated_data):
         validated_data['profile'] = self.context['user'].profile

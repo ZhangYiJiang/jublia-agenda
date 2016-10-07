@@ -1,4 +1,4 @@
-from backend.serializers import UserSerializer, AgendaSerializer, SessionSerializer
+from backend.serializers import UserSerializer, AgendaSerializer, SessionUpdateSerializer
 from backend.serializers.speaker import SpeakerSerializer
 
 
@@ -15,7 +15,7 @@ def create_agenda(user, data):
 
 
 def create_session(agenda, data):
-    s = SessionSerializer(data=data, context={'agenda': agenda})
+    s = SessionUpdateSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 

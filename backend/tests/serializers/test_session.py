@@ -1,8 +1,8 @@
 from rest_framework.exceptions import ValidationError
 
-from backend.serializers import SessionSerializer
+from backend.serializers import SessionUpdateSerializer
 from backend.tests import factory
-from backend.tests.helper import create_user, create_agenda, create_session
+from backend.tests.helper import create_user, create_agenda, create_session, create_speaker
 from backend.tests.serializers.test_serializers import SerializerTestCase
 
 
@@ -21,20 +21,22 @@ class SessionSerializerTest(SerializerTestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
 
     def update_session(self, session, data):
-        s = SessionSerializer(data=data, instance=session, partial=True)
+        s = SessionUpdateSerializer(data=data, instance=session, partial=True)
         s.is_valid(True)
         return s.save()
 
     def replace_session(self, session, data):
-        s = SessionSerializer(data=data, instance=session)
+        s = SessionUpdateSerializer(data=data, instance=session)
         s.is_valid(True)
         return s.save()
 
     def test_create_session(self):
+        # Creating basic session
         data = factory.session()
         s = create_session(self.agenda, data)
         self.assertEqual(s.name, data['name'])
 
+        # Creating full sessions
         data = factory.session(full=True)
         s = create_session(self.agenda, data)
         self.assertEqual(s.name, data['name'])
@@ -65,6 +67,13 @@ class SessionSerializerTest(SerializerTestCase):
         self.assertIsNone(s.start_at)
         self.assertIsNone(s.duration)
         self.assertEqual(s.description, '')
+
+    def test_speaker_field(self):
+        speaker = create_speaker(self.agenda, factory.speaker())
+        session = create_session(self.agenda, {
+            **factory.session(full=True),
+            'speakers': [speaker.pk],
+        })
 
     def test_invalid_session(self):
         with self.assertRaises(ValidationError):

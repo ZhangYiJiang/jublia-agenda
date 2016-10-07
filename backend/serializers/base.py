@@ -1,6 +1,22 @@
 from collections import OrderedDict
 
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
+
+from backend.models import Agenda
+
+
+class AgendaPrimaryKeyRelatedField(PrimaryKeyRelatedField):
+    def __init__(self, klass, **kwargs):
+        self.klass = klass
+        super().__init__(**kwargs)
+
+    def get_queryset(self):
+        set_name = self.klass.lower() + '_set'
+        if isinstance(self.context['agenda'], Agenda):
+            pk = self.context['agenda'].pk
+        else:
+            pk = self.context['agenda']
+        return getattr(Agenda.objects.get(pk=pk), set_name)
 
 
 class BaseSerializer(ModelSerializer):

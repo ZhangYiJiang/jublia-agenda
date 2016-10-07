@@ -1,3 +1,4 @@
-from .user import UserSerializer
 from .agenda import AgendaSerializer
-from .session import SessionSerializer
+from .session import SessionViewSerializer, SessionUpdateSerializer
+from .user import UserSerializer
+

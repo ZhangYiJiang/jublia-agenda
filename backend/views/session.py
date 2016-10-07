@@ -1,22 +1,27 @@
+from rest_framework import permissions
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from backend.models import Session
 from backend.permissions import IsOwnerOrReadOnly, IsAgendaOwnerOrReadOnly
-from backend.serializers import SessionSerializer
+from backend.serializers import SessionViewSerializer, SessionUpdateSerializer
 from .base import AgendaContextMixin
 
 
-class SessionList(AgendaContextMixin, ListCreateAPIView):
-    serializer_class = SessionSerializer
+class SessionViewMixin(AgendaContextMixin):
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return SessionViewSerializer
+        return SessionUpdateSerializer
+
+    def get_queryset(self):
+        return Session.objects.filter(agenda=self.kwargs['agenda_id'])
+
+
+class SessionList(SessionViewMixin, ListCreateAPIView):
+    serializer_class = SessionUpdateSerializer
     permission_classes = (IsAgendaOwnerOrReadOnly,)
 
-    def get_queryset(self):
-        return Session.objects.filter(agenda=self.kwargs['agenda_id'])
 
-
-class SessionDetail(AgendaContextMixin, RetrieveUpdateDestroyAPIView):
+class SessionDetail(SessionViewMixin, RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
-    serializer_class = SessionSerializer
 
-    def get_queryset(self):
-        return Session.objects.filter(agenda=self.kwargs['agenda_id'])

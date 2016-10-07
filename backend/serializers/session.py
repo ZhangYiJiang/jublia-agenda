@@ -3,7 +3,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import StringRelatedField
 
 from backend.models import Session, Category
-from .base import BaseSerializer
+from backend.serializers.speaker import SpeakerSerializer
+from .base import BaseSerializer, AgendaPrimaryKeyRelatedField
 
 
 class CategorySerializer(BaseSerializer):
@@ -29,7 +30,17 @@ class CategorySerializer(BaseSerializer):
         fields = ('name', 'tags',)
 
 
-class SessionSerializer(BaseSerializer):
+class SessionViewSerializer(BaseSerializer):
+    speakers = SpeakerSerializer(many=True, required=False)
+
+    class Meta:
+        model = Session
+        fields = ('name', 'description', 'start_at', 'duration', 'speakers',)
+
+
+class SessionUpdateSerializer(BaseSerializer):
+    speakers = AgendaPrimaryKeyRelatedField(many=True, required=False, klass='Speaker')
+
     def validate(self, attrs):
         if 'start_at' in attrs and 'duration' not in attrs and 'duration' not in self.instance:
             raise ValidationError("Start time can only be added when the duration is defined")
@@ -46,4 +57,4 @@ class SessionSerializer(BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('name', 'description', 'start_at', 'duration',)
+        fields = ('name', 'description', 'start_at', 'duration', 'speakers',)

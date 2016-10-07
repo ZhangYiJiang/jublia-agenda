@@ -25,19 +25,15 @@ class SpeakerListTest(BaseAPITestCase):
         self.assertEqual(2, len(response.data))
 
     def test_create(self):
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.post(self.url, factory.speaker())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_unauthenticated(self):
-        response = self.client.post(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assert401WhenUnauthenticated(self.url)
 
     def test_unauthorized(self):
-        another_user = create_user(factory.user())
-        self._login(another_user)
-        response = self.client.post(self.url, factory.speaker())
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assert403WhenUnauthorized(self.url)
 
 
 class SpeakerDetailTest(BaseAPITestCase):
@@ -57,18 +53,14 @@ class SpeakerDetailTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_patch(self):
-        self._login(self.user)
+        self.login(self.user)
         new_data = factory.speaker()
         response = self.client.patch(self.url, new_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(new_data['name'], response.data['name'])
 
     def test_unauthenticated(self):
-        response = self.client.patch(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assert401WhenUnauthenticated(self.url, method='patch')
 
     def test_unauthorized(self):
-        another_user = create_user(factory.user())
-        self._login(another_user)
-        response = self.client.patch(self.url, factory.speaker())
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assert403WhenUnauthorized(self.url, method='patch')

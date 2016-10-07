@@ -16,19 +16,19 @@ class AgendaListTest(BaseAPITestCase):
         create_agenda(self.user, factory.agenda())
         create_agenda(self.user, factory.agenda(full=True))
 
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
 
     def test_list_empty(self):
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data))
 
     def test_create(self):
-        self._authenticate()
+        self.authenticate()
         response = self.client.post(self.url, factory.agenda())
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -36,8 +36,7 @@ class AgendaListTest(BaseAPITestCase):
         self.assertNoEmptyFields(response.data)
 
     def test_unauthenticated(self):
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assert401WhenUnauthenticated(self.url)
 
 
 class AgendaDetailTest(BaseAPITestCase):
@@ -54,7 +53,7 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertNoEmptyFields(response.data)
 
     def test_delete(self):
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -62,7 +61,7 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_patch(self):
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.patch(self.url, {
             'name': 'New Conference Name'
         })
@@ -70,15 +69,12 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertTrue(response.data['name'], 'New Conference Name')
         self.assertNoEmptyFields(response.data)
 
-    def test_delete_unauthenticated(self):
-        response = self.client.delete(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_unauthenticated(self):
+        self.assert401WhenUnauthenticated(self.url, 'delete')
+        self.assert401WhenUnauthenticated(self.url, 'put')
+        self.assert401WhenUnauthenticated(self.url, 'patch')
 
-    def test_delete_unauthorized(self):
-        user = create_user({
-            'email': 'another-user@example.com',
-            'password': 'another test password'
-        })
-        self._login(user)
-        response = self.client.delete(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    def test_unauthorized(self):
+        self.assert403WhenUnauthorized(self.url, 'delete')
+        self.assert403WhenUnauthorized(self.url, 'patch')
+        self.assert403WhenUnauthorized(self.url, 'put')

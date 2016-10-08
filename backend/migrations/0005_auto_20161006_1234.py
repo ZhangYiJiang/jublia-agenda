@@ -21,7 +21,11 @@ class Migration(migrations.Migration):
             name='duration',
             field=models.IntegerField(blank=True, null=True),
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='session',
+            name='start_at',
+        ),
+        migrations.AddField(
             model_name='session',
             name='start_at',
             field=models.IntegerField(blank=True, null=True),

@@ -25,15 +25,17 @@ class SessionListTest(BaseAPITestCase):
         self.assertEqual(0, len(response.data))
 
     def test_create(self):
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.post(self.url, factory.session())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(response.has_header('location'))
         self.assertNoEmptyFields(response.data)
 
     def test_create_unauthenticated(self):
-        response = self.client.post(self.url, factory.session())
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assert401WhenUnauthenticated(self.url)
+
+    def test_create_unauthorized(self):
+        self.assert403WhenUnauthorized(self.url)
 
 
 class SessionDetailTest(BaseAPITestCase):
@@ -51,7 +53,7 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertNoEmptyFields(response.data)
 
     def test_delete(self):
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -59,7 +61,7 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_patch(self):
-        self._login(self.user)
+        self.login(self.user)
         response = self.client.patch(self.url, {
             'name': 'New Conference Name'
         })
@@ -67,15 +69,12 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertTrue(response.data['name'], 'New Conference Name')
         self.assertNoEmptyFields(response.data)
 
-    def test_delete_unauthenticated(self):
-        response = self.client.delete(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_unauthenticated(self):
+        self.assert401WhenUnauthenticated(self.url, 'delete')
+        self.assert401WhenUnauthenticated(self.url, 'put')
+        self.assert401WhenUnauthenticated(self.url, 'patch')
 
-    def test_delete_unauthorized(self):
-        user = create_user({
-            'email': 'another-user@example.com',
-            'password': 'another test password'
-        })
-        self._login(user)
-        response = self.client.delete(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    def test_unauthorized(self):
+        self.assert403WhenUnauthorized(self.url, 'delete')
+        self.assert403WhenUnauthorized(self.url, 'patch')
+        self.assert403WhenUnauthorized(self.url, 'put')

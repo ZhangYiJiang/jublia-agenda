@@ -27,4 +27,11 @@ urlpatterns = [
         views.SessionList.as_view(), name='session_list'),
     url(r'^(?P<agenda_id>[1-9][0-9]*)/sessions/(?P<pk>[1-9][0-9]*)',
         views.SessionDetail.as_view(), name='session_detail'),
+
+    # Session speakers
+    url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers$',
+        views.SpeakerList.as_view(), name='speaker_list'),
+    url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers/(?P<pk>[1-9][0-9]*)',
+        views.SpeakerDetail.as_view(), name='speaker_detail'),
+
 ]

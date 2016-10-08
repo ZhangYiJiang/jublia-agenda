@@ -1,0 +1,6 @@
+<h1 class="relative-column-title">Pending</h1>
+<ul class="card-list">
+  <li *ngFor="let session of sessions | where : { pending: true } | orderBy : 'order'">
+    <my-session [session]="session"></my-session>
+  </li>
+</ul>

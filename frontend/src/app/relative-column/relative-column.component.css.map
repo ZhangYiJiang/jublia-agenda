@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,sBAAuB;EACtB,UAAU,EAAE,GAAG",
+"sources": ["relative-column.component.scss"],
+"names": [],
+"file": "relative-column.component.css"
+}

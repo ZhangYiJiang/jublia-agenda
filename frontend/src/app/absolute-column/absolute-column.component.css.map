@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,sBAAuB;EACtB,UAAU,EAAE,KAAK",
+"sources": ["absolute-column.component.scss"],
+"names": [],
+"file": "absolute-column.component.css"
+}

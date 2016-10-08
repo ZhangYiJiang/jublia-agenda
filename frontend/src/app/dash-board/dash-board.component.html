@@ -1,0 +1,8 @@
+<h1 class="board-title">Dashboard</h1>
+<p>All Agenda:</p>
+<ul class="agenda-list">
+  <li *ngFor="let agenda of agendas | orderBy : 'id'"
+    (click)="onSelect(agenda)">
+    {{agenda.title}}
+  </li>
+</ul>

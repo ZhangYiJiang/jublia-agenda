@@ -1,5 +1,5 @@
 export class Session {
-  _id: string;
+  id: string;
   title: string;
   columnId: string;
   boardId: string;

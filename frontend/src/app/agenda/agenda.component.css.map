@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,aAAc;EACb,UAAU,EAAE,MAAM",
+"sources": ["agenda.component.scss"],
+"names": [],
+"file": "agenda.component.css"
+}

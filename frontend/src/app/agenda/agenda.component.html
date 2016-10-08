@@ -1,0 +1,8 @@
+<div *ngIf="!agenda">
+  Loading...
+</div>
+<div *ngIf="agenda">
+  <h1 class="agenda-title">Agenda for {{agenda.title}}</h1>
+  <board *ngIf="agenda && agenda.sessions" [sessions]="agenda.sessions">
+  </board>
+</div>

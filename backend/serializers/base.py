@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
+from rest_framework.fields import SkipField
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, CharField
 
 from backend.models import Agenda
 
@@ -33,7 +34,7 @@ class BaseSerializer(ModelSerializer):
         filtered_obj = OrderedDict()
         for key, value in obj.items():
             try:
-                if len(value):
+                if value is not None and len(value):
                     filtered_obj[key] = value
             except TypeError:
                 filtered_obj[key] = value
@@ -46,7 +47,14 @@ class BaseSerializer(ModelSerializer):
         if not self.partial:
             for name, field in self.fields.items():
                 if name not in validated_data:
-                    validated_data[name] = field.initial
+                    try:
+                        validated_data[name] = field.get_default()
+                    except SkipField:
+                        if field.allow_null:
+                            validated_data[name] = None
+                        elif isinstance(field, (CharField,)):
+                            validated_data[name] = ''
+
         return super().update(instance, validated_data)
 
 

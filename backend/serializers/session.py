@@ -35,7 +35,7 @@ class SessionViewSerializer(BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('name', 'description', 'start_at', 'duration', 'speakers',)
+        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers',)
 
 
 class SessionUpdateSerializer(BaseSerializer):
@@ -57,4 +57,4 @@ class SessionUpdateSerializer(BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('name', 'description', 'start_at', 'duration', 'speakers',)
+        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers',)

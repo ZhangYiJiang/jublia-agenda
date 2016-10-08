@@ -59,15 +59,6 @@ class SessionSerializerTest(SerializerTestCase):
         })
         self.assertEqual('The most amazing session ever', s.name)
 
-    def test_put_session(self):
-        s = create_session(self.agenda, factory.session(full=True))
-        data = factory.session()
-        self.replace_session(s, data)
-        self.assertEqual(s.name, data['name'])
-        self.assertIsNone(s.start_at)
-        self.assertIsNone(s.duration)
-        self.assertEqual(s.description, '')
-
     def test_speaker_field(self):
         speakers = [
             create_speaker(self.agenda, factory.speaker()).pk,

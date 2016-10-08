@@ -30,6 +30,13 @@ class BaseAPITestCase(APITestCase):
             except TypeError:
                 pass
 
+    def assertEqualExceptMeta(self, original, response, msg=None):
+        self.assertTrue(response.pop('id'))
+        response.pop('url', None)
+        response.pop('created_at', None)
+        response.pop('updated_at', None)
+        self.assertEqual(original, response, msg)
+
     def assert401WhenUnauthenticated(self, url, method='post', data=None):
         response = getattr(self.client, method.lower())(url, data=data)
         message = "Request to {} should have resulted in 401 Unauthorized".format(url)

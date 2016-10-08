@@ -31,6 +31,17 @@ class SessionListTest(BaseAPITestCase):
         self.assertTrue(response.has_header('location'))
         self.assertNoEmptyFields(response.data)
 
+        response = self.client.post(self.url, {
+            **factory.session(full=True),
+            'speakers': [
+                create_speaker(self.agenda, factory.speaker()).pk,
+                create_speaker(self.agenda, factory.speaker(full=True)).pk,
+            ]
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.has_header('location'))
+        self.assertNoEmptyFields(response.data)
+
     def test_create_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)
 
@@ -57,7 +68,7 @@ class SessionDetailTest(BaseAPITestCase):
         speaker = create_speaker(self.agenda, speaker_data)
         self.session.speakers.add(speaker)
         response = self.client.get(self.url)
-        self.assertEqual(response.data['speakers'][0], speaker_data)
+        self.assertEqualExceptMeta(speaker_data, response.data['speakers'][0])
 
     def test_delete(self):
         self.login(self.user)
@@ -89,6 +100,18 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertTrue(response.status_code, status.HTTP_200_OK)
         self.assertEqual(3, len(response.data['speakers']))
         self.assertNoEmptyFields(response.data)
+
+    def test_put(self):
+        self.login(self.user)
+        data = factory.session(full=True)
+        response = self.client.put(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqualExceptMeta(data, response.data)
+
+        data = factory.session()
+        response = self.client.put(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqualExceptMeta(data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url, 'delete')

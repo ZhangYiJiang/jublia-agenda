@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
-from backend.tests.helper import create_session, create_user, create_agenda
+from backend.tests.helper import create_session, create_user, create_agenda, create_speaker
 from backend.tests.views.test_views import BaseAPITestCase
 
 
@@ -31,6 +31,17 @@ class SessionListTest(BaseAPITestCase):
         self.assertTrue(response.has_header('location'))
         self.assertNoEmptyFields(response.data)
 
+        response = self.client.post(self.url, {
+            **factory.session(full=True),
+            'speakers': [
+                create_speaker(self.agenda, factory.speaker()).pk,
+                create_speaker(self.agenda, factory.speaker(full=True)).pk,
+            ]
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.has_header('location'))
+        self.assertNoEmptyFields(response.data)
+
     def test_create_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)
 
@@ -52,6 +63,13 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertEqual(response.data['name'], self.session_data['name'])
         self.assertNoEmptyFields(response.data)
 
+    def test_speaker(self):
+        speaker_data = factory.speaker()
+        speaker = create_speaker(self.agenda, speaker_data)
+        self.session.speakers.add(speaker)
+        response = self.client.get(self.url)
+        self.assertEqualExceptMeta(speaker_data, response.data['speakers'][0])
+
     def test_delete(self):
         self.login(self.user)
         response = self.client.delete(self.url)
@@ -62,12 +80,38 @@ class SessionDetailTest(BaseAPITestCase):
 
     def test_patch(self):
         self.login(self.user)
+
         response = self.client.patch(self.url, {
             'name': 'New Conference Name'
         })
         self.assertTrue(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data['name'], 'New Conference Name')
+        self.assertEqual(response.data['name'], 'New Conference Name')
         self.assertNoEmptyFields(response.data)
+
+        # Test attaching speakers
+        speakers = [
+            create_speaker(self.agenda, factory.speaker()).pk,
+            create_speaker(self.agenda, factory.speaker()).pk,
+            create_speaker(self.agenda, factory.speaker()).pk,
+        ]
+        response = self.client.patch(self.url, {
+            'speakers': speakers,
+        })
+        self.assertTrue(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(3, len(response.data['speakers']))
+        self.assertNoEmptyFields(response.data)
+
+    def test_put(self):
+        self.login(self.user)
+        data = factory.session(full=True)
+        response = self.client.put(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqualExceptMeta(data, response.data)
+
+        data = factory.session()
+        response = self.client.put(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqualExceptMeta(data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url, 'delete')

@@ -9,4 +9,4 @@ class SpeakerSerializer(BaseSerializer):
 
     class Meta:
         model = Speaker
-        fields = ('name', 'company', 'position', 'email', 'phone_number', 'company_description', 'company_url',)
+        fields = ('id', 'name', 'company', 'position', 'email', 'phone_number', 'company_description', 'company_url',)

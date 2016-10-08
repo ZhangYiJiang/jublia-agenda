@@ -12,4 +12,4 @@ class AgendaSerializer(BaseSerializer):
 
     class Meta:
         model = Agenda
-        fields = ['name', 'location', 'date', 'sessions', ]
+        fields = ('id', 'name', 'location', 'date', 'sessions',)

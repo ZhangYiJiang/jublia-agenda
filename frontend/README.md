@@ -15,6 +15,18 @@
 - `cd dist`
 - server the folder using any backend server
 
+## General Architecture Notes
+- Hierarchy of components (big to small)
+	- Dashboard (of agendas)
+	- Agenda (consisting of a board and other potential UI components)
+	- Board (consisting of columns)
+	- Columns (absolute-column with time axis and Relative-column for pending sessions)
+	- Sessions (smallest component)
+
+- Models
+	- Agenda
+	- Session
+
 ## Set-up Reference:
 - https://angular.io/docs/ts/latest/guide/webpack.html
 

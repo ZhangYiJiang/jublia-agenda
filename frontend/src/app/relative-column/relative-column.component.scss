@@ -1,3 +1,30 @@
-.relative-column-title {
-	background: red;
+@import '../../../public/css/variables';
+.rel-col {
+	position: relative;
+	background: $color-secondary;
+	box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
+	height: 640px;
+	width: 225px;
+	.session-list {
+		padding-top: 20px;
+	}
+}
+
+button.pending-toggle {
+	position: absolute;
+	top: 270px;
+	left: 200px;
+	background-color: $color-primary;
+  width: 25px;
+  height: 100px;
+  border-radius: 100% / 50%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-style: none;
+  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.5);
+
+  i.fa {
+  	color: white;
+  	font-size: 15px;
+  }
 }

@@ -6,6 +6,7 @@ export var SESSIONS: Session[] =
   <Session>{
       id: '1',
       title: 'session 1',
+      venue: 'LT 19',
       order: 1,
       columnId: '1',
       pending: true
@@ -13,6 +14,47 @@ export var SESSIONS: Session[] =
   <Session>{
     id: '2',
     title: 'session 2',
+    order: 2,
+    venue: 'LT 19',
+    columnId: '1',
+    pending: true
+  }, 
+  <Session>{
+    id: '2',
+    title: 'session 2',
+    venue: 'LT 19',
+    order: 2,
+    columnId: '1',
+    pending: true
+  }, 
+  <Session>{
+    id: '2',
+    title: 'session 2',
+    venue: 'LT 19',
+    order: 2,
+    columnId: '1',
+    pending: true
+  }, 
+  <Session>{
+    id: '2',
+    title: 'session 2',
+    venue: 'LT 19',
+    order: 2,
+    columnId: '1',
+    pending: true
+  }, 
+  <Session>{
+    id: '2',
+    title: 'session 2',
+    venue: 'LT 19',
+    order: 2,
+    columnId: '1',
+    pending: true
+  }, 
+  <Session>{
+    id: '2',
+    title: 'session 2',
+    venue: 'LT 19',
     order: 2,
     columnId: '1',
     pending: true

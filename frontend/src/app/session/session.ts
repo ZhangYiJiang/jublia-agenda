@@ -5,4 +5,6 @@ export class Session {
   boardId: string;
   order: number;
   pending: boolean;
+  time: string;
+  venue: string;
 }

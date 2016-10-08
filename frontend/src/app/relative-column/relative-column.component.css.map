@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "AAAA,sBAAuB;EACtB,UAAU,EAAE,GAAG",
-"sources": ["relative-column.component.scss"],
+"mappings": "AACA,QAAS,CACR,QAAQ,CAAE,QAAQ,CAClB,UAAU,CCFO,OAAO,CDGxB,UAAU,CAAE,4BAA4B,CACxC,MAAM,CAAE,KAAK,CACb,KAAK,CAAE,KAAK,CACZ,sBAAc,CACb,WAAW,CAAE,IAAI,CAInB,qBAAsB,CACrB,QAAQ,CAAE,QAAQ,CAClB,GAAG,CAAE,KAAK,CACV,IAAI,CAAE,KAAK,CACX,gBAAgB,CChBD,OAAO,CDiBrB,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,KAAK,CACb,aAAa,CAAE,UAAU,CACzB,uBAAuB,CAAE,CAAC,CAC1B,0BAA0B,CAAE,CAAC,CAC7B,YAAY,CAAE,IAAI,CAClB,UAAU,CAAE,iCAAiC,CAE7C,0BAAK,CACJ,KAAK,CAAE,KAAK,CACZ,SAAS,CAAE,IAAI",
+"sources": ["relative-column.component.scss","../../../public/css/variables.scss"],
 "names": [],
 "file": "relative-column.component.css"
 }

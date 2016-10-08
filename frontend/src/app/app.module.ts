@@ -17,6 +17,7 @@ import { AgendaService } from './agenda/agenda.service.ts';
 import {OrderBy} from './pipes/orderby.pipe';
 import {Where} from './pipes/where.pipe';
 
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -26,7 +27,7 @@ import {Where} from './pipes/where.pipe';
       { path: 'agenda/:id', component: AgendaComponent },
       { path: '', component: DashBoardComponent },
       { path: '**', component: DashBoardComponent }
-    ])
+    ]),
   ],
   declarations: [
     AppComponent,

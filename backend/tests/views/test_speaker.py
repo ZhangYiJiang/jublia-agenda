@@ -14,15 +14,19 @@ class SpeakerListTest(BaseAPITestCase):
         self.url = reverse('speaker_list', [self.agenda.pk])
 
     def test_list(self):
-        create_speaker(self.agenda, factory.speaker())
+        speaker_data = factory.speaker()
+        create_speaker(self.agenda, speaker_data)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data))
+        self.assertEqual(speaker_data, response.data[0])
 
-        create_speaker(self.agenda, factory.speaker(full=True))
+        speaker_data = factory.speaker(full=True)
+        create_speaker(self.agenda, speaker_data)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
+        self.assertEqual(response.data[1], speaker_data)
 
     def test_create(self):
         self.login(self.user)
@@ -59,8 +63,18 @@ class SpeakerDetailTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(new_data['name'], response.data['name'])
 
+    def test_delete(self):
+        self.login(self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(self.agenda.speaker_set.count())
+
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url, method='patch')
+        self.assert401WhenUnauthenticated(self.url, method='put')
+        self.assert401WhenUnauthenticated(self.url, method='delete')
 
     def test_unauthorized(self):
         self.assert403WhenUnauthorized(self.url, method='patch')
+        self.assert403WhenUnauthorized(self.url, method='put')
+        self.assert403WhenUnauthorized(self.url, method='delete')

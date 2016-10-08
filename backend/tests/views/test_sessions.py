@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
-from backend.tests.helper import create_session, create_user, create_agenda
+from backend.tests.helper import create_session, create_user, create_agenda, create_speaker
 from backend.tests.views.test_views import BaseAPITestCase
 
 
@@ -52,6 +52,13 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertEqual(response.data['name'], self.session_data['name'])
         self.assertNoEmptyFields(response.data)
 
+    def test_speaker(self):
+        speaker_data = factory.speaker()
+        speaker = create_speaker(self.agenda, speaker_data)
+        self.session.speakers.add(speaker)
+        response = self.client.get(self.url)
+        self.assertEqual(response.data['speakers'][0], speaker_data)
+
     def test_delete(self):
         self.login(self.user)
         response = self.client.delete(self.url)
@@ -62,11 +69,25 @@ class SessionDetailTest(BaseAPITestCase):
 
     def test_patch(self):
         self.login(self.user)
+
         response = self.client.patch(self.url, {
             'name': 'New Conference Name'
         })
         self.assertTrue(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data['name'], 'New Conference Name')
+        self.assertEqual(response.data['name'], 'New Conference Name')
+        self.assertNoEmptyFields(response.data)
+
+        # Test attaching speakers
+        speakers = [
+            create_speaker(self.agenda, factory.speaker()).pk,
+            create_speaker(self.agenda, factory.speaker()).pk,
+            create_speaker(self.agenda, factory.speaker()).pk,
+        ]
+        response = self.client.patch(self.url, {
+            'speakers': speakers,
+        })
+        self.assertTrue(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(3, len(response.data['speakers']))
         self.assertNoEmptyFields(response.data)
 
     def test_unauthenticated(self):

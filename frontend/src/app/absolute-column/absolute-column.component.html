@@ -1,1 +1,7 @@
-<h1 class="absolute-column-title">Absolute column</h1>
+<div class="abs-col">
+	<ul class="session-list">
+	  <li *ngFor="let session of displayedSessions  | orderBy : 'order'">
+	    <my-session [session]="session"></my-session>
+	  </li>
+	</ul>
+</div>

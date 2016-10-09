@@ -1,4 +1,2 @@
-.board-title {
-  background: gray; }
-
+.board,.row,.scroll{display:flex}.day{flex-direction:column}.scroll{overflow-x:scroll}.day-title{background:#41B6AB}.track-title{background:#B1C9C3}.day-title,.track-title{color:white;margin-right:10px;height:30px;line-height:30px}
 /*# sourceMappingURL=board.component.css.map */

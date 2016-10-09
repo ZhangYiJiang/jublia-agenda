@@ -1,3 +1,11 @@
-.absolute-column-title {
-	background: green;
+@import '../../../public/css/variables';
+.abs-col {
+	background: #F2F2F2;
+	height: 640px;
+	width: 200px;
+	margin-right: 10px;
+	.session-list {
+		padding-top: 10px;
+		margin-top: 0px;
+	}
 }

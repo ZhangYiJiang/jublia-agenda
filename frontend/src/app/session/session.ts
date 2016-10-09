@@ -1,10 +1,12 @@
 export class Session {
   id: string;
   title: string;
-  columnId: string;
+  abstract: string;
+  track: string;
   boardId: string;
   order: number;
   pending: boolean;
-  time: string;
+  start: Date;
+  end: Date;
   venue: string;
 }

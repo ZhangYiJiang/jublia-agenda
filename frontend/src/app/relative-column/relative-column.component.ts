@@ -2,8 +2,10 @@ import { Input, Component,trigger, state, style, transition,animate } from '@ang
 
 import {Session} from '../session/session';
 
-const MARGIN_SHOW: string = '0px';
-const MARGIN_HIDE: string = '-200px';
+const MARGIN_LEFT_SHOW: string = '0px';
+const MARGIN_LEFT_HIDE: string = '-200px';
+const MARGIN_RIGHT_SHOW: string = '245px';
+const MARGIN_RIGHT_HIDE: string = 'px';
 
 @Component({
   selector: 'relative-column',
@@ -11,8 +13,8 @@ const MARGIN_HIDE: string = '-200px';
   styleUrls: ['./relative-column.component.css'],
   animations: [
 	  trigger('colMarginTrigger', [
-	    state('open', style({ 'margin-left': MARGIN_SHOW})),
-	    state('close', style({ 'margin-left': MARGIN_HIDE})),
+	    state('open', style({ 'margin-left': MARGIN_LEFT_SHOW})),
+	    state('close', style({ 'margin-left': MARGIN_LEFT_HIDE})),
 	    transition('close => open', animate('300ms ease-in')),
 	    transition('open => close', animate('300ms 300ms ease-out'))
 	  ]),

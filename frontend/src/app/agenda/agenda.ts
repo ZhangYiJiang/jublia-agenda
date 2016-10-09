@@ -4,5 +4,7 @@ export class Agenda {
   id: string;
   title: string;
   start: Date;
-  sessions: Session[]
+  end: Date;
+  sessions: Session[];
+  tracks: string[];
 }

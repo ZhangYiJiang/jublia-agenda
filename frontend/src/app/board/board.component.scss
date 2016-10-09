@@ -1,3 +1,28 @@
-.board-title {
-	background: gray;
+@import '../../../public/css/variables';
+
+.board, .row, .scroll{
+	display: flex;
+}
+
+.day {
+	flex-direction: column;	
+}
+
+.scroll {
+	overflow-x: scroll;
+}
+
+.day-title {
+	background: $color-primary;
+}
+
+.track-title {
+	background: $color-secondary;
+}
+
+.day-title, .track-title {
+	color: white;
+	margin-right: 10px;
+  height: 30px;
+  line-height: 30px;
 }

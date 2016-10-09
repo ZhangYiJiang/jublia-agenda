@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,sBAAuB;EACtB,UAAU,EAAE,KAAK",
+"mappings": "AACA,QAAS,CACR,UAAU,CAAE,OAAO,CACnB,MAAM,CAAE,KAAK,CACb,KAAK,CAAE,KAAK,CACZ,YAAY,CAAE,IAAI,CAClB,sBAAc,CACb,WAAW,CAAE,IAAI,CACjB,UAAU,CAAE,GAAG",
 "sources": ["absolute-column.component.scss"],
 "names": [],
 "file": "absolute-column.component.css"

@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAEA,aAAc,CACb,UAAU,CAAE,KAAK,CACjB,SAAS,CAAE,KAAK,CAChB,SAAS,CCDS,IAAI,CDEtB,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,GAAG,CACZ,aAAa,CAAE,GAAG,CAClB,UAAU,CAAE,2BAA2B",
+"mappings": "AAEA,aAAc,CACb,UAAU,CAAE,KAAK,CACjB,SAAS,CAAE,KAAK,CAChB,SAAS,CCDS,IAAI,CDEtB,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,GAAG,CACZ,aAAa,CAAE,GAAG,CAClB,UAAU,CAAE,2BAA2B,CACvC,MAAM,CAAE,IAAI",
 "sources": ["session.component.scss","../../../public/css/variables.scss"],
 "names": [],
 "file": "session.component.css"

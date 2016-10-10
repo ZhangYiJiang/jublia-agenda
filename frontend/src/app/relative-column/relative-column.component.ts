@@ -14,15 +14,11 @@ const MARGIN_RIGHT_HIDE: string = 'px';
   animations: [
 	  trigger('colMarginTrigger', [
 	    state('open', style({ 'margin-left': MARGIN_LEFT_SHOW})),
-	    state('close', style({ 'margin-left': MARGIN_LEFT_HIDE})),
-	    transition('close => open', animate('300ms ease-in')),
-	    transition('open => close', animate('300ms 300ms ease-out'))
+	    state('close', style({ 'margin-left': MARGIN_LEFT_HIDE}))
 	  ]),
 	  trigger('iconTrigger', [
       state('open', style({ transform: 'rotate(0deg)' })),
-      state('close', style({ transform: 'rotate(180deg)' })),
-      transition('close => open', animate('300ms 300ms ease-in')),
-      transition('open => close', animate('300ms 300ms'))
+      state('close', style({ transform: 'rotate(180deg)' }))
   	])
   ]
 })

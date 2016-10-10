@@ -20,12 +20,14 @@ class AgendaTest(TestCase):
         }))
 
     def test_end_at(self):
-        self.agenda.date = factory.today
+        self.assertIsNone(self.agenda.end_at)
 
         # Create some session and check that the end date for the last
+        self.agenda.start_at = factory.today
         for i in range(6):
             self.create_session(24 * 60 * i, 60)
         self.create_session(24 * 60 * 6, 120)
+
         self.assertEqual(self.agenda.end_at, factory.today + timedelta(minutes=24 * 60 * 6 + 120))
 
 

@@ -17,6 +17,16 @@ The backend uses [Django 1.10][django] and [Django Rest Framework 3.4][rest-fram
 9. Make sure that there are no errors, then open `localhost:8000/admin` to check that Django is working properly
 10. Use `python manage.py createsuperuser` to create a new admin account
 
+## Deployment 
+ 
+Deployment to the staging server is done using the included [Fabric][fabric] script. The included commands are 
+
+- **`frontend`** - Pull and build the frontend code 
+
+- **`backend`** - Pull and build the backend code 
+
+- **`deploy`** - Pull and deploy both the front and backend code 
 
 [django]: https://www.djangoproject.com/
 [rest-framework]: http://www.django-rest-framework.org/
+[fabric]: http://www.fabfile.org/installing.html

@@ -26,6 +26,8 @@ def deploy():
         with cd('frontend'):
             run('npm i --progress false')
             run('npm run build')
+            run('rm -rf serve/')
+            run('cp -r dist/ serve')
 
 
 def createsuperuser():

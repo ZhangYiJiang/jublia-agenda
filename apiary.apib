@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://52.220.148.170/api/
 
 # Jublia Agenda
 
@@ -31,12 +31,16 @@ All API responses are also be encoded as JSON. A 2xx status code is returned in
 the case of successful requests. 
 
 All successful `POST` requests creating a new resource will return a `Location` header 
-representing the URL of the newly created resource. 
+representing the URL of the newly created resource, and all `POST`, `PUT` and `PATCH`
+requests will return the new state of the object in the body. 
 
 #### Datetime format 
 
-All date and time are returned as ISO 8601 dates. This can be parsed 
-directly by [all modern browsers (IE9+)][date].
+All date and time are returned as ISO 8601 dates. This can be parsed directly by 
+[all modern browsers (IE9+)][date]. Session timing are specified using `start_at` 
+relative to the first day of the event and `duration` in minutes instead to allow
+for flexible handling of the event starting date. 
+
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#Browser_compatibility
 
@@ -58,17 +62,17 @@ and will carry a debugging message for the developer. This should
 
 #### Common error codes 
 
-- 403 Forbidden - the API endpoint requires authentication, and the request either did not
-provide authentication, provided invalid authentication or does not have authorization  
-- 404 Not Found - the specified record was not found. Note that this can also be returned
-if the API route is invalid 
-- 408 Method Not Allowed - the request method (POST, PUT, etc.) is not accepted on this route
-- 422 Unprocessable Entity - the request was not valid JSON, or did not pass 
-server-side validation
+| Status Code | Name               | Common Cause                                                                                                                     |
+| ----------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| 400         | Bad Request        | Request was not valid JSON, or did not pass server-side validation |
+| 401         | Unauthorized       | Endpoint requires authentication (in the form of JWT token) which the request did not provide |
+| 403         | Forbidden          | Token provided by the request does not have the authorization (usually only the owner of the object can edit or delete it) |
+| 404         | Not Found          | The specified record was not found. Note that this can also be returned if the API route is invalid |
+| 405         | Method Not Allowed | The request method (POST, PUT, DELETE etc.) is not accepted on this route |
 
 #### Validation 
 
-TODO - Document HTTP 422 errors and the fields where validation errors can be found
+TODO - Document HTTP 400 errors and the fields where validation errors can be found
 
 ## Pagination, Filtering and Sorting
 
@@ -180,7 +184,7 @@ the user here when they ask to reset their password.
 **Authentication Required.** Get profile information about the currently authenticated user. 
 
 + Response 200 
-    + Attributes (User)
+    + Attributes (User Item)
 
 ## PATCH /users/me
 
@@ -192,10 +196,16 @@ result in email verification or notification for security reasons.
 
 + Request
 
+    + Headers
+    
+            Authorization 
+
     + Attributes
         + company: Stinky Bottom's Discount Hat Emporium (string)
     
-+ Response 204
++ Response 200
+
+    + Attributes (User Item) 
 
 # Group Event Agenda
 
@@ -228,6 +238,8 @@ pick sessions they want to go for and register interest in them.
     + Headers
     
             Location: /1
+            
+    + Attributes (Agenda Item)
 
 ## GET /{agenda_id}
 
@@ -248,7 +260,9 @@ and agenda builder.
             "name": "CSSConf Asia"
         }
 
-+ Response 204
++ Response 200
+            
+    + Attributes (Agenda Item)
 
 ## DELETE /{agenda_id}
 
@@ -282,10 +296,12 @@ Returns a paginated list of all sessions from a event.
         + speakers (array[number]) - one or more speakers at the session
         + categories (array[Category]) - one or more categories which the session belongs to
 
-+ Response 204
++ Response 201
     + Headers
     
             Location: /1/session/1
+            
+    + Attributes (Session Item)
 
 ## GET /{agenda_id}/sessions/{session_id}
 
@@ -304,7 +320,9 @@ one specified in the request.
 
     + Attribute (Session)
 
-+ Response 204
++ Response 200
+
+    + Attributes (Session Item)
 
 ## PATCH /{agenda_id}/sessions/{session_id}
 
@@ -317,7 +335,9 @@ one specified in the request.
             "name": "My Wonderful New Session Name"
         }
 
-+ Response 204
++ Response 200
+
+    + Attributes (Session Item)
 
 ## DELETE /{agenda_id}/sessions/{session_id}
 
@@ -432,9 +452,7 @@ or guest of honor page.
 ### JWT (string)
 
 ### Item
-+ id: 1 (number, required)
-+ updated_at (datetime, required) - When this item was last updated
-+ created_at (datetime, required) - When this item was created
++ id: 1 (number)
 
 ### Error
 + error: "Invalid data" (string, required) - Description of the problem for the developer. This is for debugging purpose only and may change at any time. It is not meant to be displayed to the user.
@@ -451,13 +469,14 @@ or guest of honor page.
 + description (string) - Long description of the event 
 + location: Suntec City Hall 2A (string) - Where the event is happening
 + published: false (boolean, default) - Is the agenda publicly visible
-+ date (date) - When the event is starting
++ start_at (date) - When the event is starting
++ end_at (date) - When the event is ending, computed from the session information. 
 
 ### Session
 + name: The real story behind JS performance in mobile web and hybrid apps (string, required) - Name of the session
 + description (string) - Long description of the session
-+ start_at (datetime) - Time at which the session starts
-+ end_at (datetime) - Time at which the session ends. Leave out to create something that happens at a specific point in time, such as a deadline
++ start_at (number) - Starting time of the session in integer minutes relative to 0000 hrs on first day of the event
++ duration (number) - Durating of the session in integer minutes 
 
 ### Category
 + name: Technology Covered (string, required)

@@ -21,13 +21,13 @@ class Agenda(BaseModel):
 
     @property
     def end_at(self):
-        if not self.date:
+        if not self.start_at:
             return None
 
         end_at = F('duration') + F('start_at')
         latest = self.session_set.annotate(end_at=end_at)\
             .order_by('-end_at').first()
-        return self.date + timedelta(minutes=latest.end_at)
+        return self.start_at + timedelta(minutes=latest.end_at)
 
     def get_absolute_url(self):
         return reverse('agenda_detail', (self.pk,))

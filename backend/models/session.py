@@ -64,3 +64,11 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class Track(BaseModel):
+    name = models.CharField(max_length=120)
+    agenda = models.ForeignKey(Agenda)
+
+    def __str__(self):
+        return self.name

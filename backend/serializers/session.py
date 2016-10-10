@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import StringRelatedField
 
 from backend.models import Session, Category
+from backend.models import Track
 from backend.serializers.speaker import SpeakerSerializer
 from .base import BaseSerializer, AgendaPrimaryKeyRelatedField
 
@@ -28,6 +29,12 @@ class CategorySerializer(BaseSerializer):
     class Meta:
         model = Category
         fields = ('name', 'tags',)
+
+
+class TrackSerializer(BaseSerializer):
+    class Meta:
+        model = Track
+        fields = ('id', 'name',)
 
 
 class SessionViewSerializer(BaseSerializer):

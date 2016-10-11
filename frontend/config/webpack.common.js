@@ -31,13 +31,24 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: helpers.root('src', 'app'),
+        // loader: ExtractTextPlugin.extract('style', 'css?sourceMap!to-string!css-loader!postcss-loader')
         loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
+        // https://github.com/AngularClass/angular2-webpack-starter/wiki/How-to-include-PostCSS
+        // http://stackoverflow.com/questions/36122012/how-to-run-postcss-after-sass-loader-and-extracttextplugin-have-finished
       },
       {
         test: /\.css$/,
         include: helpers.root('src', 'app'),
-        loader: 'raw'
+        loader: 'to-string!css-loader!postcss-loader'
       }
+    ],
+    postcss: [
+      require('postcss-cssnext')({
+        browsers: ['ie >= 9', 'last 2 versions']
+      }),
+      require('autoprefixer')({
+        browsers: ['last 2 versions']
+      })
     ]
   },
 

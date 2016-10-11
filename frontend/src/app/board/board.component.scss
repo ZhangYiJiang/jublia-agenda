@@ -6,10 +6,12 @@
 
 .day {
 	flex-direction: column;	
+	flex-shrink: 0;
 }
 
 .scroll {
-	overflow-x: scroll;
+  flex: 1;
+  overflow-x: scroll;
 }
 
 .day-title {
@@ -23,6 +25,7 @@
 .day-title, .track-title {
 	color: white;
 	margin-right: 10px;
+	min-width: 200px;
   height: 30px;
   line-height: 30px;
 }

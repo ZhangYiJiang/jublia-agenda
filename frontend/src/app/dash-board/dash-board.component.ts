@@ -18,7 +18,6 @@ export class DashBoardComponent {
   ngOnInit() {
     this.agendaService.getAgendas()
     .then((agendas: Agenda[]) => {
-      console.log(agendas);
       this.agendas.push(...agendas);
     })
   }

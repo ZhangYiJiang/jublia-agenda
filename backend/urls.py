@@ -24,15 +24,22 @@ urlpatterns = [
     url(r'^(?P<pk>[1-9][0-9]*)$', views.AgendaDetail.as_view(), name='agenda_detail'),
 
     # Session listing, detail
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/sessions$',
-        views.SessionList.as_view(), name='session_list'),
     url(r'^(?P<agenda_id>[1-9][0-9]*)/sessions/(?P<pk>[1-9][0-9]*)',
         views.SessionDetail.as_view(), name='session_detail'),
+    url(r'^(?P<agenda_id>[1-9][0-9]*)/sessions$',
+        views.SessionList.as_view(), name='session_list'),
 
     # Session speakers
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers$',
-        backend.views.session_meta.SpeakerList.as_view(), name='speaker_list'),
     url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers/(?P<pk>[1-9][0-9]*)',
         backend.views.session_meta.SpeakerDetail.as_view(), name='speaker_detail'),
+    url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers$',
+        backend.views.session_meta.SpeakerList.as_view(), name='speaker_list'),
+
+    # Session tracks
+    url(r'^(?P<agenda_id>[1-9][0-9]*)/tracks/(?P<pk>[1-9][0-9]*)',
+        backend.views.session_meta.TrackDetail.as_view(), name='track_detail'),
+    url(r'^(?P<agenda_id>[1-9][0-9]*)/tracks$',
+        backend.views.session_meta.TrackList.as_view(), name='track_list'),
+
 
 ]

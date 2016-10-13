@@ -13,8 +13,8 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
 
     def validate(self, attrs):
         # Slightly hacky way to get Username = Email
-        if 'email' in attrs:
-            attrs['username'] = attrs['email']
+        if 'username' in attrs:
+            attrs['email'] = attrs['username']
 
         # Only validate password if it is in the set of data
         # If password does not exist during user creation then it will
@@ -45,7 +45,7 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
     @atomic
     def create(self, validated_data):
         profile = validated_data.pop('profile', {})
-        user = super().create(validated_data)
+        user = User.objects.create_user(**validated_data)
         self._update_profile(Profile(user=user), profile)
         return user
 

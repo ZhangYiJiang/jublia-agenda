@@ -86,3 +86,10 @@ def speaker(data=None, full=False):
         }
 
     return {**speaker, **data}
+
+
+def track(data=None):
+    track = {
+        'name': fake.bs(),
+    }
+    return {**track, **data}

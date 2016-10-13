@@ -24,3 +24,6 @@ def create_speaker(agenda, data):
     s = SpeakerSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
+
+def create_track(agenda, data):
+    s = TrackSerializer()

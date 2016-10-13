@@ -1,4 +1,14 @@
 <h1 class="board-title">Dashboard</h1>
+Email: <input #email />
+Password: <input #password />
+<button (click)="signUp(email.value, password.value); email.value=''; password.value=''">
+  Sign Up
+</button>
+<button (click)="logIn(email.value, password.value); email.value=''; password.value=''">
+  Login
+</button>
+<div class = "success" *ngIf="successMsg">{{successMsg}}</div>
+<div class="error" *ngIf="errorMsg">{{errorMsg}}</div>
 <p>All Agenda:</p>
 <ul class="agenda-list">
   <li *ngFor="let agenda of agendas | orderBy : 'id'"

@@ -1,5 +1,6 @@
-from fabric.api import *
 from contextlib import contextmanager as _contextmanager
+
+from fabric.api import *
 
 env.hosts = ['52.220.148.170', ]
 env.user = 'yijiang'
@@ -37,6 +38,8 @@ def backend():
         run('pip install -q -r requirements.txt')
         run('./manage.py migrate --noinput')
         run('./manage.py collectstatic --noinput')
+        # Test
+        run('./manage.py test backend.tests')
 
 
 def createsuperuser():

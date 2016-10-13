@@ -1,2 +1,14 @@
-.abs-col{background:#F2F2F2;height:640px;width:200px;margin-right:10px}.abs-col .session-list{padding-top:10px;margin-top:0px}
+.abs-col {
+  background: #F2F2F2;
+  height: 640px;
+  width: 200px;
+  margin-right: 10px; }
+  .abs-col .session-list {
+    padding-top: 10px;
+    margin-top: 0px;
+    min-height: 100px; }
+
+.no-drag {
+  pointer-events: none; }
+
 /*# sourceMappingURL=absolute-column.component.css.map */

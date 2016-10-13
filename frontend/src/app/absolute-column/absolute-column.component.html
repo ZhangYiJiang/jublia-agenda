@@ -1,6 +1,11 @@
 <div class="abs-col">
-	<ul class="session-list">
-	  <li *ngFor="let session of displayedSessions  | orderBy : 'order'">
+	<ul class="session-list" [dragula]='"column"' [dragulaModel]='displayedSessions'
+    [attr.data-column-type]="'absolute'"
+    [attr.data-date]="day.toISOString()"
+    [attr.data-track]="track">
+	  <li *ngFor="let session of displayedSessions"
+      [attr.data-session-id]="session.id"
+      [class.no-drag]="session.placeholder">
 	    <my-session [session]="session"></my-session>
 	  </li>
 	</ul>

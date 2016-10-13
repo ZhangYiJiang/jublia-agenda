@@ -1,4 +1,5 @@
-<div class="session-tile">
+<div *ngIf="session.placeholder" class="placeholder-session"></div>
+<div *ngIf="!session.placeholder" class="session-tile">
 	<div class="session-title">{{session.title}}</div>
 	<!-- session time format is 'HH:mm - HH:mm' -->
 	<div *ngIf="session.start" class="session-time">{{session.start.getHours()}}:{{session.start.getMinutes()<10?'0':''}}{{session.start.getMinutes()}} - {{session.end.getHours()}}:{{session.end.getMinutes()<10?'0':''}}{{session.end.getMinutes()}}</div>

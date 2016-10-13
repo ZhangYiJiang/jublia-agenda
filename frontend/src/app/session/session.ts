@@ -8,4 +8,5 @@ export class Session {
   start: Date;
   end: Date;
   venue: string;
+  placeholder: boolean;
 }

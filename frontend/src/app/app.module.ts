@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule }  from '@angular/platform-browser';
-import { RouterModule }   from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
+import { DragulaService, DragulaModule } from 'ng2-dragula/ng2-dragula';
 
 import { AppComponent } from './app.component';
 
@@ -28,6 +29,7 @@ import {Where} from './pipes/where.pipe';
       { path: '', component: DashBoardComponent },
       { path: '**', component: DashBoardComponent }
     ]),
+    DragulaModule
   ],
   declarations: [
     AppComponent,

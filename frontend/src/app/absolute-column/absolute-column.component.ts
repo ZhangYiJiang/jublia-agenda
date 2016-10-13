@@ -8,25 +8,30 @@ import { Session } from '../session/session';
   styleUrls: ['./absolute-column.component.css']
 })
 export class AbsoluteColumnComponent implements OnInit {
-	@Input() sessions: Session[];
-	@Input() day: Date;
-	@Input() track: string;
+  @Input() sessions: Session[];
+  @Input() day: Date;
+  @Input() track: string;
 
-	displayedSessions: Session[];
+  displayedSessions: Session[];
 
-	getDisplayedSessions(): Session[] {
-		let displayed:Session[] = [];
-		for (let session of this.sessions) {
-			if (session.pending === false 
-				//add session to every track if it doesn't have a specific track
-				&& (!session.track || session.track === this.track || session.track === '') 
-				&& (session.start.toDateString() === this.day.toDateString() || session.end.toDateString() === this.day.toDateString()))
-				displayed.push(session);
-		}
-		return displayed;
-	}
+  getDisplayedSessions(): Session[] {
+    let displayed:Session[] = [];
+    for (let session of this.sessions) {
+      if (session.pending === false 
+        //add session to every track if it doesn't have a specific track
+        && (!session.track || session.track === this.track || session.track === '') 
+        && (session.start.toDateString() === this.day.toDateString() || session.end.toDateString() === this.day.toDateString()))
+        displayed.push(session);
+    }
+    for (var i = 0; i < 10; ++i) {
+      displayed.push(<Session>{
+        placeholder: true
+      })
+    }
+    return displayed;
+  }
 
-	ngOnInit(): void {
-  	this.displayedSessions = this.getDisplayedSessions();
+  ngOnInit(): void {
+    this.displayedSessions = this.getDisplayedSessions();
   }
 }

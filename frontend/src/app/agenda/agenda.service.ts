@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Agenda }     from './agenda';
+import { Session }     from '../session/session';
 import { AGENDAS }     from './mock-agendas';
 
 @Injectable()
@@ -15,5 +16,10 @@ export class AgendaService {
         return Promise.resolve(AGENDAS[i]);  
       }
     }
+  }
+
+  updateSession(agendaId: string, newSession: Session) {
+    console.log('updating agenda ' + agendaId + ' session ' + newSession.id);
+    console.log(JSON.stringify(newSession, null, 4));
   }
 }

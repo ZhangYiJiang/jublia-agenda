@@ -32,8 +32,14 @@ class BaseAPITestCase(APITestCase):
 
     def assertCreatedOk(self, response):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.has_header('location'))
         self.assertNoEmptyFields(response.data)
+        self.assertTrue(response.has_header('location'))
+
+        # Check that the object has actually been created at the location
+        pk = response.data['id']
+        get_response = self.client.get(response['location'])
+        self.assertTrue(get_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(get_response.data['id'], pk)
 
     def assertEqualExceptMeta(self, original, response, msg=None):
         self.assertTrue(response.pop('id'))

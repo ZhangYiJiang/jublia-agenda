@@ -31,7 +31,7 @@ class SpeakerListTest(BaseAPITestCase):
     def test_create(self):
         self.login(self.user)
         response = self.client.post(self.url, factory.speaker())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertCreatedOk(response)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

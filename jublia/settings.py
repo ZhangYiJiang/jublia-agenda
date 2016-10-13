@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+
+from datetime import timedelta
+
 from .env import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -116,7 +119,10 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer'
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=3),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=60),
 }
 
 # Enable CORS for debugging

@@ -46,7 +46,7 @@ class BaseAPITestCase(APITestCase):
         response.pop('url', None)
         response.pop('created_at', None)
         response.pop('updated_at', None)
-        self.assertEqual(original, response, msg)
+        self.assertEqual(original, dict(response), msg)
 
     def assert401WhenUnauthenticated(self, url, method='post', data=None):
         response = getattr(self.client, method.lower())(url, data=data)

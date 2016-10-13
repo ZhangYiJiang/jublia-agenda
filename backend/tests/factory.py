@@ -39,7 +39,7 @@ def agenda(data=None, full=False):
             **agenda,
             'description': fake.paragraph(),
             'location': fake.street_address(),
-            'date': today.isoformat(),
+            'start_at': today.isoformat(),
         }
 
     return {**agenda, **data}
@@ -86,3 +86,13 @@ def speaker(data=None, full=False):
         }
 
     return {**speaker, **data}
+
+
+def track(data=None):
+    if data is None:
+        data = {}
+
+    track = {
+        'name': fake.bs(),
+    }
+    return {**track, **data}

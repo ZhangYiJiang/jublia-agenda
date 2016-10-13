@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework.reverse import reverse
 
 from .agenda import Agenda
 from .base import BaseModel
@@ -14,6 +15,9 @@ class Speaker(BaseModel):
     company_url = models.URLField(blank=True)
 
     agenda = models.ForeignKey(Agenda)
+
+    def get_absolute_url(self):
+        return reverse('speaker_detail', args=[self.agenda.pk, self.pk])
 
     def __str__(self):
         return '{} - {} at {}'.format(self.name, self.position, self.company)

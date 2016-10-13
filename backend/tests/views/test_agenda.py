@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda
-from backend.tests.views.test_views import BaseAPITestCase
+from .base import BaseAPITestCase
 
 
 class AgendaListTest(BaseAPITestCase):
@@ -30,10 +30,7 @@ class AgendaListTest(BaseAPITestCase):
     def test_create(self):
         self.authenticate()
         response = self.client.post(self.url, factory.agenda())
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.has_header('location'))
-        self.assertNoEmptyFields(response.data)
+        self.assertCreatedOk(response)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

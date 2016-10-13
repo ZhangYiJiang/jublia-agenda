@@ -15,19 +15,28 @@ def virtualenv():
 
 
 def deploy():
-    with virtualenv():
-        # Build backend
-        run('git pull')
-        run('pip install -q -r requirements.txt')
-        run('./manage.py migrate --noinput')
-        run('./manage.py collectstatic --noinput')
+    backend()
+    frontend()
 
+
+def frontend():
+    with cd(env.directory):
+        run('git pull')
         # Build frontend
         with cd('frontend'):
             run('npm i --progress false')
             run('npm run build')
             run('rm -rf serve/')
             run('cp -r dist/ serve')
+
+
+def backend():
+    with virtualenv():
+        run('git pull')
+        # Build backend
+        run('pip install -q -r requirements.txt')
+        run('./manage.py migrate --noinput')
+        run('./manage.py collectstatic --noinput')
 
 
 def createsuperuser():

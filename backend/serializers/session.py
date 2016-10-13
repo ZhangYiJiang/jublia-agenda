@@ -1,33 +1,16 @@
-from django.db.transaction import atomic
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import StringRelatedField
 
-from backend.models import Session, Category
-from backend.serializers.speaker import SpeakerSerializer
+from backend.models import Session
 from .base import BaseSerializer, AgendaPrimaryKeyRelatedField
+from .speaker import SpeakerSerializer
 
 
-class CategorySerializer(BaseSerializer):
-    tags = StringRelatedField(many=True)
+class DefaultTrack:
+    def set_context(self, field):
+        self.agenda = field.context['agenda']
 
-    @atomic
-    def create(self, validated_data):
-        tags = validated_data.pop('tags', [])
-        category = super().create(validated_data)
-        return self._update_tags(category, tags)
-
-    @atomic
-    def update(self, instance, validated_data):
-        self._update_tags(instance, validated_data.pop('tags', []))
-        return super().update(instance, validated_data)
-
-    @staticmethod
-    def _update_tags(category, tags):
-        category.sync_tags(tags)
-
-    class Meta:
-        model = Category
-        fields = ('name', 'tags',)
+    def __call__(self, *args, **kwargs):
+        return self.agenda.track_set.first()
 
 
 class SessionViewSerializer(BaseSerializer):
@@ -35,10 +18,11 @@ class SessionViewSerializer(BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers',)
+        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',)
 
 
 class SessionUpdateSerializer(BaseSerializer):
+    track = AgendaPrimaryKeyRelatedField(klass='Track', default=DefaultTrack())
     speakers = AgendaPrimaryKeyRelatedField(many=True, required=False, klass='Speaker')
 
     def validate(self, attrs):
@@ -57,4 +41,4 @@ class SessionUpdateSerializer(BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers',)
+        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',)

@@ -50,7 +50,7 @@ def session(data=None, full=False):
         data = {}
 
     session = {
-        'name': fake.text(max_nb_chars=160),
+        'name': fake.text(max_nb_chars=160).split('.')[0],
     }
 
     if full:

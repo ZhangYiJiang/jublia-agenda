@@ -14,19 +14,12 @@ class SpeakerListTest(BaseAPITestCase):
         self.url = reverse('speaker_list', [self.agenda.pk])
 
     def test_list(self):
-        speaker_data = factory.speaker()
-        create_speaker(self.agenda, speaker_data)
+        first_speaker = factory.speaker()
+        create_speaker(self.agenda, first_speaker)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data))
-        self.assertEqualExceptMeta(speaker_data, response.data[0])
-
-        speaker_data = factory.speaker(full=True)
-        create_speaker(self.agenda, speaker_data)
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, len(response.data))
-        self.assertEqualExceptMeta(speaker_data, response.data[1])
+        self.assertEqualExceptMeta(first_speaker, response.data[0])
 
     def test_create(self):
         self.login(self.user)

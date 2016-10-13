@@ -34,11 +34,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['user']:
-            user = User.objects.get(email=options['user'])
+            user = User.objects.get(username=options['user'])
         else:
             user_data = factory.user(full=True)
             user = create_user(user_data)
-            self.out('Username: ' + user_data['email'])
+            self.out('Username: ' + user_data['username'])
             self.out('Password: ' + user_data['password'])
 
         agenda_data = factory.agenda(full=True)

@@ -54,7 +54,6 @@ class SessionDetailTest(BaseAPITestCase):
         response.pop('track')
         self.assertEqualExceptMeta(original, response)
 
-
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())

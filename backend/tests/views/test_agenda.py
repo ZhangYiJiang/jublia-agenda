@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda
-from backend.tests.views.test_views import BaseAPITestCase
+from .base import BaseAPITestCase
 
 
 class AgendaListTest(BaseAPITestCase):

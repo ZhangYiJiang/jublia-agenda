@@ -2,6 +2,7 @@ from django.conf.urls import url
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
+import backend.views.session_meta
 from . import views
 
 urlpatterns = [
@@ -30,8 +31,8 @@ urlpatterns = [
 
     # Session speakers
     url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers$',
-        views.SpeakerList.as_view(), name='speaker_list'),
+        backend.views.session_meta.SpeakerList.as_view(), name='speaker_list'),
     url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers/(?P<pk>[1-9][0-9]*)',
-        views.SpeakerDetail.as_view(), name='speaker_detail'),
+        backend.views.session_meta.SpeakerDetail.as_view(), name='speaker_detail'),
 
 ]

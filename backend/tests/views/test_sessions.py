@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import create_session, create_user, create_agenda, create_speaker, create_track
-from backend.tests.views.test_views import BaseAPITestCase
+from .base import BaseAPITestCase
 
 
 class SessionListTest(BaseAPITestCase):

@@ -1,8 +1,8 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
-from backend.models import Track
+from backend.models import Track, Speaker
 from backend.permissions import IsAgendaOwnerOrReadOnly
-from backend.serializers import TrackSerializer
+from backend.serializers import TrackSerializer, SpeakerSerializer
 from .base import AgendaContextMixin
 
 
@@ -20,3 +20,19 @@ class TrackDetail(AgendaContextMixin, RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Track.objects.filter(agenda=self.kwargs['agenda_id'])
+
+
+class SpeakerList(AgendaContextMixin, ListCreateAPIView):
+    permission_classes = (IsAgendaOwnerOrReadOnly,)
+    serializer_class = SpeakerSerializer
+
+    def get_queryset(self):
+        return Speaker.objects.filter(agenda=self.kwargs['agenda_id'])
+
+
+class SpeakerDetail(AgendaContextMixin, RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAgendaOwnerOrReadOnly,)
+    serializer_class = SpeakerSerializer
+
+    def get_queryset(self):
+        return Speaker.objects.filter(agenda=self.kwargs['agenda_id'])

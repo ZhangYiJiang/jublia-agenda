@@ -1,4 +1,4 @@
-from backend.serializers import UserSerializer, AgendaSerializer, SessionUpdateSerializer
+from backend.serializers import UserSerializer, AgendaSerializer, SessionUpdateSerializer, TrackSerializer
 from backend.serializers.speaker import SpeakerSerializer
 
 
@@ -25,5 +25,6 @@ def create_speaker(agenda, data):
     s.is_valid(True)
     return s.save()
 
+
 def create_track(agenda, data):
-    s = TrackSerializer()
+    s = TrackSerializer(data=data, context={'agenda': agenda})

@@ -14,15 +14,24 @@ class Tag(BaseModel):
         return self.name
 
 
+class Track(BaseModel):
+    name = models.CharField(max_length=120)
+    agenda = models.ForeignKey(Agenda)
+
+    def __str__(self):
+        return self.name
+
+
 class Session(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     start_at = models.IntegerField(blank=True, null=True)
     duration = models.IntegerField(blank=True, null=True)
+
     agenda = models.ForeignKey(Agenda)
     tags = models.ManyToManyField(Tag)
-
     speakers = models.ManyToManyField(Speaker)
+    track = models.ForeignKey(Track)
 
     @property
     def owner(self):
@@ -61,14 +70,6 @@ class Category(BaseModel):
         # Add tags which didn't exist before
         for name in tags - existing:
             self.tag_set.add(Tag.objects.create(name=name, category=self))
-
-    def __str__(self):
-        return self.name
-
-
-class Track(BaseModel):
-    name = models.CharField(max_length=120)
-    agenda = models.ForeignKey(Agenda)
 
     def __str__(self):
         return self.name

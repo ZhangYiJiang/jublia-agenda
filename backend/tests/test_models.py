@@ -12,11 +12,13 @@ class AgendaTest(TestCase):
         self.user = User.objects.create(**factory.user())
         self.profile = Profile.objects.create(user=self.user)
         self.agenda = Agenda.objects.create(profile=self.profile, name='Test')
+        self.track = Track.objects.create(agenda=self.agenda)
 
     def create_session(self, start, duration):
         return Session.objects.create(agenda=self.agenda, **factory.session(data={
             'start_at': start,
             'duration': duration,
+            'track': self.track,
         }))
 
     def test_end_at(self):

@@ -13,8 +13,8 @@ class SessionListTest(BaseAPITestCase):
         self.url = reverse('session_list', args=[self.agenda.pk])
 
     def test_list(self):
-        self.agenda.session_set.create(**factory.session())
-        self.agenda.session_set.create(**factory.session(full=True))
+        create_session(self.agenda, factory.session())
+        create_session(self.agenda, factory.session(full=True))
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
@@ -50,6 +50,11 @@ class SessionListTest(BaseAPITestCase):
 
 
 class SessionDetailTest(BaseAPITestCase):
+    def assertSessionEqual(self, original, response, msg=None):
+        response.pop('track')
+        self.assertEqualExceptMeta(original, response)
+
+
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -106,12 +111,12 @@ class SessionDetailTest(BaseAPITestCase):
         data = factory.session(full=True)
         response = self.client.put(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqualExceptMeta(data, response.data)
+        self.assertSessionEqual(data, response.data)
 
         data = factory.session()
         response = self.client.put(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqualExceptMeta(data, response.data)
+        self.assertSessionEqual(data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url, 'delete')

@@ -16,7 +16,7 @@ def user(data=None, full=False):
         data = {}
 
     user = {
-        'email': fake.email(),
+        'username': fake.email(),
         'password': fake.password(),
     }
 
@@ -39,7 +39,7 @@ def agenda(data=None, full=False):
             **agenda,
             'description': fake.paragraph(),
             'location': fake.street_address(),
-            'date': today.isoformat(),
+            'start_at': today.isoformat(),
         }
 
     return {**agenda, **data}
@@ -50,7 +50,7 @@ def session(data=None, full=False):
         data = {}
 
     session = {
-        'name': fake.text(max_nb_chars=160),
+        'name': fake.text(max_nb_chars=160).split('.')[0],
     }
 
     if full:
@@ -86,3 +86,13 @@ def speaker(data=None, full=False):
         }
 
     return {**speaker, **data}
+
+
+def track(data=None):
+    if data is None:
+        data = {}
+
+    track = {
+        'name': fake.bs(),
+    }
+    return {**track, **data}

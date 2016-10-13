@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
         agenda_data = factory.agenda(full=True)
         agenda = create_agenda(user, agenda_data)
-        self.stdout.write(self.style.SUCCESS('Creating event: ' + agenda_data['name']))
+        self.out('Creating event: ' + agenda_data['name'])
 
         tracks = [agenda.track_set.first()]
         speakers = []
@@ -52,10 +52,10 @@ class Command(BaseCommand):
         for i in range(options['tracks'] - 1):
             tracks.append(create_track(agenda))
 
-        for i in range(options['speakers'] - 1):
+        for i in range(options['speakers']):
             speakers.append(create_speaker(agenda, factory.speaker(full=coin())))
 
-        for i in range(options['sessions'] - 1):
+        for i in range(options['sessions']):
             if coin():
                 session_data = factory.session()
                 sessions.append(create_session(agenda, session_data))

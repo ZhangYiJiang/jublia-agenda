@@ -45,3 +45,8 @@ def backend():
 def createsuperuser():
     with virtualenv():
         run('./manage.py createsuperuser')
+
+
+def seed(arguments=''):
+    with virtualenv():
+        run('./manage.py seed ' + arguments)

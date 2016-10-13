@@ -9,13 +9,10 @@ from .base import HideFieldsMixin, BaseSerializer
 
 
 class UserSerializer(HideFieldsMixin, BaseSerializer):
+    username = serializers.EmailField(required=True)
     company = serializers.CharField(source='profile.company', allow_blank=True, required=False)
 
     def validate(self, attrs):
-        # Slightly hacky way to get Username = Email
-        if 'username' in attrs:
-            attrs['email'] = attrs['username']
-
         # Only validate password if it is in the set of data
         # If password does not exist during user creation then it will
         # raise a ValidationError on the parent class' validate function
@@ -40,7 +37,13 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
             if errors:
                 raise serializers.ValidationError(errors)
 
-        return super().validate(attrs)
+        validated_data = super().validate(attrs)
+
+        # Slightly hacky way to get Username = Email
+        if 'username' in attrs:
+            attrs['email'] = attrs['username']
+
+        return validated_data
 
     @atomic
     def create(self, validated_data):
@@ -64,6 +67,6 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'company',)
+        fields = ('username', 'password', 'company',)
         profile_fields = ('company',)
         hidden_fields = ('password',)

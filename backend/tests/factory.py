@@ -16,7 +16,7 @@ def user(data=None, full=False):
         data = {}
 
     user = {
-        'email': fake.email(),
+        'username': fake.email(),
         'password': fake.password(),
     }
 

@@ -30,6 +30,11 @@ class BaseAPITestCase(APITestCase):
             except TypeError:
                 pass
 
+    def assertCreatedOk(self, response):
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.has_header('location'))
+        self.assertNoEmptyFields(response.data)
+
     def assertEqualExceptMeta(self, original, response, msg=None):
         self.assertTrue(response.pop('id'))
         response.pop('url', None)

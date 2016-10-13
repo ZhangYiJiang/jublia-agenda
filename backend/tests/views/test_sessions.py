@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
-from backend.tests.helper import create_session, create_user, create_agenda, create_speaker
+from backend.tests.helper import create_session, create_user, create_agenda, create_speaker, create_track
 from backend.tests.views.test_views import BaseAPITestCase
 
 
@@ -27,20 +27,30 @@ class SessionListTest(BaseAPITestCase):
     def test_create(self):
         self.login(self.user)
         response = self.client.post(self.url, factory.session())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.has_header('location'))
-        self.assertNoEmptyFields(response.data)
+        self.assertCreatedOk(response)
 
-        response = self.client.post(self.url, {
-            **factory.session(full=True),
-            'speakers': [
-                create_speaker(self.agenda, factory.speaker()).pk,
-                create_speaker(self.agenda, factory.speaker(full=True)).pk,
-            ]
-        })
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.has_header('location'))
-        self.assertNoEmptyFields(response.data)
+    def test_create_full(self):
+        self.login(self.user)
+        track = create_track(self.agenda)
+        speakers = [
+            create_speaker(self.agenda, factory.speaker()),
+            create_speaker(self.agenda, factory.speaker(full=True)),
+        ]
+
+        response = self.client.post(self.url, factory.speaker(full=True, data={
+            'speakers': [s.pk for s in speakers],
+            'track': track.pk,
+        }))
+
+        self.assertCreatedOk(response)
+
+        pk = response.data['id']
+        self.assertTrue(track.session_set.filter(pk=pk).exists())
+        for speaker in speakers:
+            self.assertTrue(speaker.session_set.filter(pk=pk).exists())
+
+    def test_create_on_track(self):
+        self.login(self.user)
 
     def test_create_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

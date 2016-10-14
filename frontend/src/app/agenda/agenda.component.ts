@@ -19,16 +19,12 @@ export class AgendaComponent implements OnInit{
   agenda: Agenda;
   
   ngOnInit() {
-    console.log('onInit');
-    console.log(this.agenda);
     this.route.params.forEach((params: Params) => {
       let id = params['id'];
-      this.agenda = this.agendaService.getAgendaById(id);
-     /* this.agendaService.getAgendaById(id).then(agenda => {
-        this.agenda = agenda;
-        console.log('added agenda');
-        console.log(this.agenda);
-      });*/
+      this.agendaService.getAgendaById(id).subscribe(
+        agenda => this.agenda = agenda,
+        error =>  console.log(error)
+      );
     });
   }
 }

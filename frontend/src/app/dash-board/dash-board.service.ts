@@ -58,6 +58,8 @@ export class DashBoardService {
       localStorage.setItem(this.TOKEN_NAME,data.token);
       this.user.authed = true;
       this.httpAuthOptions = GlobalVariable.REQUEST_OPTION_WITH_TOKEN;
+      console.log(localStorage.getItem(this.TOKEN_NAME));
+      console.log(this.httpAuthOptions);
       return true;
     }else {
       this.user.authed = false;

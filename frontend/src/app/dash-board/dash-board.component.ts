@@ -51,10 +51,6 @@ export class DashBoardComponent implements OnInit {
     );
   }
 
-  logOut() {
-    this.dashBoardService.logOut();
-  }
-
   getAgendas() {
     this.dashBoardService.getAgendas().subscribe(
       data => {

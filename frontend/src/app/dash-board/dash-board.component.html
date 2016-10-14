@@ -11,7 +11,6 @@
 	  Login
 	</button>
 </div>
-<button *ngIf="user.authed" (click)="logOut()">Log Out</button>
 <div class = "success" *ngIf="successMsg">{{successMsg}}</div>
 <div class="error" *ngIf="errorMsg">{{errorMsg}}</div>
 <div *ngIf = "user.authed">

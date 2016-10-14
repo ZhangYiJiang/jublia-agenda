@@ -16,6 +16,7 @@ import { AgendaService } from './agenda/agenda.service.ts';
 import { DashBoardService } from './dash-board/dash-board.service.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
+import { HttpClient } from './util/http.util.service';
 
 import {OrderBy} from './pipes/orderby.pipe';
 import {Where} from './pipes/where.pipe';
@@ -50,7 +51,8 @@ import { LoggedInGuard } from './auth.guard.ts';
     AgendaService,
     DashBoardService,
     LoggedInGuard,
-    DOMUtilService
+    DOMUtilService,
+    HttpClient
   ],
   bootstrap: [ AppComponent ]
 })

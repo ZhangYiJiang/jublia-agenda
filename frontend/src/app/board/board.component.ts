@@ -90,8 +90,8 @@ export class BoardComponent implements OnInit {
     let dates: Date[] = [];
     // create cloned Date to avoid mutating start date
     // TODO: use moment.js to refactor this part
-    let tempDate: Date = new Date(this.agenda.start.getTime());
-    while (tempDate <= this.agenda.end) {
+    let tempDate: Date = new Date(this.agenda.start_at);
+    while (tempDate <= new Date(this.agenda.end_at)) {
       dates.push(new Date(tempDate.getTime()));
       tempDate.setDate(tempDate.getDate() + 1);
     }

@@ -77,11 +77,15 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertEqual(response.data['name'], self.session_data['name'])
         self.assertNoEmptyFields(response.data)
 
+        # Check relations
+        self.assertTrue('name' in response.data['track'])
+
     def test_speaker(self):
-        speaker = create_speaker(self.agenda, factory.speaker())
+        speaker_data = factory.speaker()
+        speaker = create_speaker(self.agenda, speaker_data)
         self.session.speakers.add(speaker)
         response = self.client.get(self.url)
-        self.assertEqual(speaker.pk, response.data['speakers'][0])
+        self.assertEqualExceptMeta(speaker_data, response.data['speakers'][0])
 
     def test_delete(self):
         self.login(self.user)

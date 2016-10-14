@@ -1,5 +1,4 @@
-from backend.serializers import UserSerializer, AgendaSerializer, SessionUpdateSerializer, TrackSerializer
-from backend.serializers.speaker import SpeakerSerializer
+from backend.serializers import *
 
 
 def create_user(data):

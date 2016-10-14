@@ -2,7 +2,6 @@ from rest_framework.fields import CharField
 
 from backend.models import Track
 from .base import BaseSerializer
-from .session import SessionViewSerializer
 
 
 class DefaultTrack:
@@ -24,11 +23,3 @@ class BaseTrackSerializer(BaseSerializer):
     class Meta:
         model = Track
         fields = ('id', 'name',)
-
-
-class TrackSerializer(BaseTrackSerializer):
-    sessions = SessionViewSerializer(many=True, required=False, source='session_set')
-
-    class Meta:
-        model = Track
-        fields = ('id', 'name', 'sessions',)

@@ -13,7 +13,7 @@ class DefaultTrack:
         return 'Track {}'.format(count + 1)
 
 
-class TrackSerializer(BaseSerializer):
+class BaseTrackSerializer(BaseSerializer):
     name = CharField(default=DefaultTrack())
 
     def validate(self, attrs):

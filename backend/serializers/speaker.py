@@ -2,7 +2,7 @@ from backend.models import Speaker
 from .base import BaseSerializer
 
 
-class SpeakerSerializer(BaseSerializer):
+class BaseSpeakerSerializer(BaseSerializer):
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']
         return super().create(validated_data)

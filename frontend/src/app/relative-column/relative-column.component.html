@@ -1,7 +1,7 @@
 <div class="rel-col" [@colMarginTrigger]="colState">
   <ul class="session-list" [dragula]='"column"' [dragulaModel]='sessions'
     [attr.data-column-type]="'relative'">
-    <li *ngFor="let session of sessions"
+    <li class="session-list-item" *ngFor="let session of sessions"
       [attr.data-session-id]="session.id">
       <my-session [session]="session"></my-session>
     </li>

@@ -4,11 +4,11 @@ import { Session } from '../session/session';
 export var SESSIONS: Session[] = 
   [
   <Session>{
-      id: '1',
-      title: 'session 1',
-      venue: 'LT 19',
-      order: 1,
-      pending: true
+    id: '1',
+    title: 'session 1',
+    venue: 'LT 19',
+    order: 1,
+    pending: true
   }, 
   <Session>{
     id: '2',
@@ -25,6 +25,7 @@ export var SESSIONS: Session[] =
     order: 6,
     start: new Date(2016,5,24,12),
     end: new Date(2016,5,24,13),
+    duration: 60,
     pending: false
   }, 
   <Session>{
@@ -34,7 +35,8 @@ export var SESSIONS: Session[] =
     track: 'iOS',
     order: 7,
     start: new Date(2016,7,20,12),
-    end: new Date(2016,7,20,13),
+    end: new Date(2016,7,20,14),
+    duration: 120,
     pending: false
   }, 
   <Session>{
@@ -45,6 +47,7 @@ export var SESSIONS: Session[] =
     order: 7,
     start: new Date(2016,7,20,12),
     end: new Date(2016,7,20,13),
+    duration: 60,
     pending: false
   }, 
   <Session>{
@@ -55,6 +58,7 @@ export var SESSIONS: Session[] =
     track: 'Android',
     start: new Date(2016,7,20,8),
     end: new Date(2016,7,20,9),
+    duration: 60,
     pending: false
   }
   ];

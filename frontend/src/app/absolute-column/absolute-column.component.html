@@ -1,11 +1,15 @@
 <div class="abs-col">
-	<ul class="session-list" [dragula]='"column"' [dragulaModel]='displayedSessions'
+	<ul class="session-list"
+    [dragula]='"column"' [dragulaModel]='displayedSessions'
     [attr.data-column-type]="'absolute'"
     [attr.data-date]="day.toISOString()"
     [attr.data-track]="track">
-	  <li *ngFor="let session of displayedSessions"
+	  <li class="session-list-item" *ngFor="let session of displayedSessions"
       [attr.data-session-id]="session.id"
-      [class.no-drag]="session.placeholder">
+      [attr.data-session-placeholder]="session.placeholder"
+      [attr.data-session-start]="session.start?session.start.toISOString():''"
+      [attr.data-session-duration]="session.duration"
+      [class.placeholder]="session.placeholder">
 	    <my-session [session]="session"></my-session>
 	  </li>
 	</ul>

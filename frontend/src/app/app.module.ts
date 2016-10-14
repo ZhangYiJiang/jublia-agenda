@@ -15,6 +15,8 @@ import { DashBoardComponent } from './dash-board/dash-board.component.ts';
 import { AgendaComponent } from './agenda/agenda.component.ts';
 import { AgendaService } from './agenda/agenda.service.ts';
 
+import { DOMUtilService } from './util/dom.util.service';
+
 import {OrderBy} from './pipes/orderby.pipe';
 import {Where} from './pipes/where.pipe';
 
@@ -27,7 +29,7 @@ import {Where} from './pipes/where.pipe';
     RouterModule.forRoot([
       { path: 'agenda/:id', component: AgendaComponent },
       { path: '', component: DashBoardComponent },
-      { path: '**', component: DashBoardComponent }
+      { path: '**', component: DashBoardComponent } // TODO: implement 404 page component
     ]),
     DragulaModule
   ],
@@ -43,7 +45,8 @@ import {Where} from './pipes/where.pipe';
     Where
   ],
   providers: [
-    AgendaService
+    AgendaService,
+    DOMUtilService
   ],
   bootstrap: [ AppComponent ]
 })

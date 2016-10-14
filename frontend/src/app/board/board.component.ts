@@ -7,6 +7,8 @@ import {Session} from '../session/session';
 import {Agenda} from '../agenda/agenda';
 import {AgendaService} from '../agenda/agenda.service';
 
+import { DOMUtilService } from '../util/dom.util.service';
+
 @Component({
   selector: 'board',
   templateUrl: './board.component.html',
@@ -22,25 +24,15 @@ export class BoardComponent implements OnInit {
   nonPendingSessions: Session[];
 
   constructor(private dragulaService: DragulaService,
-    private agendaService: AgendaService) {
-    dragulaService.drop.subscribe((value: any) => {
-      // console.log(`drop: ${value[0]}`);
+    private agendaService: AgendaService,
+    private domUtilService: DOMUtilService) {
+    dragulaService.dropModel.subscribe((value: any) => {
+      // console.log(`drop: ${value}`);
       this.onDrop(value.slice(1));
     });
-    dragulaService.over.subscribe((value: any) => {
-      // console.log(`over: ${value[0]}`);
-      this.onOver(value.slice(1));
-    });
   }
 
-  private onOver(args: any) {
-    let [e, el, container] = args;
-    console.log(e);
-    console.log(el);
-    console.log(container);
-  }
-
-  private onDrop(args: any) {
+  private onDrop(args: [HTMLElement, HTMLElement]) {
     let [e, el] = args;
     // console.log('drop board');
     // console.log(e);
@@ -51,13 +43,25 @@ export class BoardComponent implements OnInit {
       console.log(sessionId + ' moved to pendng');
       this.changeSessionToPending(sessionId);
       console.log(this.agenda.sessions);
-    } else {
-      console.log(sessionId + ' moved to:');
-      let columnDate = new Date(el.getAttribute('data-date'));
-      console.log(columnDate.toLocaleString());
-      console.log(el.getAttribute('data-track'));
     }
-    // console.log(this.agenda.sessions);
+  }
+
+  getSessionsForColumn(columnDate: Date, columnTrack: string): Session[] {
+    let displayed:Session[] = [];
+    for (let session of this.nonPendingSessions) {
+      if (session.pending === false 
+        //add session to every track if it doesn't have a specific track
+        && (!session.track || session.track === columnTrack || session.track === '') 
+        && (session.start.toDateString() === columnDate.toDateString() || session.end.toDateString() === columnDate.toDateString()))
+        displayed.push(session);
+    }
+    for (var i = 0; i < 10; ++i) {
+      displayed.push(<Session>{
+        placeholder: true
+      })
+    }
+
+    return displayed;
   }
 
   changeSessionToPending(sessionId: string) {

@@ -20,13 +20,17 @@ export class DashBoardComponent implements OnInit {
   agendas: Agenda[] = [];
   errorMsg: string;
   successMsg: string;
+  user = this.dashBoardService.user;
 
   ngOnInit() {
-    this.agendaService.getAgendas()
+    /*this.agendaService.getAgendas()
     .then((agendas: Agenda[]) => {
       //console.log(agendas);
       this.agendas.push(...agendas);
-    })
+    })*/
+    if (this.user.authed) {
+      this.getAgendas();
+    }
   }
 
   signUp (email: string, password: string) {
@@ -35,8 +39,8 @@ export class DashBoardComponent implements OnInit {
       return;
     }
     this.dashBoardService.signUp(email, password).subscribe(
-      status => {if (status === 201) this.successMsg = 
-        'Sign Up success! Please check your email and click on the verification link.'},
+      status => { if (status === 201) this.successMsg = 
+        'Sign Up success! Please check your email and click on the verification link.' },
       error =>  this.errorMsg = <any>error
     );
   }
@@ -47,7 +51,21 @@ export class DashBoardComponent implements OnInit {
       return;
     }
     this.dashBoardService.logIn(email, password).subscribe(
-      success => {this.successMsg = "Login success!"},
+      success => { this.successMsg = "Login success!"; this.getAgendas(); },
+      error =>  this.errorMsg = <any>error
+    );
+  }
+
+  logOut (){
+    this.agendas = [];
+    this.dashBoardService.logOut();
+  }
+  getAgendas () {
+    this.dashBoardService.getAgendas().subscribe(
+      data => {
+        console.log(data);
+        this.agendas.push(...data)
+      },
       error =>  this.errorMsg = <any>error
     );
   }

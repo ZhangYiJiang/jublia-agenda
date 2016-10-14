@@ -6,9 +6,19 @@ import { Observable }     from 'rxjs/Observable';
 @Injectable()
 export class DashBoardService {
   private httpOptions = GlobalVariable.REQUEST_OPTION;
-  private isLoggedIn = false;
+  private httpAuthOptions : RequestOptions;
+  private TOKEN_NAME = GlobalVariable.TOKEN_NAME;
 
-  constructor (private http: Http) {}
+  user = { authed:false };
+
+  constructor (private http: Http) {
+    //check if user has logged in
+    if (localStorage.getItem(this.TOKEN_NAME)) {
+      this.user.authed = true;
+      this.httpAuthOptions = GlobalVariable.REQUEST_OPTION_WITH_TOKEN;
+      //console.log(this.httpAuthOptions);
+    }
+  }
   
   signUp(email: string, password: string): Observable<number> {
     let body = JSON.stringify({ username: email, password: password});
@@ -18,7 +28,7 @@ export class DashBoardService {
                     .catch(this.handleError);
   } 
 
-  logIn(email: string, password: string): Observable<Object> {
+  logIn(email: string, password: string): Observable<boolean> {
     let body = JSON.stringify({ username: email, password: password});
     console.log(this.httpOptions);
     return this.http.post('/api/users/auth', body, this.httpOptions)
@@ -27,15 +37,27 @@ export class DashBoardService {
                     .catch(this.handleError);
   } 
 
+  logOut() {
+    this.user.authed = false;
+    localStorage.removeItem(this.TOKEN_NAME);
+  }
+
+  getAgendas(): Observable<any> {
+    return this.http.get('/api/agendas', this.httpAuthOptions)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
   //set the scope of this to the class
   private storeToken = (data: any) =>  {
     if (data.token) {
       console.log(data.token);
-      localStorage.setItem('auth_token',data.token);
-      this.isLoggedIn = true;
+      localStorage.setItem(this.TOKEN_NAME,data.token);
+      this.user.authed = true;
+      this.httpAuthOptions = GlobalVariable.REQUEST_OPTION_WITH_TOKEN;
       return true;
     }else {
-      this.isLoggedIn = false;
+      this.user.authed = false;
       return false;
     }
   }
@@ -44,8 +66,8 @@ export class DashBoardService {
     return res.status;
   }
   private extractData(res: Response) {
-    let body = res.json();
-    return body;
+    console.log(res.json());
+    return res.json();
   }
   private handleError (error: any) {
     let errMsg = (error.message) ? error.message :
@@ -53,7 +75,5 @@ export class DashBoardService {
     console.error(errMsg);
     return Observable.throw(errMsg);
   }
-  hasLoggedIn() {
-    return this.isLoggedIn;
-  }
+  
 }

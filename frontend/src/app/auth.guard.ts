@@ -4,9 +4,9 @@ import { DashBoardService } from './dash-board/dash-board.service.ts';
 
 @Injectable()
 export class LoggedInGuard implements CanActivate {
-  constructor(private auth: DashBoardService) {}
+  constructor(private dashBoardService: DashBoardService) {}
 
   canActivate() {
-    return this.auth.hasLoggedIn();
+    return this.dashBoardService.user.authed;
   }
 }

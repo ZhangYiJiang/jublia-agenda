@@ -3,7 +3,7 @@
     [attr.data-column-type]="'relative'">
     <li class="session-list-item" *ngFor="let session of sessions"
       [attr.data-session-id]="session.id">
-      <my-session [session]="session"></my-session>
+      <my-session [session]="session" [offsetDate]="offsetDate"></my-session>
     </li>
   </ul>
   <button class="pending-toggle" (click)="toggleState()">

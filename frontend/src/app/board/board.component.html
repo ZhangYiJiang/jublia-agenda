@@ -1,5 +1,5 @@
 <div class="board">
-  <relative-column [sessions]="pendingSessions">
+  <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate">
   </relative-column>
   <div class="scroll">
   <div class="day" *ngFor="let date of eventDates">
@@ -7,7 +7,7 @@
     <div class="row">
       <div class="track" *ngFor="let track of eventTracks">
         <div class="track-title">{{track.name}}</div>
-        <absolute-column [sessions]="getSessionsForColumn(date, track.id)" [day]="date" [track]="track">
+        <absolute-column [sessions]="getSessionsForColumn(date, track.id)" [day]="date" [track]="track" [offsetDate]="offsetDate">
         </absolute-column>
       </div>  
     </div>

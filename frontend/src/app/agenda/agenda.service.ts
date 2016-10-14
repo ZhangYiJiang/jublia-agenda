@@ -12,7 +12,7 @@ export class AgendaService {
 
   constructor (private httpClient: HttpClient) {}
 
-  getAgendaById(id: string): Observable<any> {
+  getAgendaById(id: string): Observable<Agenda> {
     return this.httpClient.get('/api/'+id)
                     .map(this.extractData)
                     .catch(this.handleError);

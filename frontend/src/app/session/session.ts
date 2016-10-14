@@ -1,10 +1,11 @@
 import { Speaker } from '../speaker/speaker';
+import { Track } from '../track/track';
 
 export class Session {
   id: number;
   name: string;
   desciption: string;
-  track: {id: number, name: string, url: string};
+  track: Track;
   speakers: Speaker[];
   start_at: number;  //number of minutes since start of the event
   duration: number;  //number of minutes

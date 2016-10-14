@@ -3,8 +3,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 
 import { Session } from '../session/session';
-import {Agenda} from '../agenda/agenda';
-import {AgendaService} from '../agenda/agenda.service';
+import { Agenda } from '../agenda/agenda';
+import { Track } from '../track/track';
+import { AgendaService } from '../agenda/agenda.service';
 
 import { DOMUtilService } from '../util/dom.util.service';
 
@@ -16,7 +17,8 @@ import { DOMUtilService } from '../util/dom.util.service';
 export class AbsoluteColumnComponent implements OnInit {
   @Input() sessions: Session[];
   @Input() day: Date;
-  @Input() track: string;
+  @Input() track: Track;
+  @Input() offsetDate: Date;
 
   constructor(private dragulaService: DragulaService,
     private agendaService: AgendaService,
@@ -39,7 +41,7 @@ export class AbsoluteColumnComponent implements OnInit {
     if (columnType === 'absolute') {
       let columnDate = new Date(el.getAttribute('data-date'));
       let columnTrack = el.getAttribute('data-track');
-      if (columnDate.toISOString() === this.day.toISOString() && columnTrack === this.track) {
+      if (columnDate.toISOString() === this.day.toISOString() && columnTrack === this.track.name) {
         console.log(sessionId + ' moved to:');
         console.log(columnDate.toLocaleString());
         console.log('moved session:');

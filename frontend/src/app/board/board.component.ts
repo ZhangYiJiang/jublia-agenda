@@ -3,9 +3,10 @@ import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 
-import {Session} from '../session/session';
-import {Agenda} from '../agenda/agenda';
-import {AgendaService} from '../agenda/agenda.service';
+import { Session } from '../session/session';
+import { Agenda } from '../agenda/agenda';
+import { Track } from '../track/track';
+import { AgendaService } from '../agenda/agenda.service';
 
 import { DOMUtilService } from '../util/dom.util.service';
 
@@ -17,9 +18,9 @@ import { DOMUtilService } from '../util/dom.util.service';
 export class BoardComponent implements OnInit {
   @Input()
   agenda: Agenda;
-
+  offsetDate: Date;
   eventDates: Date[];
-  eventTracks: string[];
+  eventTracks: Track[];
 
   pendingSessions: Session[];
   nonPendingSessions: Session[];
@@ -53,7 +54,7 @@ export class BoardComponent implements OnInit {
       if (
         //add session to every track if it doesn't have a specific track
         (!session.track || session.track.id === columnTrack) 
-        && ( this.addMinToDate(session.start_at, this.agenda.start_at) === columnDate.getTime()))
+        && this.isOnSameDay(this.addMinToDate(session.start_at, this.agenda.start_at) ,columnDate))
         displayed.push(session);
     }
     for (var i = 0; i < 10; ++i) {
@@ -65,11 +66,17 @@ export class BoardComponent implements OnInit {
     return displayed;
   }
 
-  //return the calculated time in the format of Ms
+  //return the calculated time as a Date
   addMinToDate(minute: number, date: string) {
     let minToMs = 60000;
     let baseMs = new Date(date).getTime();
-    return baseMs + minToMs * minute;
+    return new Date(baseMs + minToMs * minute);
+  }
+
+  isOnSameDay(day1: Date, day2: Date) {
+    return day1.getFullYear() === day2.getFullYear() 
+           && day1.getMonth() === day2.getMonth() 
+           && day1.getDate() === day2.getDate();
   }
 
   changeSessionToPending(sessionId: number) {
@@ -103,19 +110,20 @@ export class BoardComponent implements OnInit {
     return dates;
   }
 
-  getEventTracks(): string[] {
+  getEventTracks(): Track[] {
     if (!this.agenda.tracks || this.agenda.tracks.length === 0) {
-      return ['']; //return a track with no name as the default track
+      return [];
     } else {
       return this.agenda.tracks;
     }
   }
 
   ngOnInit(): void {
+    this.offsetDate = new Date(this.agenda.start_at);
     this.eventDates = this.getEventDates();
     this.eventTracks = this.getEventTracks();
     let partioned = _.partition(this.agenda.sessions, function(o:Session){return o.hasOwnProperty('start_at')});
-    this.pendingSessions = partioned[0];
-    this.nonPendingSessions = partioned[1];
+    this.pendingSessions = partioned[1];
+    this.nonPendingSessions = partioned[0];
   }
 }

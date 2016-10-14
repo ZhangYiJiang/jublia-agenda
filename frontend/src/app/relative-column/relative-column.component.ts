@@ -24,8 +24,8 @@ const MARGIN_RIGHT_HIDE: string = 'px';
 })
 
 export class RelativeColumnComponent {
-  @Input()
-  sessions: Session[];
+  @Input() sessions: Session[];
+  @Input() offsetDate: Date;
 
   colState = 'open';
   isColShown = true;

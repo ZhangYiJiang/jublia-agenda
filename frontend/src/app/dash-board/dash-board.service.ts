@@ -1,39 +1,35 @@
 import { Injectable }     from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Response } from '@angular/http';
+import { HttpClient } from '../util/http.util.service';
 import { GlobalVariable }  from '../globals';
 import { Observable }     from 'rxjs/Observable';
 import { Agenda } from '../agenda/agenda';
 
 @Injectable()
 export class DashBoardService {
-  private httpOptions = GlobalVariable.REQUEST_OPTION;
-  private httpAuthOptions : RequestOptions;
+
   private TOKEN_NAME = GlobalVariable.TOKEN_NAME;
 
   user = { authed:false };
   agendas: Agenda[];
 
-  constructor (private http: Http) {
+  constructor (private httpClient: HttpClient) {
     //check if user has logged in
     if (localStorage.getItem(this.TOKEN_NAME)) {
       this.user.authed = true;
-      this.httpAuthOptions = GlobalVariable.REQUEST_OPTION_WITH_TOKEN;
-      //console.log(this.httpAuthOptions);
     }
   }
   
   signUp(email: string, password: string): Observable<number> {
     let body = JSON.stringify({ username: email, password: password});
-    console.log(this.httpOptions);
-    return this.http.post('/api/users/sign_up', body, this.httpOptions)
+    return this.httpClient.post('/api/users/sign_up', body)
                     .map(this.extractStatus)
                     .catch(this.handleError);
   } 
 
   logIn(email: string, password: string): Observable<boolean> {
     let body = JSON.stringify({ username: email, password: password});
-    console.log(this.httpOptions);
-    return this.http.post('/api/users/auth', body, this.httpOptions)
+    return this.httpClient.post('/api/users/auth', body)
                     .map(this.extractData)
                     .map(this.storeToken)
                     .catch(this.handleError);
@@ -46,7 +42,7 @@ export class DashBoardService {
   }
 
   getAgendas(): Observable<any> {
-    return this.http.get('/api/agendas', this.httpAuthOptions)
+    return this.httpClient.get('/api/agendas')
                     .map(this.extractData)
                     .catch(this.handleError);
   }
@@ -57,9 +53,6 @@ export class DashBoardService {
       //console.log(data.token);
       localStorage.setItem(this.TOKEN_NAME,data.token);
       this.user.authed = true;
-      this.httpAuthOptions = GlobalVariable.REQUEST_OPTION_WITH_TOKEN;
-      console.log(localStorage.getItem(this.TOKEN_NAME));
-      console.log(this.httpAuthOptions);
       return true;
     }else {
       this.user.authed = false;

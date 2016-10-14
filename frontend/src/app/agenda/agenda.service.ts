@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Response } from '@angular/http';
+import { HttpClient } from '../util/http.util.service';
 import { GlobalVariable }  from '../globals';
 import { Observable }     from 'rxjs/Observable';
 import { DashBoardService } from '../dash-board/dash-board.service';
@@ -8,12 +9,11 @@ import { Session }     from '../session/session';
 
 @Injectable()
 export class AgendaService {
-  private httpOptions = GlobalVariable.REQUEST_OPTION;
 
-  constructor (private http: Http) {}
+  constructor (private httpClient: HttpClient) {}
 
   getAgendaById(id: string): Observable<any> {
-    return this.http.get('/api/'+id, this.httpOptions)
+    return this.httpClient.get('/api/'+id)
                     .map(this.extractData)
                     .catch(this.handleError);
   }

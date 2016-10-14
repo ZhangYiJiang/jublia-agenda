@@ -29,6 +29,7 @@ class AgendaTest(TestCase):
         for i in range(6):
             self.create_session(24 * 60 * i, 60)
         self.create_session(24 * 60 * 6, 120)
+        Session.objects.create(agenda=self.agenda, track=self.track, **factory.session())
 
         self.assertEqual(self.agenda.end_at, factory.today + timedelta(minutes=24 * 60 * 6 + 120))
 

@@ -49,21 +49,16 @@ export class BoardComponent implements OnInit {
   }
 
   getSessionsForColumn(columnDate: Date, columnTrack: number): Session[] {
-    let displayed:Session[] = [];
+    let sessions:Session[] = [];
     for (let session of this.nonPendingSessions) {
       if (
         //add session to every track if it doesn't have a specific track
         (!session.track || session.track.id === columnTrack) 
         && this.isOnSameDay(this.addMinToDate(session.start_at, this.agenda.start_at) ,columnDate))
-        displayed.push(session);
-    }
-    for (var i = 0; i < 10; ++i) {
-      displayed.push(<Session>{
-        placeholder: true
-      })
+        sessions.push(session);
     }
 
-    return displayed;
+    return sessions;
   }
 
   //return the calculated time as a Date

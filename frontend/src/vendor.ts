@@ -11,3 +11,4 @@ import 'rxjs';
 // You can import js, ts, css, sass, ...
 import 'dragula/dist/dragula.css';
 import 'lodash';
+import 'moment';

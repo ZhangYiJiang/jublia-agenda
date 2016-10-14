@@ -3,7 +3,7 @@
     [dragula]='"column"' [dragulaModel]='displayedSessions'
     [attr.data-column-type]="'absolute'"
     [attr.data-date]="day.toISOString()"
-    [attr.data-track]="track">
+    [attr.data-track-id]="track.id">
 	  <li class="session-list-item" *ngFor="let session of displayedSessions"
       [attr.data-session-id]="session.id"
       [attr.data-session-placeholder]="session.placeholder"

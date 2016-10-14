@@ -22,6 +22,6 @@ export class SessionComponent {
   }
 
   getFormattedTime(date: Date): string {
-    return date.getHours() + ':' + (date.getMinutes()<10?'0':'') + date.getMinutes();
+    return date.getUTCHours() + ':' + (date.getUTCMinutes()<10?'0':'') + date.getUTCMinutes();
   }
 }

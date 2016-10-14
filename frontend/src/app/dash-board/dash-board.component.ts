@@ -17,10 +17,10 @@ export class DashBoardComponent implements OnInit {
   private dashBoardService: DashBoardService,
   private agendaService: AgendaService) { }
 
-  agendas: Agenda[] = [];
+  agendas = this.dashBoardService.agendas;
+  user = this.dashBoardService.user;
   errorMsg: string;
   successMsg: string;
-  user = this.dashBoardService.user;
 
   ngOnInit() {
     /*this.agendaService.getAgendas()
@@ -33,7 +33,7 @@ export class DashBoardComponent implements OnInit {
     }
   }
 
-  signUp (email: string, password: string) {
+  signUp(email: string, password: string) {
     if (!email || !password) { 
       this.errorMsg = "Please enter email and password";
       return;
@@ -45,7 +45,7 @@ export class DashBoardComponent implements OnInit {
     );
   }
 
-  logIn (email: string, password: string) {
+  logIn(email: string, password: string) {
     if (!email || !password) { 
       this.errorMsg = "Please enter email and password";
       return;
@@ -56,14 +56,15 @@ export class DashBoardComponent implements OnInit {
     );
   }
 
-  logOut (){
-    this.agendas = [];
+  logOut() {
     this.dashBoardService.logOut();
   }
-  getAgendas () {
+
+  getAgendas() {
     this.dashBoardService.getAgendas().subscribe(
       data => {
         console.log(data);
+        this.agendas = [];
         this.agendas.push(...data)
       },
       error =>  this.errorMsg = <any>error

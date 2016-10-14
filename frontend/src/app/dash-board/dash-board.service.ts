@@ -2,6 +2,7 @@ import { Injectable }     from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { GlobalVariable }  from '../globals';
 import { Observable }     from 'rxjs/Observable';
+import { Agenda } from '../agenda/agenda';
 
 @Injectable()
 export class DashBoardService {
@@ -10,6 +11,7 @@ export class DashBoardService {
   private TOKEN_NAME = GlobalVariable.TOKEN_NAME;
 
   user = { authed:false };
+  agendas: Agenda[];
 
   constructor (private http: Http) {
     //check if user has logged in
@@ -38,6 +40,7 @@ export class DashBoardService {
   } 
 
   logOut() {
+    this.agendas = [];
     this.user.authed = false;
     localStorage.removeItem(this.TOKEN_NAME);
   }
@@ -51,7 +54,7 @@ export class DashBoardService {
   //set the scope of this to the class
   private storeToken = (data: any) =>  {
     if (data.token) {
-      console.log(data.token);
+      //console.log(data.token);
       localStorage.setItem(this.TOKEN_NAME,data.token);
       this.user.authed = true;
       this.httpAuthOptions = GlobalVariable.REQUEST_OPTION_WITH_TOKEN;

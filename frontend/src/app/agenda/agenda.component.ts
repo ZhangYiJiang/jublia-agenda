@@ -15,13 +15,13 @@ export class AgendaComponent {
     private route: ActivatedRoute,
     private router: Router,
     private agendaService: AgendaService) { }
-
+  
   agenda: Agenda;
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
       let id = params['id'];
-      this.agendaService.getAgendaById(id).then(agenda => this.agenda = agenda);
+      this.agenda = this.agendaService.getAgendaById(id);
     });
   }
 }

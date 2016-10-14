@@ -25,7 +25,8 @@ class Agenda(BaseModel):
             return None
 
         end_at = F('duration') + F('start_at')
-        latest = self.session_set.annotate(end_at=end_at)\
+        latest = self.session_set.filter(start_at__isnull=False)\
+            .annotate(end_at=end_at)\
             .order_by('-end_at').first()
         return self.start_at + timedelta(minutes=latest.end_at)
 

@@ -77,6 +77,9 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertEqual(response.data['name'], self.session_data['name'])
         self.assertNoEmptyFields(response.data)
 
+        # Check relations
+        self.assertTrue('name' in response.data['track'])
+
     def test_speaker(self):
         speaker_data = factory.speaker()
         speaker = create_speaker(self.agenda, speaker_data)

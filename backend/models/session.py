@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.transaction import atomic
+from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 
 from backend.models.speaker import Speaker
@@ -14,15 +16,38 @@ class Tag(BaseModel):
         return self.name
 
 
+class Track(BaseModel):
+    name = models.CharField(max_length=120)
+    agenda = models.ForeignKey(Agenda)
+
+    def get_absolute_url(self):
+        return reverse('track_detail', args=(self.agenda.pk, self.pk,))
+
+    @atomic
+    def delete(self, using=None, keep_parents=False):
+        if self.agenda.track_set.count() == 1:
+            raise ValidationError("The event agenda must have at least one track")
+
+        # Move all existing sessions on this track to another one to prevent the
+        # delete from cascading to them
+        self.session_set.update(track=self.agenda.track_set.exclude(pk=self.pk).first())
+
+        super().delete(using, keep_parents)
+
+    def __str__(self):
+        return self.name
+
+
 class Session(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     start_at = models.IntegerField(blank=True, null=True)
     duration = models.IntegerField(blank=True, null=True)
+
     agenda = models.ForeignKey(Agenda)
     tags = models.ManyToManyField(Tag)
-
     speakers = models.ManyToManyField(Speaker)
+    track = models.ForeignKey(Track)
 
     @property
     def owner(self):

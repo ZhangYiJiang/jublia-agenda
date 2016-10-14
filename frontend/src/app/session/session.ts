@@ -7,5 +7,7 @@ export class Session {
   pending: boolean;
   start: Date;
   end: Date;
+  duration: number;
   venue: string;
+  placeholder: boolean;
 }

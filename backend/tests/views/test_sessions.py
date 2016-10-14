@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
-from backend.tests.helper import create_session, create_user, create_agenda, create_speaker
-from backend.tests.views.test_views import BaseAPITestCase
+from backend.tests.helper import create_session, create_user, create_agenda, create_speaker, create_track
+from .base import BaseAPITestCase
 
 
 class SessionListTest(BaseAPITestCase):
@@ -13,8 +13,8 @@ class SessionListTest(BaseAPITestCase):
         self.url = reverse('session_list', args=[self.agenda.pk])
 
     def test_list(self):
-        self.agenda.session_set.create(**factory.session())
-        self.agenda.session_set.create(**factory.session(full=True))
+        create_session(self.agenda, factory.session())
+        create_session(self.agenda, factory.session(full=True))
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
@@ -27,20 +27,30 @@ class SessionListTest(BaseAPITestCase):
     def test_create(self):
         self.login(self.user)
         response = self.client.post(self.url, factory.session())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.has_header('location'))
-        self.assertNoEmptyFields(response.data)
+        self.assertCreatedOk(response)
 
-        response = self.client.post(self.url, {
-            **factory.session(full=True),
-            'speakers': [
-                create_speaker(self.agenda, factory.speaker()).pk,
-                create_speaker(self.agenda, factory.speaker(full=True)).pk,
-            ]
-        })
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.has_header('location'))
-        self.assertNoEmptyFields(response.data)
+    def test_create_full(self):
+        self.login(self.user)
+        track = create_track(self.agenda)
+        speakers = [
+            create_speaker(self.agenda, factory.speaker()),
+            create_speaker(self.agenda, factory.speaker(full=True)),
+        ]
+
+        response = self.client.post(self.url, factory.speaker(full=True, data={
+            'speakers': [s.pk for s in speakers],
+            'track': track.pk,
+        }))
+
+        self.assertCreatedOk(response)
+
+        pk = response.data['id']
+        self.assertTrue(track.session_set.filter(pk=pk).exists())
+        for speaker in speakers:
+            self.assertTrue(speaker.session_set.filter(pk=pk).exists())
+
+    def test_create_on_track(self):
+        self.login(self.user)
 
     def test_create_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)
@@ -50,6 +60,10 @@ class SessionListTest(BaseAPITestCase):
 
 
 class SessionDetailTest(BaseAPITestCase):
+    def assertSessionEqual(self, original, response, msg=None):
+        response.pop('track')
+        self.assertEqualExceptMeta(original, response)
+
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -106,12 +120,12 @@ class SessionDetailTest(BaseAPITestCase):
         data = factory.session(full=True)
         response = self.client.put(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqualExceptMeta(data, response.data)
+        self.assertSessionEqual(data, response.data)
 
         data = factory.session()
         response = self.client.put(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqualExceptMeta(data, response.data)
+        self.assertSessionEqual(data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url, 'delete')

@@ -12,26 +12,26 @@ const MARGIN_RIGHT_HIDE: string = 'px';
   templateUrl: './relative-column.component.html',
   styleUrls: ['./relative-column.component.css'],
   animations: [
-	  trigger('colMarginTrigger', [
-	    state('open', style({ 'margin-left': MARGIN_LEFT_SHOW})),
-	    state('close', style({ 'margin-left': MARGIN_LEFT_HIDE}))
-	  ]),
-	  trigger('iconTrigger', [
+    trigger('colMarginTrigger', [
+      state('open', style({ 'margin-left': MARGIN_LEFT_SHOW})),
+      state('close', style({ 'margin-left': MARGIN_LEFT_HIDE}))
+    ]),
+    trigger('iconTrigger', [
       state('open', style({ transform: 'rotate(0deg)' })),
       state('close', style({ transform: 'rotate(180deg)' }))
-  	])
+    ])
   ]
 })
 
 export class RelativeColumnComponent {
   @Input()
   sessions: Session[];
-  
+
   colState = 'open';
   isColShown = true;
 
   toggleState(): void {
-  	this.colState = this.isColShown ? 'close' : 'open';
-  	this.isColShown = !this.isColShown;
+    this.colState = this.isColShown ? 'close' : 'open';
+    this.isColShown = !this.isColShown;
   }
 }

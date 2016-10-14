@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+
+from datetime import timedelta
+
 from .env import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -33,7 +36,7 @@ INSTALLED_APPS = [
 
     'backend.apps.BackendConfig',
     'rest_framework',
-
+    'corsheaders',
     'django_extensions',
 ]
 
@@ -116,8 +119,20 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer'
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=3),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=60),
 }
+
+# Enable CORS for debugging
+# https://github.com/ottoyiu/django-cors-headers
+if DEBUG:
+    MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
+    MIDDLEWARE.insert(1, 'corsheaders.middleware.CorsPostCsrfMiddleware')
+
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_REPLACE_HTTPS_REFERER = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

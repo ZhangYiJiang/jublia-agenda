@@ -1,5 +1,6 @@
-from fabric.api import *
 from contextlib import contextmanager as _contextmanager
+
+from fabric.api import *
 
 env.hosts = ['52.220.148.170', ]
 env.user = 'yijiang'
@@ -15,13 +16,13 @@ def virtualenv():
 
 
 def deploy():
-    with virtualenv():
-        # Build backend
-        run('git pull')
-        run('pip install -q -r requirements.txt')
-        run('./manage.py migrate --noinput')
-        run('./manage.py collectstatic --noinput')
+    backend()
+    frontend()
 
+
+def frontend():
+    with cd(env.directory):
+        run('git pull')
         # Build frontend
         with cd('frontend'):
             run('npm i --progress false')
@@ -30,6 +31,22 @@ def deploy():
             run('cp -r dist/ serve')
 
 
+def backend():
+    with virtualenv():
+        run('git pull')
+        # Build backend
+        run('pip install -q -r requirements.txt')
+        run('./manage.py migrate --noinput')
+        run('./manage.py collectstatic --noinput')
+        # Test
+        run('./manage.py test backend.tests')
+
+
 def createsuperuser():
     with virtualenv():
         run('./manage.py createsuperuser')
+
+
+def seed(arguments=''):
+    with virtualenv():
+        run('./manage.py seed ' + arguments)

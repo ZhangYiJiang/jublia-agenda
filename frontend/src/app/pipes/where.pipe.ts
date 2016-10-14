@@ -20,8 +20,6 @@ export class Where implements PipeTransform {
     if (input){
       this.tmp.push(...input.filter((item: any) => Where._whereComparer(item, clauses)));
     }
-    console.log('result:');
-    console.log(this.tmp);
     return this.tmp; 
   }
 }

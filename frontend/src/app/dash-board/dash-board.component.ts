@@ -23,11 +23,6 @@ export class DashBoardComponent implements OnInit {
   successMsg: string;
 
   ngOnInit() {
-    /*this.agendaService.getAgendas()
-    .then((agendas: Agenda[]) => {
-      //console.log(agendas);
-      this.agendas.push(...agendas);
-    })*/
     if (this.user.authed) {
       this.getAgendas();
     }

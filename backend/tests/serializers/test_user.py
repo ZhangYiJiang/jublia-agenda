@@ -23,13 +23,13 @@ class UserSerializerTest(SerializerTestCase):
     def test_invalid_user(self):
         with self.assertRaises(ValidationError, msg='Invalid email not rejected'):
             create_user({
-                'email': 'notemail',
+                'username': 'notemail',
                 'password': 'password123',
             })
 
         with self.assertRaises(ValidationError, msg='Password may not be blank'):
             create_user({
-                'email': 'exmaple@example.com',
+                'username': 'exmaple@example.com',
                 'password': '',
             })
 
@@ -48,4 +48,4 @@ class UserSerializerTest(SerializerTestCase):
         u = create_user(factory.user())
 
         with self.assertRaises(ValidationError):
-            self._patch_user(u, {'email': 'invalid-email'})
+            self._patch_user(u, {'username': 'invalid-email'})

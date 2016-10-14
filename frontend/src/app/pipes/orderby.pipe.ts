@@ -22,8 +22,6 @@ export class OrderBy implements PipeTransform {
   }
 
   transform(input: any, [config = '+']): any {
-    //console.log(input);
-    //console.log(config);
     this.tmp.length = 0;
     if (!Array.isArray(input)) return input;
     let arr: any = [];

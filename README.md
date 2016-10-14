@@ -17,6 +17,37 @@ The backend uses [Django 1.10][django] and [Django Rest Framework 3.4][rest-fram
 9. Make sure that there are no errors, then open `localhost:8000/admin` to check that Django is working properly
 10. Use `python manage.py createsuperuser` to create a new admin account
 
+## Commands 
+
+Django comes with a number of useful [command line commands][commands] through `manage/py`. In addition, [Django Extensions][extensions] is also installed, which means there's a number of useful commands in addition to Django's defaults. Run `manage.py` without any commands to see a list. 
+ 
+In addition to this we also define the following commands: 
+
+### `seed` - seed database with fake data for testing 
+
+This command will create a new user and generate a new event agenda with tracks, speakers and sessions for testing purposes. The following options are available. 
+
+- `--user=None` - if specified, adds the seeded event to the user with the given email 
+- `--tracks=2` - number of session tracks 
+- `--speakers=5` - number of speakers 
+- `--sessions=20` - number of sessions. 
+
+The sessions are randomly assigned fields, speakers and tracks. Their timing should be within office hours, but no checks for overlapping sessions is done 
+
+## Deployment 
+ 
+Deployment to the staging server is done using the included [Fabric][fabric] script. The included commands are 
+
+- **`frontend`** - Pull and build the frontend code 
+
+- **`backend`** - Pull and build the backend code 
+
+- **`deploy`** - Pull and deploy both the front and backend code 
+
+- **`seed`** - Runs the database seed command. Use a colon to separate the arguments, which are passed straight to the command, like this `fab seed:'--sessions=30'`
 
 [django]: https://www.djangoproject.com/
 [rest-framework]: http://www.django-rest-framework.org/
+[commands]: https://docs.djangoproject.com/en/1.10/ref/django-admin/#available-commands
+[extensions]: https://django-extensions.readthedocs.io/
+[fabric]: http://www.fabfile.org/installing.html

@@ -34,7 +34,7 @@ export class AbsoluteColumnComponent implements OnInit {
     // console.log(el);
     // console.log('parent');
     // console.log(e.parentElement);
-    let sessionId = e.getAttribute('data-session-id');
+    let sessionId = parseInt(e.getAttribute('data-session-id'));
     let columnType = el.getAttribute('data-column-type');
     if (columnType === 'absolute') {
       let columnDate = new Date(el.getAttribute('data-date'));
@@ -65,7 +65,7 @@ export class AbsoluteColumnComponent implements OnInit {
 
   displayedSessions: Session[];
 
-  getSessionById(sessionId: string): Session {
+  getSessionById(sessionId: number): Session {
     for (var i = 0; i < this.displayedSessions.length; ++i) {
       if(this.displayedSessions[i].id === sessionId) {
         return this.displayedSessions[i];

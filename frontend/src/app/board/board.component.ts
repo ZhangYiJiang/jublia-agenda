@@ -42,18 +42,18 @@ export class BoardComponent implements OnInit {
     let columnType = el.getAttribute('data-column-type');
     if(columnType === 'relative') {
       console.log(sessionId + ' moved to pendng');
-      this.changeSessionToPending(sessionId);
+      this.changeSessionToPending(parseInt(sessionId));
       console.log(this.agenda.sessions);
     }
   }
 
-  getSessionsForColumn(columnDate: Date, columnTrack: string): Session[] {
+  getSessionsForColumn(columnDate: Date, columnTrack: number): Session[] {
     let displayed:Session[] = [];
     for (let session of this.nonPendingSessions) {
-      if (session.pending === false 
+      if (
         //add session to every track if it doesn't have a specific track
-        && (!session.track || session.track === columnTrack || session.track === '') 
-        && (session.start.toDateString() === columnDate.toDateString() || session.end.toDateString() === columnDate.toDateString()))
+        (!session.track || session.track.id === columnTrack) 
+        && ( this.addMinToDate(session.start_at, this.agenda.start_at) === columnDate.getTime()))
         displayed.push(session);
     }
     for (var i = 0; i < 10; ++i) {
@@ -65,19 +65,24 @@ export class BoardComponent implements OnInit {
     return displayed;
   }
 
-  changeSessionToPending(sessionId: string) {
+  //return the calculated time in the format of Ms
+  addMinToDate(minute: number, date: string) {
+    let minToMs = 60000;
+    let baseMs = new Date(date).getTime();
+    return baseMs + minToMs * minute;
+  }
+
+  changeSessionToPending(sessionId: number) {
     let session: Session = this.getSessionById(sessionId);
     if(session) {
-      session.pending = true;
-      session.start = undefined;
-      session.end = undefined;
+      delete session.start_at;
       this.agendaService.updateSession(this.agenda.id, session);
     } else {
       console.error('Session not found for id=' + sessionId + '.');
     }
   }
 
-  getSessionById(sessionId: string): Session {
+  getSessionById(sessionId: number): Session {
     for (var i = 0; i < this.agenda.sessions.length; ++i) {
       if(this.agenda.sessions[i].id === sessionId) {
         return this.agenda.sessions[i];
@@ -109,7 +114,7 @@ export class BoardComponent implements OnInit {
   ngOnInit(): void {
     this.eventDates = this.getEventDates();
     this.eventTracks = this.getEventTracks();
-    let partioned = _.partition(this.agenda.sessions, {pending: true});
+    let partioned = _.partition(this.agenda.sessions, function(o:Session){return o.hasOwnProperty('start_at')});
     this.pendingSessions = partioned[0];
     this.nonPendingSessions = partioned[1];
   }

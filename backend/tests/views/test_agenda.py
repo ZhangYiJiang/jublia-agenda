@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
-from backend.tests.helper import create_user, create_agenda
+from backend.tests.helper import *
 from .base import BaseAPITestCase
 
 
@@ -41,6 +41,10 @@ class AgendaDetailTest(BaseAPITestCase):
         self.user = create_user(factory.user())
         self.agenda_data = factory.agenda()
         self.agenda = create_agenda(self.user, self.agenda_data)
+        self.speaker = create_speaker(self.agenda, factory.speaker())
+        self.session = create_session(self.agenda, factory.session(data={
+            'speakers': [self.speaker.pk],
+        }))
         self.url = reverse('agenda_detail', [self.agenda.pk])
 
     def test_retrieve(self):
@@ -48,6 +52,15 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.agenda_data['name'])
         self.assertNoEmptyFields(response.data)
+
+        # Check related fields
+        self.assertTrue('sessions' in response.data)
+        self.assertTrue('tracks' in response.data)
+        self.assertTrue('speakers' in response.data)
+
+        # Check no deep nesting
+        self.assertFalse('sessions' in response.data['tracks'][0])
+        self.assertFalse('sessions' in response.data['speakers'][0])
 
     def test_delete(self):
         self.login(self.user)

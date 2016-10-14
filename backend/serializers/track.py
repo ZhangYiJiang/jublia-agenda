@@ -2,6 +2,7 @@ from rest_framework.fields import CharField
 
 from backend.models import Track
 from .base import BaseSerializer
+from .session import SessionViewSerializer
 
 
 class DefaultTrack:
@@ -13,7 +14,7 @@ class DefaultTrack:
         return 'Track {}'.format(count + 1)
 
 
-class TrackSerializer(BaseSerializer):
+class BaseTrackSerializer(BaseSerializer):
     name = CharField(default=DefaultTrack())
 
     def validate(self, attrs):
@@ -23,3 +24,11 @@ class TrackSerializer(BaseSerializer):
     class Meta:
         model = Track
         fields = ('id', 'name',)
+
+
+class TrackSerializer(BaseTrackSerializer):
+    sessions = SessionViewSerializer(many=True, required=False, source='session_set')
+
+    class Meta:
+        model = Track
+        fields = ('id', 'name', 'sessions',)

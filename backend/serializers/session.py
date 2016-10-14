@@ -2,7 +2,6 @@ from rest_framework.exceptions import ValidationError
 
 from backend.models import Session
 from .base import BaseSerializer, AgendaPrimaryKeyRelatedField
-from .speaker import SpeakerSerializer
 
 
 class DefaultTrack:
@@ -14,8 +13,6 @@ class DefaultTrack:
 
 
 class SessionViewSerializer(BaseSerializer):
-    speakers = SpeakerSerializer(many=True, required=False)
-
     class Meta:
         model = Session
         fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',)

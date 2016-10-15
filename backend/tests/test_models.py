@@ -71,3 +71,22 @@ class CategoryTest(TestCase):
         self.category.add_tags(tags)
         self.assertTagsEqual(self.category, tags)
 
+
+class SessionTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(**factory.user())
+        self.profile = Profile.objects.create(user=self.user)
+        self.agenda = Agenda.objects.create(profile=self.profile, name='Test')
+        self.track = Track.objects.create(agenda=self.agenda)
+
+    def test_default_sort(self):
+        for i in range(5):
+            Session.objects.create(**factory.session(full=True, data={
+                'agenda': self.agenda,
+                'track': self.track,
+            }))
+
+        last = Session.objects.first()
+        for session in Session.objects.all()[1:]:
+            self.assertGreater(session.start_at, last.start_at)
+            last = session

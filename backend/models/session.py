@@ -59,6 +59,9 @@ class Session(BaseModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('start_at',)
+
 
 class Category(BaseModel):
     name = models.CharField(max_length=255)

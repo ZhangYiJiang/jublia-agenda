@@ -3,13 +3,13 @@ from rest_framework.reverse import reverse
 
 from .agenda import Agenda
 from .base import BaseModel
-from .session_meta import Track
+from .session_meta import Track, Venue
 from .speaker import Speaker
 
 
 class Tag(BaseModel):
     name = models.CharField(max_length=255)
-    category = models.ForeignKey('Category')
+    category = models.ForeignKey('Category', models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -21,10 +21,11 @@ class Session(BaseModel):
     start_at = models.IntegerField(blank=True, null=True)
     duration = models.IntegerField(blank=True, null=True)
 
-    agenda = models.ForeignKey(Agenda)
+    agenda = models.ForeignKey(Agenda, models.CASCADE)
     tags = models.ManyToManyField(Tag)
     speakers = models.ManyToManyField(Speaker)
-    track = models.ForeignKey(Track)
+    track = models.ForeignKey(Track, models.PROTECT)
+    venue = models.ForeignKey(Venue, models.SET_NULL, blank=True, null=True)
 
     @property
     def owner(self):
@@ -42,7 +43,7 @@ class Session(BaseModel):
 
 class Category(BaseModel):
     name = models.CharField(max_length=255)
-    agenda = models.ForeignKey(Agenda)
+    agenda = models.ForeignKey(Agenda, models.CASCADE)
 
     def add_tags(self, tags):
         """

@@ -9,7 +9,7 @@ from .base import BaseModel
 
 class Track(BaseModel):
     name = models.CharField(max_length=120)
-    agenda = models.ForeignKey(Agenda)
+    agenda = models.ForeignKey(Agenda, models.CASCADE)
 
     def get_absolute_url(self):
         return reverse('track_detail', args=(self.agenda.pk, self.pk,))
@@ -33,10 +33,10 @@ class Venue(BaseModel):
     name = models.CharField(max_length=255)
     unit = models.CharField(max_length=30, blank=True)
 
-    agenda = models.ForeignKey(Agenda)
+    agenda = models.ForeignKey(Agenda, models.CASCADE)
 
-    # def get_absolute_url(self):
-    #   return reverse('speaker_detail', args=[self.agenda.pk, self.pk])
+    def get_absolute_url(self):
+        return reverse('venue_detail', args=[self.agenda.pk, self.pk])
 
     def __str__(self):
         if self.unit:

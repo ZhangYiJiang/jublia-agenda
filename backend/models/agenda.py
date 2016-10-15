@@ -10,7 +10,7 @@ from .profile import Profile
 
 class Agenda(BaseModel):
     name = models.CharField("event name", max_length=255)
-    profile = models.ForeignKey(Profile)
+    profile = models.ForeignKey(Profile, models.CASCADE)
     location = models.CharField(blank=True, max_length=255)
     published = models.BooleanField(default=False)
     start_at = models.DateField(blank=True, null=True)

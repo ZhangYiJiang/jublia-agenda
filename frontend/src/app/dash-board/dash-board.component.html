@@ -1,8 +1,24 @@
 <h1 class="board-title">Dashboard</h1>
-<p>All Agenda:</p>
-<ul class="agenda-list">
-  <li *ngFor="let agenda of agendas | orderBy : 'id'"
-    (click)="onSelect(agenda)">
-    {{agenda.title}}
-  </li>
-</ul>
+<div *ngIf = "!user.authed">
+	<div class = "form">
+		Email: <input #email />
+		Password: <input #password />
+	</div>
+	<button (click)="signUp(email.value, password.value); email.value=''; password.value=''">
+	  Sign Up
+	</button>
+	<button (click)="logIn(email.value, password.value); email.value=''; password.value=''">
+	  Login
+	</button>
+</div>
+<div class = "success" *ngIf="successMsg">{{successMsg}}</div>
+<div class="error" *ngIf="errorMsg">{{errorMsg}}</div>
+<div *ngIf = "user.authed">
+	<p>All Agenda:</p>
+	<ul class="agenda-list">
+	  <li *ngFor="let agenda of agendas | orderBy : 'id'"
+	    (click)="onSelect(agenda)">
+	    {{agenda.name}}
+	  </li>
+	</ul>
+</div>

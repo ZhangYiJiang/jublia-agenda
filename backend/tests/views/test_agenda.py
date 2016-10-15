@@ -56,6 +56,8 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertEqual(response.data['name'], self.agenda_data['name'])
         self.assertNoEmptyFields(response.data)
 
+        self.assertTrue('end_at' in response.data)
+
         # Check related fields
         self.assertTrue('sessions' in response.data)
         self.assertTrue('tracks' in response.data)

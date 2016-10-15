@@ -22,8 +22,9 @@ module.exports = webpackMerge(commonConfig, {
     stats: 'minimal',
     proxy: {
       '/api': {
-        target: 'http://52.220.148.170/',
-        secure: false
+        target: 'https://agenda-demo.jublia.com',
+        secure: false,
+        changeOrigin: true
       }
     }
   }

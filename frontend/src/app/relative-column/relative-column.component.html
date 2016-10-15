@@ -1,10 +1,12 @@
 <div class="rel-col" [@colMarginTrigger]="colState">
-	<ul class="session-list">
-	  <li *ngFor="let session of sessions | where : { pending: true } | orderBy : 'order'">
-	    <my-session [session]="session"></my-session>
-	  </li>
-	</ul>
-	<button class="pending-toggle" (click)="toggleState()">
-		<i [@iconTrigger]="colState" class="fa fa-arrow-left" aria-hidden="true"></i>
-	</button>
+  <ul class="session-list" [dragula]='"column"' [dragulaModel]='sessions'
+    [attr.data-column-type]="'relative'">
+    <li class="session-list-item" *ngFor="let session of sessions"
+      [attr.data-session-id]="session.id">
+      <my-session [session]="session" [offsetDate]="offsetDate"></my-session>
+    </li>
+  </ul>
+  <button class="pending-toggle" (click)="toggleState()">
+    <i [@iconTrigger]="colState" class="fa fa-arrow-left" aria-hidden="true"></i>
+  </button>
 </div>

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule }  from '@angular/platform-browser';
-import { RouterModule }   from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
+import { DragulaService, DragulaModule } from 'ng2-dragula/ng2-dragula';
 
 import { AppComponent } from './app.component';
 
@@ -10,12 +11,17 @@ import { AbsoluteColumnComponent } from './absolute-column/absolute-column.compo
 import { RelativeColumnComponent } from './relative-column/relative-column.component.ts';
 import { SessionComponent } from './session/session.component.ts';
 import { DashBoardComponent } from './dash-board/dash-board.component.ts';
-
 import { AgendaComponent } from './agenda/agenda.component.ts';
 import { AgendaService } from './agenda/agenda.service.ts';
+import { DashBoardService } from './dash-board/dash-board.service.ts';
+
+import { DOMUtilService } from './util/dom.util.service';
+import { HttpClient } from './util/http.util.service';
 
 import {OrderBy} from './pipes/orderby.pipe';
 import {Where} from './pipes/where.pipe';
+
+import { LoggedInGuard } from './auth.guard.ts';
 
 
 @NgModule({
@@ -24,10 +30,11 @@ import {Where} from './pipes/where.pipe';
     HttpModule,
     JsonpModule,
     RouterModule.forRoot([
-      { path: 'agenda/:id', component: AgendaComponent },
+      { path: 'agenda/:id', component: AgendaComponent, canActivate: [LoggedInGuard] },
       { path: '', component: DashBoardComponent },
-      { path: '**', component: DashBoardComponent }
+      { path: '**', component: DashBoardComponent } // TODO: implement 404 page component
     ]),
+    DragulaModule
   ],
   declarations: [
     AppComponent,
@@ -41,7 +48,11 @@ import {Where} from './pipes/where.pipe';
     Where
   ],
   providers: [
-    AgendaService
+    AgendaService,
+    DashBoardService,
+    LoggedInGuard,
+    DOMUtilService,
+    HttpClient
   ],
   bootstrap: [ AppComponent ]
 })

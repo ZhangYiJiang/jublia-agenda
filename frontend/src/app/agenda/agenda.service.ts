@@ -1,19 +1,37 @@
 import { Injectable } from '@angular/core';
-
+import { Response } from '@angular/http';
+import { HttpClient } from '../util/http.util.service';
+import { GlobalVariable }  from '../globals';
+import { Observable }     from 'rxjs/Observable';
+import { DashBoardService } from '../dash-board/dash-board.service';
 import { Agenda }     from './agenda';
-import { AGENDAS }     from './mock-agendas';
+import { Session }     from '../session/session';
 
 @Injectable()
 export class AgendaService {
-  getAgendas(): Promise<Agenda[]> { 
-    return Promise.resolve(AGENDAS);  
+
+  constructor (private httpClient: HttpClient) {}
+
+  getAgendaById(id: string): Observable<Agenda> {
+    return this.httpClient.get('/api/'+id)
+                    .map(this.extractData)
+                    .catch(this.handleError);
   }
 
-  getAgendaById(id: string): Promise<Agenda> {
-    for (var i = 0; i < AGENDAS.length; ++i) {
-      if(AGENDAS[i].id === id) {
-        return Promise.resolve(AGENDAS[i]);  
-      }
-    }
+  private extractData(res: Response) {
+    console.log(res.json());
+    return res.json();
+  }
+
+  private handleError (error: any) {
+    let errMsg = (error.message) ? error.message :
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    console.error(errMsg);
+    return Observable.throw(errMsg);
+  }
+
+  updateSession(agendaId: string, newSession: Session) {
+    console.log('updating agenda ' + agendaId + ' session ' + newSession.id);
+    console.log(JSON.stringify(newSession, null, 4));
   }
 }

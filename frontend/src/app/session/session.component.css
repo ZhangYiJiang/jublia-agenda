@@ -1,2 +1,14 @@
-.session-tile{background:white;max-width:170px;font-size:14px;margin:10px;padding:5px;border-radius:8px;box-shadow:0px 2px 4px rgba(0,0,0,0.5);cursor:move}
+.session-tile {
+  background: white;
+  max-width: 170px;
+  font-size: 14px;
+  margin: 10px;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  cursor: move; }
+
+.placeholder-session {
+  height: 10px; }
+
 /*# sourceMappingURL=session.component.css.map */

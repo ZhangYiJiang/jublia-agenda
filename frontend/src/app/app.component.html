@@ -1,5 +1,8 @@
 <main>
-  <h1>{{appName}}</h1>
-  <!-- Routed views go here -->
-  <router-outlet></router-outlet>
+    <div class="header">
+        <span class="title">{{appName}}</span>
+        <button *ngIf="user.authed" (click)="logOut()">Log Out</button>
+    </div>
+    <!-- Routed views go here -->
+     <router-outlet></router-outlet>
 </main>

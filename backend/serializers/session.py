@@ -4,6 +4,7 @@ from backend.models import Session
 from .base import BaseSerializer, AgendaPrimaryKeyRelatedField
 from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
+from .venue import BaseVenueSerializer
 
 
 class DefaultTrack:
@@ -17,15 +18,17 @@ class DefaultTrack:
 class SessionViewSerializer(BaseSerializer):
     track = BaseTrackSerializer()
     speakers = BaseSpeakerSerializer(many=True)
+    venue = BaseVenueSerializer()
 
     class Meta:
         model = Session
-        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',)
+        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track', 'venue',)
 
 
 class SessionUpdateSerializer(BaseSerializer):
     track = AgendaPrimaryKeyRelatedField(klass='Track', default=DefaultTrack())
     speakers = AgendaPrimaryKeyRelatedField(many=True, required=False, klass='Speaker')
+    venue = AgendaPrimaryKeyRelatedField(required=False, klass='Venue')
 
     def validate(self, attrs):
         if 'start_at' in attrs and 'duration' not in attrs and 'duration' not in self.instance:
@@ -43,4 +46,4 @@ class SessionUpdateSerializer(BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',)
+        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track', 'venue',)

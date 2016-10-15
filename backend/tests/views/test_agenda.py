@@ -45,7 +45,7 @@ class AgendaDetailTest(BaseAPITestCase):
         self.agenda_data = factory.agenda()
         self.agenda = create_agenda(self.user, self.agenda_data)
         self.speaker = create_speaker(self.agenda, factory.speaker())
-        self.session = create_session(self.agenda, factory.session(data={
+        self.session = create_session(self.agenda, factory.session(full=True, data={
             'speakers': [self.speaker.pk],
         }))
         self.url = reverse('agenda_detail', [self.agenda.pk])
@@ -56,8 +56,6 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertEqual(response.data['name'], self.agenda_data['name'])
         self.assertNoEmptyFields(response.data)
 
-        self.assertTrue('end_at' in response.data)
-
         # Check related fields
         self.assertTrue('sessions' in response.data)
         self.assertTrue('tracks' in response.data)
@@ -66,6 +64,13 @@ class AgendaDetailTest(BaseAPITestCase):
         # Check no deep nesting
         self.assertFalse('sessions' in response.data['tracks'][0])
         self.assertFalse('sessions' in response.data['speakers'][0])
+
+    def test_retrieve_end_at(self):
+        self.agenda.start_at = factory.now
+        self.agenda.save()
+        create_session(self.agenda, factory.session(full=True))
+        response = self.client.get(self.url)
+        self.assertTrue('end_at' in response.data)
 
     def test_delete(self):
         self.login(self.user)

@@ -1,4 +1,4 @@
-from backend.models import Track, Speaker
+from backend.models import Track, Speaker, Venue
 from .session import SessionUpdateSerializer
 from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
@@ -35,5 +35,5 @@ class VenueSerializer(BaseVenueSerializer):
     sessions = SessionUpdateSerializer(many=True, required=False, source='session_set')
 
     class Meta:
-        model = Track
+        model = Venue
         fields = ('id', 'name', 'unit', 'sessions',)

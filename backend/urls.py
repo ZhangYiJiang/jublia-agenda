@@ -23,7 +23,7 @@ urlpatterns = [
 
     # Agenda listing, detail
     url(r'^agenda', views.AgendaList.as_view(), name='agenda_list'),
-    url(agenda_id + r'^$', views.AgendaDetail.as_view(), name='agenda_detail'),
+    url(r'^(?P<pk>[1-9][0-9]*)$', views.AgendaDetail.as_view(), name='agenda_detail'),
 
     # Session listing, detail
     url(agenda_id + r'/sessions/(?P<pk>[1-9][0-9]*)',

@@ -21,6 +21,9 @@ class AgendaListTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
 
+        # Agenda list items should not have session data
+        self.assertFalse('sessions' in response.data[0])
+
     def test_list_empty(self):
         self.login(self.user)
         response = self.client.get(self.url)

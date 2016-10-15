@@ -2,7 +2,7 @@ from django.db.transaction import atomic
 
 from backend.models import Agenda
 from .base import BaseSerializer
-from .session import SessionViewSerializer
+from .session import SessionUpdateSerializer
 from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
 
@@ -24,7 +24,7 @@ class BaseAgendaSerializer(BaseSerializer):
 
 
 class AgendaSerializer(BaseAgendaSerializer):
-    sessions = SessionViewSerializer(many=True, required=False, source='session_set')
+    sessions = SessionUpdateSerializer(many=True, required=False, source='session_set')
     tracks = BaseTrackSerializer(many=True, required=False, source='track_set')
     speakers = BaseSpeakerSerializer(many=True, required=False, source='speaker_set')
 

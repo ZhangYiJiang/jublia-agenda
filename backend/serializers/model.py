@@ -1,11 +1,11 @@
 from backend.models import Track, Speaker
-from .session import SessionViewSerializer, SessionUpdateSerializer
+from .session import SessionUpdateSerializer
 from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
 
 
 class TrackSerializer(BaseTrackSerializer):
-    sessions = SessionViewSerializer(many=True, required=False, source='session_set')
+    sessions = SessionUpdateSerializer(many=True, required=False, source='session_set')
 
     class Meta:
         model = Track

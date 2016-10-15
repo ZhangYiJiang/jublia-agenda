@@ -22,6 +22,7 @@ class TrackListTest(BaseAPITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
+        self.assertFalse('sessions' in response.data[0])
 
     def test_create(self):
         self.login(self.user)
@@ -46,6 +47,7 @@ class TrackDetailTest(BaseAPITestCase):
     def test_retrieve(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('sessions' in response.data)
 
     def test_patch(self):
         self.login(self.user)

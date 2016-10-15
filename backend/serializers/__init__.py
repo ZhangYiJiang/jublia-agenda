@@ -4,5 +4,7 @@ from .session import SessionViewSerializer, SessionUpdateSerializer
 from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
 from .user import UserSerializer
+from .venue import BaseVenueSerializer
+
 
 

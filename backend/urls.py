@@ -5,6 +5,8 @@ from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 import backend.views.session_meta
 from . import views
 
+agenda_id = r'^(?P<agenda_id>[1-9][0-9]*)'
+
 urlpatterns = [
     # For JWT authentication
     url(r'^users/auth', obtain_jwt_token, name='auth'),
@@ -24,22 +26,27 @@ urlpatterns = [
     url(r'^(?P<pk>[1-9][0-9]*)$', views.AgendaDetail.as_view(), name='agenda_detail'),
 
     # Session listing, detail
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/sessions/(?P<pk>[1-9][0-9]*)',
+    url(agenda_id + r'/sessions/(?P<pk>[1-9][0-9]*)',
         views.SessionDetail.as_view(), name='session_detail'),
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/sessions$',
+    url(agenda_id + r'/sessions$',
         views.SessionList.as_view(), name='session_list'),
 
     # Session speakers
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers/(?P<pk>[1-9][0-9]*)',
+    url(agenda_id + r'/speakers/(?P<pk>[1-9][0-9]*)',
         backend.views.session_meta.SpeakerDetail.as_view(), name='speaker_detail'),
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/speakers$',
+    url(agenda_id + r'/speakers$',
         backend.views.session_meta.SpeakerList.as_view(), name='speaker_list'),
 
     # Session tracks
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/tracks/(?P<pk>[1-9][0-9]*)',
+    url(agenda_id + r'/tracks/(?P<pk>[1-9][0-9]*)',
         backend.views.session_meta.TrackDetail.as_view(), name='track_detail'),
-    url(r'^(?P<agenda_id>[1-9][0-9]*)/tracks$',
+    url(agenda_id + r'/tracks$',
         backend.views.session_meta.TrackList.as_view(), name='track_list'),
 
+    # Session venues
+    url(agenda_id + r'/venues/(?P<pk>[1-9][0-9]*)',
+        backend.views.session_meta.VenueDetail.as_view(), name='venue_detail'),
+    url(agenda_id + r'/venues$',
+        backend.views.session_meta.VenueList.as_view(), name='venue_list'),
 
 ]

@@ -96,3 +96,17 @@ def track(data=None):
         'name': fake.bs(),
     }
     return {**track, **data}
+
+
+def venue(data=None, full=False):
+    if data is None:
+        data = {}
+
+    venue = {
+        'name': fake.secondary_address(),
+    }
+
+    if full:
+        venue['unit'] = '#' + fake.bothify(text="##-##?")
+
+    return venue

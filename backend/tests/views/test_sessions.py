@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
-from backend.tests.helper import create_session, create_user, create_agenda, create_speaker, create_track
+from backend.tests.helper import *
 from .base import BaseAPITestCase
 
 
@@ -86,6 +86,14 @@ class SessionDetailTest(BaseAPITestCase):
         self.session.speakers.add(speaker)
         response = self.client.get(self.url)
         self.assertEqualExceptMeta(speaker_data, response.data['speakers'][0])
+
+    def test_venue(self):
+        venue_data = factory.venue(full=True)
+        venue = create_venue(self.agenda, venue_data)
+        self.session.venue = venue
+        self.session.save()
+        response = self.client.get(self.url)
+        self.assertEqualExceptMeta(venue_data, response.data['venue'])
 
     def test_delete(self):
         self.login(self.user)

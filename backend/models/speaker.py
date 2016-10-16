@@ -14,7 +14,7 @@ class Speaker(BaseModel):
     company_description = models.TextField(blank=True)
     company_url = models.URLField(blank=True)
 
-    agenda = models.ForeignKey(Agenda)
+    agenda = models.ForeignKey(Agenda, models.CASCADE)
 
     def get_absolute_url(self):
         return reverse('speaker_detail', args=[self.agenda.pk, self.pk])

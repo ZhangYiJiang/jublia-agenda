@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://52.220.148.170/api/
+HOST: https://agenda-demo.jublia.com/api/
 
 # Jublia Agenda
 
@@ -23,7 +23,7 @@ set to `application/json`. The correct HTTP verb should also be observed. In gen
 
 #### Deletion 
 
-TODO: Use Soft delete? 
+All deletion on the API are hard deletes. There is no recovery or undo from the API side. 
 
 ### Responses 
 
@@ -34,12 +34,15 @@ All successful `POST` requests creating a new resource will return a `Location` 
 representing the URL of the newly created resource, and all `POST`, `PUT` and `PATCH`
 requests will return the new state of the object in the body. 
 
+Most objects also come with an `url` field that indicates the API endpoint that represents
+the object.
+
 #### Datetime format 
 
 All date and time are returned as ISO 8601 dates. This can be parsed directly by 
 [all modern browsers (IE9+)][date]. Session timing are specified using `start_at` 
 relative to the first day of the event and `duration` in minutes instead to allow
-for flexible handling of the event starting date. 
+for flexible handling of the event starting date. All absolute dates are in UTC. 
 
 
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#Browser_compatibility
@@ -49,12 +52,22 @@ for flexible handling of the event starting date.
 Unless otherwise specified, all strings returned by the API should be considered unsafe and should be 
 XSS filtered by the consumer.
 
+#### Relations 
+
+Some endpoints return session metadata that are repeated. The API will replace these with the ID of the 
+object instead. 
+
+- Track 
+- Speakers 
+- Venue 
+- Tag categories and tags 
+
 ### Errors 
 
-Response with 4xx or 5xx status codes indicate something went 
-wrong with the request. 4xx errors indicate a problem with the request, 
-and will carry a debugging message for the developer. This should 
-**not** be displayed to the end user. 
+Response with 4xx or 5xx status codes indicate something went wrong with the request. 
+4xx errors indicate a problem with the request, and will carry a debugging message for 
+the developer. Except for validation error in the case of 400 errors (see below), this should **not** 
+be displayed to the end user. 
 
     {
         "error": "Record not found"
@@ -73,10 +86,6 @@ and will carry a debugging message for the developer. This should
 #### Validation 
 
 TODO - Document HTTP 400 errors and the fields where validation errors can be found
-
-## Pagination, Filtering and Sorting
-
-TODO - For large API requests and lists we will definitely need to support filtering and pagination
 
 # Group Event Organizers
 
@@ -108,14 +117,14 @@ to the homepage with the JWT as a URL query parameter (see `/users/verify` below
 
 TODO: Include password requirements
 
-+ Request
++ Request (application/json)
 
     + Attributes
         + Include User
         + password (string, required)
         + event_name: JSConf.Asia (string) - The name of the event the new user is organizing. This will be turned into an agenda that the user can start working with immediately after signing up
 
-+ Response 201
++ Response 201 (application/json)
 
 + Response 422
 
@@ -126,13 +135,13 @@ TODO: Include password requirements
 User login using email and password. If successful a JWT will be returned 
 which can be used to call endpoints that require authentication. 
 
-+ Request
++ Request (application/json)
 
     + Attributes 
-        + email: john.doe@example.com (string, required)
+        + username: john.doe@example.com (string, required) - the user's email
         + password (string, required)
 
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes
         + token (JWT)
@@ -146,12 +155,12 @@ which can be used to call endpoints that require authentication.
 
 Exchange an existing token for a fresh one. The existing token must not have expired. 
 
-+ Request
++ Request (application/json)
 
     + Attributes
         + token (JWT)
 
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes
         + token (JWT)
@@ -183,7 +192,8 @@ the user here when they ask to reset their password.
 
 **Authentication Required.** Get profile information about the currently authenticated user. 
 
-+ Response 200 
++ Response 200 (application/json)
+
     + Attributes (User Item)
 
 ## PATCH /users/me
@@ -194,16 +204,12 @@ used on the user's profile page.
 TODO: Need something different for password and email changes because both should 
 result in email verification or notification for security reasons.
 
-+ Request
-
-    + Headers
-    
-            Authorization 
++ Request (application/json)
 
     + Attributes
         + company: Stinky Bottom's Discount Hat Emporium (string)
     
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes (User Item) 
 
@@ -221,20 +227,19 @@ pick sessions they want to go for and register interest in them.
 
 **Authentication required.** Lists all event agendas created by the user. 
 
-+ Response 200
++ Response 200 (application/json)
 
-    + Attributes (Page)
-        + agendas (array[Agenda Item])
+    + Attributes (array[Agenda Item])
 
 ## POST /agendas
 
 **Authentication required.** Creates a new event agenda under the user. 
 
-+ Request
++ Request (application/json)
 
     + Attributes (Agenda)
 
-+ Response 201
++ Response 201 (application/json)
     + Headers
     
             Location: /1
@@ -246,21 +251,25 @@ pick sessions they want to go for and register interest in them.
 Returns a specific event's aganda. This can be used by both the agenda viewer 
 and agenda builder. 
 
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes (Agenda Item)
-
+    
+        + sessions (array[Session Item])
+        + speakers (array[Speaker Item])
+        + tracks (array[Track Item])
+        
 ## PATCH /{agenda_id}
 
 **Authentication required.** Updates the agenda with new event information. 
 
-+ Request
++ Request (application/json)
     
         {
             "name": "CSSConf Asia"
         }
 
-+ Response 200
++ Response 200 (application/json)
             
     + Attributes (Agenda Item)
 
@@ -277,26 +286,28 @@ It could be administrative, like registration or lunch, a workshop or a talk wit
 one or more speakers, or even some specific timing like the submission
 deadline for a hackathon. 
 
+Sessions are always ordered by their starting time in ascending order. 
+
 ## GET /{agenda_id}/sessions
 
 Returns a paginated list of all sessions from a event. 
 
-+ Response 200
-    + Attributes (Page)
-        + sessions (array[Session Item])
++ Response 200 (application/json)
+
+    + Attributes (array[Session Item])
 
 ## POST /{agenda_id}/sessions
 
 **Authentication required.** Creates a new session at an event. 
 
-+ Request
++ Request (application/json)
 
     + Attributes
         + Include Session
-        + speakers (array[number]) - one or more speakers at the session
-        + categories (array[Category]) - one or more categories which the session belongs to
+        + speakers (array[number]) - one or more speakers at the session, represented by their id.
+        + track (number) - the id representing the track this session is on. If not specified the first track of the event will be used.
 
-+ Response 201
++ Response 201 (application/json)
     + Headers
     
             Location: /1/session/1
@@ -307,20 +318,22 @@ Returns a paginated list of all sessions from a event.
 
 Get information about a specific session from an event. 
 
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes (Session)
+        + speakers (array[Speaker Item])
+        + track (Track Item)
 
 ## PUT /{agenda_id}/sessions/{session_id}
 
 **Authentication required.**. Replace the stored session information with the 
 one specified in the request. 
 
-+ Request
++ Request (application/json)
 
     + Attribute (Session)
 
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes (Session Item)
 
@@ -329,13 +342,11 @@ one specified in the request.
 **Authentication required.** Update the stored session information with the 
 one specified in the request.
 
-+ Request
++ Request (application/json)
 
-        {
-            "name": "My Wonderful New Session Name"
-        }
+    + Attribute (Session)
 
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes (Session Item)
 
@@ -345,11 +356,141 @@ one specified in the request.
 
 + Response 204
 
-# Group Session Metadata
+# Group Speakers 
 
-The following are endpoints for working with the metadata that can be attached to individual sessions. 
+A speaker can represent the host, speaker or guest of honor at a specific session. 
+This information is provided by Jublia. 
 
-## Session Tags and Tag Categories 
+### GET /{agenda_id}/speakers
+
+Retrieve all speakers at an event. This can be used for a speakers listing 
+or guest of honor page. 
+
++ Response 200 (application/json)
+
+    + Attributes (array[Speaker])
+
+### POST /{agenda_id}/speakers
+
+**Authentication required.** Creates a new speaker to attach to the event. 
+
++ Request (application/json)
+
+    + Attributes (Speaker)
+
++ Response 200 (application/json)
+
+    + Headers
+            
+            Location: /1/speakers/1
+
+    + Attributes (Speaker Item)
+
+### GET /{agenda_id}/speakers/{speaker_id}
+
+Retrieve information about a specific speaker. 
+
++ Response 200 (application/json)
+
+    + Attributes (Speaker Item)
+        + sessions (array[Session Item])
+
+
+### PUT /{agenda_id}/speakers/{speaker_id}
+
+**Authentication required.** Replace information about the specific speaker with the one in the request.
+
++ Request (application/json)
+
+    + Attributes (Speaker)
+
++ Response 200 (application/json)
+
+    + Attribute (Speaker Item)
+
+### PATCH /{agenda_id}/speakers/{speaker_id} 
+
+**Authentication required.** Same as above, except this allows for partial update. 
+
++ Response 200 (application/json)
+
+    + Attribute (Speaker Item)
+
+### DELETE /{agenda_id}/speakers/{speaker_id} 
+
+
+**Authentication required.** Deletes the speaker. 
+
++ Response 204
+
+# Group Session Tracks 
+
+A track represents a group of sessions. An event can have multiple tracks, possibly representing 
+different locations, themes or just sets of sessions that happen at the same time. An event 
+must have at least one track. 
+
+### GET /{agenda_id}/tracks
+
+Retrieves all tracks for the event. 
+
++ Response 200 (application/json) 
+
+    + Attribute (array[Track Item])
+
+### POST /{agenda_id}/tracks
+
+**Authentication required.** Creates a new track on the agenda. 
+
++ Request (application/json)
+
+    + Attribute (Track)
+
++ Response 201 (application/json) 
+
+    + Attribute (Track Item)
+
+    + Headers
+    
+            Location: /1/tracks/2
+
+### GET /{agenda_id}/tracks/{track_id} 
+
+Retrieve information about a single track and all sessions under it 
+
++ Response 200 (application/json) 
+
+    + Attribute (Track Item) 
+        + sessions (array[Session Item]) 
+
+### PUT /{agenda_id}/tracks/{track_id} 
+
+**Authentication required.** Update track information 
+
++ Request (application/json)
+
+    + Attribute (Track)
+
+
+### PATCH /{agenda_id}/tracks/{track_id}
+
+**Authentication required.** Update track information 
+
++ Request (application/json)
+
+    + Attribute (Track)
+
+### DELETE /{agenda_id}/tracks/{track_id}
+
+**Authentication required.** Delete the track. An agenda must have at least one track, 
+so requesting to delete the last track will result in an error. Sessions that 
+are attached to the deleted track will be moved to another track. 
+
++ Response 204 
+
+
+# Group Tags and Tag Categories 
+
+**Categories are not implemented yet** 
 
 Sessions are organized by tags. A tag is simply a string that must belong to a tag category. Each
 session can have many tags from each category attached to them. Viewers can than use this 
@@ -357,22 +498,17 @@ to filter sessions they are interested in.
 
 Examples of tag categories, and the tags that can go under them:
 
- - Venue: Ballroom 1, Ballroom 2, Seminar Room 1A
  - Technology Covered: JavaScript, CSS, HTML 
  - Format: Networking, Seminar, Workshop 
+ - Theme: Grow & Earn, Develop, What's Next
+ - Area Covered: Advertising, Mobile Platform, Games, Internet of Things, Web Development, Virtual Reality
  
-
-## Speakers 
-
-A speaker can represent the host, speaker or guest of honor at a specific session. 
-This information is provided by Jublia. 
-
 
 ### GET /{agenda_id}/categories
 
 Get all session tag categories for an event. This can be used to allow viewers to filter sessions by category tags.
 
-+ Response 200
++ Response 200 (application/json)
 
     + Attributes
         
@@ -384,12 +520,12 @@ Get all session tag categories for an event. This can be used to allow viewers t
 **Authentication required.** Creates a new tag category for sessions, and optionally 
 an array of tags to be created under it. 
 
-+ Request
++ Request (application/json)
 
     + Attributes (Category)
         + tags: JavaScript, HTML, CSS (array[string])
 
-+ Response 204
++ Response 201 (application/json)
     + Header
             
             Location: /1/categories/1
@@ -398,7 +534,7 @@ an array of tags to be created under it.
 
 **Authentication required.** Update tag category. Currently this is only used for renaming.
 
-+ Request
++ Request (application/json)
 
     + Attributes
         
@@ -410,11 +546,11 @@ an array of tags to be created under it.
 
 **Authentication required.** Creates a new tag under the category. 
 
-+ Request 
++ Request (application/json)
 
     + Attributes (Tag)
 
-+ Response 204
++ Response 200 (application/json)
     + Header
     
             Location: /1/categories/1/tags/1
@@ -423,23 +559,14 @@ an array of tags to be created under it.
 
 **Authentication required.** Renames the specified tag. 
 
-+ Request
++ Request (application/json)
 
     + Attributes 
         
         + name: JavaScript (string)
 
-+ Response 204
++ Response 200 (application/json)
 
-### GET /{agenda_id}/speakers
-
-Retrieve all speakers at an event. This can be used for a speakers listing 
-or guest of honor page. 
-
-+ Response 200
-
-    + Attributes (Page)
-        + speakers (array[Speaker])
 
 ## Data Structures 
 
@@ -452,25 +579,24 @@ or guest of honor page.
 ### JWT (string)
 
 ### Item
-+ id: 1 (number)
++ id: 1 (number) - the ID of the object
++ created_at (datetime) - when the object was created, represented as an ISO 8601 string
++ updated_at (datetime) - when the object was last updated, represented as an ISO 8601 string
++ url (string) - the API URL representing the object 
 
 ### Error
 + error: "Invalid data" (string, required) - Description of the problem for the developer. This is for debugging purpose only and may change at any time. It is not meant to be displayed to the user.
 
-### Page
-+ count: 4 (number) - Number of items on this page
-
 ### User
-+ email: john.doe@example.com (string, required)
++ username: john.doe@example.com (string, required) - User's email
 + company: Happy Cogs (string) - Name of the event organizer's company
 
 ### Agenda
 + name: JSConf Asia 2016 (string, required) - Name of the event
-+ description (string) - Long description of the event 
++ description: The greatest JavaScript conference under the sun! (string) - Long description of the event 
 + location: Suntec City Hall 2A (string) - Where the event is happening
 + published: false (boolean, default) - Is the agenda publicly visible
 + start_at (date) - When the event is starting
-+ end_at (date) - When the event is ending, computed from the session information. 
 
 ### Session
 + name: The real story behind JS performance in mobile web and hybrid apps (string, required) - Name of the session
@@ -493,18 +619,21 @@ or guest of honor page.
 + company_description (string)
 + company_url (string)
 
+### Track
++ name (string) - the name of the track. Will be set to 'Track 1', 'Track 2', etc. if not provided. 
+
 ### User Item (User)
 + Include Item
 + agendas (array[Agenda Item])
 
 ### Agenda Item (Agenda)
 + Include Item
-+ sessions (array[Session Item])
++ end_at (date) - When the event is ending, computed from the session information. 
 
 ### Session Item (Session)
 + Include Item
-+ speakers (array[Speaker Item])
-+ categories (array[Category Item])
++ track (number) - The ID of the track the session is in
++ speakers (array[number]) - The ID of the speakers for the session
 
 ### Category Item (Category)
 + Include Item
@@ -514,4 +643,7 @@ or guest of honor page.
 + Include Item
 
 ### Speaker Item (Speaker)
++ Include Item
+
+### Track Item (Track)
 + Include Item

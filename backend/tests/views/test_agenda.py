@@ -21,6 +21,9 @@ class AgendaListTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
 
+        # Agenda list items should not have session data
+        self.assertFalse('sessions' in response.data[0])
+
     def test_list_empty(self):
         self.login(self.user)
         response = self.client.get(self.url)
@@ -41,10 +44,16 @@ class AgendaDetailTest(BaseAPITestCase):
         self.user = create_user(factory.user())
         self.agenda_data = factory.agenda()
         self.agenda = create_agenda(self.user, self.agenda_data)
+
+        # Session metadata
         self.speaker = create_speaker(self.agenda, factory.speaker())
-        self.session = create_session(self.agenda, factory.session(data={
+        self.venue = create_venue(self.agenda, factory.venue())
+
+        self.session = create_session(self.agenda, factory.session(full=True, data={
             'speakers': [self.speaker.pk],
+            'venue': self.venue.pk,
         }))
+
         self.url = reverse('agenda_detail', [self.agenda.pk])
 
     def test_retrieve(self):
@@ -57,10 +66,19 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertTrue('sessions' in response.data)
         self.assertTrue('tracks' in response.data)
         self.assertTrue('speakers' in response.data)
+        self.assertTrue('venues' in response.data)
 
         # Check no deep nesting
         self.assertFalse('sessions' in response.data['tracks'][0])
         self.assertFalse('sessions' in response.data['speakers'][0])
+        self.assertFalse('sessions' in response.data['venues'][0])
+
+    def test_retrieve_end_at(self):
+        self.agenda.start_at = factory.now
+        self.agenda.save()
+        create_session(self.agenda, factory.session(full=True))
+        response = self.client.get(self.url)
+        self.assertTrue('end_at' in response.data)
 
     def test_delete(self):
         self.login(self.user)

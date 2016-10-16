@@ -1,16 +1,32 @@
 @import '../../../public/css/variables';
 
+$height-per-15-min: 15px;
+
 .session-tile {
-	background: white;
-	max-width: 170px;
-	font-size: $size-normal-text;
-	margin: 10px;
-	padding: 5px;
-	border-radius: 8px;
-	box-shadow: 0px 2px 4px rgba(0,0,0,0.5);
-	cursor: move;
+    box-sizing: border-box;
+    background: white;
+    max-width: 180px;
+    font-size: $size-normal-text;
+    margin: 4px 10px;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+    cursor: move;
+    &.pending {
+        margin: 10px;
+        .session-title, .session-venue {
+            white-space: initial;
+            overflow: initial;
+            text-overflow: initial;
+        }
+    }
+    .session-title, .session-venue {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .placeholder-session {
-	height: 10px;
+    height: $height-per-15-min;
 }

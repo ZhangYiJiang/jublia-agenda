@@ -18,13 +18,27 @@ import { DOMUtilService } from '../util/dom.util.service';
 })
 export class AbsoluteColumnComponent implements OnInit {
   @Input() sessions: Session[];
+
+  @Input()
+  agenda: Agenda;
+
+  // column's date
   @Input() day: Date;
   @Input() track: Track;
+
+  // event start date
   @Input() offsetDate: Date;
 
   private PLACEHOLDER_DURATION: number = 15;
   private DEFAULT_DAY_START_OFFSET_MIN: number = 8 * 60; // default start time for column is 8AM
+
+  private DEFAULT_NEW_DURATION: number = 60;
+
+  // offset from start of the column's date to start of displayed time withn the date (8AM, etc)
   private dayStartOffsetMin: number;
+
+  // offset from event start date to column's date, in number of minutes 
+  private eventStartOffsetMin: number;
 
   displayedSessions: Session[];
 
@@ -47,57 +61,55 @@ export class AbsoluteColumnComponent implements OnInit {
       if (columnDate.toISOString() === this.day.toISOString() && columnTrackId === this.track.id) {
         console.log(sessionId + ' moved to:');
         console.log(columnDate.toLocaleString());
-        console.log('moved session:');
-        console.log(this.getSessionById(sessionId));
-        console.log(this.offsetDate.toISOString());
-        console.log(this.day.toISOString());
-
-        let duration: number = 0;
-        for (var i = 0; i < this.displayedSessions.length; ++i) {
-          let session: Session = this.displayedSessions[i];
-          if(session.id === sessionId) {
-            console.log('reached moved session');
-            break;
-          } else if(session.placeholder) {
-            console.log('reached placeholder');
-            duration += this.PLACEHOLDER_DURATION;
-          } else {
-            duration += session.duration;
-          }
-        }
-        console.log('totoal duration: ' + duration);
-        // for (var i = 0; i < el.children.length; ++i) {
-        //   let sessionEl = el.children[i];
-        //   console.log(sessionEl.getAttribute('data-session-id'));
-        //   if (sessionEl.getAttribute('data-session-id') === sessionId) {
-        //     console.log('reached moved session');
-        //     break;
-        //   }
-        //   if (this.domUtilService.hasClass(sessionEl, 'placeholder')) {
-        //     console.log('placeholder before session');
-        //   } else {
-        //     let duration = sessionEl.getAttribute('data-session-duration');
-        //     console.log(duration);
-        //   }
-        // }
+        this.handleSessionDropped(sessionId);
       }
-
     }
+  }
+
+  private handleSessionDropped(sessionId: number) {
+    let duration: number = 0;
+    let movedSession: Session;
+    for (var i = 0; i < this.displayedSessions.length; ++i) {
+      let session: Session = this.displayedSessions[i];
+      if (session.id === sessionId) {
+        movedSession = session;
+        console.log('reached moved session');
+        break;
+      } else if (session.placeholder) {
+        console.log('reached placeholder');
+        duration += this.PLACEHOLDER_DURATION;
+      } else {
+        duration += session.duration;
+      }
+    }
+    console.log('totoal duration: ' + duration);
+    let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(duration);
+    this.updateSessionTime(movedSession, globalStartTime);
+  }
+
+  private getGlobalStartTimeFromDisplayedStartTime(displayedStartTime: number) {
+    return displayedStartTime + this.dayStartOffsetMin + this.eventStartOffsetMin;
+  }
+
+  private updateSessionTime(session: Session, newStartTime: number) {
+    session.start_at = newStartTime;
+    if(session.duration == null) {
+      session.duration = this.DEFAULT_NEW_DURATION;
+    }
+    this.agendaService.updateSession(this.agenda.id, session);
   }
 
   // Get start minutes of session relative to start of the day
   getRelativeStartMin(session: Session): number {
-    console.log(session);
-    let offsetMins = moment(this.day).diff(moment(this.offsetDate), 'minutes', true);
-    if(offsetMins % 60 !== 0) {
+    if (this.eventStartOffsetMin % 60 !== 0) {
       console.error('offset date and current date diff is not exact multiple of days');
     }
-    return session.start_at - offsetMins - this.dayStartOffsetMin;
+    return session.start_at - this.eventStartOffsetMin - this.dayStartOffsetMin;
   }
 
   getSessionById(sessionId: number): Session {
     for (var i = 0; i < this.displayedSessions.length; ++i) {
-      if(this.displayedSessions[i].id === sessionId) {
+      if (this.displayedSessions[i].id === sessionId) {
         return this.displayedSessions[i];
       }
     }
@@ -109,10 +121,10 @@ export class AbsoluteColumnComponent implements OnInit {
     let lastSessionMins: number = 0;
     for (var i = 0; i < rawSessions.length; i++) {
       let relativeStartMins = this.getRelativeStartMin(rawSessions[i]);
-      if(relativeStartMins < 0) {
+      if (relativeStartMins < 0) {
         console.error('Start minutes relative to start of the day smaller than zero.');
       }
-      if(relativeStartMins - lastSessionMins < 0) {
+      if (relativeStartMins - lastSessionMins < 0) {
         console.error('Start minutes relative to last session smaller than zero.');
       }
       // round down number of placeholders
@@ -128,8 +140,8 @@ export class AbsoluteColumnComponent implements OnInit {
       lastSessionMins = relativeStartMins + rawSessions[i].duration;
     }
     // placeholders after the last session
-    // allow 4 hours
-    for (var i = 0; i < (60 / this.PLACEHOLDER_DURATION * 4); ++i) {
+    // allow 6 hours
+    for (var i = 0; i < (60 / this.PLACEHOLDER_DURATION * 6); ++i) {
       newSessions.push(<Session>{
         placeholder: true
       })
@@ -138,12 +150,13 @@ export class AbsoluteColumnComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.sessions.length > 0) {
+    if (this.sessions.length > 0) {
       let firstSessionMins = this.getRelativeStartMin(this.sessions[0]);
-      if(firstSessionMins < this.DEFAULT_DAY_START_OFFSET_MIN) {
+      if (firstSessionMins < this.DEFAULT_DAY_START_OFFSET_MIN) {
         console.error('Earliest session before 8AM, session before 8AM will be hidden.');
       }
     }
+    this.eventStartOffsetMin = moment(this.day).diff(moment(this.offsetDate), 'minutes', true);
     this.dayStartOffsetMin = this.DEFAULT_DAY_START_OFFSET_MIN;
     let sortedSessions = _.sortBy(this.sessions, ['start_at']);
     this.displayedSessions = this.addPlaceHolderSessions(sortedSessions);

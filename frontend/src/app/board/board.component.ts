@@ -53,7 +53,7 @@ export class BoardComponent implements OnInit {
     for (let session of this.nonPendingSessions) {
       if (
         //add session to every track if it doesn't have a specific track
-        (!session.track || session.track.id === columnTrack) 
+        (!session.track || session.track === columnTrack) 
         && this.isOnSameDay(this.addMinToDate(session.start_at, this.agenda.start_at) ,columnDate))
         sessions.push(session);
     }

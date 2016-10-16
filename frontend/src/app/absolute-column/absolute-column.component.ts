@@ -66,28 +66,12 @@ export class AbsoluteColumnComponent implements OnInit {
           }
         }
         console.log('totoal duration: ' + duration);
-        // for (var i = 0; i < el.children.length; ++i) {
-        //   let sessionEl = el.children[i];
-        //   console.log(sessionEl.getAttribute('data-session-id'));
-        //   if (sessionEl.getAttribute('data-session-id') === sessionId) {
-        //     console.log('reached moved session');
-        //     break;
-        //   }
-        //   if (this.domUtilService.hasClass(sessionEl, 'placeholder')) {
-        //     console.log('placeholder before session');
-        //   } else {
-        //     let duration = sessionEl.getAttribute('data-session-duration');
-        //     console.log(duration);
-        //   }
-        // }
       }
-
     }
   }
 
   // Get start minutes of session relative to start of the day
   getRelativeStartMin(session: Session): number {
-    console.log(session);
     let offsetMins = moment(this.day).diff(moment(this.offsetDate), 'minutes', true);
     if(offsetMins % 60 !== 0) {
       console.error('offset date and current date diff is not exact multiple of days');
@@ -128,8 +112,8 @@ export class AbsoluteColumnComponent implements OnInit {
       lastSessionMins = relativeStartMins + rawSessions[i].duration;
     }
     // placeholders after the last session
-    // allow 4 hours
-    for (var i = 0; i < (60 / this.PLACEHOLDER_DURATION * 4); ++i) {
+    // allow 6 hours
+    for (var i = 0; i < (60 / this.PLACEHOLDER_DURATION * 6); ++i) {
       newSessions.push(<Session>{
         placeholder: true
       })

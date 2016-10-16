@@ -5,7 +5,7 @@ export class Session {
   id: number;
   name: string;
   desciption: string;
-  track: Track;
+  track: number; // ID of the track
   speakers: Speaker[];
   start_at: number;  //number of minutes since start of the event
   duration: number;  //number of minutes

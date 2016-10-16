@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpModule } from '@angular/http';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Agenda } from '../agenda/agenda';
 import { AgendaService } from '../agenda/agenda.service';
 import { DashBoardService } from './dash-board.service';
@@ -14,6 +15,7 @@ import { DashBoardService } from './dash-board.service';
 export class DashBoardComponent implements OnInit {
   constructor(
   private router: Router,
+  private _fb: FormBuilder,
   private dashBoardService: DashBoardService,
   private agendaService: AgendaService) { }
 
@@ -22,9 +24,25 @@ export class DashBoardComponent implements OnInit {
   errorMsg: string;
   successMsg: string;
 
+  agendaForm: FormGroup;
+  formMsg: string;
+  options = {
+    placeholder: "+ track",
+    secondaryPlaceholder: "Enter a new track (optional)"
+  }
+
   ngOnInit() {
     if (this.user.authed) {
       this.getAgendas();
+
+      this.agendaForm = this._fb.group({
+            name: ['', [<any>Validators.required]],
+            abstract: [''],
+            location: [''],
+            start: ['', [<any>Validators.required]],
+            end: [''],
+            tracks: [[]]
+      });
     }
   }
 
@@ -59,6 +77,35 @@ export class DashBoardComponent implements OnInit {
         this.agendas.push(...data)
       },
       error =>  this.errorMsg = <any>error
+    );
+  }
+
+  submitAgendaForm(isValid: boolean) {
+    if (!isValid) { 
+      this.formMsg = "Please fill in Name and Start Date";
+      return;
+    }
+    console.log(this.agendaForm.value);
+    this.createAgenda();
+  }
+
+  createAgenda() {
+    this.dashBoardService.createAgenda(this.agendaForm.value.name, this.agendaForm.value.abstract, this.agendaForm.value.location, this.agendaForm.value.start).subscribe(
+      data => { 
+        this.formMsg = 'New agenda created!';
+        this.agendas.push(data);
+        for (let track of this.agendaForm.value.tracks) {
+          this.createTrack(data.id, track);
+        }
+      },
+      error =>  this.formMsg = <any>error
+    );
+  }
+
+  createTrack(agendaId: number, name: string) {
+    this.dashBoardService.createTrack(agendaId, name).subscribe(
+      success => console.log('new track created'),
+      error =>  this.formMsg = <any>error
     );
   }
 

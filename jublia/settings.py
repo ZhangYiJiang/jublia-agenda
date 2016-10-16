@@ -9,16 +9,16 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-
 import os
-
+import sys
 from datetime import timedelta
 
 from .env import *
 
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -70,7 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'jublia.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -89,7 +88,6 @@ if not DEBUG:
             'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
         },
     ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -134,9 +132,17 @@ if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_REPLACE_HTTPS_REFERER = True
 
+
+# Testing uses the memory backend so that unit tests can check if emails were
+# sent out
+if TESTING:
+    EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+PASSWORD_RESET_TIMEOUT_DAYS = 1

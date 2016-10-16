@@ -4,6 +4,6 @@
   [class.pending]="session.start_at == null">
 	<div class="session-title">{{session.name}}</div>
 	<!-- session time format is 'HH:mm - HH:mm' -->
-	<div *ngIf="session.start_at" class="session-time">{{getDisplayedTime()}}</div>
+	<div *ngIf="session.start_at && session.duration >= 60" class="session-time">{{getDisplayedTime()}}</div>
 	<div class="session-venue">{{session.venue}}</div>
 </div>

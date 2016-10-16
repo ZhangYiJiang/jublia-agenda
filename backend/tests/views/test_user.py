@@ -46,12 +46,15 @@ class UserViewTest(BaseAPITestCase):
         self.assertIn(profile.verification_token, email.body)
 
         # Request for another verification email
-        # TODO: Finish this test
-        self.client.post(reverse('resend_verification'))
+        response = self.client.post(reverse('resend_verification'), {'username': user_data['username']})
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        email = mail.outbox.pop()
+        profile.refresh_from_db()
+        self.assertIn(profile.verification_token, email.body)
 
         # Check that the verification
-        response = self.client.get(reverse('verify_email', args=[profile.verification_token]))
-        self.assertEqual(response.status_code, status.HTTP_301_MOVED_PERMANENTLY)
+        response = self.client.get(reverse('verify_email', [profile.verification_token]))
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertIn('token', response['location'])
 
     def test_get_user(self):

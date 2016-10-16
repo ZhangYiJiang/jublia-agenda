@@ -52,17 +52,18 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
     def create(self, validated_data):
         profile = validated_data.pop('profile', {})
         user = User.objects.create_user(**validated_data)
-        self._update_profile(Profile(user=user), profile)
+        self.update_profile(Profile(user=user), profile)
+        user.profile.send_verification_email()
         return user
 
     @atomic
     def update(self, instance, validated_data):
         profile = validated_data.pop('profile', {})
-        self._update_profile(instance.profile, profile)
+        self.update_profile(instance.profile, profile)
         return super().update(instance, validated_data)
 
     @classmethod
-    def _update_profile(cls, profile, data):
+    def update_profile(cls, profile, data):
         for k, v in data.items():
             if k in cls.Meta.profile_fields:
                 setattr(profile, k, v)

@@ -1,11 +1,16 @@
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, get_object_or_404
+from django.utils.translation import ugettext as _
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_jwt.views import JSONWebTokenAPIView
 
 from backend.helper import get_token
+from backend.models import Profile
 from backend.serializers import UserSerializer, UserJWTSerializer
 
 
@@ -25,16 +30,24 @@ def sign_up(request):
         return Response({'token': token}, status=status.HTTP_201_CREATED)
 
 
-@api_view
+@api_view()
 @permission_classes((AllowAny,))
-def verify_email(request):
-    pass
+def verify_email(request, token):
+    profile = get_object_or_404(Profile, verification_token=token)
+    profile.is_verified = True
+    profile.verification_token = ''
+    profile.save()
+    return redirect('/?token=' + get_token(profile.user))
 
 
 @api_view(('POST',))
-@permission_classes
+@permission_classes((AllowAny,))
 def resend_verification(request):
-    pass
+    if 'username' not in request.data:
+        raise ValidationError(_('Email is required'))
+    user = get_object_or_404(User, username=request.data['username'])
+    user.profile.send_verification_email()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserDetail(RetrieveUpdateAPIView):

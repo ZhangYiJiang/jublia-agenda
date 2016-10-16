@@ -4,7 +4,11 @@ from backend.serializers import *
 def create_user(data):
     s = UserSerializer(data=data)
     s.is_valid(raise_exception=True)
-    return s.save()
+    user = s.save()
+    # Mark the user as verified for convenience
+    user.profile.is_verified = True
+    user.profile.save()
+    return user
 
 
 def create_agenda(user, data):

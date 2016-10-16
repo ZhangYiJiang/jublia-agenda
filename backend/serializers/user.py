@@ -86,3 +86,4 @@ class UserJWTSerializer(JSONWebTokenSerializer):
             profile.send_verification_email()
             msg = _("Your email address is not verified. Please check your email address for your verification email.")
             raise ValidationError(msg)
+        return validated_data

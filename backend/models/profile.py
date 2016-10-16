@@ -8,8 +8,11 @@ from django.utils.crypto import get_random_string
 from .base import BaseModel
 
 
+EXPIRY = timedelta(hours=6)
+
+
 def token_expiry():
-    return timezone.now() + timedelta(hours=6)
+    return timezone.now() + EXPIRY
 
 
 class Profile(BaseModel):
@@ -20,6 +23,9 @@ class Profile(BaseModel):
     verification_expiry = models.DateTimeField(default=token_expiry)
 
     def send_verification_email(self):
+        pass
+
+    def verify_email(self, token):
         pass
 
     def __str__(self):

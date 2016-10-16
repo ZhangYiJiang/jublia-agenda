@@ -12,9 +12,13 @@ urlpatterns = [
     url(r'^users/auth', views.ObtainJSONWebToken.as_view(), name='auth'),
     url(r'^users/refresh', refresh_jwt_token),
 
-    # User create, retrieve, update, password reset
+    # User create, retrieve, update, verification, password reset
     url(r'^users/sign_up', views.sign_up, name='sign_up'),
     url(r'^users/me', views.UserDetail.as_view(), name='user'),
+
+    url(r'users/verify/(\w+)', views.verify_email, name='verify_email'),
+    url(r'users/verify$', views.resend_verification, name='resend_verification'),
+
     url(r'^users/password', password_reset, name='password_reset'),
     url(r'^users/password_done', password_reset_done, name='password_reset_done'),
     # TODO: Need to redirect the user to the homepage with the JWT. Probably need to rewrite

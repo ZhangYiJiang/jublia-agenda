@@ -25,6 +25,18 @@ def sign_up(request):
         return Response({'token': token}, status=status.HTTP_201_CREATED)
 
 
+@api_view
+@permission_classes((AllowAny,))
+def verify_email(request):
+    pass
+
+
+@api_view(('POST',))
+@permission_classes
+def resend_verification(request):
+    pass
+
+
 class UserDetail(RetrieveUpdateAPIView):
     serializer_class = UserSerializer
 

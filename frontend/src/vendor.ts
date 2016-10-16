@@ -12,3 +12,4 @@ import 'rxjs';
 import 'dragula/dist/dragula.css';
 import 'lodash';
 import 'moment';
+import 'hammerjs';

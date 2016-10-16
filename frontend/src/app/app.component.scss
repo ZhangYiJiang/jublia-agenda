@@ -15,8 +15,9 @@ main {
   .title {
   	margin: 0px;
     color: white;
-    float: left;
     font-size: $size-large-text;
+    float: left;
+    text-decoration: none;
   }
 
   button {
@@ -29,6 +30,7 @@ main {
     border-radius: 5px;
     font-size: $size-normal-text;
     margin-top: 14px;
+    cursor: pointer;
     &:focus {
       outline: none;
     }

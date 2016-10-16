@@ -1,8 +1,9 @@
-<h1 class="board-title">Dashboard</h1>
+<h1 class="board-title">Log In</h1>
 <div *ngIf = "!user.authed">
 	<div class = "form">
-		Email: <input #email />
-		Password: <input #password />
+		Email: <md-input #email> </md-input> 
+		<br>
+		Password: <input type="password" #password />
 	</div>
 	<button (click)="signUp(email.value, password.value); email.value=''; password.value=''">
 	  Sign Up

@@ -1,6 +1,6 @@
 <div *ngIf="session.placeholder" class="placeholder-session"></div>
 <div *ngIf="!session.placeholder" class="session-tile"
-  [style.height]="height + 'px'"
+  [style.height]="session.start_at == null?'initial':height + 'px'"
   [class.pending]="session.start_at == null">
 	<div class="session-title">{{session.name}}</div>
 	<!-- session time format is 'HH:mm - HH:mm' -->

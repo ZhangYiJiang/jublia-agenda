@@ -1,4 +1,4 @@
-import { Input, Component } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 
 import {Session} from '../session/session';
 
@@ -7,9 +7,13 @@ import {Session} from '../session/session';
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.css']
 })
-export class SessionComponent {
+export class SessionComponent implements OnInit {
   @Input() session: Session;
   @Input() offsetDate: Date;
+
+  HEIGHT_PER_15_MINS = 10; // px
+
+  height: number;
 
   getDisplayedTime(): string {
 
@@ -23,5 +27,9 @@ export class SessionComponent {
 
   getFormattedTime(date: Date): string {
     return date.getUTCHours() + ':' + (date.getUTCMinutes()<10?'0':'') + date.getUTCMinutes();
+  }
+
+  ngOnInit(): void {
+    this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS;
   }
 }

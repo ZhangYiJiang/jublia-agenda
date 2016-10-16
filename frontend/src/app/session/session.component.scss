@@ -1,16 +1,22 @@
 @import '../../../public/css/variables';
 
+$height-per-15-min: 10px;
+
 .session-tile {
+	box-sizing: border-box;
 	background: white;
-	max-width: 170px;
+	max-width: 180px;
 	font-size: $size-normal-text;
-	margin: 10px;
+	margin: 0 10px;
 	padding: 5px;
 	border-radius: 8px;
 	box-shadow: 0px 2px 4px rgba(0,0,0,0.5);
 	cursor: move;
+	&.pending {
+		margin: 10px;
+	}
 }
 
 .placeholder-session {
-	height: 10px;
+	height: $height-per-15-min;
 }

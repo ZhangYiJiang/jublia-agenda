@@ -1,11 +1,12 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework_jwt.views import JSONWebTokenAPIView
 
 from backend.helper import get_token
-from backend.serializers import UserSerializer
+from backend.serializers import UserSerializer, UserJWTSerializer
 
 
 @api_view(('POST',))
@@ -29,3 +30,7 @@ class UserDetail(RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class ObtainJSONWebToken(JSONWebTokenAPIView):
+    serializer_class = UserJWTSerializer

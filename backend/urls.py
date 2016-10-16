@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from rest_framework_jwt.views import refresh_jwt_token
 
 import backend.views.session_meta
 from . import views
@@ -9,7 +9,7 @@ agenda_id = r'^(?P<agenda_id>[1-9][0-9]*)'
 
 urlpatterns = [
     # For JWT authentication
-    url(r'^users/auth', obtain_jwt_token, name='auth'),
+    url(r'^users/auth', views.ObtainJSONWebToken.as_view(), name='auth'),
     url(r'^users/refresh', refresh_jwt_token),
 
     # User create, retrieve, update, password reset

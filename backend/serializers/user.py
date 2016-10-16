@@ -2,7 +2,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db.transaction import atomic
+from django.utils.translation import ugettext as _
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from backend.models import Profile
 from .base import HideFieldsMixin, BaseSerializer
@@ -70,3 +73,15 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
         fields = ('username', 'password', 'company',)
         profile_fields = ('company',)
         hidden_fields = ('password',)
+
+
+class UserJWTSerializer(JSONWebTokenSerializer):
+    def validate(self, attrs):
+        # After the normal JWT check, we also check if the user is verified
+        # and send them the verification email again if they haven't gotten it
+        validated_data = super().validate(attrs)
+        profile = validated_data['user'].profile
+        if not profile.is_verified:
+            profile.send_verification_email()
+            msg = _("Your email address is not verified. Please check your email address for your verification email.")
+            raise ValidationError(msg)

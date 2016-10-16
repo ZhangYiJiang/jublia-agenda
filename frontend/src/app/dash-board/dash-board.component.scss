@@ -1,3 +1,5 @@
+@import '../../../public/css/variables';
+
 .dash-board-title {
     background: gray;
 }
@@ -27,3 +29,44 @@
         }
     }
 }
+
+.sign-up-form {
+        display: inline-block;
+
+}
+
+.user-form {
+    margin-top: 50px;
+    button {
+        margin-top: 30px;
+        background-color: $color-primary;
+        color: white;
+    }
+}
+
+.log-in-card {
+    width: 400px;
+    display: inline-block;
+    border-right: 2px solid $color-secondary;
+    h2 {
+        color: $color-primary;
+    }
+    form {
+        display: inline-block;
+        md-input {
+            width: 300px;
+        }
+    }
+}
+
+.sign-up-card {
+    width: 300px;
+    margin-left: 20px;
+    display: inline-block;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px $color-secondary inset; //not working
+    -webkit-text-fill-color: white !important;
+}
+

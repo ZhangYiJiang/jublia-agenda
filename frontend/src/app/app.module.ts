@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { DragulaService, DragulaModule } from 'ng2-dragula/ng2-dragula';
 import { MaterialModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
+
 
 import { AppComponent } from './app.component';
 
@@ -36,7 +38,8 @@ import { LoggedInGuard } from './auth.guard.ts';
       { path: '**', component: DashBoardComponent } // TODO: implement 404 page component
     ]),
     DragulaModule,
-    MaterialModule.forRoot()
+    MaterialModule.forRoot(),
+    FormsModule
   ],
   declarations: [
     AppComponent,

@@ -21,6 +21,13 @@ export class DashBoardComponent implements OnInit {
   user = this.dashBoardService.user;
   errorMsg: string;
   successMsg: string;
+  loginEmail: string;
+  loginPassword: string;
+  registerEmail: string;
+  registerPassword: string;
+  organiser: string;
+  event: string;
+  signingUp = false;
 
   ngOnInit() {
     if (this.user.authed) {
@@ -28,24 +35,29 @@ export class DashBoardComponent implements OnInit {
     }
   }
 
-  signUp(email: string, password: string) {
-    if (!email || !password) { 
+  signUp() {
+    if (!this.registerEmail || !this.registerPassword) { 
       this.errorMsg = "Please enter email and password";
       return;
     }
-    this.dashBoardService.signUp(email, password).subscribe(
-      status => { if (status === 201) this.successMsg = 
-        'Sign Up success! Please check your email and click on the verification link.' },
+    this.dashBoardService.signUp(this.registerEmail, this.registerPassword,this.organiser,this.event).subscribe(
+      status => { 
+        if (status === 201){ 
+          this.successMsg = 
+          'Sign Up success! Please check your email and click on the verification link.';
+          this.toggleSigningUp();
+        }
+      },
       error =>  this.errorMsg = <any>error
     );
   }
 
-  logIn(email: string, password: string) {
-    if (!email || !password) { 
+  logIn() {
+    if (!this.loginEmail || !this.loginPassword) { 
       this.errorMsg = "Please enter email and password";
       return;
     }
-    this.dashBoardService.logIn(email, password).subscribe(
+    this.dashBoardService.logIn(this.loginEmail, this.loginPassword).subscribe(
       success => { this.successMsg = "Login success!"; this.getAgendas(); },
       error =>  this.errorMsg = <any>error
     );
@@ -64,5 +76,9 @@ export class DashBoardComponent implements OnInit {
 
   onSelect(agenda: Agenda) {
     this.router.navigate(['/agenda', agenda.id]);
+  }
+
+  toggleSigningUp() {
+    this.signingUp = !this.signingUp;
   }
 }

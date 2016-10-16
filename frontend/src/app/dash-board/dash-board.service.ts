@@ -20,8 +20,8 @@ export class DashBoardService {
     }
   }
   
-  signUp(email: string, password: string): Observable<number> {
-    let body = JSON.stringify({ username: email, password: password});
+  signUp(email: string, password: string, organiser: string, event: string): Observable<number> {
+    let body = JSON.stringify({ username: email, password: password, company: organiser, event_name: event});
     return this.httpClient.post('/api/users/sign_up', body)
                     .map(this.extractStatus)
                     .catch(this.handleError);

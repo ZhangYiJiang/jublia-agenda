@@ -1,25 +1,43 @@
-<h1 class="board-title">Log In</h1>
-<div *ngIf = "!user.authed">
-	<div class = "form">
-		Email: <md-input #email> </md-input> 
-		<br>
-		Password: <input type="password" #password />
+<div class="sign-up-form" *ngIf = "signingUp">
+	<h2>Register</h2>
+	<form >
+		<table><td>
+		<tr><md-input required placeholder="Email" [(ngModel)]="registerEmail" name="email"> </md-input></tr>
+		<tr><md-input required placeholder="Password" type="password" [(ngModel)]="registerPassword" name="password"> </md-input></tr>
+		<tr><md-input placeholder="Event Organiser" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
+		<tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
+		</td></table>
+		<button md-button (click)="toggleSigningUp()">Cancel</button>
+		<button md-button (click)="signUp()">Register</button>
+			
+	</form>
+</div>
+<div class="user-form" *ngIf = "!user.authed && !signingUp">
+	<div class="log-in-card">
+		<h2>Log In</h2>
+		<form >
+			<table><td>
+			<tr><md-input required placeholder="Email" [(ngModel)]="loginEmail" name="email"> </md-input></tr>
+			<tr><md-input required placeholder="Password" type="password" [(ngModel)]="loginPassword" name="password"> </md-input></tr>
+			</td></table>
+			<button md-button (click)="logIn()">Login</button>
+			
+		</form>
+		<div class = "success" *ngIf="successMsg">{{successMsg}}</div>
+		<div class="error" *ngIf="errorMsg">{{errorMsg}}</div>
 	</div>
-	<button (click)="signUp(email.value, password.value); email.value=''; password.value=''">
-	  Sign Up
-	</button>
-	<button (click)="logIn(email.value, password.value); email.value=''; password.value=''">
-	  Login
-	</button>
+	<div class="sign-up-card">
+		<p>Or create an account<br> and start building your event agenda</p>
+			
+		<button md-button (click)="toggleSigningUp()">Register</button>
+	</div>
 </div>
-<div class = "success" *ngIf="successMsg">{{successMsg}}</div>
-<div class="error" *ngIf="errorMsg">{{errorMsg}}</div>
-<div *ngIf = "user.authed">
-	<p>All Agenda:</p>
-	<ul class="agenda-list">
-	  <li *ngFor="let agenda of agendas | orderBy : 'id'"
-	    (click)="onSelect(agenda)">
-	    {{agenda.name}}
-	  </li>
-	</ul>
-</div>
+		<div *ngIf = "user.authed">
+			<p>All Agenda:</p>
+			<ul class="agenda-list">
+			  <li *ngFor="let agenda of agendas | orderBy : 'id'"
+			    (click)="onSelect(agenda)">
+			    {{agenda.name}}
+			  </li>
+			</ul>
+		</div>

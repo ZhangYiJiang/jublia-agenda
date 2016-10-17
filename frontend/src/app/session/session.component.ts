@@ -74,8 +74,10 @@ export class SessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
+
     if (this.session.start_at != null) {
       this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;
     }

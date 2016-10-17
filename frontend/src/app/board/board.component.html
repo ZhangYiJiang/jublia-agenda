@@ -7,7 +7,7 @@
     <div class="row">
       <div class="track" *ngFor="let track of eventTracks">
         <div class="track-title">{{track.name}}</div>
-        <absolute-column [sessions]="getSessionsForColumn(date, track.id)" [day]="date" [track]="track" [offsetDate]="offsetDate">
+        <absolute-column [sessions]="getSessionsForColumn(date, track.id)" [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda">
         </absolute-column>
       </div>  
     </div>

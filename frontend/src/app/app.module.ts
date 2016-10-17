@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { DragulaService, DragulaModule } from 'ng2-dragula/ng2-dragula';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TagInputModule } from 'ng2-tag-input';
 
 import { AppComponent } from './app.component';
 
@@ -34,7 +36,10 @@ import { LoggedInGuard } from './auth.guard.ts';
       { path: '', component: DashBoardComponent },
       { path: '**', component: DashBoardComponent } // TODO: implement 404 page component
     ]),
-    DragulaModule
+    DragulaModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TagInputModule
   ],
   declarations: [
     AppComponent,

@@ -16,11 +16,31 @@
         <div class="jumbotron">
           <p>{{getDisplayedDate()}} {{getDisplayedTime()}}</p>
           <h2>Description</h2>
-          <p>{{session.description}}</p>
+            <div *ngIf="session.description">
+              <p>{{session.description}}</p>
+            </div>
+            <div *ngIf="!session.description">
+              <p>Description not available.</p>
+            </div>
           <h2>Speakers</h2>
-          <p>{{session.speakers}}</p>
+          <div *ngIf="session.speakers">
+            <div *ngFor="let speakerId of session.speakers">
+              <h3>{{speakersObj[speakerId].name}}</h3>
+              <p>{{speakersObj[speakerId].position}}, {{speakersObj[speakerId].company}}</p>
+              <p>{{speakersObj[speakerId].email}}</p>
+              <p>{{speakersObj[speakerId].phone_number}}</p>
+            </div>
+          </div>
+          <div *ngIf="!session.speakers">
+            <p>Speaker inforamtion not available.</p>
+          </div>
           <h2>Track</h2>
-          <p>{{session.track}}</p>
+          <div *ngIf="session.track">
+            <p>{{trackObj[session.track].name}}</p>  
+          </div>
+          <div *ngIf="!session.track">
+            <p>Track inforamtion not available.</p>
+          </div>
         </div>
         <div class="clearfix">
           <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>

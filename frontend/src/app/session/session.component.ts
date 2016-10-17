@@ -1,11 +1,13 @@
 import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
 
-import {Session} from '../session/session';
+import { Session } from '../session/session';
+import { Agenda } from '../agenda/agenda';
 
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
 
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 import {
   VEXBuiltInThemes,
@@ -34,6 +36,11 @@ export class SessionComponent implements OnInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input() session: Session;
   @Input() offsetDate: Date;
+  @Input()
+  agenda: Agenda;
+
+  speakersObj = {};
+  trackObj = {};
 
   HEIGHT_PER_15_MINS = 15; // px
   VERTICAL_MARGIN = 8; // 4*2px
@@ -67,6 +74,8 @@ export class SessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
+    this.trackObj = _.keyBy(this.agenda.tracks, 'id');
     if (this.session.start_at != null) {
       this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;
     }

@@ -10,7 +10,7 @@
       [attr.data-session-start]="session.start?session.start.toISOString():''"
       [attr.data-session-duration]="session.duration"
       [class.placeholder]="session.placeholder">
-	    <my-session [session]="session" [offsetDate]="offsetDate"></my-session>
+	    <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda"></my-session>
 	  </li>
 	</ul>
 </div>

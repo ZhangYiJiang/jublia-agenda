@@ -14,17 +14,18 @@ class SpeakerListTest(BaseAPITestCase):
         self.url = reverse('speaker_list', [self.agenda.pk])
 
     def test_list(self):
-        first_speaker = factory.speaker()
-        create_speaker(self.agenda, first_speaker)
+        create_speaker(self.agenda, factory.speaker())
+        create_speaker(self.agenda, factory.speaker(full=True))
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data))
-        self.assertEqualExceptMeta(first_speaker, response.data[0])
+        self.assertEqual(2, len(response.data))
 
     def test_create(self):
         self.login(self.user)
-        response = self.client.post(self.url, factory.speaker())
+        speaker_data = factory.speaker(full=True)
+        response = self.client.post(self.url, speaker_data)
         self.assertCreatedOk(response)
+        self.assertEqualExceptMeta(speaker_data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

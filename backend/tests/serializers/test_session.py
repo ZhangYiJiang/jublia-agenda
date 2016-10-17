@@ -1,6 +1,6 @@
 from rest_framework.exceptions import ValidationError
 
-from backend.serializers import SessionUpdateSerializer
+from backend.serializers import SessionSerializer
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda, create_session, create_speaker
 from backend.tests.serializers.test_serializers import SerializerTestCase
@@ -21,12 +21,12 @@ class SessionSerializerTest(SerializerTestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
 
     def update_session(self, session, data):
-        s = SessionUpdateSerializer(data=data, instance=session, partial=True)
+        s = SessionSerializer(data=data, instance=session, partial=True)
         s.is_valid(True)
         return s.save()
 
     def replace_session(self, session, data):
-        s = SessionUpdateSerializer(data=data, instance=session)
+        s = SessionSerializer(data=data, instance=session)
         s.is_valid(True)
         return s.save()
 

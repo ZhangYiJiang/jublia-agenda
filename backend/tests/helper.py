@@ -18,7 +18,7 @@ def create_agenda(user, data):
 
 
 def create_session(agenda, data):
-    s = SessionUpdateSerializer(data=data, context={'agenda': agenda})
+    s = SessionSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 

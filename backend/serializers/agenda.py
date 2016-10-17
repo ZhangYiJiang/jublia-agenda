@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -16,6 +17,15 @@ class BaseAgendaSerializer(BaseSerializer):
         if value <= timezone.now().date():
             raise ValidationError(_("The event start date must be later than today"))
         return value
+
+    def validate_duration(self, value):
+        # Check if any sessions will be cut off by the duration
+        if self.instance:
+            end_at = (F('start_at') + F('duration')) / (60 * 24)  # 24 hours = 1 day
+            count = self.instance.session_set.annotate(end_at=end_at)\
+                .filter(end_at__gte=value).count()
+            if count:
+                raise ValidationError(_("%d sessions will be cut off by the change in duration") % count)
 
     @atomic
     def create(self, validated_data):

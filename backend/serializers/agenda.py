@@ -1,4 +1,7 @@
 from django.db.transaction import atomic
+from django.utils import timezone
+from django.utils.translation import ugettext as _
+from rest_framework.exceptions import ValidationError
 
 from backend.models import Agenda
 from .base import BaseSerializer
@@ -9,6 +12,11 @@ from .venue import BaseVenueSerializer
 
 
 class BaseAgendaSerializer(BaseSerializer):
+    def validate_start_at(self, value):
+        if value <= timezone.now().date():
+            raise ValidationError(_("The event start date must be later than today"))
+        return value
+
     @atomic
     def create(self, validated_data):
         validated_data['profile'] = self.context['user'].profile
@@ -21,7 +29,7 @@ class BaseAgendaSerializer(BaseSerializer):
 
     class Meta:
         model = Agenda
-        fields = ('id', 'name', 'location', 'start_at', 'end_at',)
+        fields = ('id', 'name', 'location', 'description', 'start_at', 'end_at', 'duration',)
 
 
 class AgendaSerializer(BaseAgendaSerializer):
@@ -32,4 +40,5 @@ class AgendaSerializer(BaseAgendaSerializer):
 
     class Meta:
         model = Agenda
-        fields = ('id', 'name', 'location', 'start_at', 'end_at', 'sessions', 'tracks', 'speakers', 'venues',)
+        fields = ('id', 'name', 'location', 'start_at', 'description', 'end_at', 'sessions', 'tracks',
+                  'speakers', 'venues', 'duration',)

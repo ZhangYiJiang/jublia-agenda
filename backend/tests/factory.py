@@ -9,6 +9,7 @@ fake = Faker()
 today = date.today()
 now = datetime.now()
 later = now + timedelta(hours=2)
+next_month = now + timedelta(days=30)
 
 
 def user(data=None, full=False):
@@ -39,7 +40,8 @@ def agenda(data=None, full=False):
             **agenda,
             'description': fake.paragraph(),
             'location': fake.street_address(),
-            'start_at': today.isoformat(),
+            'start_at': next_month.date().isoformat(),
+            'duration': random.randint(2, 6),
         }
 
     return {**agenda, **data}

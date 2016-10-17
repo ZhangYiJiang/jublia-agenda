@@ -14,6 +14,7 @@ class Agenda(BaseModel):
     location = models.CharField(blank=True, max_length=255)
     published = models.BooleanField(default=False)
     start_at = models.DateField(blank=True, null=True)
+    duration = models.IntegerField(blank=True, null=True)
 
     @property
     def owner(self):
@@ -23,6 +24,9 @@ class Agenda(BaseModel):
     def end_at(self):
         if not self.start_at:
             return None
+
+        if self.duration:
+            return self.start_at + timedelta(days=self.duration)
 
         end_at = F('duration') + F('start_at')
         latest = self.session_set.filter(start_at__isnull=False)\

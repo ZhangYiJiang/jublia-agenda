@@ -13,6 +13,12 @@ from .venue import BaseVenueSerializer
 
 
 class BaseAgendaSerializer(BaseSerializer):
+    def validate_name(self, value):
+        profile = self.context['user'].profile
+        if profile.agenda_set.filter(name__iexact=value).exists():
+            raise ValidationError(_("You already have an event with the name %s" % value))
+        return value
+
     def validate_start_at(self, value):
         if value <= timezone.now().date():
             raise ValidationError(_("The event start date must be later than today"))
@@ -21,9 +27,10 @@ class BaseAgendaSerializer(BaseSerializer):
     def validate_duration(self, value):
         # Check if any sessions will be cut off by the duration
         if self.instance:
-            end_at = (F('start_at') + F('duration')) / (60 * 24)  # 24 hours = 1 day
+            minutes = value * 24 * 60
+            end_at = F('start_at') + F('duration')
             count = self.instance.session_set.annotate(end_at=end_at)\
-                .filter(end_at__gte=value).count()
+                .filter(end_at__gte=minutes).count()
             if count:
                 raise ValidationError(_("%d sessions will be cut off by the change in duration") % count)
 

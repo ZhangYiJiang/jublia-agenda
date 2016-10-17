@@ -13,7 +13,9 @@ class AgendaSerializerTest(SerializerTestCase):
         self.user = create_user(factory.user())
 
     def patch_agenda(self, agenda, data):
-        s = AgendaSerializer(instance=agenda, data=data, partial=True)
+        s = AgendaSerializer(instance=agenda, data=data, partial=True, context={
+            'user': self.user,
+        })
         s.is_valid(True)
         return s.save()
 
@@ -52,6 +54,14 @@ class AgendaSerializerTest(SerializerTestCase):
         with self.assertRaises(ValidationError):
             create_agenda(self.user, factory.agenda(data={
                 'start_at': factory.today - timedelta(days=1),
+            }))
+
+    def test_duplicate_agenda(self):
+        agenda_data = factory.agenda(full=True)
+        create_agenda(self.user, agenda_data)
+        with self.assertRaises(ValidationError):
+            create_agenda(self.user, factory.agenda(full=True, data={
+                'name': agenda_data['name'],
             }))
 
     def test_duration_cut_session(self):

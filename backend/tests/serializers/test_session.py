@@ -1,3 +1,5 @@
+from unittest import skip
+
 from rest_framework.exceptions import ValidationError
 
 from backend.serializers import SessionSerializer
@@ -75,10 +77,10 @@ class SessionSerializerTest(SerializerTestCase):
 
     def test_invalid_session(self):
         with self.assertRaises(ValidationError):
-            create_session(self.agenda, self.negative_duration)
+            create_session(self.agenda, factory.session(data=self.negative_duration))
 
         with self.assertRaises(ValidationError):
-            create_session(self.agenda, self.start_without_duration)
+            create_session(self.agenda, factory.session(data=self.start_without_duration))
 
     def test_invalid_update(self):
         s = create_session(self.agenda, factory.session())
@@ -88,3 +90,15 @@ class SessionSerializerTest(SerializerTestCase):
 
         with self.assertRaises(ValidationError):
             self.update_session(s, self.start_without_duration)
+
+    @skip
+    def test_create_outside_agenda_duration(self):
+        # TODO: Implement this
+        self.agenda.duration = 1
+        self.agenda.save()
+
+        with self.assertRaises(ValidationError):
+            create_session(self.agenda, factory.session(data={
+                'start_at': 36 * 60,  # 12pm, second day
+                'duration': 60,
+            }))

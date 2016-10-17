@@ -4,11 +4,35 @@
     background: gray;
 }
 
+.success {
+    margin-top: 20px;
+    font-size: 14px;
+    border: 2px solid green;
+    padding: 10px;
+    display: inline-block;
+    color: green;
+    position: absolute;
+    top: 50px;
+    transform: translateX(-50%) translateX(0px);
+}
+
+.error {
+    margin-top: 20px;
+    font-size: 14px;
+    border: 2px solid red;
+    padding: 10px;
+    display: inline-block;
+    color: red;
+    position: absolute;
+    top: 50px;
+    transform: translateX(-50%) translateX(0px);
+}
 .agenda-list {
     margin: 0 0 2em 0;
     list-style-type: none;
     padding: 0;
     width: 15em;
+    display: inline-block;
     li {
         cursor: pointer;
         position: relative;
@@ -31,31 +55,48 @@
 }
 
 .sign-up-form {
-        display: inline-block;
-
+    margin-top: 100px;
 }
 
-.user-form {
-    margin-top: 50px;
-    button {
-        margin-top: 30px;
+
+
+button{
+    margin-top: 30px;
+    border: 2px solid $color-primary;
+    &.primary{
         background-color: $color-primary;
         color: white;
     }
+    &.secondary{
+        background-color: white;
+        color: $color-primary;
+    }
+}
+.user-form {
+    margin-top: 150px;
+    
 }
 
 .log-in-card {
     width: 400px;
     display: inline-block;
     border-right: 2px solid $color-secondary;
+}
+
+.dashboard-agendas {
     h2 {
-        color: $color-primary;
+        margin-top: 100px;
     }
-    form {
-        display: inline-block;
-        md-input {
-            width: 300px;
-        }
+
+}
+
+h2 {
+    color: $color-primary;
+}
+form {
+    display: inline-block;
+    md-input {
+        width: 300px;
     }
 }
 
@@ -64,9 +105,7 @@
     margin-left: 20px;
     display: inline-block;
 }
-
-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px $color-secondary inset; //not working
-    -webkit-text-fill-color: white !important;
+snack-bar-container {
+    background: $color-primary;
 }
 

@@ -15,6 +15,15 @@ body {
     text-align: center;
 }
 
+.md-visually-hidden {
+    display: none;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset; 
+    -webkit-text-fill-color: $color-secondary !important;
+}
+
 // drag-and-drop
 .gu-transit {
     opacity: 0.7;

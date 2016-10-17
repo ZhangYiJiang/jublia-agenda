@@ -15,6 +15,9 @@ class Viewer(BaseModel):
     def __str__(self):
         return self.email
 
+    class Meta:
+        unique_together = ('email', 'agenda',)
+
 
 class Registration(models.Model):
     viewer = models.ForeignKey(Viewer)

@@ -26,8 +26,7 @@ def sign_up(request):
         if 'event_name' in request.data:
             user.profile.agenda_set.create(name=request.data['event_name'])
 
-        token = get_token(user)
-        return Response({'token': token}, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 @api_view()

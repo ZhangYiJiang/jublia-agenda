@@ -1,7 +1,5 @@
 @import '../../../public/css/variables';
-
 $height-per-15-min: 15px;
-
 .session-tile {
     box-sizing: border-box;
     background: white;
@@ -10,17 +8,19 @@ $height-per-15-min: 15px;
     margin: 4px 10px;
     padding: 5px;
     border-radius: 8px;
-    box-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     cursor: move;
     &.pending {
         margin: 10px;
-        .session-title, .session-venue {
+        .session-title,
+        .session-venue {
             white-space: initial;
             overflow: initial;
             text-overflow: initial;
         }
     }
-    .session-title, .session-venue {
+    .session-title,
+    .session-venue {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -30,3 +30,30 @@ $height-per-15-min: 15px;
 .placeholder-session {
     height: $height-per-15-min;
 }
+
+.modal-container {
+    padding: 10px;
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+/* start commented backslash hack \*/
+* html .clearfix {
+    height: 1%;
+}
+
+.clearfix {
+    display: block;
+}
+/* close commented backslash hack */

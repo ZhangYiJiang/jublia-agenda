@@ -33,7 +33,7 @@ def sign_up(request):
 @permission_classes((AllowAny,))
 def verify_email(request, token):
     profile = get_object_or_404(Profile, verification_token=token)
-    if profile.verify_email():
+    if profile.verify_email(request):
         return redirect('/?token=' + get_token(profile.user))
     else:
         return _('Your verification email has expired. We have sent you another one. Please check your email.')

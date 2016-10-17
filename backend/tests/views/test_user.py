@@ -14,11 +14,18 @@ class UserViewTest(BaseAPITestCase):
     login_url = reverse('auth')
     sign_up_url = reverse('sign_up')
 
+    def setUp(self):
+        self.email_count = len(mail.outbox)
+
+    def assertEmailSent(self, count=1):
+        self.assertEqual(count, len(mail.outbox) - self.email_count)
+
     def test_sign_up(self):
         user_data = factory.user()
         response = self.client.post(self.sign_up_url, user_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue('data' not in response or 'token' not in response.data)
+        self.assertEmailSent()
 
         # Check that the user can't sign in yet
         login_response = self.client.post(self.login_url, user_data)
@@ -30,6 +37,7 @@ class UserViewTest(BaseAPITestCase):
         })
         user_response = self.client.post(self.sign_up_url, user_with_event)
         self.assertEqual(user_response.status_code, status.HTTP_201_CREATED)
+        self.assertEmailSent()
 
         # Check that a event was created with the user
         self.assertTrue(Agenda.objects.filter(name='JSConf.asia').count())
@@ -40,13 +48,16 @@ class UserViewTest(BaseAPITestCase):
 
         # Check that the verification email was send with token
         profile = User.objects.get(username=user_data['username']).profile
-        email = mail.outbox.pop()
+        self.assertEmailSent()
+        email = mail.outbox[-1]
         self.assertIn(profile.verification_token, email.body)
+        self.assertIn('http', email.body, 'URL in verification email need to be full URLs')
 
         # Request for another verification email
         response = self.client.post(reverse('resend_verification'), {'username': user_data['username']})
+        self.assertEmailSent(2)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        email = mail.outbox.pop()
+        email = mail.outbox[-1]
         profile.refresh_from_db()
         self.assertIn(profile.verification_token, email.body)
 

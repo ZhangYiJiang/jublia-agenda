@@ -21,7 +21,7 @@ export class DashBoardComponent implements OnInit {
     private agendaService: AgendaService,
     public snackBar: MdSnackBar,
     public viewContainerRef: ViewContainerRef
-  ){}
+   ){}
 
   agendas = this.dashBoardService.agendas;
   user = this.dashBoardService.user;

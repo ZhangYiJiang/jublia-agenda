@@ -3,12 +3,12 @@
 <div class="sign-up-form" *ngIf = "signingUp">
 	<h2>Register</h2>
 	<form (ngSubmit)="signUp()">
-		<table><td>
+		<table>
 		<tr><md-input required placeholder="Email" [(ngModel)]="registerEmail" name="email"> </md-input></tr>
 		<tr><md-input required placeholder="Password" type="password" [(ngModel)]="registerPassword" name="password"> </md-input></tr>
 		<tr><md-input placeholder="Event Organiser" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
 		<tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
-		</td></table>
+		</table>
 		<button class="primary" md-button type="submit" >Register</button>
 		<a class="secondary" md-button type="cancel" (click)="toggleSigningUp()">Cancel</a>			
 	</form>
@@ -17,12 +17,11 @@
 	<div class="log-in-card">
 		<h2>Log In</h2>
 		<form >
-			<table><td>
+			<table>
 			<tr><md-input required placeholder="Email" [(ngModel)]="loginEmail" name="email"> </md-input></tr>
 			<tr><md-input required placeholder="Password" type="password" [(ngModel)]="loginPassword" name="password"> </md-input></tr>
-			</td></table>
-			<button class="primary" md-button (click)="logIn()">Login</button>
-			
+			</table>
+			<button class="primary" md-button (click)="logIn()">Login</button>			
 		</form>
 	</div>
 	<div class="sign-up-card">
@@ -32,14 +31,14 @@
 	</div>
 </div>
 <div class="dashboard-agendas" *ngIf = "user.authed">
-	<h2>All Agenda:</h2>
+	<h2>All Events:</h2>
 	<ul class="agenda-list">
 	  <li *ngFor="let agenda of agendas | orderBy : 'id'"
 	    (click)="onSelect(agenda)">
 	    {{agenda.name}}
 	  </li>
 	</ul>
-	<p>New Agenda</p>
+	<p>New Event</p>
 	<form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm(agendaForm.valid)">
 	  	<div class="form-field">
 		    Name: <input type="text" formControlName="name" placeholder="Name">

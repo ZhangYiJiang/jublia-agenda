@@ -33,6 +33,7 @@ class BaseAgendaSerializer(BaseSerializer):
                 .filter(end_at__gte=minutes).count()
             if count:
                 raise ValidationError(_("%d sessions will be cut off by the change in duration") % count)
+        return value
 
     @atomic
     def create(self, validated_data):

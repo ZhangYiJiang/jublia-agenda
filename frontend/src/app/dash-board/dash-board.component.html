@@ -39,4 +39,27 @@
 	    {{agenda.name}}
 	  </li>
 	</ul>
+	<p>New Agenda</p>
+	<form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm(agendaForm.valid)">
+	  	<div class="form-field">
+		    Name: <input type="text" formControlName="name" placeholder="Name">
+		</div>
+		<div class="form-field">
+		    Abstract: <input type="text" formControlName="abstract" placeholder="Abstract">
+		</div>
+		<div class="form-field">
+		    Location: <input type="text" formControlName="location" placeholder="Location">
+		</div>
+		<div class="form-field">
+		    Start Date: <input type="date" formControlName="start" placeholder="Start Date">
+		</div>
+		<div class="form-field">
+		    End Date: <input type="date" formControlName="end" placeholder="End Date">
+		</div>
+		<div class="form-field">
+			<tag-input [ngModel]="agendaForm.tracks" [placeholder]="options.placeholder" [secondaryPlaceholder]="options.secondaryPlaceholder" formControlName="tracks"></tag-input>
+		</div>
+	  <button type="submit">Submit</button>
+	</form>
+	<div class="success" *ngIf="formMsg">{{formMsg}}</div>
 </div>

@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { DragulaService, DragulaModule } from 'ng2-dragula/ng2-dragula';
 import { MaterialModule } from '@angular/material';
-import { FormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TagInputModule } from 'ng2-tag-input';
 
 import { AppComponent } from './app.component';
 
@@ -39,7 +39,9 @@ import { LoggedInGuard } from './auth.guard.ts';
     ]),
     DragulaModule,
     MaterialModule.forRoot(),
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    TagInputModule
   ],
   declarations: [
     AppComponent,

@@ -139,8 +139,6 @@ if DEBUG:
 if TESTING:
     EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'agenda@jublia.com'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 

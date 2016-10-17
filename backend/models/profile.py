@@ -34,7 +34,7 @@ class Profile(BaseModel):
 
     def send_verification_email(self):
         # Don't send out any verification email if one has been sent out in the last 5 min
-        sent_recently = self.verification_expiry - timezone.now() < timedelta(minutes=5)
+        sent_recently = timezone.now() + EXPIRY - self.verification_expiry < timedelta(minutes=5)
         if self.is_verified or (sent_recently and not settings.TESTING):
             return
 
@@ -43,13 +43,23 @@ class Profile(BaseModel):
         self.verification_expiry = token_expiry()
         self.save()
 
-        link = reverse('verify_email', args=[self.verification_token])
+        link = settings.BASE_URL + reverse('verify_email', args=[self.verification_token])
         subject = _('Please verify your email address')
         message = _('Verify your address using this link: %s' % link)
-        send_mail(subject, message, '', (self.user.email,))
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.user.email,))
 
-    def verify_email(self, token):
-        pass
+    def verify_email(self, request):
+        if self.is_verified:
+            return True
+
+        if timezone.now() < self.verification_expiry:
+            self.is_verified = True
+            self.verification_token = ''
+            self.save()
+            return True
+        else:
+            self.send_verification_email()
+            return False
 
     def __str__(self):
         return str(self.user)

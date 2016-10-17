@@ -69,6 +69,10 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertTrue('venues' in response.data)
 
         # Check no deep nesting
+        session = response.data['sessions'][0]
+        self.assertEqual(self.speaker.pk, session['speakers'][0])
+        self.assertEqual(self.agenda.track_set.first().pk, session['track'])
+        self.assertEqual(self.venue.pk, session['venue'])
         self.assertFalse('sessions' in response.data['tracks'][0])
         self.assertFalse('sessions' in response.data['speakers'][0])
         self.assertFalse('sessions' in response.data['venues'][0])

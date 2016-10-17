@@ -19,6 +19,10 @@ class SessionListTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
 
+        # Check that relations are represented with IDs
+        track = self.agenda.track_set.first()
+        self.assertEqual(response.data[0]['track'], track.pk)
+
     def test_list_empty(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

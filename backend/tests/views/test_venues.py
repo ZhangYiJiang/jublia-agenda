@@ -27,8 +27,10 @@ class VenueListTest(BaseAPITestCase):
 
     def test_create(self):
         self.login(self.user)
-        response = self.client.post(self.url, factory.venue())
+        venue_data = factory.venue(full=True)
+        response = self.client.post(self.url, venue_data)
         self.assertCreatedOk(response)
+        self.assertEqualExceptMeta(venue_data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

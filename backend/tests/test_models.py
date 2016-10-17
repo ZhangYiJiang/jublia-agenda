@@ -21,7 +21,7 @@ class AgendaTest(TestCase):
             'track': self.track,
         }))
 
-    def test_end_at(self):
+    def test_end_at_sessions(self):
         self.assertIsNone(self.agenda.end_at)
 
         # Create some session and check that the end date for the last
@@ -32,6 +32,12 @@ class AgendaTest(TestCase):
         Session.objects.create(agenda=self.agenda, track=self.track, **factory.session())
 
         self.assertEqual(self.agenda.end_at, factory.today + timedelta(minutes=24 * 60 * 6 + 120))
+
+    def test_end_at_duration(self):
+        self.agenda.duration = 4
+        self.assertIsNone(self.agenda.end_at)
+        self.agenda.start_at = factory.today
+        self.assertEqual(self.agenda.end_at, factory.today + timedelta(days=4))
 
 
 class CategoryTest(TestCase):

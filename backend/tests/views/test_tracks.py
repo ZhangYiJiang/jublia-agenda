@@ -26,8 +26,10 @@ class TrackListTest(BaseAPITestCase):
 
     def test_create(self):
         self.login(self.user)
-        response = self.client.post(self.url, factory.track())
+        track_data = factory.track()
+        response = self.client.post(self.url, track_data)
         self.assertCreatedOk(response)
+        self.assertEqualExceptMeta(track_data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

@@ -1,7 +1,9 @@
 from datetime import timedelta
 
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F
+from django.utils.translation import ugettext as _
 from rest_framework.reverse import reverse
 
 from .base import BaseModel
@@ -12,8 +14,12 @@ class Agenda(BaseModel):
     name = models.CharField("event name", max_length=255)
     profile = models.ForeignKey(Profile, models.CASCADE)
     location = models.CharField(blank=True, max_length=255)
+    description = models.TextField(blank=True)
     published = models.BooleanField(default=False)
     start_at = models.DateField(blank=True, null=True)
+    duration = models.IntegerField(blank=True, null=True, validators=[
+        MinValueValidator(1, _("The duration of the event must be at least one day long"))
+    ])
 
     @property
     def owner(self):
@@ -23,6 +29,9 @@ class Agenda(BaseModel):
     def end_at(self):
         if not self.start_at:
             return None
+
+        if self.duration:
+            return self.start_at + timedelta(days=self.duration)
 
         end_at = F('duration') + F('start_at')
         latest = self.session_set.filter(start_at__isnull=False)\

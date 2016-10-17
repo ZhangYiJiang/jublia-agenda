@@ -46,10 +46,20 @@ class Profile(BaseModel):
         link = reverse('verify_email', args=[self.verification_token])
         subject = _('Please verify your email address')
         message = _('Verify your address using this link: %s' % link)
-        send_mail(subject, message, '', (self.user.email,))
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.user.email,))
 
-    def verify_email(self, token):
-        pass
+    def verify_email(self):
+        if self.is_verified:
+            return True
+
+        if timezone.now() < self.verification_expiry:
+            self.is_verified = True
+            self.verification_token = ''
+            self.save()
+            return True
+        else:
+            self.send_verification_email()
+            return False
 
     def __str__(self):
         return str(self.user)

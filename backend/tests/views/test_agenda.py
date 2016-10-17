@@ -31,7 +31,7 @@ class AgendaListTest(BaseAPITestCase):
         self.assertEqual(0, len(response.data))
 
     def test_create(self):
-        self.authenticate()
+        self.login(self.user)
         response = self.client.post(self.url, factory.agenda())
         self.assertCreatedOk(response)
 

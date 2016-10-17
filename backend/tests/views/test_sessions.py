@@ -78,14 +78,14 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertNoEmptyFields(response.data)
 
         # Check relations
-        self.assertTrue('name' in response.data['track'])
+        self.assertIsInstance(response.data['track'], int)
 
     def test_speaker(self):
         speaker_data = factory.speaker()
         speaker = create_speaker(self.agenda, speaker_data)
         self.session.speakers.add(speaker)
         response = self.client.get(self.url)
-        self.assertEqualExceptMeta(speaker_data, response.data['speakers'][0])
+        self.assertEqual(speaker.pk, response.data['speakers'][0])
 
     def test_venue(self):
         venue_data = factory.venue(full=True)
@@ -93,7 +93,7 @@ class SessionDetailTest(BaseAPITestCase):
         self.session.venue = venue
         self.session.save()
         response = self.client.get(self.url)
-        self.assertEqualExceptMeta(venue_data, response.data['venue'])
+        self.assertEqual(venue.pk, response.data['venue'])
 
     def test_delete(self):
         self.login(self.user)

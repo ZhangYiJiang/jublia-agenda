@@ -113,3 +113,14 @@ def venue(data=None, full=False):
         venue['unit'] = '#' + fake.bothify(text="##-##?")
 
     return venue
+
+
+def viewer(data=None):
+    if data is None:
+        data = {}
+
+    viewer = {
+        'email': fake.email(),
+    }
+
+    return {**data, **viewer}

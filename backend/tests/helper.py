@@ -41,3 +41,9 @@ def create_venue(agenda, data):
     s = VenueSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
+
+
+def create_viewer(agenda, data):
+    s = ViewerSerializer(data=data, context={'agenda': agenda})
+    s.is_valid(True)
+    return s.save()

@@ -11,11 +11,23 @@ def get_token(user):
     return jwt_encode_handler(payload)
 
 
-def generate_unique_token(model, length=20, field='token'):
-    def generate():
-        Model = apps.get_model('backend', model)
-        token = get_random_string(length)
-        while Model.objects.filter(**{field: token}).count() > 0:
-            token = get_random_string(length)
+class UniqueTokenGenerator:
+    def __init__(self, model, length=20, field='token'):
+        self.length = length
+        self.model = model
+        self.field = field
+
+    def __call__(self, *args, **kwargs):
+        Model = apps.get_model('backend', self.model)
+        token = get_random_string(self.length)
+        while Model.objects.filter(**{self.field: token}).count() > 0:
+            token = get_random_string(self.length)
         return token
-    return generate
+
+    def deconstruct(self):
+        args = (self.model,)
+        kwargs = {
+            'length': self.length,
+            'field': self.field,
+        }
+        return 'backend.helper.UniqueTokenGenerator', args, kwargs

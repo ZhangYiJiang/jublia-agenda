@@ -8,6 +8,7 @@ from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext as _
 from rest_framework.reverse import reverse
 
+from backend.helper import generate_unique_token
 from .base import BaseModel
 
 
@@ -29,7 +30,10 @@ class Profile(BaseModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE)
     company = models.CharField(max_length=255, blank=True)
     is_verified = models.BooleanField(default=False)
-    verification_token = models.CharField(max_length=50, default=generate_verify_token)
+    verification_token = models.CharField(
+        max_length=50,
+        default=generate_unique_token('Profile', field='verification_token')
+    )
     verification_expiry = models.DateTimeField(default=token_expiry)
 
     def send_verification_email(self):
@@ -39,7 +43,7 @@ class Profile(BaseModel):
             return
 
         # Generate a new token
-        self.verification_token = generate_verify_token()
+        self.verification_token = self._meta.get_field('verification_token').get_default()
         self.verification_expiry = token_expiry()
         self.save()
 

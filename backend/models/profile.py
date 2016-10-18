@@ -4,10 +4,10 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
-from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext as _
 from rest_framework.reverse import reverse
 
+from backend.helper import UniqueTokenGenerator
 from .base import BaseModel
 
 
@@ -18,18 +18,14 @@ def token_expiry():
     return timezone.now() + EXPIRY
 
 
-def generate_verify_token():
-    token = get_random_string(20)
-    while Profile.objects.filter(verification_token=token).count() > 0:
-        token = get_random_string(20)
-    return token
-
-
 class Profile(BaseModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE)
     company = models.CharField(max_length=255, blank=True)
     is_verified = models.BooleanField(default=False)
-    verification_token = models.CharField(max_length=50, default=generate_verify_token)
+    verification_token = models.CharField(
+        max_length=50,
+        default=UniqueTokenGenerator('Profile', field='verification_token')
+    )
     verification_expiry = models.DateTimeField(default=token_expiry)
 
     def send_verification_email(self):
@@ -39,14 +35,20 @@ class Profile(BaseModel):
             return
 
         # Generate a new token
-        self.verification_token = generate_verify_token()
+        token = self._meta.get_field('verification_token').get_default()
+
+        # Construct email
+        link = settings.BASE_URL + reverse('verify_email', args=[token])
+        subject = _('Please verify your email address')
+        message = _("Welcome to Jublia Agenda! Please verify your address using "
+                    "this link: %s. If you did not sign up with us, please ignore "
+                    "this email" % link)
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.user.email,))
+
+        # Only update DB after send_mail, in case send_mail fails for whatever reason
+        self.verification_token = token
         self.verification_expiry = token_expiry()
         self.save()
-
-        link = settings.BASE_URL + reverse('verify_email', args=[self.verification_token])
-        subject = _('Please verify your email address')
-        message = _('Verify your address using this link: %s' % link)
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (self.user.email,))
 
     def verify_email(self, request):
         if self.is_verified:

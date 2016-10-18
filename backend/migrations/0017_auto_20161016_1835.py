@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='profile',
             name='verification_token',
-            field=models.CharField(default=backend.models.profile.generate_verify_token, max_length=50),
+            field=models.CharField(max_length=50),
         ),
     ]

@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 
 from backend.models import Agenda
 from .base import BaseSerializer
-from .session import SessionUpdateSerializer
+from .session import SessionSerializer
 from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
 from .venue import BaseVenueSerializer
@@ -32,7 +32,7 @@ class BaseAgendaSerializer(BaseSerializer):
             count = self.instance.session_set.annotate(end_at=end_at)\
                 .filter(end_at__gte=minutes).count()
             if count:
-                raise ValidationError(_("%d sessions will be cut off by the change in duration") % count)
+                raise ValidationError(_("%d sessions will be cut off by the change in duration" % count))
         return value
 
     @atomic
@@ -51,7 +51,7 @@ class BaseAgendaSerializer(BaseSerializer):
 
 
 class AgendaSerializer(BaseAgendaSerializer):
-    sessions = SessionUpdateSerializer(many=True, required=False, source='session_set')
+    sessions = SessionSerializer(many=True, required=False, source='session_set')
     tracks = BaseTrackSerializer(many=True, required=False, source='track_set')
     speakers = BaseSpeakerSerializer(many=True, required=False, source='speaker_set')
     venues = BaseVenueSerializer(many=True, required=False, source='venue_set')

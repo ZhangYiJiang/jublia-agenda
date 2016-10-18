@@ -1,6 +1,8 @@
+from unittest import skip
+
 from rest_framework.exceptions import ValidationError
 
-from backend.serializers import SessionUpdateSerializer
+from backend.serializers import SessionSerializer
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda, create_session, create_speaker
 from backend.tests.serializers.test_serializers import SerializerTestCase
@@ -13,7 +15,7 @@ class SessionSerializerTest(SerializerTestCase):
     }
 
     start_without_duration = {
-        'start_at': factory.now.isoformat()
+        'start_at': 12 * 60,
     }
 
     def setUp(self):
@@ -21,12 +23,12 @@ class SessionSerializerTest(SerializerTestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
 
     def update_session(self, session, data):
-        s = SessionUpdateSerializer(data=data, instance=session, partial=True)
+        s = SessionSerializer(data=data, instance=session, partial=True)
         s.is_valid(True)
         return s.save()
 
     def replace_session(self, session, data):
-        s = SessionUpdateSerializer(data=data, instance=session)
+        s = SessionSerializer(data=data, instance=session)
         s.is_valid(True)
         return s.save()
 
@@ -74,17 +76,35 @@ class SessionSerializerTest(SerializerTestCase):
         self.assertEquals(3, session.speakers.count())
 
     def test_invalid_session(self):
-        with self.assertRaises(ValidationError):
-            create_session(self.agenda, self.negative_duration)
+        with self.assertRaises(ValidationError) as e:
+            create_session(self.agenda, factory.session(data=self.negative_duration))
+        self.assertValidationError(e.exception)
 
-        with self.assertRaises(ValidationError):
-            create_session(self.agenda, self.start_without_duration)
+        with self.assertRaises(ValidationError) as e:
+            create_session(self.agenda, factory.session(data=self.start_without_duration))
+        self.assertValidationError(e.exception)
 
     def test_invalid_update(self):
         s = create_session(self.agenda, factory.session())
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as e:
             self.update_session(s, self.negative_duration)
+        self.assertValidationError(e.exception)
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as e:
             self.update_session(s, self.start_without_duration)
+        self.assertValidationError(e.exception)
+
+    @skip
+    def test_create_outside_agenda_duration(self):
+        # TODO: Implement this
+        self.agenda.duration = 1
+        self.agenda.save()
+
+        with self.assertRaises(ValidationError) as e:
+            create_session(self.agenda, factory.session(data={
+                'start_at': 36 * 60,  # 12pm, second day
+                'duration': 60,
+            }))
+        self.assertValidationError(e.exception)
+

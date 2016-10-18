@@ -17,9 +17,6 @@ class UserViewTest(BaseAPITestCase):
     def setUp(self):
         self.email_count = len(mail.outbox)
 
-    def assertEmailSent(self, count=1):
-        self.assertEqual(count, len(mail.outbox) - self.email_count)
-
     def test_sign_up(self):
         user_data = factory.user()
         response = self.client.post(self.sign_up_url, user_data)
@@ -30,6 +27,7 @@ class UserViewTest(BaseAPITestCase):
         # Check that the user can't sign in yet
         login_response = self.client.post(self.login_url, user_data)
         self.assertEqual(login_response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsErrorDetail(login_response.data)
 
     def test_sign_up_with_event(self):
         user_with_event = factory.user({

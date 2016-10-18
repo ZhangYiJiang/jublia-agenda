@@ -53,4 +53,10 @@ urlpatterns = [
     url(agenda_id + r'/venues$',
         backend.views.session_meta.VenueList.as_view(), name='venue_list'),
 
+    # Agenda viewers
+    url(agenda_id + r'viewers/(?P<token>\w+)/(?P<session_id>[1-9][0-9]*)',
+        views.ViewerRegistrationView.as_view(), name='viewer_registration'),
+    url(agenda_id + r'viewers/(?P<token>\w+)$',
+        views.ViewerSessionList.as_view(), name='viewer_sessions'),
+    url(agenda_id + r'viewers$', views.create_viewer, name='viewer_create'),
 ]

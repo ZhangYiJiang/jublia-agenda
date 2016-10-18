@@ -1,11 +1,14 @@
 from django.test import TestCase
+from rest_framework.exceptions import ValidationError
 
 from backend.tests import factory
-from backend.tests.helper import create_user, create_agenda, create_track
+from backend.tests.helper import create_user, create_agenda, create_track, ErrorDetailMixin
 
 
-class SerializerTestCase(TestCase):
-    pass
+class SerializerTestCase(ErrorDetailMixin, TestCase):
+    def assertValidationError(self, error):
+        self.assertIsInstance(error, ValidationError)
+        self.assertIsErrorDetail(error.detail)
 
 
 class TrackSerializerTest(SerializerTestCase):

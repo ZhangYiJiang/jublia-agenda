@@ -12,8 +12,10 @@ export class AgendaService {
 
   constructor (private httpClient: HttpClient) {}
 
+  private BASE_URL = '/api'
+
   getAgendaById(id: string): Observable<Agenda> {
-    return this.httpClient.get('/api/'+id)
+    return this.httpClient.get(this.BASE_URL + '/'+ id)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
@@ -33,5 +35,15 @@ export class AgendaService {
   updateSession(agendaId: string, newSession: Session) {
     console.log('updating agenda ' + agendaId + ' session ' + newSession.id);
     console.log(JSON.stringify(newSession, null, 4));
+    this.httpClient
+        .put(this.BASE_URL + '/' + agendaId + '/sessions/' + newSession.id, JSON.stringify(newSession))
+        .catch(this.handleError)
+        .subscribe(
+          res => {
+            console.log('updated session, result:');
+            console.log(res)
+          },
+          err => console.error(err)
+        );
   }
 }

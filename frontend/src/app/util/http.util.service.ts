@@ -23,4 +23,12 @@ export class HttpClient {
   post(url: string, body: string) {
     return this.http.post(url, body, this.createRequestOptions());
   }
+
+  patch(url: string, body: string) {
+    return this.http.patch(url, body, this.createRequestOptions());
+  }
+
+  put(url: string, body: string) {
+    return this.http.put(url, body, this.createRequestOptions());
+  }
 }

@@ -70,6 +70,7 @@ class TrackDetailTest(BaseAPITestCase):
         self.login(self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsErrorDetail(response.data)
         self.assertEqual(1, self.agenda.track_set.count())
 
     def test_delete_no_cascade(self):

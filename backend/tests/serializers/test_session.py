@@ -76,21 +76,24 @@ class SessionSerializerTest(SerializerTestCase):
         self.assertEquals(3, session.speakers.count())
 
     def test_invalid_session(self):
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as e:
             create_session(self.agenda, factory.session(data=self.negative_duration))
+        self.assertValidationError(e.exception)
 
         with self.assertRaises(ValidationError) as e:
             create_session(self.agenda, factory.session(data=self.start_without_duration))
-        print(e.exception)
+        self.assertValidationError(e.exception)
 
     def test_invalid_update(self):
         s = create_session(self.agenda, factory.session())
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as e:
             self.update_session(s, self.negative_duration)
+        self.assertValidationError(e.exception)
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as e:
             self.update_session(s, self.start_without_duration)
+        self.assertValidationError(e.exception)
 
     @skip
     def test_create_outside_agenda_duration(self):
@@ -98,8 +101,10 @@ class SessionSerializerTest(SerializerTestCase):
         self.agenda.duration = 1
         self.agenda.save()
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as e:
             create_session(self.agenda, factory.session(data={
                 'start_at': 36 * 60,  # 12pm, second day
                 'duration': 60,
             }))
+        self.assertValidationError(e.exception)
+

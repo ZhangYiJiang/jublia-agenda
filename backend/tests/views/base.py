@@ -6,10 +6,10 @@ from rest_framework.test import APITestCase
 
 from backend.helper import get_token
 from backend.tests import factory
-from backend.tests.helper import create_user
+from backend.tests.helper import create_user, ErrorDetailMixin
 
 
-class BaseAPITestCase(APITestCase):
+class BaseAPITestCase(ErrorDetailMixin, APITestCase):
     def authenticate(self):
         url = reverse('sign_up')
         response = self.client.post(url, factory.user())

@@ -31,6 +31,7 @@ class ViewerCreateTest(BaseAPITestCase):
         self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
         second_response = self.client.post(self.url, viewer_data)
         self.assertEqual(second_response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsErrorDetail(second_response.data)
         self.assertEmailSent(2)
 
 

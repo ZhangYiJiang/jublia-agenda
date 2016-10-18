@@ -27,6 +27,7 @@ class UserViewTest(BaseAPITestCase):
         # Check that the user can't sign in yet
         login_response = self.client.post(self.login_url, user_data)
         self.assertEqual(login_response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsErrorDetail(login_response.data)
 
     def test_sign_up_with_event(self):
         user_with_event = factory.user({

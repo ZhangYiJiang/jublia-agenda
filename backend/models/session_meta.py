@@ -19,7 +19,7 @@ class Track(BaseModel):
     def delete(self, using=None, keep_parents=False):
         if self.agenda.track_set.count() == 1:
             raise ValidationError({
-                "detail": _("The event agenda must have at least one track"),
+                "non-field-errors": [_("The event agenda must have at least one track")],
             })
 
         # Move all existing sessions on this track to another one to prevent the

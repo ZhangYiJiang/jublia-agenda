@@ -1,9 +1,49 @@
 <div *ngIf="session.placeholder" class="placeholder-session"></div>
 <div *ngIf="!session.placeholder" class="session-tile"
   [style.height]="session.start_at == null?'initial':height + 'px'"
-  [class.pending]="session.start_at == null">
+  [class.pending]="session.start_at == null"
+  (click)="clicked($event)">
 	<div class="session-title">{{session.name}}</div>
 	<!-- session time format is 'HH:mm - HH:mm' -->
 	<div *ngIf="session.start_at && session.duration >= 60" class="session-time">{{getDisplayedTime()}}</div>
 	<div class="session-venue">{{session.venue}}</div>
 </div>
+<template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+    <div class="modal-container">
+        <div class="page-header">
+            <h1>{{session.name}}</h1>
+        </div>
+        <div class="jumbotron">
+          <p>{{getDisplayedDate()}} {{getDisplayedTime()}}</p>
+          <h2>Description</h2>
+            <div *ngIf="session.description">
+              <p>{{session.description}}</p>
+            </div>
+            <div *ngIf="!session.description">
+              <p>Description not available.</p>
+            </div>
+          <h2>Speakers</h2>
+          <div *ngIf="session.speakers">
+            <div *ngFor="let speakerId of session.speakers">
+              <h3>{{speakersObj[speakerId].name}}</h3>
+              <p>{{speakersObj[speakerId].position}}, {{speakersObj[speakerId].company}}</p>
+              <p>{{speakersObj[speakerId].email}}</p>
+              <p>{{speakersObj[speakerId].phone_number}}</p>
+            </div>
+          </div>
+          <div *ngIf="!session.speakers">
+            <p>Speaker inforamtion not available.</p>
+          </div>
+          <h2>Track</h2>
+          <div *ngIf="session.track">
+            <p>{{trackObj[session.track].name}}</p>  
+          </div>
+          <div *ngIf="!session.track">
+            <p>Track inforamtion not available.</p>
+          </div>
+        </div>
+        <div class="clearfix">
+          <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
+        </div>
+    </div>
+</template>

@@ -1,6 +1,7 @@
 import { Input, Component,trigger, state, style, transition,animate } from '@angular/core';
 
 import {Session} from '../session/session';
+import { Agenda } from '../agenda/agenda';
 
 const MARGIN_LEFT_SHOW: string = '0px';
 const MARGIN_LEFT_HIDE: string = '-200px';
@@ -26,6 +27,9 @@ const MARGIN_RIGHT_HIDE: string = 'px';
 export class RelativeColumnComponent {
   @Input() sessions: Session[];
   @Input() offsetDate: Date;
+
+  @Input()
+  agenda: Agenda;
 
   colState = 'open';
   isColShown = true;

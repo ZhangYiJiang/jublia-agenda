@@ -41,17 +41,20 @@ class SessionListTest(BaseAPITestCase):
             create_speaker(self.agenda, factory.speaker(full=True)),
         ]
 
-        response = self.client.post(self.url, factory.speaker(full=True, data={
+        session_data = factory.session(full=True, data={
             'speakers': [s.pk for s in speakers],
             'track': track.pk,
-        }))
+        })
+        response = self.client.post(self.url, session_data)
 
         self.assertCreatedOk(response)
 
+        # Check that the speakers match, and that the session has been created
         pk = response.data['id']
         self.assertTrue(track.session_set.filter(pk=pk).exists())
         for speaker in speakers:
             self.assertTrue(speaker.session_set.filter(pk=pk).exists())
+        self.assertEqualExceptMeta(session_data, response.data)
 
     def test_create_on_track(self):
         self.login(self.user)

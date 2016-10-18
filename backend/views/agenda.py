@@ -13,7 +13,7 @@ class AgendaList(UserContextMixin, ListCreateAPIView):
         return Agenda.objects.filter(profile__user=self.request.user)
 
 
-class AgendaDetail(RetrieveUpdateDestroyAPIView):
+class AgendaDetail(UserContextMixin, RetrieveUpdateDestroyAPIView):
     queryset = Agenda.objects.all()
 
     permission_classes = (IsOwnerOrReadOnly,)

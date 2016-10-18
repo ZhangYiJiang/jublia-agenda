@@ -26,6 +26,9 @@ import {Where} from './pipes/where.pipe';
 
 import { LoggedInGuard } from './auth.guard.ts';
 
+import { ModalModule } from 'angular2-modal';
+import { VexModalModule} from 'angular2-modal/plugins/vex';
+
 
 @NgModule({
   imports: [
@@ -41,7 +44,9 @@ import { LoggedInGuard } from './auth.guard.ts';
     MaterialModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    TagInputModule
+    TagInputModule,
+    ModalModule.forRoot(),
+    VexModalModule
   ],
   declarations: [
     AppComponent,

@@ -67,6 +67,7 @@ export class AbsoluteColumnComponent implements OnInit {
   }
 
   private handleSessionDropped(sessionId: number) {
+    // TODO: Update the track info as well
     let duration: number = 0;
     let movedSession: Session;
     for (var i = 0; i < this.displayedSessions.length; ++i) {

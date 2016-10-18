@@ -32,8 +32,11 @@ class AgendaListTest(BaseAPITestCase):
 
     def test_create(self):
         self.login(self.user)
-        response = self.client.post(self.url, factory.agenda())
+        agenda_data = factory.agenda(full=True)
+        response = self.client.post(self.url, agenda_data)
         self.assertCreatedOk(response)
+        response.data.pop('end_at')
+        self.assertEqualExceptMeta(agenda_data, response.data)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

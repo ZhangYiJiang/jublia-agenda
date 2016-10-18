@@ -4,8 +4,8 @@
 	<h2>Register</h2>
 	<form (ngSubmit)="signUp()">
 		<table>
-		<tr><md-input required placeholder="Email" [(ngModel)]="registerEmail" name="email"> </md-input></tr>
-		<tr><md-input required placeholder="Password" type="password" [(ngModel)]="registerPassword" name="password"> </md-input></tr>
+		<tr><md-input required placeholder="Email" [(ngModel)]="registerEmail" name="email" autocomplete="new-password"></md-input> </tr>
+		<tr><md-input required placeholder="Password" type="password" [(ngModel)]="registerPassword" name="password" autocomplete="new-password"> </md-input></tr>
 		<tr><md-input placeholder="Event Organiser" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
 		<tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
 		</table>

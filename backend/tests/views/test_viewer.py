@@ -18,6 +18,7 @@ class ViewerCreateTest(BaseAPITestCase):
         response = self.client.post(self.url, factory.viewer())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('token', response.data)
+        self.assertEmailSent()
 
 
 class ViewerRegisterTest(BaseAPITestCase):

@@ -17,9 +17,6 @@ class UserViewTest(BaseAPITestCase):
     def setUp(self):
         self.email_count = len(mail.outbox)
 
-    def assertEmailSent(self, count=1):
-        self.assertEqual(count, len(mail.outbox) - self.email_count)
-
     def test_sign_up(self):
         user_data = factory.user()
         response = self.client.post(self.sign_up_url, user_data)

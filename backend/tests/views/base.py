@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core import mail
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -60,4 +61,8 @@ class BaseAPITestCase(APITestCase):
         response = getattr(self.client, method.lower())(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, message)
 
-
+    def assertEmailSent(self, count=1):
+        if not hasattr(self, 'email_count'):
+            raise AssertionError("Please add 'self.email_count = len(mail.outbox)' to the "
+                                 "test setUp method")
+        self.assertEqual(count, len(mail.outbox) - self.email_count)

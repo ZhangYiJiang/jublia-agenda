@@ -61,12 +61,12 @@ export class AbsoluteColumnComponent implements OnInit {
       if (columnDate.toISOString() === this.day.toISOString() && columnTrackId === this.track.id) {
         console.log(sessionId + ' moved to:');
         console.log(columnDate.toLocaleString());
-        this.handleSessionDropped(sessionId);
+        this.handleSessionDropped(sessionId, columnTrackId);
       }
     }
   }
 
-  private handleSessionDropped(sessionId: number) {
+  private handleSessionDropped(sessionId: number, trackId: number) {
     // TODO: Update the track info as well
     let duration: number = 0;
     let movedSession: Session;
@@ -85,18 +85,19 @@ export class AbsoluteColumnComponent implements OnInit {
     }
     console.log('totoal duration: ' + duration);
     let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(duration);
-    this.updateSessionTime(movedSession, globalStartTime);
+    this.updateDroppedSession(movedSession, globalStartTime, trackId);
   }
 
   private getGlobalStartTimeFromDisplayedStartTime(displayedStartTime: number) {
     return displayedStartTime + this.dayStartOffsetMin + this.eventStartOffsetMin;
   }
 
-  private updateSessionTime(session: Session, newStartTime: number) {
+  private updateDroppedSession(session: Session, newStartTime: number, trackId: number) {
     session.start_at = newStartTime;
     if(session.duration == null) {
       session.duration = this.DEFAULT_NEW_DURATION;
     }
+    session.track = trackId;
     this.agendaService.updateSession(this.agenda.id, session);
   }
 

@@ -49,42 +49,107 @@ export class AbsoluteColumnComponent implements OnInit {
       // console.log(`drop: ${value}`);
       this.onDrop(value.slice(1));
     });
+
+    dragulaService.over.subscribe((value: any) => {
+      // console.log(`drop: ${value}`);
+      // this.onOver(value.slice(1));
+    });
   }
 
-  private onDrop(args: [HTMLElement, HTMLElement]) {
-    let [e, el] = args;
-    let sessionId = parseInt(e.getAttribute('data-session-id'));
+  private getColumnDate(el: HTMLElement): Date {
+    return new Date(el.getAttribute('data-date'));
+  }
+
+  private getColumnTrack(el: HTMLElement): number {
+    return +el.getAttribute('data-track-id');
+  }
+
+  private isEventForAbsoluteColumn(el: HTMLElement): boolean {
     let columnType = el.getAttribute('data-column-type');
-    if (columnType === 'absolute') {
-      let columnDate = new Date(el.getAttribute('data-date'));
-      let columnTrackId = +el.getAttribute('data-track-id');
-      if (columnDate.toISOString() === this.day.toISOString() && columnTrackId === this.track.id) {
+    return columnType === 'absolute';
+  }
+
+  private isEventForThisColumn(columnDate: Date, columnTrackId: number): boolean {
+    return columnDate.toISOString() === this.day.toISOString() && columnTrackId === this.track.id;
+  }
+
+  private onDrop(args: [HTMLElement, HTMLElement, HTMLElement]) {
+    let [e, el, source] = args;
+    if (this.isEventForAbsoluteColumn(el)) {
+      let columnDate = this.getColumnDate(el);
+      let columnTrackId = this.getColumnTrack(el);
+      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
+        let sessionId = parseInt(e.getAttribute('data-session-id'));
         console.log(sessionId + ' moved to:');
         console.log(columnDate.toLocaleString());
         this.handleSessionDropped(sessionId, columnTrackId);
+        this.refreshSessions();
+      }
+    }
+
+    if (this.isEventForAbsoluteColumn(source)) {
+      let columnDate = this.getColumnDate(source);
+      let columnTrackId = this.getColumnTrack(source);
+      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
+        this.refreshSessions();
       }
     }
   }
 
-  private handleSessionDropped(sessionId: number, trackId: number) {
-    // TODO: Update the track info as well
+  private onOver(args: [HTMLElement, HTMLElement, HTMLElement]) {
+    let [e, el, container] = args;
+    let moved = !(el === container);
+    if (this.isEventForAbsoluteColumn(container)) {
+      let columnDate = this.getColumnDate(container);
+      let columnTrackId = this.getColumnTrack(container);
+      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
+        let sessionId = parseInt(e.getAttribute('data-session-id'));
+        console.log(sessionId + ' moved container:');
+        console.log(columnDate.toLocaleString());
+        console.log('track ' + columnTrackId);
+      }
+    }
+    if (this.isEventForAbsoluteColumn(el)) {
+      let columnDate = this.getColumnDate(el);
+      let columnTrackId = this.getColumnTrack(el);
+      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
+        let sessionId = parseInt(e.getAttribute('data-session-id'));
+        console.log(sessionId + ' moved el:');
+        console.log(columnDate.toLocaleString());
+        console.log('track ' + columnTrackId);
+      }
+    }
+  }
+
+  private reCalculateSessionStartTime(sessionId: number): number {
     let duration: number = 0;
-    let movedSession: Session;
     for (var i = 0; i < this.displayedSessions.length; ++i) {
       let session: Session = this.displayedSessions[i];
       if (session.id === sessionId) {
-        movedSession = session;
-        console.log('reached moved session');
         break;
       } else if (session.placeholder) {
-        console.log('reached placeholder');
         duration += this.PLACEHOLDER_DURATION;
       } else {
         duration += session.duration;
       }
     }
-    console.log('totoal duration: ' + duration);
     let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(duration);
+    return globalStartTime;
+  }
+
+  private refreshSessions() {
+    for (var i = 0; i < this.displayedSessions.length; i++) {
+      if (!this.displayedSessions[i].placeholder) {
+        let newStartTime = this.reCalculateSessionStartTime(this.displayedSessions[i].id);
+        this.displayedSessions[i].start_at = newStartTime;
+        this.agendaService.updateSession(this.agenda.id, this.displayedSessions[i]);
+      }
+    }
+  }
+
+  private handleSessionDropped(sessionId: number, trackId: number) {
+    let movedSession = this.getSessionById(sessionId);
+    let globalStartTime = this.reCalculateSessionStartTime(movedSession.id);
     this.updateDroppedSession(movedSession, globalStartTime, trackId);
   }
 
@@ -94,7 +159,7 @@ export class AbsoluteColumnComponent implements OnInit {
 
   private updateDroppedSession(session: Session, newStartTime: number, trackId: number) {
     session.start_at = newStartTime;
-    if(session.duration == null) {
+    if (session.duration == null) {
       session.duration = this.DEFAULT_NEW_DURATION;
     }
     session.track = trackId;
@@ -127,12 +192,13 @@ export class AbsoluteColumnComponent implements OnInit {
         console.error('Start minutes relative to start of the day smaller than zero.');
       }
       if (relativeStartMins - lastSessionMins < 0) {
-        console.error('Start minutes relative to last session smaller than zero.');
+        console.warn('Start minutes relative to last session smaller than zero, session conflict.');
+        console.warn('Conflicted sessions: ');
+        console.warn(rawSessions[i-1].name);
+        console.warn(rawSessions[i].name);
       }
       // round down number of placeholders
       let noOfPlaceholders = Math.floor((relativeStartMins - lastSessionMins) / this.PLACEHOLDER_DURATION);
-      console.log('relativeStartMins: ' + relativeStartMins);
-      console.log('noOfPlaceholders: ' + noOfPlaceholders);
       for (var j = 0; j < noOfPlaceholders; ++j) {
         newSessions.push(<Session>{
           placeholder: true
@@ -152,13 +218,13 @@ export class AbsoluteColumnComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.eventStartOffsetMin = moment(this.day).diff(moment(this.offsetDate), 'minutes', true);
     if (this.sessions.length > 0) {
       let firstSessionMins = this.getRelativeStartMin(this.sessions[0]);
       if (firstSessionMins < this.DEFAULT_DAY_START_OFFSET_MIN) {
         console.error('Earliest session before 8AM, session before 8AM will be hidden.');
       }
     }
-    this.eventStartOffsetMin = moment(this.day).diff(moment(this.offsetDate), 'minutes', true);
     this.dayStartOffsetMin = this.DEFAULT_DAY_START_OFFSET_MIN;
     let sortedSessions = _.sortBy(this.sessions, ['start_at']);
     this.displayedSessions = this.addPlaceHolderSessions(sortedSessions);

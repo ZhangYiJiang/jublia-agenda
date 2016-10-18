@@ -2,6 +2,7 @@ from django.core import mail
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from backend.models import Viewer
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda, create_session, create_viewer
 from .base import BaseAPITestCase
@@ -9,16 +10,20 @@ from .base import BaseAPITestCase
 
 class ViewerCreateTest(BaseAPITestCase):
     def setUp(self):
-        self.email_count = len(mail.outbox)
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda(full=True))
         self.url = reverse('viewer_create', [self.agenda.pk])
+        self.email_count = len(mail.outbox)
 
     def testCreate(self):
-        response = self.client.post(self.url, factory.viewer())
+        viewer_data = factory.viewer()
+        response = self.client.post(self.url, viewer_data)
+        viewer = Viewer.objects.get(email=viewer_data['email'])
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn('token', response.data)
+        self.assertEqual(viewer.token, response.data['token'])
         self.assertEmailSent()
+        email = mail.outbox[-1]
+        self.assertIn(viewer.token, email.body)
 
 
 class ViewerRegisterTest(BaseAPITestCase):

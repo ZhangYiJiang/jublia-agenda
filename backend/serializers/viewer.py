@@ -29,7 +29,9 @@ class ViewerSerializer(BaseSerializer):
 
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']
-        return super().create(validated_data)
+        viewer = super().create(validated_data)
+        viewer.send_agenda_email()
+        return viewer
 
     class Meta:
         model = Viewer

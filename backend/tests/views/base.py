@@ -64,5 +64,6 @@ class BaseAPITestCase(APITestCase):
     def assertEmailSent(self, count=1):
         if not hasattr(self, 'email_count'):
             raise AssertionError("Please add 'self.email_count = len(mail.outbox)' to the "
-                                 "test setUp method")
-        self.assertEqual(count, len(mail.outbox) - self.email_count)
+                                 "test setUp method (remember to place it AFTER any create_user)")
+        self.assertEqual(count, len(mail.outbox) - self.email_count,
+                         "Expected %d emails to have been sent" % count)

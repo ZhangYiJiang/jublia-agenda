@@ -15,7 +15,7 @@ class SessionSerializerTest(SerializerTestCase):
     }
 
     start_without_duration = {
-        'start_at': factory.now.isoformat()
+        'start_at': 12 * 60,
     }
 
     def setUp(self):
@@ -79,8 +79,9 @@ class SessionSerializerTest(SerializerTestCase):
         with self.assertRaises(ValidationError):
             create_session(self.agenda, factory.session(data=self.negative_duration))
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as e:
             create_session(self.agenda, factory.session(data=self.start_without_duration))
+        print(e.exception)
 
     def test_invalid_update(self):
         s = create_session(self.agenda, factory.session())

@@ -32,7 +32,7 @@ class BaseAgendaSerializer(BaseSerializer):
             count = self.instance.session_set.annotate(end_at=end_at)\
                 .filter(end_at__gte=minutes).count()
             if count:
-                raise ValidationError(_("%d sessions will be cut off by the change in duration") % count)
+                raise ValidationError(_("%d sessions will be cut off by the change in duration" % count))
         return value
 
     @atomic

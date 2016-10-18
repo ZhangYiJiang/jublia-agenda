@@ -25,6 +25,14 @@ class ViewerCreateTest(BaseAPITestCase):
         email = mail.outbox[-1]
         self.assertIn(viewer.token, email.body)
 
+    def testDoubleCreate(self):
+        viewer_data = factory.viewer()
+        first_response = self.client.post(self.url, viewer_data)
+        self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
+        second_response = self.client.post(self.url, viewer_data)
+        self.assertEqual(second_response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEmailSent(2)
+
 
 class ViewerRegisterTest(BaseAPITestCase):
     def setUp(self):

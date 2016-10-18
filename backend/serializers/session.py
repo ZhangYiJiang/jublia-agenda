@@ -19,7 +19,8 @@ class SessionSerializer(BaseSerializer):
     venue = AgendaPrimaryKeyRelatedField(required=False, klass='Venue')
 
     def validate(self, attrs):
-        if 'start_at' in attrs and 'duration' not in attrs and 'duration' not in self.instance:
+        no_duration = 'duration' not in attrs and (not self.instance or 'duration' not in self.instance)
+        if 'start_at' in attrs and no_duration:
             raise ValidationError(_("Start time can only be added when the duration is defined"))
         return attrs
 

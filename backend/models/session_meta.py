@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.transaction import atomic
+from django.utils.translation import ugettext as _
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 
@@ -17,7 +18,9 @@ class Track(BaseModel):
     @atomic
     def delete(self, using=None, keep_parents=False):
         if self.agenda.track_set.count() == 1:
-            raise ValidationError("The event agenda must have at least one track")
+            raise ValidationError({
+                "detail": _("The event agenda must have at least one track"),
+            })
 
         # Move all existing sessions on this track to another one to prevent the
         # delete from cascading to them

@@ -94,5 +94,5 @@ class SessionTest(TestCase):
 
         last = Session.objects.first()
         for session in Session.objects.all()[1:]:
-            self.assertGreater(session.start_at, last.start_at)
+            self.assertGreaterEqual(session.start_at, last.start_at)
             last = session

@@ -1,3 +1,5 @@
+from django.apps import apps
+from django.utils.crypto import get_random_string
 from rest_framework_jwt.settings import api_settings
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -7,3 +9,25 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 def get_token(user):
     payload = jwt_payload_handler(user)
     return jwt_encode_handler(payload)
+
+
+class UniqueTokenGenerator:
+    def __init__(self, model, length=20, field='token'):
+        self.length = length
+        self.model = model
+        self.field = field
+
+    def __call__(self, *args, **kwargs):
+        Model = apps.get_model('backend', self.model)
+        token = get_random_string(self.length)
+        while Model.objects.filter(**{self.field: token}).count() > 0:
+            token = get_random_string(self.length)
+        return token
+
+    def deconstruct(self):
+        args = (self.model,)
+        kwargs = {
+            'length': self.length,
+            'field': self.field,
+        }
+        return 'backend.helper.UniqueTokenGenerator', args, kwargs

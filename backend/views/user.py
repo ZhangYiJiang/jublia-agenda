@@ -43,7 +43,7 @@ def verify_email(request, token):
 @permission_classes((AllowAny,))
 def resend_verification(request):
     if 'username' not in request.data:
-        raise ValidationError(_('Email is required'))
+        raise ValidationError({'username': _('Username is required')})
     user = get_object_or_404(User, username=request.data['username'])
     user.profile.send_verification_email()
     return Response(status=status.HTTP_204_NO_CONTENT)

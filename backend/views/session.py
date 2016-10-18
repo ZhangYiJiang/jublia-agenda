@@ -2,12 +2,12 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 
 from backend.models import Session
 from backend.permissions import IsOwnerOrReadOnly, IsAgendaOwnerOrReadOnly
-from backend.serializers import SessionUpdateSerializer
+from backend.serializers import SessionSerializer
 from .base import AgendaContextMixin
 
 
 class SessionViewMixin(AgendaContextMixin):
-    serializer_class = SessionUpdateSerializer
+    serializer_class = SessionSerializer
 
     def get_queryset(self):
         return Session.objects.filter(agenda=self.kwargs['agenda_id'])

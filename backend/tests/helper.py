@@ -18,7 +18,7 @@ def create_agenda(user, data):
 
 
 def create_session(agenda, data):
-    s = SessionUpdateSerializer(data=data, context={'agenda': agenda})
+    s = SessionSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 
@@ -41,3 +41,18 @@ def create_venue(agenda, data):
     s = VenueSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
+
+
+def create_viewer(agenda, data):
+    s = ViewerSerializer(data=data, context={'agenda': agenda})
+    s.is_valid(True)
+    return s.save()
+
+
+class ErrorDetailMixin:
+    def assertIsErrorDetail(self, detail):
+        self.assertIsInstance(detail, dict)
+        for v in detail.values():
+            self.assertFalse(isinstance(v, str))
+            for s in v:
+                self.assertIsInstance(s, str)

@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from backend.models import Viewer, Agenda
 from backend.serializers import ViewerSerializer
+from .base import AgendaContextMixin
 
 
 @api_view(('POST',))
@@ -25,7 +26,7 @@ def get_viewer(agenda_id, token):
     return get_object_or_404(Viewer.objects, agenda=agenda_id, token=token)
 
 
-class ViewerSessionList(RetrieveAPIView):
+class ViewerSessionList(AgendaContextMixin, RetrieveAPIView):
     serializer_class = ViewerSerializer
     permission_classes = (AllowAny,)
 
@@ -37,7 +38,16 @@ class ViewerRegistrationView(APIView):
     permission_classes = (AllowAny,)
 
     def put(self, request, agenda_id, token, session_id):
+        # This is probably a little more convoluted than it should be
+        # should refactor when there's time
+        agenda = get_object_or_404(Agenda.objects, pk=agenda_id)
         viewer = get_viewer(agenda_id, token)
+        session = get_object_or_404(agenda.session_set, pk=session_id)
+        if not viewer.registration_set.filter(session=session_id).exists():
+            viewer.registration_set.create(session=session)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, agenda_id, token, session_id):
-        viewer = get_viewer(agenda_id, token)
+        queryset = get_viewer(agenda_id, token).sessions
+        get_object_or_404(queryset, pk=session_id).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

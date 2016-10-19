@@ -6,8 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from backend.models import Session
-from backend.models import Viewer, Agenda
+from backend.models import Viewer, Agenda, Session
 from backend.serializers import ViewerSerializer
 from .base import AgendaContextMixin
 

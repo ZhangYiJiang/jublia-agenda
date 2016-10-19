@@ -32,6 +32,11 @@ export class BoardComponent implements OnInit {
       // console.log(`drop: ${value}`);
       this.onDrop(value.slice(1));
     });
+
+    dragulaService.setOptions('column', {
+      // copy: true,
+      // copySortSource: true
+    });
   }
 
   private onDrop(args: [HTMLElement, HTMLElement]) {

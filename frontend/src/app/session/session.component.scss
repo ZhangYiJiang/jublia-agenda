@@ -28,6 +28,8 @@ $height-per-15-min: 15px;
 }
 
 .placeholder-session {
+    box-sizing: border-box;
+    margin: 4px 10px;
     height: $height-per-15-min;
 }
 

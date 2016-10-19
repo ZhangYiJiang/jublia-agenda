@@ -1,4 +1,5 @@
-<div class="board">
+<div class="board"
+  [class.not-dragging]="!dragging">
   <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda">
   </relative-column>
   <div class="scroll">

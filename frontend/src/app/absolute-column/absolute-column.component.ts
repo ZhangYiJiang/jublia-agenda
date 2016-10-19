@@ -225,14 +225,12 @@ export class AbsoluteColumnComponent implements OnInit {
   }
 
   private generateContainers() {
-    let mins = 0;
     // mins are relative to start of the day i.e. 8AM
-    for (var i = 0; i < 12 * 60; ++i) {
+    for (var mins = 0; mins < 12 * 60; mins += this.PLACEHOLDER_DURATION) {
       this.containers.push({
         start_at: mins,
         sessions: this.getSessionByStartTime(mins)
       });
-      mins += this.PLACEHOLDER_DURATION;
     }
   }
 

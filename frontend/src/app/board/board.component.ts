@@ -25,17 +25,28 @@ export class BoardComponent implements OnInit {
   pendingSessions: Session[];
   nonPendingSessions: Session[];
 
+  dragging: boolean = false;
+
   constructor(private dragulaService: DragulaService,
     private agendaService: AgendaService,
     private domUtilService: DOMUtilService) {
     dragulaService.dropModel.subscribe((value: any) => {
       // console.log(`drop: ${value}`);
+      this.dragging = false;
       this.onDrop(value.slice(1));
+    });
+
+    dragulaService.drag.subscribe((value: any) => {
+      this.dragging = true;
     });
 
     dragulaService.setOptions('column', {
       // copy: true,
       // copySortSource: true
+      accepts: function (el: HTMLElement, target: HTMLElement) {
+        // only accept when the slot container is empty
+        return target.children.length === 0;
+      }
     });
   }
 

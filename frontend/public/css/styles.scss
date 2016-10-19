@@ -44,4 +44,11 @@ input:-webkit-autofill {
     opacity: 0.3;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
     filter: alpha(opacity=30);
+    .session-time {
+        display: none;
+    }
+}
+
+.not-dragging .empty-container {
+    pointer-events: none;
 }

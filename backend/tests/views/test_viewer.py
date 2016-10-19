@@ -43,8 +43,10 @@ class ViewerRegisterTest(BaseAPITestCase):
         self.agenda = create_agenda(self.user, factory.agenda(full=True))
         self.viewer = create_viewer(self.agenda, factory.viewer())
 
-    def url(self, session_id):
-        return reverse('viewer_registration', [self.agenda.pk, self.viewer.token, session_id])
+    def url(self, session_id, token=None):
+        if token is None:
+            token = self.viewer.token
+        return reverse('viewer_registration', [self.agenda.pk, token, session_id])
 
     def testRegister(self):
         session = create_session(self.agenda, factory.session(full=True))
@@ -68,6 +70,25 @@ class ViewerRegisterTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(9, self.viewer.sessions.count())
         self.assertNotIn(sessions[3], self.viewer.sessions.all())
+
+    def testPopularity(self):
+        session = create_session(self.agenda, factory.session())
+        viewers = [create_viewer(self.agenda, factory.viewer()) for i in range(10)]
+        for i in [2, 5, 6, 9]:
+            self.client.put(self.url(session.pk, viewers[i].token))
+        session.refresh_from_db()
+        self.assertEqual(4, session.popularity)
+
+        # Calls put 5 times, but with one repeat
+        for i in [0, 1, 2, 3, 4]:
+            self.client.put(self.url(session.pk, viewers[i].token))
+        session.refresh_from_db()
+        self.assertEqual(8, session.popularity)
+
+        for i in [0, 3, 6, 7]:
+            self.client.delete(self.url(session.pk, viewers[i].token))
+        session.refresh_from_db()
+        self.assertEqual(5, session.popularity)
 
     def testRegisterError(self):
         response = self.client.put(self.url(1))

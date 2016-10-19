@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from backend.models import Track
 from backend.tests import factory
 from backend.tests.helper import *
 from .base import BaseAPITestCase
@@ -35,8 +36,23 @@ class AgendaListTest(BaseAPITestCase):
         agenda_data = factory.agenda(full=True)
         response = self.client.post(self.url, agenda_data)
         self.assertCreatedOk(response)
+
+        # Checks that end_at is in the data and cleans it for assertEqualExceptMeta
         response.data.pop('end_at')
+        # Check that new agendas are unpublished
+        self.assertFalse(response.data.pop('published'))
         self.assertEqualExceptMeta(agenda_data, response.data)
+
+    def test_create_with_tracks(self):
+        self.login(self.user)
+        agenda_data = factory.agenda(data={
+            'tracks': ['Test Track', 'Hello World'],
+        })
+        response = self.client.post(self.url, agenda_data)
+        self.assertCreatedOk(response)
+        tracks = Track.objects.filter(agenda=response.data['id']).values_list('name', flat=True)
+        self.assertIn('Test Track', tracks)
+        self.assertIn('Hello World', tracks)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)
@@ -86,6 +102,22 @@ class AgendaDetailTest(BaseAPITestCase):
         create_session(self.agenda, factory.session(full=True))
         response = self.client.get(self.url)
         self.assertTrue('end_at' in response.data)
+
+    def test_retrieve_unpublished(self):
+        agenda = create_agenda(self.user, factory.agenda(), published=False)
+        url = reverse('agenda_detail', [agenda.pk])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        # Also check each of the component listing isn't available
+        for field in ['session', 'track', 'speaker', 'venue']:
+            response = self.client.get(reverse(field + '_list', [agenda.pk]))
+            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        agenda.published = True
+        agenda.save()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete(self):
         self.login(self.user)

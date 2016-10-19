@@ -54,7 +54,7 @@ class SessionListTest(BaseAPITestCase):
         self.assertTrue(track.session_set.filter(pk=pk).exists())
         for speaker in speakers:
             self.assertTrue(speaker.session_set.filter(pk=pk).exists())
-        self.assertEqualExceptMeta(session_data, response.data)
+        self.assertEqualExceptMeta(session_data, response.data, ignore=('popularity',))
 
     def test_create_on_track(self):
         self.login(self.user)
@@ -68,8 +68,7 @@ class SessionListTest(BaseAPITestCase):
 
 class SessionDetailTest(BaseAPITestCase):
     def assertSessionEqual(self, original, response, msg=None):
-        response.pop('track')
-        self.assertEqualExceptMeta(original, response)
+        self.assertEqualExceptMeta(original, response, ignore=('track', 'popularity',))
 
     def setUp(self):
         self.user = create_user(factory.user())

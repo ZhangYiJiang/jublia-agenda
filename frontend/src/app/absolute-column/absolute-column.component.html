@@ -8,7 +8,8 @@
         [attr.data-column-type]="'absolute'"
         [attr.data-date]="day.toISOString()"
         [attr.data-track-id]="track.id"
-        [attr.data-container-start-at]="container.start_at">
+        [attr.data-container-start-at]="container.start_at"
+        [attr.data-container-global-start-at]="getGlobalStartTimeFromDisplayedStartTime(container.start_at)">
         <li class="session-wrapper"
           *ngFor="let session of container.sessions"
           [attr.data-session-id]="session.id"

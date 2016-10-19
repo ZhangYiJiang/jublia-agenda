@@ -30,7 +30,7 @@ export class AbsoluteColumnComponent implements OnInit {
   @Input() offsetDate: Date;
 
   @Output() onSessionChanged = new EventEmitter<Session>();
-  @Output() onNewSessionFromPending = new EventEmitter<Session>();
+  @Output() onSessionMovedFromPending = new EventEmitter<Session>();
 
   containers: any[] = [];
 
@@ -50,14 +50,8 @@ export class AbsoluteColumnComponent implements OnInit {
   constructor(private dragulaService: DragulaService,
     private domUtilService: DOMUtilService) {
     dragulaService.dropModel.subscribe((value: any) => {
-      // console.log(`drop: ${value}`);
       this.onDrop(value.slice(1));
     });
-
-    // dragulaService.over.subscribe((value: any) => {
-    // console.log(`drop: ${value}`);
-    // this.onOver(value.slice(1));
-    // });
   }
 
   private getColumnDate(el: HTMLElement): Date {
@@ -73,47 +67,22 @@ export class AbsoluteColumnComponent implements OnInit {
     return columnType === 'absolute';
   }
 
-  private isEventForThisColumn(columnDate: Date, columnTrackId: number): boolean {
-    return columnDate.toISOString() === this.day.toISOString() && columnTrackId === this.track.id;
+  private isEventForThisContainer(containerDate: Date, containerTrackId: number): boolean {
+    return containerDate.toISOString() === this.day.toISOString() && containerTrackId === this.track.id;
   }
 
   private onDrop(args: [HTMLElement, HTMLElement, HTMLElement]) {
     let [e, el, source] = args;
     if (this.isEventForAbsoluteColumn(el)) {
-      let columnDate = this.getColumnDate(el);
-      let columnTrackId = this.getColumnTrack(el);
-      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
-        let sessionId = parseInt(e.getAttribute('data-session-id'));
+      let containerDate = this.domUtilService.getContainerDate(el);
+      let containerTrackId = this.domUtilService.getContainerTrack(el);
+      if (this.isEventForThisContainer(containerDate, containerTrackId)) {
+        let sessionId = this.domUtilService.getSessionIdFromDOM(e);
         console.log(sessionId + ' moved to:');
-        console.log(columnDate.toLocaleString());
-        let startAt = parseInt(el.getAttribute('data-container-start-at'));
+        console.log(containerDate.toLocaleString());
+        let startAt = this.domUtilService.getContainerStartAt(el);
         console.log(startAt);
-        this.handleSessionDropped(sessionId, columnTrackId, startAt);
-      }
-    }
-  }
-
-  private onOver(args: [HTMLElement, HTMLElement, HTMLElement]) {
-    let [e, el, container] = args;
-    let moved = !(el === container);
-    if (this.isEventForAbsoluteColumn(container)) {
-      let columnDate = this.getColumnDate(container);
-      let columnTrackId = this.getColumnTrack(container);
-      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
-        let sessionId = parseInt(e.getAttribute('data-session-id'));
-        console.log(sessionId + ' moved container:');
-        console.log(columnDate.toLocaleString());
-        console.log('track ' + columnTrackId);
-      }
-    }
-    if (this.isEventForAbsoluteColumn(el)) {
-      let columnDate = this.getColumnDate(el);
-      let columnTrackId = this.getColumnTrack(el);
-      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
-        let sessionId = parseInt(e.getAttribute('data-session-id'));
-        console.log(sessionId + ' moved el:');
-        console.log(columnDate.toLocaleString());
-        console.log('track ' + columnTrackId);
+        this.handleSessionDropped(sessionId, containerTrackId, startAt);
       }
     }
   }
@@ -152,7 +121,7 @@ export class AbsoluteColumnComponent implements OnInit {
     }
     session.track = trackId;
     if(isFromPending) {
-      this.onNewSessionFromPending.emit(session);
+      this.onSessionMovedFromPending.emit(session);
     } else {
       this.onSessionChanged.emit(session);
     }

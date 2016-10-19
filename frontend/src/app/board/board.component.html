@@ -11,7 +11,7 @@
         <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
           [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda"
           (onSessionChanged)="onSessionChanged($event)"
-          (onNewSessionFromPending)="onNewSessionFromPending($event)">
+          (onSessionMovedFromPending)="onSessionMovedFromPending($event)">
         </absolute-column>
       </div>  
     </div>

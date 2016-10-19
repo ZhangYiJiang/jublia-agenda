@@ -22,10 +22,13 @@ export class BoardComponent implements OnInit {
   eventDates: Date[];
   eventTracks: Track[];
 
+  allSessions: Session[];
   pendingSessions: Session[];
   nonPendingSessions: Session[];
 
   dragging: boolean = false;
+
+  private PLACEHOLDER_DURATION: number = 15;
 
   constructor(private dragulaService: DragulaService,
     private agendaService: AgendaService,
@@ -43,12 +46,51 @@ export class BoardComponent implements OnInit {
     dragulaService.setOptions('column', {
       // copy: true,
       // copySortSource: true
-      accepts: function (el: HTMLElement, target: HTMLElement) {
-        // only accept when the slot container is empty
-        // or the slot is for pending session
-        return domUtilService.hasClass(target, 'pending-session-list')  || target.children.length === 0;
-      }
+      accepts: this.canDropSession.bind(this)
     });
+  }
+
+  canDropSession(el: HTMLElement, target: HTMLElement): boolean {
+    // only accept when the slot container is empty
+    // or the slot is for pending session
+    return this.domUtilService.hasClass(target, 'pending-session-list') 
+      || this.canContainerAcceptNewSession(el, target);
+  }
+
+  canContainerAcceptNewSession(sessionEl: HTMLElement, target: HTMLElement): boolean {
+    if(target.children.length !== 0) {
+      return false;
+    } else {
+      let sessionId = this.domUtilService.getSessionIdFromDOM(sessionEl);
+      let containerTrackId = this.domUtilService.getContainerTrack(target);
+      let globalStartAt = this.domUtilService.getContainerGlobalStartAt(target);
+      return !this.isThereCollision(sessionId, globalStartAt, containerTrackId);
+    }
+  }
+
+  isThereCollision(draggingSessionId: number, startAt: number, trackId: number): boolean {
+    let draggingSession = this.getSessionById(draggingSessionId);
+    if(draggingSession == null) {
+      console.error('Session not found in board for id: ' + draggingSessionId);
+    }
+    for (var i = 0; i < this.allSessions.length; i++) {
+      // skip pending session
+      if(this.allSessions[i].start_at == null) {
+        continue;
+      }
+      console.log('checking with: ' + this.allSessions[i].start_at);
+      // no collision with itself
+      if(this.allSessions[i].id !== draggingSessionId
+        // same track
+        && this.allSessions[i].track === trackId
+        // existing session starts before the dragging session ends
+        && this.allSessions[i].start_at < (startAt + draggingSession.duration)
+        // existing session ends after the dragging session start
+        && (this.allSessions[i].start_at + this.allSessions[i].duration) > startAt) {
+        return true;
+      }
+    }
+    return false;
   }
 
   onSessionChanged(changedSession: Session) {
@@ -57,10 +99,10 @@ export class BoardComponent implements OnInit {
     this.agendaService.updateSession(this.agenda.id, changedSession);
   }
 
-  onNewSessionFromPending(newSessionFromPending: Session) {
+  onSessionMovedFromPending(sessionFromPending: Session) {
     console.log('session from pending in board');
-    console.log(newSessionFromPending);
-    this.agendaService.updateSession(this.agenda.id, newSessionFromPending);
+    console.log(sessionFromPending);
+    this.agendaService.updateSession(this.agenda.id, sessionFromPending);
   }
 
   private onDrop(args: [HTMLElement, HTMLElement]) {
@@ -73,10 +115,6 @@ export class BoardComponent implements OnInit {
     if(columnType === 'relative') {
       this.changeSessionToPending(parseInt(sessionId));
     }
-  }
-
-  generateSessionArrays() {
-
   }
 
   getSessionsForColumn(columnDate: Date, columnTrack: number): Session[] {
@@ -150,7 +188,8 @@ export class BoardComponent implements OnInit {
     this.offsetDate = new Date(this.agenda.start_at);
     this.eventDates = this.getEventDates();
     this.eventTracks = this.getEventTracks();
-    let partioned = _.partition(this.agenda.sessions, function(o:Session){return o.hasOwnProperty('start_at')});
+    this.allSessions = this.agenda.sessions;
+    let partioned = _.partition(this.allSessions, function(o:Session){return o.hasOwnProperty('start_at')});
     this.pendingSessions = partioned[1];
     this.nonPendingSessions = partioned[0];
   }

@@ -14,8 +14,19 @@ export class AgendaService {
 
   private BASE_URL = '/api'
 
-  getAgendaById(id: string): Observable<Agenda> {
+  getAgendaById(id: number): Observable<Agenda> {
     return this.httpClient.get(this.BASE_URL + '/'+ id)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
+  publishAgenda(id: number) {
+    let data = JSON.stringify({published: true});
+    this.updateAgenda(id, data);
+  }
+
+  updateAgenda(id: number, data: string): Observable<Agenda> {
+    return this.httpClient.patch(this.BASE_URL + '/'+ id, data)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
@@ -32,7 +43,7 @@ export class AgendaService {
     return Observable.throw(errMsg);
   }
 
-  updateSession(agendaId: string, newSession: Session) {
+  updateSession(agendaId: number, newSession: Session) {
     console.log('updating agenda ' + agendaId + ' session ' + newSession.id);
     console.log(JSON.stringify(newSession, null, 4));
     this.httpClient

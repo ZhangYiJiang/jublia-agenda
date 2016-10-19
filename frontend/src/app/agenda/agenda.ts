@@ -2,7 +2,7 @@ import { Session } from '../session/session';
 import { Track } from '../track/track';
 
 export class Agenda {
-  id: string;
+  id: number;
   title: string;
   start_at: string;
   end_at: string;

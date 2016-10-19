@@ -1,10 +1,11 @@
 @import '../../../public/css/variables';
+
 .abs-col {
     background: #F2F2F2;
     height: 640px;
     width: 200px;
     margin-right: 10px;
-    .session-list {
+    .session-container-list {
         padding-top: 10px;
         margin-top: 0px;
         min-height: 100px;
@@ -14,4 +15,13 @@
 
 .placeholder { 
     pointer-events: none;
+}
+
+.session-container {
+    box-sizing: border-box;
+    margin: 0 10px;
+    height: $height-per-15-min;
+    .session-list {
+        height: 100%;
+    }
 }

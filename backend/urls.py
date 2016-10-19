@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm
+from django.contrib.auth.views import password_reset, password_reset_done, password_reset_complete
 from rest_framework_jwt.views import refresh_jwt_token
 
 import backend.views.session_meta
@@ -19,11 +19,12 @@ urlpatterns = [
     url(r'users/verify/(\w+)', views.verify_email, name='verify_email'),
     url(r'users/verify$', views.resend_verification, name='resend_verification'),
 
-    url(r'^users/password', password_reset, name='password_reset'),
-    url(r'^users/password_done', password_reset_done, name='password_reset_done'),
-    # TODO: Need to redirect the user to the homepage with the JWT. Probably need to rewrite
-    # or wrap the  password_reset_confirm view
-    url(r'users/reset', password_reset_confirm, name='password_reset_confirm'),
+    url(r'^users/password$', password_reset, name='password_reset'),
+    url(r'^users/password/done$', password_reset_done, name='password_reset_done'),
+    # Note that this view below uses our own password_reset_complete
+    url(r'^users/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.password_reset_confirm, name='password_reset_confirm'),
+    url(r'^users/reset/done$', password_reset_complete, name='password_reset_complete'),
 
     # Agenda listing, detail
     url(r'^agenda', views.AgendaList.as_view(), name='agenda_list'),

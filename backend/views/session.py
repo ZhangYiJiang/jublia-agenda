@@ -1,7 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from backend.models import Session
-from backend.permissions import IsOwnerOrReadOnly, IsAgendaOwnerOrReadOnly
+from backend.permissions import IsAgendaOwnerOrReadOnly
 from backend.serializers import SessionSerializer
 from .base import AgendaContextMixin
 
@@ -18,5 +18,5 @@ class SessionList(SessionViewMixin, ListCreateAPIView):
 
 
 class SessionDetail(SessionViewMixin, RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAgendaOwnerOrReadOnly,)
 

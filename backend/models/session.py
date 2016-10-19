@@ -26,15 +26,14 @@ class Session(BaseModel):
         MinValueValidator(24 * 60, _("A session cannot be longer than 24 hours long")),
     ])
 
+    # Denormalized aggregate of the number of registrations on the model
+    popularity = models.IntegerField(default=0, editable=False)
+
     agenda = models.ForeignKey(Agenda, models.CASCADE)
     tags = models.ManyToManyField(Tag)
     speakers = models.ManyToManyField(Speaker)
     track = models.ForeignKey(Track, models.CASCADE)
     venue = models.ForeignKey(Venue, models.SET_NULL, blank=True, null=True)
-
-    @property
-    def owner(self):
-        return self.agenda.owner
 
     def get_absolute_url(self):
         return reverse('session_detail', (self.agenda.pk, self.pk,))

@@ -1,14 +1,2 @@
-.abs-col {
-  background: #F2F2F2;
-  height: 640px;
-  width: 200px;
-  margin-right: 10px; }
-  .abs-col .session-list {
-    padding-top: 10px;
-    margin-top: 0px;
-    min-height: 100px; }
-
-.placeholder {
-  pointer-events: none; }
-
+.abs-col{background:#F2F2F2;height:640px;width:200px;margin-right:10px}.abs-col .session-container-list{padding-top:10px;margin-top:0px;min-height:100px}.placeholder{pointer-events:none}.session-container{box-sizing:border-box;margin:0 10px;height:15px}.session-container .session-list{height:100%}
 /*# sourceMappingURL=absolute-column.component.css.map */

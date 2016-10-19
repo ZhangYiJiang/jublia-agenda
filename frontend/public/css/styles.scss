@@ -1,4 +1,5 @@
 @import 'variables';
+
 body {
     background: #fff;
     color: #4A4A4A;
@@ -6,13 +7,21 @@ body {
     margin: 0px;
 }
 
-.session-list {
+.session-container-list, .session-list, .session-wrapper {
     padding-left: 0px;
-}
-
-.session-list-item {
     list-style: none;
     text-align: center;
+}
+
+.session-wrapper.gu-transit .session-tile {
+    height: $height-per-15-min !important;
+    .session-content {
+        display: none;
+    }
+}
+
+.session-container {
+    padding-left: 0px;
 }
 
 .md-visually-hidden {

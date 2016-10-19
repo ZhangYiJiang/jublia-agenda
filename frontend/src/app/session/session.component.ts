@@ -43,7 +43,7 @@ export class SessionComponent implements OnInit {
   trackObj = {};
 
   HEIGHT_PER_15_MINS = 15; // px
-  VERTICAL_MARGIN = 8; // 4*2px
+  VERTICAL_MARGIN = 4;
 
   height: number;
 

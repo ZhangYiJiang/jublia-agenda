@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.models import User
 from django.core import mail
 from rest_framework import status
@@ -66,6 +68,31 @@ class UserViewTest(BaseAPITestCase):
 
         # Check that sign in afterwards works
         response = self.client.post(self.login_url, user_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_password_reset(self):
+        user_data = factory.user()
+        user = create_user(user_data)
+
+        # Simulate user resetting password
+        response = self.client.post(reverse('password_reset'), {'email': user_data['username']}, format='multipart')
+        self.assertIsRedirect(response)
+        self.assertEmailSent(2)
+        email = mail.outbox[-1].body
+        url = re.search(r'(/api/users/reset/[^\n]+)', email, re.I).group(1)
+
+        # Simulate a password reset request and check the redirection
+        response = self.client.post(url, format='multipart', data={
+            'new_password1': 'testing_password_12345',
+            'new_password2': 'testing_password_12345',
+        })
+        self.assertIsRedirect(response)
+        self.assertIn('token', response['location'])
+
+        response = self.client.post(self.login_url, {
+            'username': user_data['username'],
+            'password': 'testing_password_12345',
+        })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_user(self):

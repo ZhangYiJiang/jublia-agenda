@@ -43,11 +43,21 @@ class BaseAPITestCase(ErrorDetailMixin, APITestCase):
         self.assertEqual(get_response.data['id'], pk)
 
     def assertEqualExceptMeta(self, original, response, msg=None):
+        """Checks that the dict representing the response is the same as the original data
+        except some common model properties
+        """
         self.assertTrue(response.pop('id'))
         response.pop('url', None)
         response.pop('created_at', None)
         response.pop('updated_at', None)
         self.assertEqual(original, dict(response), msg)
+
+    def assertIsRedirect(self, response, path=None):
+        """A less strict version of assertRedirects
+        This method only check response code is in 3XX range and optionally if path matches"""
+        self.assertIn(response.status_code, range(300, 400), str(response) + ' is not a redirect')
+        if path:
+            self.assertEqual(response['location'], path)
 
     def assert401WhenUnauthenticated(self, url, method='post', data=None):
         response = getattr(self.client, method.lower())(url, data=data)

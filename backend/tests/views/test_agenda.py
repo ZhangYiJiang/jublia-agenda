@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from backend.models import Track
 from backend.tests import factory
 from backend.tests.helper import *
 from .base import BaseAPITestCase
@@ -35,8 +36,20 @@ class AgendaListTest(BaseAPITestCase):
         agenda_data = factory.agenda(full=True)
         response = self.client.post(self.url, agenda_data)
         self.assertCreatedOk(response)
+        # This checks that end_at is in the data and cleans it for assertEqualExceptMeta
         response.data.pop('end_at')
         self.assertEqualExceptMeta(agenda_data, response.data)
+
+    def test_create_with_tracks(self):
+        self.login(self.user)
+        agenda_data = factory.agenda(data={
+            'tracks': ['Test Track', 'Hello World'],
+        })
+        response = self.client.post(self.url, agenda_data)
+        self.assertCreatedOk(response)
+        tracks = Track.objects.filter(agenda=response.data['id']).values_list('name', flat=True)
+        self.assertIn('Test Track', tracks)
+        self.assertIn('Hello World', tracks)
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)

@@ -12,7 +12,7 @@ def create_user(data):
 
 
 def create_agenda(user, data):
-    s = AgendaSerializer(data=data, context={'user': user})
+    s = AgendaSerializer(data=data, context={'user': user, 'tracks': []})
     s.is_valid(True)
     return s.save()
 

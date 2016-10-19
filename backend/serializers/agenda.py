@@ -35,14 +35,22 @@ class BaseAgendaSerializer(BaseSerializer):
                 raise ValidationError(_("%d sessions will be cut off by the change in duration" % count))
         return value
 
+    def create_tracks(self, agenda):
+        if self.context['tracks']:
+            tracks = [{'name': name} for name in self.context['tracks']]
+        else:
+            tracks = [{}]
+
+        for track in tracks:
+            serializer = BaseTrackSerializer(data=track, context={'agenda': agenda})
+            serializer.is_valid(True)
+            serializer.save()
+
     @atomic
     def create(self, validated_data):
         validated_data['profile'] = self.context['user'].profile
         agenda = super().create(validated_data)
-        # Create a default track for the new agenda
-        track = BaseTrackSerializer(data={}, context={'agenda': agenda})
-        track.is_valid(True)
-        track.save()
+        self.create_tracks(agenda)
         return agenda
 
     class Meta:

@@ -103,6 +103,22 @@ class AgendaDetailTest(BaseAPITestCase):
         response = self.client.get(self.url)
         self.assertTrue('end_at' in response.data)
 
+    def test_retrieve_unpublished(self):
+        agenda = create_agenda(self.user, factory.agenda(), published=False)
+        url = reverse('agenda_detail', [agenda.pk])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        # Also check each of the component listing isn't available
+        for field in ['session', 'track', 'speaker', 'venue']:
+            response = self.client.get(reverse(field + '_list', [agenda.pk]))
+            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        agenda.published = True
+        agenda.save()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_delete(self):
         self.login(self.user)
         response = self.client.delete(self.url)

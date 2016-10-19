@@ -1,13 +1,29 @@
+from django.http import Http404
 from rest_framework import permissions
+from rest_framework.generics import get_object_or_404
 
 from backend.models import Agenda
+
+
+def check_agenda_permission(agenda, request):
+    if agenda.published and request.method in permissions.SAFE_METHODS:
+        return True
+
+    if agenda.profile.user == request.user:
+        return True
+
+    if request.method in permissions.SAFE_METHODS:
+        raise Http404
+
+    return False
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """Custom permission to only allow owners of an object to edit it."""
     def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request,
-        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if isinstance(obj, Agenda):
+            return check_agenda_permission(obj, request)
+
         if request.method in permissions.SAFE_METHODS:
             return True
 
@@ -17,10 +33,5 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 class IsAgendaOwnerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        # Allow creating and editing if you are the owner of the event
-        pk = view.kwargs['agenda_id']
-        return request.user.is_authenticated and \
-               Agenda.objects.filter(pk=pk, profile__user=request.user).exists()
+        agenda = get_object_or_404(Agenda.objects, pk=view.kwargs['agenda_id'])
+        return check_agenda_permission(agenda, request)

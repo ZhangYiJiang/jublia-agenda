@@ -32,10 +32,6 @@ class Session(BaseModel):
     track = models.ForeignKey(Track, models.CASCADE)
     venue = models.ForeignKey(Venue, models.SET_NULL, blank=True, null=True)
 
-    @property
-    def owner(self):
-        return self.agenda.owner
-
     def get_absolute_url(self):
         return reverse('session_detail', (self.agenda.pk, self.pk,))
 

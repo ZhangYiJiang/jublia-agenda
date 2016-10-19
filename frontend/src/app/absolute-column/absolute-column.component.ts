@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import * as _ from 'lodash';
@@ -29,6 +29,9 @@ export class AbsoluteColumnComponent implements OnInit {
   // event start date
   @Input() offsetDate: Date;
 
+  @Output() onSessionChanged = new EventEmitter<Session>();
+  @Output() onNewSessionFromPending = new EventEmitter<Session>();
+
   containers: any[] = [];
 
   private PLACEHOLDER_DURATION: number = 15;
@@ -45,7 +48,6 @@ export class AbsoluteColumnComponent implements OnInit {
   displayedSessions: Session[];
 
   constructor(private dragulaService: DragulaService,
-    private agendaService: AgendaService,
     private domUtilService: DOMUtilService) {
     dragulaService.dropModel.subscribe((value: any) => {
       // console.log(`drop: ${value}`);
@@ -87,15 +89,6 @@ export class AbsoluteColumnComponent implements OnInit {
         let startAt = parseInt(el.getAttribute('data-container-start-at'));
         console.log(startAt);
         this.handleSessionDropped(sessionId, columnTrackId, startAt);
-        // this.refreshSessions();
-      }
-    }
-
-    if (this.isEventForAbsoluteColumn(source)) {
-      let columnDate = this.getColumnDate(source);
-      let columnTrackId = this.getColumnTrack(source);
-      if (this.isEventForThisColumn(columnDate, columnTrackId)) {
-        // this.refreshSessions();
       }
     }
   }
@@ -141,16 +134,6 @@ export class AbsoluteColumnComponent implements OnInit {
     return globalStartTime;
   }
 
-  private refreshSessions() {
-    for (var i = 0; i < this.displayedSessions.length; i++) {
-      if (!this.displayedSessions[i].placeholder) {
-        let newStartTime = this.reCalculateSessionStartTime(this.displayedSessions[i].id);
-        this.displayedSessions[i].start_at = newStartTime;
-        this.agendaService.updateSession(this.agenda.id, this.displayedSessions[i]);
-      }
-    }
-  }
-
   private handleSessionDropped(sessionId: number, trackId: number, startAt: number) {
     let movedSession = this.getSessionById(sessionId);
     let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(startAt);
@@ -162,12 +145,17 @@ export class AbsoluteColumnComponent implements OnInit {
   }
 
   private updateDroppedSession(session: Session, newStartTime: number, trackId: number) {
+    let isFromPending = (session.start_at == null);
     session.start_at = newStartTime;
     if (session.duration == null) {
       session.duration = this.DEFAULT_NEW_DURATION;
     }
     session.track = trackId;
-    this.agendaService.updateSession(this.agenda.id, session);
+    if(isFromPending) {
+      this.onNewSessionFromPending.emit(session);
+    } else {
+      this.onSessionChanged.emit(session);
+    }
   }
 
   // Get start minutes of session relative to start of the day
@@ -188,40 +176,6 @@ export class AbsoluteColumnComponent implements OnInit {
     }
 
     return null;
-  }
-
-  addPlaceHolderSessions(rawSessions: Session[]): Session[] {
-    let newSessions: Session[] = [];
-    let lastSessionMins: number = 0;
-    for (var i = 0; i < rawSessions.length; i++) {
-      let relativeStartMins = this.getRelativeStartMin(rawSessions[i]);
-      if (relativeStartMins < 0) {
-        console.error('Start minutes relative to start of the day smaller than zero.');
-      }
-      if (relativeStartMins - lastSessionMins < 0) {
-        console.warn('Start minutes relative to last session smaller than zero, session conflict.');
-        console.warn('Conflicted sessions: ');
-        console.warn(rawSessions[i - 1].name);
-        console.warn(rawSessions[i].name);
-      }
-      // round down number of placeholders
-      let noOfPlaceholders = Math.floor((relativeStartMins - lastSessionMins) / this.PLACEHOLDER_DURATION);
-      for (var j = 0; j < noOfPlaceholders; ++j) {
-        newSessions.push(<Session>{
-          placeholder: true
-        })
-      }
-      newSessions.push(rawSessions[i]);
-      lastSessionMins = relativeStartMins + rawSessions[i].duration;
-    }
-    // placeholders after the last session
-    // allow 6 hours
-    for (var i = 0; i < (60 / this.PLACEHOLDER_DURATION * 6); ++i) {
-      newSessions.push(<Session>{
-        placeholder: true
-      })
-    }
-    return newSessions;
   }
 
   private generateContainers() {

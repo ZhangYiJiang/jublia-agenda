@@ -1,5 +1,5 @@
 <div class="rel-col" [@colMarginTrigger]="colState">
-  <ul class="session-list" [dragula]='"column"' [dragulaModel]='sessions'
+  <ul class="session-list pending-session-list" [dragula]='"column"' [dragulaModel]='sessions'
     [attr.data-column-type]="'relative'">
     <li class="session-wrapper" *ngFor="let session of sessions"
       [attr.data-session-id]="session.id">

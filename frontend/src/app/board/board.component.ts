@@ -45,9 +45,22 @@ export class BoardComponent implements OnInit {
       // copySortSource: true
       accepts: function (el: HTMLElement, target: HTMLElement) {
         // only accept when the slot container is empty
-        return target.children.length === 0;
+        // or the slot is for pending session
+        return domUtilService.hasClass(target, 'pending-session-list')  || target.children.length === 0;
       }
     });
+  }
+
+  onSessionChanged(changedSession: Session) {
+    console.log('session changed in board');
+    console.log(changedSession);
+    this.agendaService.updateSession(this.agenda.id, changedSession);
+  }
+
+  onNewSessionFromPending(newSessionFromPending: Session) {
+    console.log('session from pending in board');
+    console.log(newSessionFromPending);
+    this.agendaService.updateSession(this.agenda.id, newSessionFromPending);
   }
 
   private onDrop(args: [HTMLElement, HTMLElement]) {
@@ -58,10 +71,12 @@ export class BoardComponent implements OnInit {
     let sessionId = e.getAttribute('data-session-id');
     let columnType = el.getAttribute('data-column-type');
     if(columnType === 'relative') {
-      console.log(sessionId + ' moved to pendng');
       this.changeSessionToPending(parseInt(sessionId));
-      console.log(this.agenda.sessions);
     }
+  }
+
+  generateSessionArrays() {
+
   }
 
   getSessionsForColumn(columnDate: Date, columnTrack: number): Session[] {
@@ -94,6 +109,8 @@ export class BoardComponent implements OnInit {
     let session: Session = this.getSessionById(sessionId);
     if(session) {
       delete session.start_at;
+      console.log('session to pending in board');
+      console.log(session);
       this.agendaService.updateSession(this.agenda.id, session);
     } else {
       console.error('Session not found for id=' + sessionId + '.');

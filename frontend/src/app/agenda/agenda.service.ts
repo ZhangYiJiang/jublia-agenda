@@ -56,8 +56,8 @@ export class AgendaService {
         .catch(this.handleError)
         .subscribe(
           res => {
-            console.log('updated session, result:');
-            console.log(res)
+            console.log('update session successful');
+            // console.log(res)
           },
           err => console.error(err)
         );

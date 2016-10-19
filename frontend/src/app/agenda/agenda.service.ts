@@ -22,7 +22,12 @@ export class AgendaService {
 
   publishAgenda(id: number) {
     let data = JSON.stringify({published: true});
-    this.updateAgenda(id, data);
+    return this.updateAgenda(id, data);
+  }
+
+  unpublishAgenda(id: number) {
+    let data = JSON.stringify({published: false});
+    return this.updateAgenda(id, data);
   }
 
   updateAgenda(id: number, data: string): Observable<Agenda> {

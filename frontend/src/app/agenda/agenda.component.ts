@@ -21,10 +21,28 @@ export class AgendaComponent implements OnInit{
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
       let id = params['id'];
-      this.agendaService.getAgendaById(id).subscribe(
+      this.getAgendaById(id);
+    });
+  }
+
+  getAgendaById(id: number) {
+    this.agendaService.getAgendaById(id).subscribe(
         agenda => this.agenda = agenda,
         error =>  console.log(error)
-      );
-    });
+    );
+  }
+
+  publishAgenda() {
+    this.agendaService.publishAgenda(this.agenda.id).subscribe(
+      agenda => this.agenda = agenda,
+      error =>  console.log(error)
+    );
+  }
+
+  unpublishAgenda() {
+    this.agendaService.unpublishAgenda(this.agenda.id).subscribe(
+      agenda => this.agenda = agenda,
+      error =>  console.log(error)
+    );
   }
 }

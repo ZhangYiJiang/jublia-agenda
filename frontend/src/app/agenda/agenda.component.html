@@ -2,7 +2,10 @@
   Loading...
 </div>
 <div *ngIf="agenda">
-  <h1 class="agenda-title">{{agenda.name}}</h1>
+  <span class="agenda-title">{{agenda.name}}</span>
+  <button md-button class="secondary" *ngIf="!agenda.published" (click)="publishAgenda()">Publish</button>
+  <button md-button class="secondary" *ngIf="agenda.published" (click)="unpublishAgenda()">Unpublish</button>
+
   <board *ngIf="agenda" [agenda]="agenda">
   </board>
 </div>

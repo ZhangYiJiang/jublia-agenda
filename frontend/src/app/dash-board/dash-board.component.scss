@@ -60,18 +60,6 @@
 
 
 
-button{
-    margin-top: 30px;
-    border: 2px solid $color-primary;
-    &.primary{
-        background-color: $color-primary;
-        color: white;
-    }
-    &.secondary{
-        background-color: white;
-        color: $color-primary;
-    }
-}
 .user-form {
     margin-top: 150px;
     

@@ -7,6 +7,19 @@ body {
     margin: 0px;
 }
 
+button{
+    margin-top: 30px;
+    border: 2px solid $color-primary;
+    &.primary{
+        background-color: $color-primary;
+        color: white;
+    }
+    &.secondary{
+        background-color: white;
+        color: $color-primary;
+    }
+}
+
 .session-container-list, .session-list, .session-wrapper {
     padding-left: 0px;
     list-style: none;

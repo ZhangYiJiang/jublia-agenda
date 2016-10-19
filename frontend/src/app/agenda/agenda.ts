@@ -9,4 +9,5 @@ export class Agenda {
   sessions: Session[];
   tracks: Track[];
   speakers: any[];
+  published: boolean;
 }

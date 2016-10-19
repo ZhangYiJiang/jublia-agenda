@@ -36,8 +36,11 @@ class AgendaListTest(BaseAPITestCase):
         agenda_data = factory.agenda(full=True)
         response = self.client.post(self.url, agenda_data)
         self.assertCreatedOk(response)
-        # This checks that end_at is in the data and cleans it for assertEqualExceptMeta
+
+        # Checks that end_at is in the data and cleans it for assertEqualExceptMeta
         response.data.pop('end_at')
+        # Check that new agendas are unpublished
+        self.assertFalse(response.data.pop('published'))
         self.assertEqualExceptMeta(agenda_data, response.data)
 
     def test_create_with_tracks(self):

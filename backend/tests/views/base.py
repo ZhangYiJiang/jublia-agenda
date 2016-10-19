@@ -42,14 +42,16 @@ class BaseAPITestCase(ErrorDetailMixin, APITestCase):
         self.assertTrue(get_response.status_code, status.HTTP_200_OK)
         self.assertEqual(get_response.data['id'], pk)
 
-    def assertEqualExceptMeta(self, original, response, msg=None):
+    def assertEqualExceptMeta(self, original, response, msg=None, ignore=()):
         """Checks that the dict representing the response is the same as the original data
         except some common model properties
         """
-        self.assertTrue(response.pop('id'))
+        self.assertTrue(response.pop('id'))  # Sanity check that ID > 0
         response.pop('url', None)
         response.pop('created_at', None)
         response.pop('updated_at', None)
+        for field in ignore:
+            response.pop(field, None)
         self.assertEqual(original, dict(response), msg)
 
     def assertIsRedirect(self, response, path=None):

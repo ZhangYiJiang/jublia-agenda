@@ -11,10 +11,14 @@ def create_user(data):
     return user
 
 
-def create_agenda(user, data):
+def create_agenda(user, data, published=True):
     s = AgendaSerializer(data=data, context={'user': user, 'tracks': []})
     s.is_valid(True)
-    return s.save()
+    agenda = s.save()
+    if published:
+        agenda.published = True
+        agenda.save()
+    return agenda
 
 
 def create_session(agenda, data):

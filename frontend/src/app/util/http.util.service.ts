@@ -9,6 +9,7 @@ export class HttpClient {
   createRequestOptions() : RequestOptions {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    headers.append('Accept','application/json');
     if(localStorage.getItem(GlobalVariable.TOKEN_NAME)){
       headers.append('Authorization', 'Bearer ' + localStorage.getItem(GlobalVariable.TOKEN_NAME));
     }

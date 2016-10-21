@@ -63,9 +63,9 @@ class AgendaSerializer(BaseAgendaSerializer):
     sessions = SessionSerializer(many=True, required=False, source='session_set')
     tracks = BaseTrackSerializer(many=True, required=False, source='track_set')
     speakers = BaseSpeakerSerializer(many=True, required=False, source='speaker_set')
-    venues = BaseVenueSerializer(many=True, required=False, source='venue_set')
+    session_venues = BaseVenueSerializer(many=True, required=False, source='venue_set')
 
     class Meta:
         model = Agenda
         fields = ('id', 'name', 'location', 'start_at', 'description', 'published', 'end_at',
-                  'sessions', 'tracks', 'speakers', 'venues', 'duration',)
+                  'sessions', 'tracks', 'speakers', 'session_venues', 'duration',)

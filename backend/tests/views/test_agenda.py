@@ -85,7 +85,7 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertTrue('sessions' in response.data)
         self.assertTrue('tracks' in response.data)
         self.assertTrue('speakers' in response.data)
-        self.assertTrue('venues' in response.data)
+        self.assertTrue('session_venues' in response.data)
 
         # Check no deep nesting
         session = response.data['sessions'][0]
@@ -94,7 +94,7 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertEqual(self.venue.pk, session['venue'])
         self.assertFalse('sessions' in response.data['tracks'][0])
         self.assertFalse('sessions' in response.data['speakers'][0])
-        self.assertFalse('sessions' in response.data['venues'][0])
+        self.assertFalse('sessions' in response.data['session_venues'][0])
 
     def test_retrieve_end_at(self):
         self.agenda.start_at = factory.now

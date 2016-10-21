@@ -1,5 +1,7 @@
 import { Session } from '../session/session';
 import { Track } from '../track/track';
+import { Tag } from '../tag/tag';
+import { Speaker } from '../speaker/speaker';
 
 export class Agenda {
   id: number;
@@ -8,6 +10,7 @@ export class Agenda {
   end_at: string;
   sessions: Session[];
   tracks: Track[];
-  speakers: any[];
+  speakers: Speaker[];
+  tags: Tag[];
   published: boolean;
 }

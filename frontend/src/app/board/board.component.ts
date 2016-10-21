@@ -1,4 +1,4 @@
-import { Input, Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
 import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -6,21 +6,50 @@ import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Track } from '../track/track';
+import { Tag } from '../tag/tag';
+import { Speaker } from '../speaker/speaker';
 import { AgendaService } from '../agenda/agenda.service';
+import { BoardService } from './board.service';
 
 import { DOMUtilService } from '../util/dom.util.service';
+import { overlayConfigFactory } from 'angular2-modal';
+import { Overlay } from 'angular2-modal';
+import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Rx';
+
+import {
+  VEXBuiltInThemes,
+  Modal,
+  DialogPreset,
+  DialogFormModal,
+  DialogPresetBuilder,
+  VEXModalContext,
+  VexModalModule,
+  providers
+} from 'angular2-modal/plugins/vex';
 
 @Component({
   selector: 'board',
   templateUrl: './board.component.html',
-  styleUrls: ['./board.component.css']
+  styleUrls: [
+  './board.component.css',
+  '../session/css/vex.css',
+  '../session/css/vex-theme-default.css',
+  '../dash-board/dash-board.component.css'
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class BoardComponent implements OnInit {
+  @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input()
   agenda: Agenda;
   offsetDate: Date;
   eventDates: Date[];
   eventTracks: Track[];
+  eventTags: Tag[];
+  eventTagsName: String[];
+  eventSpeakers: Speaker[];
+  eventSpeakersName: String[];
 
   allSessions: Session[];
   pendingSessions: Session[];
@@ -32,7 +61,10 @@ export class BoardComponent implements OnInit {
 
   constructor(private dragulaService: DragulaService,
     private agendaService: AgendaService,
-    private domUtilService: DOMUtilService) {
+    private boardService: BoardService,
+    private domUtilService: DOMUtilService,
+    public modal: Modal,
+    private _fb: FormBuilder) {
     dragulaService.dropModel.subscribe((value: any) => {
       // console.log(`drop: ${value}`);
       this.dragging = false;
@@ -184,13 +216,166 @@ export class BoardComponent implements OnInit {
     }
   }
 
+  getEventTags(): Tag[] { // using tracks for testing
+    // if (!this.agenda.tags || this.agenda.tags.length === 0) {
+    //   return [];
+    // } else {
+    //   return this.agenda.tags;
+    // }
+    if (!this.agenda.tracks || this.agenda.tracks.length === 0) {
+      return [];
+    } else {
+      return this.agenda.tracks;
+    }  
+  }
+
+  getEventTagsName(): String[] {
+    if (!this.eventTags || this.eventTags.length === 0) {
+      return [];
+    } else {
+      return this.eventTags.map(function(tag) {return tag.name;});
+    }
+  }
+
+  getEventSpeakers(): Speaker[] {
+    if (!this.agenda.speakers || this.agenda.speakers.length === 0) {
+      return [];
+    } else {
+      return this.agenda.speakers;
+    }
+  }
+
+  getEventSpeakersName(): String[] {
+    if (!this.eventSpeakers || this.eventSpeakers.length === 0) {
+      return [];
+    } else {
+      return this.eventSpeakers.map(function(speaker) {return speaker.name;});
+    }
+  }
+
+  sessionForm: FormGroup;
+  formMsg: string;
+  options = {
+    placeholderTags: "+ tag",
+    secondaryPlaceholderTags: "Enter a custom tag",
+    placeholderSpeakers: "+ speaker",
+    secondaryPlaceholderSpeakers: "Add an existing speaker"
+  }
+
   ngOnInit(): void {
     this.offsetDate = new Date(this.agenda.start_at);
     this.eventDates = this.getEventDates();
     this.eventTracks = this.getEventTracks();
+    this.eventTags = this.getEventTags();
+    this.eventTagsName = this.getEventTagsName();
+    this.eventSpeakers = this.getEventSpeakers();
+    this.eventSpeakersName = this.getEventSpeakersName();
     this.allSessions = this.agenda.sessions;
     let partioned = _.partition(this.allSessions, function(o:Session){return o.hasOwnProperty('start_at')});
     this.pendingSessions = partioned[1];
     this.nonPendingSessions = partioned[0];
+  }
+
+  createSessionModal() {
+    console.log("session modal");
+    this.sessionForm = this._fb.group({
+      name: ['', [<any>Validators.required]],
+      description: [''],
+      duration: ['', [<any>Validators.required]],
+      existingSpeakers: [[]],
+      newSpeakers: this._fb.array([]),
+      tags: [[]]
+    });
+    this.formMsg = "";
+    this.modal
+      .open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+  }
+
+  initSpeaker() {
+    return this._fb.group({
+        name: ['', Validators.required],
+        company: ['', Validators.required],
+        position: ['', Validators.required],
+        email: ['', Validators.required],
+        phone_number: [''],
+        company_description: [''],
+        company_url: ['']
+    });
+  }
+
+  addSpeaker() {
+    const control = <FormArray>this.sessionForm.controls['newSpeakers'];
+    control.push(this.initSpeaker());
+  }
+
+  removeSpeaker(i: number) {
+    const control = <FormArray>this.sessionForm.controls['newSpeakers'];
+    control.removeAt(i);
+  }
+
+  submitSessionForm(isValid: boolean) {
+    if (!isValid) { 
+      this.formMsg = "Please fill in all required information.";
+      return;
+    }
+    let observables: Observable<any>[] = [];
+    if (!this.sessionForm.value.existingSpeakers) {
+      this.sessionForm.value.existingSpeakers = [];
+    }
+    for (let speaker of this.sessionForm.value.newSpeakers) {
+      observables.push(this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url));
+    }
+    if (!this.sessionForm.value.tags) {
+      this.sessionForm.value.tags = [];
+    }
+    let newTagsCount: number = 0;
+    // for (let tag of this.sessionForm.value.tags) {
+    //   if (!this.eventTagsName.some(function(existingTag) {return existingTag === tag})) {
+    //     observables.push(this.boardService.createTag(this.agenda.id, tag));
+    //     newTagsCount += 1;
+    //   }
+    // }
+    console.log(this.sessionForm.value);
+    Observable.forkJoin(observables).subscribe(
+      data => {
+        let newSpeakersCount: number = this.sessionForm.value.newSpeakers.length;
+        for (let i = 0; i < newSpeakersCount; i++) {
+          console.log('new speaker created: ' + data[i].name);
+          this.eventSpeakers.push(data[i]);
+          this.sessionForm.value.existingSpeakers.push(data[i].name);
+        }
+        for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
+          console.log('new tag created: ' + data[i].name);
+          this.eventTags.push(data[i]);
+        }
+        this.createSession();
+      },
+      error =>  this.formMsg = <any>error
+    );
+  }
+
+  createSession() {
+    let speakers: Speaker[] = this.eventSpeakers;
+    let tags: Tag[] = this.eventTags;
+    function getId(name: string, lookup: any) {
+      for (let item of lookup) {
+        if (item.name === name) {
+          return item.id;
+        }
+      }
+    }
+    let speakersId: number[] = this.sessionForm.value.existingSpeakers.map(function(name: string) {return getId(name, speakers)});
+    let tagsId: number[] = this.sessionForm.value.tags.map(function(name: string) {return getId(name, tags)});
+    console.log(speakersId);
+    console.log(tagsId);
+    this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
+                                    this.sessionForm.value.duration, speakersId, tagsId).subscribe(
+      data => { 
+        this.formMsg = 'New session created!';
+        this.allSessions.push(data);
+        this.pendingSessions.push(data);
+      },
+      error =>  this.formMsg = <any>error
+    );
   }
 }

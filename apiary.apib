@@ -85,7 +85,24 @@ be displayed to the end user.
 
 #### Validation 
 
-TODO - Document HTTP 400 errors and the fields where validation errors can be found
+Validation errors result in a 400 Bad Request response from the API. Validation errors look like this 
+(these are examples and do not correspond to actual errors):
+
+    {
+      "password": [
+        "The password field is required"
+      ], 
+      
+      "non_field_errors": [
+        "The user needs to verify his email address"
+      ]
+    }
+
+
+Validation errors consist of an object with fields as the keys and an array of errors 
+in the form of strings that **can** be displayed to the user. Errors not associated with 
+any field in particular appear under `non_field_errors`. 
+
 
 # Group Event Organizers
 
@@ -98,7 +115,7 @@ The sign up process is -
 
 1. User enters information and submits form 
 2. Frontend makes request to `/users/sign_up`
-3. Frontend ask user to check their email **(Not Currently Implemented)** - API currently immediately returns JWT immediately
+3. Frontend ask user to check their email 
 4. User clicks on verification link to `/users/verify/{token}`
 5. User is redirected to homepage with JWT in query parameter
 
@@ -164,6 +181,20 @@ Exchange an existing token for a fresh one. The existing token must not have exp
 
     + Attributes
         + token (JWT)
+
+## POST /users/verify
+
+Send the user another verification email. This should be called at a minimum interval of 
+5 minutes since the server will not send out emails more than once every 5 minute. A
+success response is returned even if the server did not send out any email because the user 
+is already verified or if the request is made too soon. 
+
++ Request (application/json) 
+
+    + Attributes 
+        + username (string) 
+    
++ Response 204
 
 ## GET /users/verify/{token}
 
@@ -238,6 +269,7 @@ pick sessions they want to go for and register interest in them.
 + Request (application/json)
 
     + Attributes (Agenda)
+        + tracks: Track A, Track B (array[string]) - An array of track names to crate on the new agenda. If no tracks are specified a default track will be assigned to the agenda. 
 
 + Response 201 (application/json)
     + Headers
@@ -245,11 +277,13 @@ pick sessions they want to go for and register interest in them.
             Location: /1
             
     + Attributes (Agenda Item)
+        + tracks (array[Track Item])
 
 ## GET /{agenda_id}
 
 Returns a specific event's aganda. This can be used by both the agenda viewer 
-and agenda builder. 
+and agenda builder. Unpublished agendas, and all subresources under the agenda like 
+sessions and speakers require authentication to fetch. 
 
 + Response 200 (application/json)
 
@@ -265,9 +299,7 @@ and agenda builder.
 
 + Request (application/json)
     
-        {
-            "name": "CSSConf Asia"
-        }
+    + Attribute (Agenda)
 
 + Response 200 (application/json)
             
@@ -320,9 +352,7 @@ Get information about a specific session from an event.
 
 + Response 200 (application/json)
 
-    + Attributes (Session)
-        + speakers (array[Speaker Item])
-        + track (Track Item)
+    + Attributes (Session Item)
 
 ## PUT /{agenda_id}/sessions/{session_id}
 
@@ -393,7 +423,7 @@ Retrieve information about a specific speaker.
 + Response 200 (application/json)
 
     + Attributes (Speaker Item)
-        + sessions (array[Session Item])
+        + sessions (array[number]) - An array of ID representing the ID of the sessions the speaker appears in 
 
 
 ### PUT /{agenda_id}/speakers/{speaker_id}
@@ -460,7 +490,7 @@ Retrieve information about a single track and all sessions under it
 + Response 200 (application/json) 
 
     + Attribute (Track Item) 
-        + sessions (array[Session Item]) 
+        + sessions (array[number]) - an array of ID representing the sessions on this track 
 
 ### PUT /{agenda_id}/tracks/{track_id} 
 
@@ -484,6 +514,73 @@ Retrieve information about a single track and all sessions under it
 **Authentication required.** Delete the track. An agenda must have at least one track, 
 so requesting to delete the last track will result in an error. Sessions that 
 are attached to the deleted track will be moved to another track. 
+
++ Response 204 
+
+# Group Session Venues
+
+A venue represents the location a session can take place at. 
+
+### GET /{agenda_id}/venues
+
+Retrieves all venues for the event. 
+
++ Response 200 (application/json) 
+
+    + Attribute (array[Venue Item])
+
+### POST /{agenda_id}/venues
+
+**Authentication required.** Creates a new venue on the agenda. 
+
++ Request (application/json)
+
+    + Attribute (Venue)
+
++ Response 201 (application/json) 
+
+    + Attribute (Venue Item)
+
+    + Headers
+    
+            Location: /1/venues/2
+
+### GET /{agenda_id}/venues/{venue_id} 
+
+Retrieve information about a single venue and all sessions under it 
+
++ Response 200 (application/json) 
+
+    + Attribute (Venue Item) 
+        + sessions (array[number]) - an array of ID representing the sessions on this track 
+
+### PUT /{agenda_id}/venues/{venue_id} 
+
+**Authentication required.** Update venue information 
+
++ Request (application/json)
+
+    + Attribute (Venue)
+
++ Response (application/json)
+
+    + Attribute (Venue Item)
+
+### PATCH /{agenda_id}/venues/{venue_id}
+
+**Authentication required.** Update venue information 
+
++ Request (application/json)
+
+    + Attribute (Venue)
+
++ Response (application/json)
+
+    + Attribute (Venue Item)
+
+### DELETE /{agenda_id}/venues/{venue_id}
+
+**Authentication required.** Delete the venue. 
 
 + Response 204 
 
@@ -540,7 +637,7 @@ an array of tags to be created under it.
         
         + name: Session Type (string)
 
-+ Response 204
++ Response 200
 
 ### POST /{agenda_id}/categories/{category_id}/tags
 
@@ -567,6 +664,56 @@ an array of tags to be created under it.
 
 + Response 200 (application/json)
 
+# Group Event Agenda Viewer 
+
+These routes are used for event agenda viewers to create personalized agendas. 
+Each viewer is identified by a unique token that is generated when they first register 
+with their email. An URL to the agenda contaning the token is also sent to the user's
+email when they first register as a reminder so that they can return to their 
+personalized agenda. 
+
+## POST /{agenda_id}/viewers 
+
+Creates a new viewer. 
+
+If the email already exists for the given email on this agenda, a 400 response is 
+returned instead and an email with the token is sent to the email address. 
+
++ Request (application/json)
+
+    + Attributes
+        + email: john.doe@example.com (string, required)
+        
++ Response 201 (application/json)
+
+    + Attributes
+        + token (string)
+
+## GET /{agenda_id}/viewers/{token} 
+
+Fetch all of the data associated with the token, including email and session IDs. 
+
++ Response 200 (application/json) 
+
+    + Attributes
+        + email (string) 
+        + sessions (array[number]) - an array of session IDs that this viewer has selected 
+
+## PUT /{agenda_id}/viewers/{token}/{session_id}
+
+Adds a session to the list of selected sessions from this viewer. Note that the API does 
+not reject registering for overlapping sessions. Repeated calls to this endpoint will 
+always return 204, as `PUT` endpoints are idempotent. 
+
++ Response 204 
+
+## DELETE /{agenda_id}/viewers/{token}/{session_id}
+
+Removes the session from the list selected sessions from this viewer. Attempting 
+to call this endpoint when the viewer does not have the session selected will result 
+in a 404 response. 
+
++ Response 204 
 
 ## Data Structures 
 
@@ -622,6 +769,10 @@ an array of tags to be created under it.
 ### Track
 + name (string) - the name of the track. Will be set to 'Track 1', 'Track 2', etc. if not provided. 
 
+### Venue
++ name (string, required) - name of the venue 
++ unit (string) - unit number of the venue 
+
 ### User Item (User)
 + Include Item
 + agendas (array[Agenda Item])
@@ -634,6 +785,7 @@ an array of tags to be created under it.
 + Include Item
 + track (number) - The ID of the track the session is in
 + speakers (array[number]) - The ID of the speakers for the session
++ popularity (number) - number of viewers who have registered for the session
 
 ### Category Item (Category)
 + Include Item
@@ -646,4 +798,7 @@ an array of tags to be created under it.
 + Include Item
 
 ### Track Item (Track)
++ Include Item
+
+### Venue Item (Venue)
 + Include Item

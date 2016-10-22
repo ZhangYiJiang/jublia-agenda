@@ -3,10 +3,10 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda, create_session, create_track
-from .base import BaseAPITestCase
+from .base import BaseAPITestCase, ListAuthTestMixin, DetailAuthTestMixin
 
 
-class TrackListTest(BaseAPITestCase):
+class TrackListTest(ListAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -31,14 +31,8 @@ class TrackListTest(BaseAPITestCase):
         self.assertCreatedOk(response)
         self.assertEqualExceptMeta(track_data, response.data)
 
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url)
 
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url)
-
-
-class TrackDetailTest(BaseAPITestCase):
+class TrackDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -80,13 +74,3 @@ class TrackDetailTest(BaseAPITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.session.refresh_from_db()  # Will raise exception if the session is deleted
-
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url, method='patch')
-        self.assert401WhenUnauthenticated(self.url, method='put')
-        self.assert401WhenUnauthenticated(self.url, method='delete')
-
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url, method='patch')
-        self.assert403WhenUnauthorized(self.url, method='put')
-        self.assert403WhenUnauthorized(self.url, method='delete')

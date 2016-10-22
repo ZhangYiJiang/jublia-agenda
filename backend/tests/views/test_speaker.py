@@ -3,10 +3,10 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda, create_session, create_speaker
-from .base import BaseAPITestCase
+from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin
 
 
-class SpeakerListTest(BaseAPITestCase):
+class SpeakerListTest(ListAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -27,14 +27,8 @@ class SpeakerListTest(BaseAPITestCase):
         self.assertCreatedOk(response)
         self.assertEqualExceptMeta(speaker_data, response.data)
 
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url)
 
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url)
-
-
-class SpeakerDetailTest(BaseAPITestCase):
+class SpeakerDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -62,13 +56,3 @@ class SpeakerDetailTest(BaseAPITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(self.agenda.speaker_set.count())
-
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url, method='patch')
-        self.assert401WhenUnauthenticated(self.url, method='put')
-        self.assert401WhenUnauthenticated(self.url, method='delete')
-
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url, method='patch')
-        self.assert403WhenUnauthorized(self.url, method='put')
-        self.assert403WhenUnauthorized(self.url, method='delete')

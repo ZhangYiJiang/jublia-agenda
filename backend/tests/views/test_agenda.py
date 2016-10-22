@@ -4,7 +4,7 @@ from rest_framework.reverse import reverse
 from backend.models import Track
 from backend.tests import factory
 from backend.tests.helper import *
-from .base import BaseAPITestCase
+from .base import BaseAPITestCase, DetailAuthTestMixin
 
 
 class AgendaListTest(BaseAPITestCase):
@@ -58,7 +58,7 @@ class AgendaListTest(BaseAPITestCase):
         self.assert401WhenUnauthenticated(self.url)
 
 
-class AgendaDetailTest(BaseAPITestCase):
+class AgendaDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda_data = factory.agenda()
@@ -137,13 +137,3 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertTrue(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['name'], 'New Conference Name')
         self.assertNoEmptyFields(response.data)
-
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url, 'delete')
-        self.assert401WhenUnauthenticated(self.url, 'put')
-        self.assert401WhenUnauthenticated(self.url, 'patch')
-
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url, 'delete')
-        self.assert403WhenUnauthorized(self.url, 'patch')
-        self.assert403WhenUnauthorized(self.url, 'put')

@@ -3,10 +3,10 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import *
-from .base import BaseAPITestCase
+from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin
 
 
-class CategoryViewSetTest(BaseAPITestCase):
+class CategoryViewSetTest(ListAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -32,14 +32,8 @@ class CategoryViewSetTest(BaseAPITestCase):
         response = self.client.get(self.url)
         self.assertEqual(2, len(response.data))
 
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url)
 
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url)
-
-
-class CategoryDetailTest(BaseAPITestCase):
+class CategoryDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -64,18 +58,8 @@ class CategoryDetailTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(0, self.agenda.category_set.count())
 
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url, method='patch')
-        self.assert401WhenUnauthenticated(self.url, method='put')
-        self.assert401WhenUnauthenticated(self.url, method='delete')
 
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url, method='patch')
-        self.assert403WhenUnauthorized(self.url, method='put')
-        self.assert403WhenUnauthorized(self.url, method='delete')
-
-
-class TagListTest(BaseAPITestCase):
+class TagListTest(ListAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -90,7 +74,7 @@ class TagListTest(BaseAPITestCase):
         self.assertEqual(1, self.category.tag_set.count())
 
 
-class TagDetailTest(BaseAPITestCase):
+class TagDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -118,13 +102,3 @@ class TagDetailTest(BaseAPITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.session.refresh_from_db()
-
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url, method='patch')
-        self.assert401WhenUnauthenticated(self.url, method='put')
-        self.assert401WhenUnauthenticated(self.url, method='delete')
-
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url, method='patch')
-        self.assert403WhenUnauthorized(self.url, method='put')
-        self.assert403WhenUnauthorized(self.url, method='delete')

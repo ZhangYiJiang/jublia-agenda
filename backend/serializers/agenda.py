@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 
 from backend.models import Agenda
 from .base import BaseSerializer
+from .category import CategorySerializer
 from .session import SessionSerializer
 from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
@@ -64,8 +65,9 @@ class AgendaSerializer(BaseAgendaSerializer):
     tracks = BaseTrackSerializer(many=True, required=False, source='track_set')
     speakers = BaseSpeakerSerializer(many=True, required=False, source='speaker_set')
     session_venues = BaseVenueSerializer(many=True, required=False, source='venue_set')
+    categories = CategorySerializer(many=True, required=False, source='category_set')
 
     class Meta:
         model = Agenda
         fields = ('id', 'name', 'location', 'start_at', 'description', 'published', 'end_at',
-                  'sessions', 'tracks', 'speakers', 'session_venues', 'duration',)
+                  'categories', 'sessions', 'tracks', 'speakers', 'session_venues', 'duration',)

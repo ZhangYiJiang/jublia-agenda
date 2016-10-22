@@ -101,6 +101,14 @@ class SessionDetailTest(BaseAPITestCase):
         response = self.client.get(self.url)
         self.assertEqual(venue.pk, response.data['venue'])
 
+    def test_category(self):
+        category = create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
+        tags = category.tag_set.all()
+        self.session.tags.add(*tags)
+        response = self.client.get(self.url)
+        for tag in tags:
+            self.assertTrue(tag.pk in response.data['categories'][category.pk])
+
     def test_delete(self):
         self.login(self.user)
         response = self.client.delete(self.url)

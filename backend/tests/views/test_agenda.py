@@ -72,6 +72,7 @@ class AgendaDetailTest(BaseAPITestCase):
             'speakers': [self.speaker.pk],
             'venue': self.venue.pk,
         }))
+        self.category = create_category(self.agenda, factory.agenda(), ['A', 'B', 'C'])
 
         self.url = self.agenda.get_absolute_url()
 
@@ -86,6 +87,7 @@ class AgendaDetailTest(BaseAPITestCase):
         self.assertTrue('tracks' in response.data)
         self.assertTrue('speakers' in response.data)
         self.assertTrue('session_venues' in response.data)
+        self.assertIsInstance(response.data['categories'][0], dict)
 
         # Check no deep nesting
         session = response.data['sessions'][0]

@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -37,6 +39,13 @@ class Session(BaseModel):
     speakers = models.ManyToManyField(Speaker)
     track = models.ForeignKey(Track, models.CASCADE)
     venue = models.ForeignKey(Venue, models.SET_NULL, blank=True, null=True)
+
+    @property
+    def categories(self):
+        categories = defaultdict(list)
+        for category, tag in self.tags.values_list('category__pk', 'pk'):
+            categories[category].append(tag)
+        return categories
 
     def get_absolute_url(self):
         return reverse('session_detail', (self.agenda.pk, self.pk,))

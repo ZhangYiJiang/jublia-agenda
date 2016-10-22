@@ -111,3 +111,20 @@ class TagDetailTest(BaseAPITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(2, self.category.tag_set.count())
+
+    def test_delete_no_cascade(self):
+        self.login(self.user)
+        self.session.tags.add(self.tags[0])
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.session.refresh_from_db()
+
+    def test_unauthenticated(self):
+        self.assert401WhenUnauthenticated(self.url, method='patch')
+        self.assert401WhenUnauthenticated(self.url, method='put')
+        self.assert401WhenUnauthenticated(self.url, method='delete')
+
+    def test_unauthorized(self):
+        self.assert403WhenUnauthorized(self.url, method='patch')
+        self.assert403WhenUnauthorized(self.url, method='put')
+        self.assert403WhenUnauthorized(self.url, method='delete')

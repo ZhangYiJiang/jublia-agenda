@@ -68,8 +68,7 @@ class Category(BaseModel):
         """
         tags = set(tags)
         existing = set(t.name for t in self.tag_set.all())
-        for name in tags - existing:
-            self.tag_set.add(Tag.objects.create(name=name, category=self))
+        Tag.objects.bulk_create([Tag(name=name, category=self) for name in tags - existing])
 
     def sync_tags(self, tags):
         """
@@ -81,8 +80,7 @@ class Category(BaseModel):
         # Delete tags that does not appear in the new tag list
         self.tag_set.filter(name__in=existing - tags).delete()
         # Add tags which didn't exist before
-        for name in tags - existing:
-            self.tag_set.add(Tag.objects.create(name=name, category=self))
+        Tag.objects.bulk_create([Tag(name=name, category=self) for name in tags - existing])
 
     def get_absolute_url(self):
         return reverse('category-detail', [self.agenda.pk, self.pk])

@@ -19,7 +19,7 @@ class CreateCategorySerializer(BaseSerializer):
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']
         category = super().create(validated_data)
-        category.sync_tags(self.context['tags'])
+        category.add_tags(self.context['tags'])
         return category
 
     class Meta:

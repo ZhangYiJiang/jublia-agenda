@@ -44,7 +44,7 @@ class SpeakerDetailTest(BaseAPITestCase):
             **factory.session(),
             'speakers': [self.speaker.pk],
         })
-        self.url = reverse('speaker_detail', [self.agenda.pk, self.speaker.pk])
+        self.url = self.speaker.get_absolute_url()
 
     def test_retrieve(self):
         response = self.client.get(self.url)

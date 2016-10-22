@@ -45,7 +45,7 @@ class VenueDetailTest(BaseAPITestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
         self.venue = create_venue(self.agenda, factory.venue())
         self.session = create_session(self.agenda, data=factory.session(data={'venue': self.venue.pk}))
-        self.url = reverse('venue_detail', [self.agenda.pk, self.venue.pk])
+        self.url = self.venue.get_absolute_url()
 
     def test_retrieve(self):
         response = self.client.get(self.url)

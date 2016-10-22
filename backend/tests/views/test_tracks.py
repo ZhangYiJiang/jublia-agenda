@@ -44,7 +44,7 @@ class TrackDetailTest(BaseAPITestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
         self.track = self.agenda.track_set.first()
         self.session = create_session(self.agenda, data=factory.session(data={'track': self.track.pk}))
-        self.url = reverse('track_detail', [self.agenda.pk, self.track.pk])
+        self.url = self.track.get_absolute_url()
 
     def test_retrieve(self):
         response = self.client.get(self.url)

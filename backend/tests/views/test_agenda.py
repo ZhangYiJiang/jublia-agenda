@@ -73,7 +73,7 @@ class AgendaDetailTest(BaseAPITestCase):
             'venue': self.venue.pk,
         }))
 
-        self.url = reverse('agenda_detail', [self.agenda.pk])
+        self.url = self.agenda.get_absolute_url()
 
     def test_retrieve(self):
         response = self.client.get(self.url)

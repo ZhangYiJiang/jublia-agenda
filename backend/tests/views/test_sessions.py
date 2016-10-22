@@ -75,7 +75,7 @@ class SessionDetailTest(BaseAPITestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
         self.session_data = factory.session()
         self.session = create_session(self.agenda, self.session_data)
-        self.url = reverse('session_detail', args=[self.agenda.pk, self.session.pk])
+        self.url = self.session.get_absolute_url()
 
     def test_retrieve(self):
         response = self.client.get(self.url)

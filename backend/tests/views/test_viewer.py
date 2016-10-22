@@ -104,7 +104,7 @@ class ViewerListTest(BaseAPITestCase):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda(full=True))
         self.viewer = create_viewer(self.agenda, factory.viewer())
-        self.url = reverse('viewer_sessions', [self.agenda.pk, self.viewer.token])
+        self.url = self.viewer.get_absolute_url()
         self.sessions = [create_session(self.agenda, factory.session(full=True)) for i in range(10)]
 
     def testListEmpty(self):

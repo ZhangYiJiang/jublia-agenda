@@ -54,6 +54,10 @@ export class AbsoluteColumnComponent implements OnInit {
     });
   }
 
+  onSessionEdited(editedSession: Session) {
+    this.onSessionChanged.emit(editedSession);
+  }
+
   private getColumnDate(el: HTMLElement): Date {
     return new Date(el.getAttribute('data-date'));
   }

@@ -14,16 +14,18 @@
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
     <div class="modal-container">
         <div class="page-header">
-            <h1>{{session.name}}</h1>
+            <h1><ndv-area [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="true"></ndv-area></h1>
         </div>
         <div class="jumbotron">
           <p>{{getDisplayedDate()}} {{getDisplayedTime()}}</p>
           <h2>Description</h2>
             <div *ngIf="session.description">
-              <p>{{session.description}}</p>
+              <!-- <p>{{session.description}}</p> -->
+              <p><ndv-area [title]="'description'" [placeholder]="session.description" (onSave)="updateSession($event)" [permission]="true"></ndv-area></p>
             </div>
             <div *ngIf="!session.description">
-              <p>Description not available.</p>
+              <!-- <p>Description not available.</p> -->
+              <p><ndv-area [title]="'description'" [placeholder]="'Description not empty.'" (onSave)="updateSession($event)" [permission]="true"></ndv-area></p>
             </div>
           <h2>Speakers</h2>
           <div *ngIf="session.speakers">

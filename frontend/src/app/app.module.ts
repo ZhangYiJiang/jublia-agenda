@@ -33,6 +33,8 @@ import { VexModalModule} from 'angular2-modal/plugins/vex';
 import { JwtHelper } from 'angular2-jwt';
 
 
+import { NdvEditComponent } from './ndv/ndv.edit.component.ts';
+import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
 
 @NgModule({
   imports: [
@@ -61,7 +63,9 @@ import { JwtHelper } from 'angular2-jwt';
     DashBoardComponent,
     AgendaComponent,
     OrderBy,
-    Where
+    Where,
+    NdvEditComponent,
+    NdvEditAreaComponent
   ],
   providers: [
     AgendaService,

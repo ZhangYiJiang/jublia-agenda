@@ -79,3 +79,23 @@ class BaseAPITestCase(ErrorDetailMixin, APITestCase):
                                  "test setUp method (remember to place it AFTER any create_user)")
         self.assertEqual(count, len(mail.outbox) - self.email_count,
                          "Expected %d emails to have been sent" % count)
+
+
+class ListAuthTestMixin:
+    def test_unauthenticated(self):
+        self.assert401WhenUnauthenticated(self.url)
+
+    def test_unauthorized(self):
+        self.assert403WhenUnauthorized(self.url)
+
+
+class DetailAuthTestMixin:
+    def test_unauthenticated(self):
+        self.assert401WhenUnauthenticated(self.url, method='patch')
+        self.assert401WhenUnauthenticated(self.url, method='put')
+        self.assert401WhenUnauthenticated(self.url, method='delete')
+
+    def test_unauthorized(self):
+        self.assert403WhenUnauthorized(self.url, method='patch')
+        self.assert403WhenUnauthorized(self.url, method='put')
+        self.assert403WhenUnauthorized(self.url, method='delete')

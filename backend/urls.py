@@ -1,11 +1,17 @@
 from django.conf.urls import url
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_complete
+from rest_framework.routers import SimpleRouter
 from rest_framework_jwt.views import refresh_jwt_token
 
 import backend.views.session_meta
 from . import views
 
-agenda_id = r'^(?P<agenda_id>[1-9][0-9]*)/'
+agenda_id = r'(?P<agenda_id>[1-9][0-9]*)/'
+
+router = SimpleRouter()
+router.register(agenda_id + r'categories/(?P<category_id>[1-9][0-9]*)/tags',
+                views.TagViewSet)
+router.register(agenda_id + r'categories', views.CategoryViewSet)
 
 urlpatterns = [
     # For JWT authentication
@@ -61,3 +67,5 @@ urlpatterns = [
         views.ViewerSessionList.as_view(), name='viewer_sessions'),
     url(agenda_id + r'viewers$', views.create_viewer, name='viewer_create'),
 ]
+
+urlpatterns += router.urls

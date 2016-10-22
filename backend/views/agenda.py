@@ -12,10 +12,7 @@ class AgendaList(UserContextMixin, ListCreateAPIView):
     def get_serializer_context(self):
         # Add tracks to the serializer context, if it is in the request
         context = super().get_serializer_context()
-        if 'tracks' in self.request.data:
-            context['tracks'] = self.request.data['tracks']
-        else:
-            context['tracks'] = []
+        context['tracks'] = self.request.data.get('tracks', [])
         return context
 
     def get_queryset(self):

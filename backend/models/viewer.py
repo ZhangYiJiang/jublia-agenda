@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from rest_framework.reverse import reverse
 
 from backend.helper import UniqueTokenGenerator
 from .agenda import Agenda
@@ -41,6 +42,9 @@ class Viewer(BaseModel):
         # Only update DB after send_mail
         self.last_email_at = timezone.now()
         self.save()
+
+    def get_absolute_url(self):
+        return reverse('viewer_sessions', [self.agenda.pk, self.token])
 
     def __str__(self):
         return self.email

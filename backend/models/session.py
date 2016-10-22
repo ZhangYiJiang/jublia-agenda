@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -12,6 +14,9 @@ from .speaker import Speaker
 class Tag(BaseModel):
     name = models.CharField(max_length=255)
     category = models.ForeignKey('Category', models.CASCADE)
+
+    def get_absolute_url(self):
+        return reverse('tag-detail', [self.category.agenda.pk, self.category.pk, self.pk])
 
     def __str__(self):
         return self.name
@@ -35,6 +40,13 @@ class Session(BaseModel):
     track = models.ForeignKey(Track, models.CASCADE)
     venue = models.ForeignKey(Venue, models.SET_NULL, blank=True, null=True)
 
+    @property
+    def categories(self):
+        categories = defaultdict(list)
+        for category, tag in self.tags.values_list('category__pk', 'pk'):
+            categories[category].append(tag)
+        return categories
+
     def get_absolute_url(self):
         return reverse('session_detail', (self.agenda.pk, self.pk,))
 
@@ -56,8 +68,7 @@ class Category(BaseModel):
         """
         tags = set(tags)
         existing = set(t.name for t in self.tag_set.all())
-        for name in tags - existing:
-            self.tag_set.add(Tag.objects.create(name=name, category=self))
+        Tag.objects.bulk_create([Tag(name=name, category=self) for name in tags - existing])
 
     def sync_tags(self, tags):
         """
@@ -69,8 +80,10 @@ class Category(BaseModel):
         # Delete tags that does not appear in the new tag list
         self.tag_set.filter(name__in=existing - tags).delete()
         # Add tags which didn't exist before
-        for name in tags - existing:
-            self.tag_set.add(Tag.objects.create(name=name, category=self))
+        Tag.objects.bulk_create([Tag(name=name, category=self) for name in tags - existing])
+
+    def get_absolute_url(self):
+        return reverse('category-detail', [self.agenda.pk, self.pk])
 
     def __str__(self):
         return self.name

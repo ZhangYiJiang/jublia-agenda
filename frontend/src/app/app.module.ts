@@ -21,6 +21,7 @@ import { BoardService } from './board/board.service.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
+import { Auth } from './util/auth.util.service';
 
 import { OrderBy } from './pipes/orderby.pipe';
 import { Where } from './pipes/where.pipe';
@@ -29,6 +30,8 @@ import { LoggedInGuard } from './auth.guard.ts';
 
 import { ModalModule } from 'angular2-modal';
 import { VexModalModule} from 'angular2-modal/plugins/vex';
+import { JwtHelper } from 'angular2-jwt';
+
 
 
 @NgModule({
@@ -66,7 +69,9 @@ import { VexModalModule} from 'angular2-modal/plugins/vex';
     BoardService,
     LoggedInGuard,
     DOMUtilService,
-    HttpClient
+    HttpClient,
+    JwtHelper,
+    Auth
   ],
   bootstrap: [ AppComponent ]
 })

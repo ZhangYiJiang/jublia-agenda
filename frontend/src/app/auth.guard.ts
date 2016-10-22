@@ -1,12 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { DashBoardService } from './dash-board/dash-board.service.ts';
+import { GlobalVariable }  from './globals';
+import { tokenNotExpired } from 'angular2-jwt';
+
 
 @Injectable()
 export class LoggedInGuard implements CanActivate {
-  constructor(private dashBoardService: DashBoardService) {}
+  constructor(
+  	private router: Router
+  ) {}
+
+  private TOKEN_NAME = GlobalVariable.TOKEN_NAME;
 
   canActivate() {
-    return this.dashBoardService.user.authed;
+    if (tokenNotExpired(this.TOKEN_NAME)) {
+      return true;
+    }
+    this.router.navigate(['']);
+    return false;
   }
 }

@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import {MdSnackBar, MdSnackBarConfig} from '@angular/material';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
@@ -18,9 +17,7 @@ export class DashBoardComponent implements OnInit {
     private router: Router,
     private _fb: FormBuilder,
     private dashBoardService: DashBoardService,
-    private agendaService: AgendaService,
-    public snackBar: MdSnackBar,
-    public viewContainerRef: ViewContainerRef
+    private agendaService: AgendaService
    ){}
 
   agendas = this.dashBoardService.agendas;
@@ -56,10 +53,6 @@ export class DashBoardComponent implements OnInit {
     }
   }
 
-  open() {
-    let config = new MdSnackBarConfig(this.viewContainerRef);
-    this.snackBar.open(this.successMsg, null,config);
-  }
   private clearMsg = (success: boolean) => {
     if(success) {
       setTimeout(()=>{this.successMsg = undefined;},3000);

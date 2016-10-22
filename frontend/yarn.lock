@@ -95,6 +95,12 @@ amdefine@>=0.0.4:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
 
+angular2-jwt:
+  version "0.1.24"
+  resolved "https://registry.yarnpkg.com/angular2-jwt/-/angular2-jwt-0.1.24.tgz#af45d180c51751ff9d04f4beb1357848f31d854b"
+  dependencies:
+    js-base64 "^2.1.9"
+
 angular2-modal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/angular2-modal/-/angular2-modal-2.0.1.tgz#6a7544ee5426b0ea07046fe7d7d3a38acf9bdde7"

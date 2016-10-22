@@ -1,23 +1,30 @@
 import { Injectable }     from '@angular/core';
+import { Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { HttpClient } from '../util/http.util.service';
+import { Auth } from '../util/auth.util.service';
 import { GlobalVariable }  from '../globals';
 import { Observable }     from 'rxjs/Observable';
 import { Agenda } from '../agenda/agenda';
+import { tokenNotExpired } from 'angular2-jwt';
+import { JwtHelper } from 'angular2-jwt';
+import * as moment from 'moment';
 
 @Injectable()
 export class DashBoardService {
 
   private TOKEN_NAME = GlobalVariable.TOKEN_NAME;
 
-  user = { authed:false };
+  user = this.auth.user;
   agendas: Agenda[];
 
-  constructor (private httpClient: HttpClient) {
+  constructor (
+    private httpClient: HttpClient,
+    private jwtHelper: JwtHelper,
+    private auth: Auth,
+    private router: Router) {
     //check if user has logged in
-    if (localStorage.getItem(this.TOKEN_NAME)) {
-      this.user.authed = true;
-    }
+    this.user.authed = tokenNotExpired(this.TOKEN_NAME);
   }
   
   signUp(email: string, password: string, organiser: string, event: string): Observable<number> {
@@ -54,6 +61,7 @@ export class DashBoardService {
                     .map(this.extractData)
                     .catch(this.handleError);
   }
+ 
 
   //set the scope of this to the class
   private storeToken = (data: any) =>  {
@@ -61,6 +69,7 @@ export class DashBoardService {
       //console.log(data.token);
       localStorage.setItem(this.TOKEN_NAME,data.token);
       this.user.authed = true;
+      console.log('token saved');
       return true;
     }else {
       this.user.authed = false;

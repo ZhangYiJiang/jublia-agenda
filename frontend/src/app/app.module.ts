@@ -29,6 +29,8 @@ import { LoggedInGuard } from './auth.guard.ts';
 import { ModalModule } from 'angular2-modal';
 import { VexModalModule} from 'angular2-modal/plugins/vex';
 
+import { NdvEditComponent } from './ndv/ndv.edit.component.ts';
+import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
 
 @NgModule({
   imports: [
@@ -57,7 +59,9 @@ import { VexModalModule} from 'angular2-modal/plugins/vex';
     DashBoardComponent,
     AgendaComponent,
     OrderBy,
-    Where
+    Where,
+    NdvEditComponent,
+    NdvEditAreaComponent
   ],
   providers: [
     AgendaService,

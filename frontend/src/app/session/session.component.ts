@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
+import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
@@ -39,6 +39,8 @@ export class SessionComponent implements OnInit {
   @Input()
   agenda: Agenda;
 
+  @Output() onSessionEdited = new EventEmitter<Session>();
+
   speakersObj = {};
   trackObj = {};
 
@@ -46,6 +48,15 @@ export class SessionComponent implements OnInit {
   VERTICAL_MARGIN = 4;
 
   height: number;
+
+  updateSession(event: any) {
+    console.log(event);
+    if(typeof event.description === 'string') {
+      console.log(this.session);
+      this.session.description = event.description;
+      this.onSessionEdited.emit(this.session);
+    }
+  }
 
   clicked(event: DocumentEvent) {
     console.log(event);

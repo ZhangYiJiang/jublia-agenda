@@ -6,31 +6,31 @@ from backend.tests.helper import *
 from .base import BaseAPITestCase
 
 
-class VenueListTest(BaseAPITestCase):
+class CategoryViewSetTest(BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
-        self.session = create_session(self.agenda, factory.session())
-        self.url = reverse('venue_list', [self.agenda.pk])
-
-    def test_list(self):
-        create_venue(self.agenda, factory.venue())
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data))
-
-        create_venue(self.agenda, factory.venue(full=True))
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, len(response.data))
-        self.assertFalse('sessions' in response.data[0])
+        self.url = reverse('category-list', [self.agenda.pk])
 
     def test_create(self):
         self.login(self.user)
-        venue_data = factory.venue(full=True)
-        response = self.client.post(self.url, venue_data)
+        category_data = factory.category()
+        response = self.client.post(self.url, category_data)
         self.assertCreatedOk(response)
-        self.assertEqualExceptMeta(venue_data, response.data)
+
+    def test_create_with_tags(self):
+        self.login(self.user)
+        response = self.client.post(self.url, factory.category({
+           'tags': ['Test Tag 1', 'Test Tag 2'],
+        }))
+        self.assertCreatedOk(response)
+        self.assertEqual(2, len(self.agenda.category_set.first().tag_set.all()))
+
+    def test_list(self):
+        create_category(self.agenda, factory.category())
+        create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
+        response = self.client.get(self.url)
+        self.assertEqual(2, len(response.data))
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)
@@ -39,22 +39,21 @@ class VenueListTest(BaseAPITestCase):
         self.assert403WhenUnauthorized(self.url)
 
 
-class VenueDetailTest(BaseAPITestCase):
+class CategoryDetailTest(BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
-        self.venue = create_venue(self.agenda, factory.venue())
-        self.session = create_session(self.agenda, data=factory.session(data={'venue': self.venue.pk}))
-        self.url = reverse('venue_detail', [self.agenda.pk, self.venue.pk])
+        self.category = create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
+        self.url = self.category.get_absolute_url()
 
     def test_retrieve(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue('sessions' in response.data)
+        self.assertEqual(3, len(response.data['tags']))
 
     def test_patch(self):
         self.login(self.user)
-        new_data = factory.venue()
+        new_data = factory.category()
         response = self.client.patch(self.url, new_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(new_data['name'], response.data['name'])
@@ -63,14 +62,7 @@ class VenueDetailTest(BaseAPITestCase):
         self.login(self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(0, self.agenda.venue_set.count())
-
-    def test_delete_no_cascade(self):
-        # Deleting a venue should not cause the session to disappear
-        self.login(self.user)
-        response = self.client.delete(self.url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.session.refresh_from_db()  # Will raise exception if the session is deleted
+        self.assertEqual(0, self.agenda.category_set.count())
 
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url, method='patch')

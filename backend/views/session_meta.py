@@ -62,6 +62,16 @@ class CategoryViewSet(AgendaContextMixin, ModelViewSet):
     serializer_class = serializers.CategorySerializer
     queryset = Category.objects.all()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['tags'] = self.request.data.get('tags', [])
+        return context
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return serializers.CreateCategorySerializer
+        return super().get_serializer_class()
+
     def get_queryset(self):
         return self.queryset.filter(agenda=self.kwargs['agenda_id'])
 

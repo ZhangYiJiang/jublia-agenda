@@ -10,18 +10,21 @@ class TagSerializer(BaseSerializer):
         fields = ('id', 'name',)
 
 
-class CategorySerializer(BaseSerializer):
-    tags = TagSerializer(many=True, required=False)
-
-    def validate_tags(self, tags):
-        return [{'name': name} for name in tags]
-
+class CreateCategorySerializer(BaseSerializer):
     @atomic
     def create(self, validated_data):
-        tags = validated_data.pop('tags', [])
+        validated_data['agenda'] = self.context['agenda']
         category = super().create(validated_data)
-        category.sync_tags(tags)
+        category.sync_tags(self.context['tags'])
         return category
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name',)
+
+
+class CategorySerializer(BaseSerializer):
+    tags = TagSerializer(many=True, required=False, source='tag_set')
 
     def update(self, instance, validated_data):
         # Update does not accept the setting of tags

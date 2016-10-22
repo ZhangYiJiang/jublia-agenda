@@ -72,5 +72,8 @@ class Category(BaseModel):
         for name in tags - existing:
             self.tag_set.add(Tag.objects.create(name=name, category=self))
 
+    def get_absolute_url(self):
+        return reverse('category-detail', [self.agenda.pk, self.pk])
+
     def __str__(self):
         return self.name

@@ -18,3 +18,18 @@ class AgendaContextMixin:
             **super().get_serializer_context(),
             'agenda': agenda,
         }
+
+
+class SplitSerializerMixin:
+    """
+    ModelViewSet mixin which splits create and list requests down one serializer,
+    and retrieve, update and delete requests down the other
+    """
+    def get_serializer_class(self):
+        if self.is_list_create_request:
+            return self.list_serializer_class
+        return super().get_serializer_class()
+
+    def get_serializer(self, *args, **kwargs):
+        self.is_list_create_request = kwargs.get('many', False) or self.request.method == 'POST'
+        super().get_serializer(*args, **kwargs)

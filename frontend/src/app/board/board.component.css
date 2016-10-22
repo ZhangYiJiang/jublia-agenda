@@ -1,2 +1,2 @@
-.board,.row,.scroll{display:flex}.day{flex-direction:column;flex-shrink:0}.scroll{flex:1;overflow-x:scroll}.day-title{background:#41B6AB}.track-title{background:#B1C9C3}.day-title,.track-title{color:white;margin-right:10px;min-width:200px;height:30px;line-height:30px}
+.board,.row,.scroll{display:flex}.day{flex-direction:column;flex-shrink:0}.scroll{flex:1;overflow-x:scroll}.day-title{background:#41B6AB}.track-title{background:#B1C9C3}.day-title,.track-title{color:white;margin-right:10px;min-width:200px;height:30px;line-height:30px}.fab-add{top:10px;left:-40px}.ng2-dropdown-menu-container{z-index:10000}
 /*# sourceMappingURL=board.component.css.map */

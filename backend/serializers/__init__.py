@@ -1,4 +1,5 @@
 from .agenda import BaseAgendaSerializer, AgendaSerializer
+from .category import CategorySerializer, TagSerializer
 from .model import TrackSerializer, SpeakerSerializer, VenueSerializer
 from .session import SessionSerializer
 from .speaker import BaseSpeakerSerializer

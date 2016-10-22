@@ -124,3 +124,25 @@ def viewer(data=None):
     }
 
     return {**data, **viewer}
+
+
+def category(data=None):
+    if data is None:
+        data = {}
+
+    category = {
+        'name': fake.bs(),
+    }
+
+    return {**data, **category}
+
+
+def tag(data=None):
+    if data is None:
+        data = {}
+
+    tag = {
+        'name': fake.bs()
+    }
+
+    return {**data, **tag}

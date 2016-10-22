@@ -1,28 +1,33 @@
 from django.db.transaction import atomic
-from rest_framework.relations import StringRelatedField
 
-from backend.models import Category
+from backend.models import Category, Tag
 from backend.serializers.base import BaseSerializer
 
 
+class TagSerializer(BaseSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'name',)
+
+
 class CategorySerializer(BaseSerializer):
-    tags = StringRelatedField(many=True)
+    tags = TagSerializer(many=True, required=False)
+
+    def validate_tags(self, tags):
+        return [{'name': name} for name in tags]
 
     @atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags', [])
         category = super().create(validated_data)
-        return self._update_tags(category, tags)
-
-    @atomic
-    def update(self, instance, validated_data):
-        self._update_tags(instance, validated_data.pop('tags', []))
-        return super().update(instance, validated_data)
-
-    @staticmethod
-    def _update_tags(category, tags):
         category.sync_tags(tags)
+        return category
+
+    def update(self, instance, validated_data):
+        # Update does not accept the setting of tags
+        validated_data.pop('tags', [])
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Category
-        fields = ('name', 'tags',)
+        fields = ('id', 'name', 'tags',)

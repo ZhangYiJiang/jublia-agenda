@@ -1,6 +1,9 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
 from backend import serializers
+from backend.models import Category
+from backend.models import Tag
 from backend.models import Track, Speaker, Venue
 from backend.permissions import IsAgendaOwnerOrReadOnly
 from .base import AgendaContextMixin
@@ -52,3 +55,22 @@ class VenueDetail(AgendaContextMixin, RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Venue.objects.filter(agenda=self.kwargs['agenda_id'])
+
+
+class CategoryViewSet(AgendaContextMixin, ModelViewSet):
+    permission_classes = (IsAgendaOwnerOrReadOnly,)
+    serializer_class = serializers.CategorySerializer
+    queryset = Category.objects.all()
+
+    def get_queryset(self):
+        return self.queryset.filter(agenda=self.kwargs['agenda_id'])
+
+
+class TagViewSet(AgendaContextMixin, ModelViewSet):
+    permission_classes = (IsAgendaOwnerOrReadOnly,)
+    serializers = serializers.TagSerializer
+    queryset = Tag.objects.all()
+
+    def get_queryset(self):
+        return self.queryset.filter(agenda=self.kwargs['agenda_id'],
+                                    category=self.kwargs['category_id'])

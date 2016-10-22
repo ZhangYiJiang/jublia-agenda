@@ -10,8 +10,8 @@
 }
 
 .scroll {
-  flex: 1;
-  overflow-x: scroll;
+    flex: 1;
+    overflow-x: scroll;
 }
 
 .day-title {
@@ -26,6 +26,15 @@
 	color: white;
 	margin-right: 10px;
 	min-width: 200px;
-  height: 30px;
-  line-height: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.fab-add {
+	top: 10px;
+	left: -40px;
+}
+
+.ng2-dropdown-menu-container {
+	z-index: 10000;
 }

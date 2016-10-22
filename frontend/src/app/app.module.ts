@@ -17,12 +17,13 @@ import { DashBoardComponent } from './dash-board/dash-board.component.ts';
 import { AgendaComponent } from './agenda/agenda.component.ts';
 import { AgendaService } from './agenda/agenda.service.ts';
 import { DashBoardService } from './dash-board/dash-board.service.ts';
+import { BoardService } from './board/board.service.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
 
-import {OrderBy} from './pipes/orderby.pipe';
-import {Where} from './pipes/where.pipe';
+import { OrderBy } from './pipes/orderby.pipe';
+import { Where } from './pipes/where.pipe';
 
 import { LoggedInGuard } from './auth.guard.ts';
 
@@ -62,6 +63,7 @@ import { VexModalModule} from 'angular2-modal/plugins/vex';
   providers: [
     AgendaService,
     DashBoardService,
+    BoardService,
     LoggedInGuard,
     DOMUtilService,
     HttpClient

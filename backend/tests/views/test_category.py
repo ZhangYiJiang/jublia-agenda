@@ -73,3 +73,41 @@ class CategoryDetailTest(BaseAPITestCase):
         self.assert403WhenUnauthorized(self.url, method='patch')
         self.assert403WhenUnauthorized(self.url, method='put')
         self.assert403WhenUnauthorized(self.url, method='delete')
+
+
+class TagListTest(BaseAPITestCase):
+    def setUp(self):
+        self.user = create_user(factory.user())
+        self.agenda = create_agenda(self.user, factory.agenda())
+        self.category = create_category(self.agenda, factory.category())
+        self.url = reverse('tag-list', [self.agenda.pk, self.category.pk])
+
+    def test_create(self):
+        self.login(self.user)
+        tag_data = factory.tag()
+        response = self.client.post(self.url, tag_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(1, self.category.tag_set.count())
+
+
+class TagDetailTest(BaseAPITestCase):
+    def setUp(self):
+        self.user = create_user(factory.user())
+        self.agenda = create_agenda(self.user, factory.agenda())
+        self.category = create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
+        self.tags = self.category.tag_set.all()
+        self.session = create_session(self.agenda, factory.session())
+        self.url = self.tags[0].get_absolute_url()
+
+    def test_put(self):
+        self.login(self.user)
+        tag_data = factory.tag()
+        response = self.client.put(self.url, tag_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(tag_data['name'], self.tags[0].name)
+
+    def test_delete(self):
+        self.login(self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(2, self.category.tag_set.count())

@@ -5,6 +5,10 @@ from backend.serializers.base import BaseSerializer
 
 
 class TagSerializer(BaseSerializer):
+    def create(self, validated_data):
+        validated_data['category'] = self.context['category']
+        return super().create(validated_data)
+
     class Meta:
         model = Tag
         fields = ('id', 'name',)

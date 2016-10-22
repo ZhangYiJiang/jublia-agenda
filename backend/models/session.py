@@ -13,6 +13,9 @@ class Tag(BaseModel):
     name = models.CharField(max_length=255)
     category = models.ForeignKey('Category', models.CASCADE)
 
+    def get_absolute_url(self):
+        return reverse('tag-detail', [self.category.agenda.pk, self.category.pk, self.pk])
+
     def __str__(self):
         return self.name
 

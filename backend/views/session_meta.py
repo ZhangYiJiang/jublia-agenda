@@ -1,10 +1,8 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 
 from backend import serializers
-from backend.models import Category
-from backend.models import Tag
-from backend.models import Track, Speaker, Venue
+from backend.models import Track, Speaker, Venue, Tag, Category
 from backend.permissions import IsAgendaOwnerOrReadOnly
 from .base import AgendaContextMixin
 
@@ -76,11 +74,18 @@ class CategoryViewSet(AgendaContextMixin, ModelViewSet):
         return self.queryset.filter(agenda=self.kwargs['agenda_id'])
 
 
-class TagViewSet(AgendaContextMixin, ModelViewSet):
+class TagViewSet(ModelViewSet):
     permission_classes = (IsAgendaOwnerOrReadOnly,)
-    serializers = serializers.TagSerializer
+    serializer_class = serializers.TagSerializer
     queryset = Tag.objects.all()
 
+    def get_serializer_context(self):
+        return {
+            'category': get_object_or_404(Category.objects,
+                                          agenda=self.kwargs['agenda_id'],
+                                          pk=self.kwargs['category_id'])
+        }
+
     def get_queryset(self):
-        return self.queryset.filter(agenda=self.kwargs['agenda_id'],
+        return self.queryset.filter(category__agenda=self.kwargs['agenda_id'],
                                     category=self.kwargs['category_id'])

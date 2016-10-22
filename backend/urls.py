@@ -9,9 +9,9 @@ from . import views
 agenda_id = r'(?P<agenda_id>[1-9][0-9]*)/'
 
 router = SimpleRouter()
-router.register(agenda_id + r'categories', views.CategoryViewSet)
 router.register(agenda_id + r'categories/(?P<category_id>[1-9][0-9]*)/tags',
-                views.CategoryViewSet)
+                views.TagViewSet)
+router.register(agenda_id + r'categories', views.CategoryViewSet)
 
 urlpatterns = [
     # For JWT authentication

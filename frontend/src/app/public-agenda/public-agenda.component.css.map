@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "AAEA,aAAc,CACb,KAAK,CCHU,OAAO,CDItB,SAAS,CCDQ,IAAI,CDErB,MAAM,CAAE,IAAI,CAEb,MAAO,CACN,MAAM,CAAE,IAAI,CACT,MAAM,CAAE,iBAAwB",
-"sources": ["agenda.component.scss","../../../public/css/variables.scss"],
+"mappings": "AAEA,aAAc,CACb,KAAK,CCHU,OAAO,CDItB,SAAS,CCDQ,IAAI,CDErB,MAAM,CAAE,IAAI,CAEb,MAAO,CACN,MAAM,CAAE,IAAI,CACT,MAAM,CAAE,iBAAwB,CAGpC,eAAgB,CACf,SAAS,CAAE,IAAI,CACZ,MAAM,CAAE,eAAe,CACvB,OAAO,CAAE,IAAI,CACb,KAAK,CAAE,KAAK,CACZ,KAAK,CAAE,KAAK,CACZ,MAAM,CAAE,IAAI,CACZ,UAAU,CAAE,IAAI,CAChB,aAAa,CAAE,IAAI",
+"sources": ["public-agenda.component.scss","../../../public/css/variables.scss"],
 "names": [],
-"file": "agenda.component.css"
+"file": "public-agenda.component.css"
 }

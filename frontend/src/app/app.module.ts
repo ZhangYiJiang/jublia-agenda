@@ -20,6 +20,7 @@ import { AnalyticsComponent } from './analytics/analytics.component.ts';
 import { AgendaService } from './agenda/agenda.service.ts';
 import { DashBoardService } from './dash-board/dash-board.service.ts';
 import { BoardService } from './board/board.service.ts';
+import { PublicAgendaService } from './public-agenda/public-agenda.service.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
@@ -47,7 +48,8 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
       { path: 'agenda/:id', component: AgendaComponent, canActivate: [LoggedInGuard] },
       { path: '', component: DashBoardComponent },
       { path: 'public/agenda/:id', component: PublicAgendaComponent },
-      { path: 'analytics/agenda/:id', component: AnalyticsComponent },
+      { path: 'public/agenda/:id/:token', component: PublicAgendaComponent },
+      { path: 'analytics/agenda/:id', component: AnalyticsComponent, canActivate: [LoggedInGuard] },
       { path: '**', component: DashBoardComponent } // TODO: implement 404 page component
     ]),
     DragulaModule,
@@ -77,6 +79,7 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     AgendaService,
     DashBoardService,
     BoardService,
+    PublicAgendaService,
     LoggedInGuard,
     DOMUtilService,
     HttpClient,

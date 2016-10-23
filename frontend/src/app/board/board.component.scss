@@ -5,10 +5,9 @@
 	color: $color-accent;
 	font-size: $size-normal-text;
 	position: absolute;
-    margin-left: 245px;
+    //margin-left: 245px;
 	.hour {
 		margin-bottom: 41px;
-		margin-right: 10px;
 	}
 }
 
@@ -21,16 +20,20 @@
         height: $height-per-15-min*4-2;
         width: 77.7vw; //994.55
         .quarter {
-            border-bottom: 1px solid $color-accent;
+            border-bottom: 1px dashed $color-accent;
             height: $height-per-15-min - 1;
         }
     }
 }
 
-.board {
+.board,.schedule {
 	position: relative;
 }
-.board, .row, .scroll{
+
+.scroll {
+	margin-left: 40px;
+}
+.board, .schedule,.row, .scroll{
 	display: flex;
 }
 
@@ -39,7 +42,7 @@
 	flex-shrink: 0;
 }
 
-.scroll {
+.schedule,.scroll {
     flex: 1;
     overflow-x: scroll;
 }
@@ -63,6 +66,8 @@
 .fab-add {
 	top: 10px;
 	left: -40px;
+	color: white;
+	background-color: $color-accent;
 }
 
 .ng2-dropdown-menu-container {

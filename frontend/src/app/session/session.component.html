@@ -17,8 +17,9 @@
             <h1><ndv-area [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="true"></ndv-area></h1>
         </div>
         <div class="jumbotron">
-          <p>{{getDisplayedDate()}} {{getDisplayedTime()}}</p>
-          <h2>Description</h2>
+          <p><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>
+          <p><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}}</p>
+          <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
             <div *ngIf="session.description">
               <!-- <p>{{session.description}}</p> -->
               <p><ndv-area [title]="'description'" [placeholder]="session.description" (onSave)="updateSession($event)" [permission]="true"></ndv-area></p>
@@ -27,7 +28,7 @@
               <!-- <p>Description not available.</p> -->
               <p><ndv-area [title]="'description'" [placeholder]="'Description not empty.'" (onSave)="updateSession($event)" [permission]="true"></ndv-area></p>
             </div>
-          <h2>Speakers</h2>
+          <h2><i class="fa fa-user" aria-hidden="true"></i> Speakers</h2>
           <div *ngIf="session.speakers">
             <div *ngFor="let speakerId of session.speakers">
               <h3>{{speakersObj[speakerId].name}}</h3>
@@ -39,12 +40,21 @@
           <div *ngIf="!session.speakers">
             <p>Speaker inforamtion not available.</p>
           </div>
-          <h2>Track</h2>
+          <h2><i class="fa fa-list-ol" aria-hidden="true"></i> Track</h2>
           <div *ngIf="session.track">
             <p>{{trackObj[session.track].name}}</p>  
           </div>
           <div *ngIf="!session.track">
             <p>Track inforamtion not available.</p>
+          </div>
+          <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
+          <div *ngIf="!(session.popularity == null)">
+            <p *ngIf="session.popularity === 0">No one has expressed interest in this session yet.</p>
+            <p *ngIf="session.popularity === 1">One person is interested in this session.</p>
+            <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
+          </div>
+          <div *ngIf="session.popularity == null">
+            <p>Popularity inforamtion not available.</p>
           </div>
         </div>
         <div class="clearfix">

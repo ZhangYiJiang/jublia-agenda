@@ -58,8 +58,8 @@
                     <span *ngIf='!show' style='line-height:1.5em;word-wrap: break-word;' (click)='makeEditable()'>{{text || '-Empty Field-'}}</span>
                 </span>
                 <div class='ndv-buttons' *ngIf='show'>
-                    <a class='button primary button-symbol' (click)='callSave()'><i>✔</i></a>
-                    <a class='button secondary button-symbol' (click)='cancelEditable()'><i>✖</i></a>
+                    <a class='button primary button-symbol' (click)='callSave()'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                    <a class='button secondary button-symbol' (click)='cancelEditable()'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
                 </div></form>`,
     host: {
         "(document: click)": "compareEvent($event)",

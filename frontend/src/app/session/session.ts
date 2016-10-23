@@ -11,6 +11,7 @@ export class Session {
   duration: number;  //number of minutes
   url: string;
   venue: string;
+  popularity: number;
   //not from api
   placeholder: boolean;
   order: number;

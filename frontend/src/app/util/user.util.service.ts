@@ -1,7 +1,7 @@
 import { Injectable }     from '@angular/core';
 
 @Injectable()
-export class Auth{
+export class User{
   constructor(){}
-  user = { authed:false };
+  user = { authed:false, agenda:false };
 }

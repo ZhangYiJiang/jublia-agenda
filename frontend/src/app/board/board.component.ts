@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
 import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -39,7 +39,7 @@ import {
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input()
   agenda: Agenda;
@@ -85,6 +85,10 @@ export class BoardComponent implements OnInit {
       // copySortSource: true
       accepts: this.canDropSession.bind(this)
     });
+  }
+
+  ngOnDestroy() {
+    this.dragulaService.destroy('column');
   }
 
   canDropSession(el: HTMLElement, target: HTMLElement): boolean {

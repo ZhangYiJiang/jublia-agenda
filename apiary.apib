@@ -44,7 +44,6 @@ All date and time are returned as ISO 8601 dates. This can be parsed directly by
 relative to the first day of the event and `duration` in minutes instead to allow
 for flexible handling of the event starting date. All absolute dates are in UTC. 
 
-
 [date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#Browser_compatibility
 
 #### Content Safety 
@@ -204,8 +203,6 @@ the user in the verification email. The frontend should **not** access this dire
 After the user visits this URL they will be redirected to the root of the 
 website with a JWT in the URL query parameters.
 
-TODO - What should happen if the token is invalid or expired? 
-
 + Parameters
     - token: cfawe03s1 (string, required)
 
@@ -318,7 +315,8 @@ It could be administrative, like registration or lunch, a workshop or a talk wit
 one or more speakers, or even some specific timing like the submission
 deadline for a hackathon. 
 
-Sessions are always ordered by their starting time in ascending order. 
+Sessions are always ordered by their starting time in ascending order. Session names 
+can be duplicated because of repeating sessions such as 'Lunch'. 
 
 ## GET /{agenda_id}/sessions
 
@@ -388,8 +386,9 @@ one specified in the request.
 
 # Group Speakers 
 
-A speaker can represent the host, speaker or guest of honor at a specific session. 
-This information is provided by Jublia. 
+A speaker can represent the host, speaker or guest of honor at a specific session. A session can 
+have multiple speakers, and are represented as an array of IDs under the `speakers` key. 
+Speaker names must be unique. 
 
 ### GET /{agenda_id}/speakers
 
@@ -457,7 +456,10 @@ Retrieve information about a specific speaker.
 
 A track represents a group of sessions. An event can have multiple tracks, possibly representing 
 different locations, themes or just sets of sessions that happen at the same time. An event 
-must have at least one track. 
+must have at least one track - the API will automatically create one on newly created event agendas, 
+and reject requests to delete the last track on an agenda. 
+
+Event tracks are represented with ID on sessions under the `track` key. Tracks must have unique names. 
 
 ### GET /{agenda_id}/tracks
 
@@ -519,7 +521,8 @@ are attached to the deleted track will be moved to another track.
 
 # Group Session Venues
 
-A venue represents the location a session can take place at. 
+A venue represents the location a session can take place at. Venues are represented on session objects as 
+ID under the `venue` key. Venues must have unique names. 
 
 ### GET /{agenda_id}/venues
 
@@ -587,18 +590,24 @@ Retrieve information about a single venue and all sessions under it
 
 # Group Tags and Tag Categories 
 
-**Categories are not implemented yet** 
+Sessions are organized by tags, and tags are organized into categories. 
+Each session can have many tags from each category attached to them. 
+Viewers can than use this to filter sessions they are interested in. 
+Session tags are represented on sessions as objects under the `categories` attribute: 
 
-Sessions are organized by tags. A tag is simply a string that must belong to a tag category. Each
-session can have many tags from each category attached to them. Viewers can than use this 
-to filter sessions they are interested in. 
+    "categories": {
+        4: [6, 7, 8], 
+        9: [10]
+    }
 
-Examples of tag categories, and the tags that can go under them:
+In the example above, the session has four tags (ID 6, 7, 8 and 10) from two different categories (4 and 9). 
 
- - Technology Covered: JavaScript, CSS, HTML 
+Here are some examples of tag categories, and the tags that can go under them:
+
+ - Technology: JavaScript, CSS, HTML 
  - Format: Networking, Seminar, Workshop 
  - Theme: Grow & Earn, Develop, What's Next
- - Area Covered: Advertising, Mobile Platform, Games, Internet of Things, Web Development, Virtual Reality
+ - Area of Interest: Advertising, Mobile Platform, Games, Internet of Things, Web Development, Virtual Reality
  
 
 ### GET /{agenda_id}/categories
@@ -626,10 +635,13 @@ an array of tags to be created under it.
     + Header
             
             Location: /1/categories/1
+    
+    + Attributes (Category Item)
 
 ### PATCH /{agenda_id}/categories/{category_id}
 
 **Authentication required.** Update tag category. Currently this is only used for renaming.
+To add, edit or remove individual tags, use the `{agenda_id}/categories/{category_id}/tags` routes. 
 
 + Request (application/json)
 
@@ -637,7 +649,15 @@ an array of tags to be created under it.
         
         + name: Session Type (string)
 
-+ Response 200
++ Response 200 (application/json) 
+
+    + Attributes (Category Item)
+
+### DELETE /{agenda_id}/categories/{category_id}
+
+**Authentication required.** Deletes the tag category, and all tags under it. 
+
++ Response 204
 
 ### POST /{agenda_id}/categories/{category_id}/tags
 
@@ -652,7 +672,7 @@ an array of tags to be created under it.
     
             Location: /1/categories/1/tags/1
 
-### PATCH /{agenda_id}/categories/category_id/tags/{tag_id}
+### PATCH /{agenda_id}/categories/{category_id}/tags/{tag_id}
 
 **Authentication required.** Renames the specified tag. 
 
@@ -663,6 +683,12 @@ an array of tags to be created under it.
         + name: JavaScript (string)
 
 + Response 200 (application/json)
+
+### DELETE /{agenda_id}/categories/{category_id}/tags/{tag_id}
+
+**Authentication required.** Deletes the tag under the category. 
+
++ Response 204
 
 # Group Event Agenda Viewer 
 
@@ -786,6 +812,7 @@ in a 404 response.
 + track (number) - The ID of the track the session is in
 + speakers (array[number]) - The ID of the speakers for the session
 + popularity (number) - number of viewers who have registered for the session
++ categories (object) - a mapping of category ID to a list of tag IDs under the category
 
 ### Category Item (Category)
 + Include Item

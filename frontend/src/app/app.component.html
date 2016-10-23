@@ -1,6 +1,9 @@
 <main>
     <div class="header">
-        <a class="title" href="/">{{appName}}</a>
+        <p class="title" (click)="goBack()">
+        <i *ngIf="user.agenda" class="fa fa-arrow-left" aria-hidden="true"></i>
+        {{appName}}
+        </p>
         <button *ngIf="user.authed" (click)="logOut()">Log Out</button>
     </div>
     <!-- Routed views go here -->

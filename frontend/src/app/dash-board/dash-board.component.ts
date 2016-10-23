@@ -21,11 +21,14 @@ export class DashBoardComponent implements OnInit {
    ){}
 
   agendas = this.dashBoardService.agendas;
-  user = this.dashBoardService.user;
+  user = this.dashBoardService.currentUser;
   errorMsg: string;
   successMsg: string;
-  loginEmail: string;
-  loginPassword: string;
+  //loginEmail: string;
+  //loginPassword: string;
+  //for testing
+  loginEmail = 'meganmckenzie@gmail.com';
+  loginPassword = '^Z2AwhuJ)T';
   registerEmail: string;
   registerPassword: string;
   organiser: string;
@@ -36,7 +39,7 @@ export class DashBoardComponent implements OnInit {
   formMsg: string;
   options = {
     placeholder: "+ track",
-    secondaryPlaceholder: "Enter a new track (optional)"
+    secondaryPlaceholder: "Enter a track (optional)"
   }
 
   ngOnInit() {
@@ -136,6 +139,7 @@ export class DashBoardComponent implements OnInit {
 
   onSelect(agenda: Agenda) {
     this.router.navigate(['/agenda', agenda.id]);
+    this.user.agenda = true;
   }
 
   toggleSigningUp() {

@@ -23,7 +23,7 @@ import { BoardService } from './board/board.service.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
-import { Auth } from './util/auth.util.service';
+import { User } from './util/user.util.service';
 
 import { OrderBy } from './pipes/orderby.pipe';
 import { Where } from './pipes/where.pipe';
@@ -81,7 +81,7 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     DOMUtilService,
     HttpClient,
     JwtHelper,
-    Auth
+    User
   ],
   bootstrap: [ AppComponent ]
 })

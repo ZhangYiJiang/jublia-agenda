@@ -626,10 +626,13 @@ an array of tags to be created under it.
     + Header
             
             Location: /1/categories/1
+    
+    + Attributes (Category Item)
 
 ### PATCH /{agenda_id}/categories/{category_id}
 
 **Authentication required.** Update tag category. Currently this is only used for renaming.
+To add, edit or remove individual tags, use the `{agenda_id}/categories/{category_id}/tags` routes. 
 
 + Request (application/json)
 
@@ -637,7 +640,15 @@ an array of tags to be created under it.
         
         + name: Session Type (string)
 
-+ Response 200
++ Response 200 (application/json) 
+
+    + Attributes (Category Item)
+
+### DELETE /{agenda_id}/categories/{category_id}
+
+**Authentication required.** Deletes the tag category, and all tags under it. 
+
++ Response 204
 
 ### POST /{agenda_id}/categories/{category_id}/tags
 
@@ -652,7 +663,7 @@ an array of tags to be created under it.
     
             Location: /1/categories/1/tags/1
 
-### PATCH /{agenda_id}/categories/category_id/tags/{tag_id}
+### PATCH /{agenda_id}/categories/{category_id}/tags/{tag_id}
 
 **Authentication required.** Renames the specified tag. 
 
@@ -663,6 +674,12 @@ an array of tags to be created under it.
         + name: JavaScript (string)
 
 + Response 200 (application/json)
+
+### DELETE /{agenda_id}/categories/{category_id}/tags/{tag_id}
+
+**Authentication required.** Deletes the tag under the category. 
+
++ Response 204
 
 # Group Event Agenda Viewer 
 
@@ -786,6 +803,7 @@ in a 404 response.
 + track (number) - The ID of the track the session is in
 + speakers (array[number]) - The ID of the speakers for the session
 + popularity (number) - number of viewers who have registered for the session
++ categories (object) - a mapping of category ID to a list of tag IDs under the category
 
 ### Category Item (Category)
 + Include Item

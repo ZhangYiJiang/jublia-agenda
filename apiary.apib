@@ -336,6 +336,7 @@ Returns a paginated list of all sessions from a event.
         + Include Session
         + speakers (array[number]) - one or more speakers at the session, represented by their id.
         + track (number) - the id representing the track this session is on. If not specified the first track of the event will be used.
+        + tags (array[number]) - an array of tag IDs that are associated with the session 
 
 + Response 201 (application/json)
     + Headers
@@ -360,6 +361,9 @@ one specified in the request.
 + Request (application/json)
 
     + Attribute (Session)
+        + speakers (array[number]) - one or more speakers at the session, represented by their id.
+        + track (number) - the id representing the track this session is on. If not specified the first track of the event will be used.
+        + tags (array[number]) - an array of tag IDs that are associated with the session 
 
 + Response 200 (application/json)
 
@@ -373,6 +377,9 @@ one specified in the request.
 + Request (application/json)
 
     + Attribute (Session)
+        + speakers (array[number]) - one or more speakers at the session, represented by their id.
+        + track (number) - the id representing the track this session is on. If not specified the first track of the event will be used.
+        + tags (array[number]) - an array of tag IDs that are associated with the session 
 
 + Response 200 (application/json)
 

@@ -7,9 +7,20 @@ body {
     margin: 0px;
 }
 
-button{
+.page-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.fa-spinner {
+    color: $color-primary;
+}
+
+button, .button{
     margin-top: 30px;
     border: 2px solid $color-primary;
+    cursor: pointer;
     &.primary{
         background-color: $color-primary;
         color: white;
@@ -18,6 +29,12 @@ button{
         background-color: white;
         color: $color-primary;
     }
+}
+
+.button-symbol {
+    margin: 0;
+    padding: 3px;
+    display: inline-block;
 }
 
 .session-container-list, .session-list, .session-wrapper {

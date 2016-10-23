@@ -112,7 +112,7 @@ def venue(data=None, full=False):
     if full:
         venue['unit'] = '#' + fake.bothify(text="##-##?")
 
-    return venue
+    return {**venue, **data}
 
 
 def viewer(data=None):
@@ -123,4 +123,26 @@ def viewer(data=None):
         'email': fake.email(),
     }
 
-    return {**data, **viewer}
+    return {**viewer, **data}
+
+
+def category(data=None):
+    if data is None:
+        data = {}
+
+    category = {
+        'name': fake.bs(),
+    }
+
+    return {**category, **data}
+
+
+def tag(data=None):
+    if data is None:
+        data = {}
+
+    tag = {
+        'name': fake.bs()
+    }
+
+    return {**tag, **data}

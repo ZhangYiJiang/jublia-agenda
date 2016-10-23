@@ -21,3 +21,6 @@ class Speaker(BaseModel):
 
     def __str__(self):
         return '{} - {} at {}'.format(self.name, self.position, self.company)
+
+    class Meta:
+        unique_together = ('agenda', 'name',)

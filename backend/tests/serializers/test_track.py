@@ -1,10 +1,11 @@
-from unittest import TestCase
+from rest_framework.exceptions import ValidationError
 
 from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda, create_track
+from backend.tests.serializers.test_serializers import SerializerTestCase
 
 
-class TrackSerializerTest(TestCase):
+class TrackSerializerTest(SerializerTestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -19,3 +20,9 @@ class TrackSerializerTest(TestCase):
 
         track = create_track(self.agenda, {'name': 'My custom name'})
         self.assertEqual("My custom name", track.name)
+
+    def test_unique_name(self):
+        track = create_track(self.agenda, factory.track())
+        with self.assertRaises(ValidationError) as e:
+            create_track(self.agenda, factory.track({'name': track.name}))
+        self.assertValidationError(e.exception)

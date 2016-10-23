@@ -1,7 +1,7 @@
 from rest_framework.fields import CharField
 
 from backend.models import Track
-from .base import BaseSerializer
+from .base import BaseSerializer, UniqueForAgenda
 
 
 class DefaultTrack:
@@ -14,7 +14,11 @@ class DefaultTrack:
 
 
 class BaseTrackSerializer(BaseSerializer):
-    name = CharField(default=DefaultTrack())
+    name = CharField(
+        default=DefaultTrack(),
+        validators=[UniqueForAgenda(queryset=Track.objects.all())]
+    )
+
 
     def validate(self, attrs):
         attrs['agenda'] = self.context['agenda']

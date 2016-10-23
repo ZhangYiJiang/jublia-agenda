@@ -53,6 +53,12 @@ def create_viewer(agenda, data):
     return s.save()
 
 
+def create_category(agenda, data, tags=()):
+    s = BaseCategorySerializer(data=data, context={'agenda': agenda, 'tags': tags})
+    s.is_valid(True)
+    return s.save()
+
+
 class ErrorDetailMixin:
     def assertIsErrorDetail(self, detail):
         self.assertIsInstance(detail, dict)

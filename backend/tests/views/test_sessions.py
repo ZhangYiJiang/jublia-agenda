@@ -3,10 +3,10 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import *
-from .base import BaseAPITestCase
+from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin
 
 
-class SessionListTest(BaseAPITestCase):
+class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -59,14 +59,8 @@ class SessionListTest(BaseAPITestCase):
     def test_create_on_track(self):
         self.login(self.user)
 
-    def test_create_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url)
 
-    def test_create_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url)
-
-
-class SessionDetailTest(BaseAPITestCase):
+class SessionDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def assertSessionEqual(self, original, response, msg=None):
         self.assertEqualExceptMeta(original, response, ignore=('track', 'popularity',))
 
@@ -75,7 +69,7 @@ class SessionDetailTest(BaseAPITestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
         self.session_data = factory.session()
         self.session = create_session(self.agenda, self.session_data)
-        self.url = reverse('session_detail', args=[self.agenda.pk, self.session.pk])
+        self.url = self.session.get_absolute_url()
 
     def test_retrieve(self):
         response = self.client.get(self.url)
@@ -100,6 +94,14 @@ class SessionDetailTest(BaseAPITestCase):
         self.session.save()
         response = self.client.get(self.url)
         self.assertEqual(venue.pk, response.data['venue'])
+
+    def test_category(self):
+        category = create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
+        tags = category.tag_set.all()
+        self.session.tags.add(*tags)
+        response = self.client.get(self.url)
+        for tag in tags:
+            self.assertTrue(tag.pk in response.data['categories'][category.pk])
 
     def test_delete(self):
         self.login(self.user)
@@ -144,12 +146,3 @@ class SessionDetailTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertSessionEqual(data, response.data)
 
-    def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.url, 'delete')
-        self.assert401WhenUnauthenticated(self.url, 'put')
-        self.assert401WhenUnauthenticated(self.url, 'patch')
-
-    def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.url, 'delete')
-        self.assert403WhenUnauthorized(self.url, 'patch')
-        self.assert403WhenUnauthorized(self.url, 'put')

@@ -21,7 +21,9 @@
           <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
             [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
             (onSessionChanged)="onSessionChanged($event)"
-            (onSessionMovedFromPending)="onSessionMovedFromPending($event)">
+            (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
+            (onSessionInterestChanged)="onSessionInterestChanged($event)"
+            [token]="token" [interestedSessionIds]="interestedSessionIds">
           </absolute-column>
         </div>  
       </div>

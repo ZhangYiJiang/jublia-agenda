@@ -1,65 +1,70 @@
 <div *ngIf="session.placeholder" class="placeholder-session"></div>
-<div *ngIf="!session.placeholder" class="session-tile"
-  [style.height]="session.start_at == null?'initial':height + 'px'"
-  [style.background-color]="'rgb('+red+','+green+','+blue+')'"
-  [class.pending]="session.start_at == null"
-  (click)="clicked($event)">
+<div *ngIf="!session.placeholder" class="session-tile" [style.height]="session.start_at == null?'initial':height + 'px'" [style.background-color]="'rgb('+red+','+green+','+blue+')'" [class.pending]="session.start_at == null" [class.static]="isPublic" (click)="clicked($event)">
   <div class="session-content">
-      <div class="session-title">{{session.name}}</div>
+    <div class="session-title">
+      <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
     <!-- session time format is 'HH:mm - HH:mm' -->
     <div *ngIf="session.start_at && session.duration >= 60" class="session-time">{{getDisplayedTime()}}</div>
     <div class="session-venue">{{session.venue}}</div>
   </div>
-
 </div>
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-    <div class="modal-container">
-        <div class="page-header">
-            <h1><ndv-area [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="true"></ndv-area></h1>
-        </div>
-        <div class="jumbotron">
-          <p><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>
-          <p><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}}</p>
-          <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
-            <div *ngIf="session.description">
-              <!-- <p>{{session.description}}</p> -->
-              <p><ndv-area [title]="'description'" [placeholder]="session.description" (onSave)="updateSession($event)" [permission]="true"></ndv-area></p>
-            </div>
-            <div *ngIf="!session.description">
-              <!-- <p>Description not available.</p> -->
-              <p><ndv-area [title]="'description'" [placeholder]="'Description not empty.'" (onSave)="updateSession($event)" [permission]="true"></ndv-area></p>
-            </div>
-          <h2><i class="fa fa-user" aria-hidden="true"></i> Speakers</h2>
-          <div *ngIf="session.speakers">
-            <div *ngFor="let speakerId of session.speakers">
-              <h3>{{speakersObj[speakerId].name}}</h3>
-              <p>{{speakersObj[speakerId].position}}, {{speakersObj[speakerId].company}}</p>
-              <p>{{speakersObj[speakerId].email}}</p>
-              <p>{{speakersObj[speakerId].phone_number}}</p>
-            </div>
-          </div>
-          <div *ngIf="!session.speakers">
-            <p>Speaker inforamtion not available.</p>
-          </div>
-          <h2><i class="fa fa-list-ol" aria-hidden="true"></i> Track</h2>
-          <div *ngIf="session.track">
-            <p>{{trackObj[session.track].name}}</p>  
-          </div>
-          <div *ngIf="!session.track">
-            <p>Track inforamtion not available.</p>
-          </div>
-          <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
-          <div *ngIf="!(session.popularity == null)">
-            <p *ngIf="session.popularity === 0">No one has expressed interest in this session yet.</p>
-            <p *ngIf="session.popularity === 1">One person is interested in this session.</p>
-            <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
-          </div>
-          <div *ngIf="session.popularity == null">
-            <p>Popularity inforamtion not available.</p>
-          </div>
-        </div>
-        <div class="clearfix">
-          <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
-        </div>
+  <div class="modal-container">
+    <div *ngIf="token">
+      <button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
+        <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
+      </button>
     </div>
+    <div class="page-header">
+      <h1><ndv-area [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area></h1>
+    </div>
+    <div class="jumbotron">
+      <p><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>
+      <p><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}}</p>
+      <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
+      <div *ngIf="session.description">
+        <!-- <p>{{session.description}}</p> -->
+        <p>
+          <ndv-area [title]="'description'" [placeholder]="session.description" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
+        </p>
+      </div>
+      <div *ngIf="!session.description">
+        <!-- <p>Description not available.</p> -->
+        <p>
+          <ndv-area [title]="'description'" [placeholder]="'Description not empty.'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
+        </p>
+      </div>
+      <h2><i class="fa fa-user" aria-hidden="true"></i> Speakers</h2>
+      <div *ngIf="session.speakers">
+        <div *ngFor="let speakerId of session.speakers">
+          <h3>{{speakersObj[speakerId].name}}</h3>
+          <p>{{speakersObj[speakerId].position}}, {{speakersObj[speakerId].company}}</p>
+          <p>{{speakersObj[speakerId].email}}</p>
+          <p>{{speakersObj[speakerId].phone_number}}</p>
+        </div>
+      </div>
+      <div *ngIf="!session.speakers">
+        <p>Speaker inforamtion not available.</p>
+      </div>
+      <h2><i class="fa fa-list-ol" aria-hidden="true"></i> Track</h2>
+      <div *ngIf="session.track">
+        <p>{{trackObj[session.track].name}}</p>
+      </div>
+      <div *ngIf="!session.track">
+        <p>Track inforamtion not available.</p>
+      </div>
+      <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
+      <div *ngIf="!(session.popularity == null)">
+        <p *ngIf="session.popularity === 0">No one has expressed interest in this session yet.</p>
+        <p *ngIf="session.popularity === 1">One person is interested in this session.</p>
+        <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
+      </div>
+      <div *ngIf="session.popularity == null">
+        <p>Popularity inforamtion not available.</p>
+      </div>
+    </div>
+    <div class="clearfix">
+      <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
+    </div>
+  </div>
 </template>

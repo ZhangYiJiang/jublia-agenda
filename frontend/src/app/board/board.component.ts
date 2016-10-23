@@ -45,6 +45,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   agenda: Agenda;
   @Input()
   isPublic: boolean;
+  @Input()
+  token: string;
+  @Input()
+  interestedSessionIds: number[];
 
   offsetDate: Date;
   eventDates: Date[];
@@ -138,6 +142,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     console.log('session changed in board');
     console.log(changedSession);
     this.agendaService.updateSession(this.agenda.id, changedSession);
+  }
+
+  onSessionInterestChanged(event: [number, boolean]) {
+    console.log('session ' + event[0] + ' changed to ' + event[1]);
+    this.agendaService.updateSessionInterest(this.agenda.id, event[0], event[1], this.token);
   }
 
   onSessionMovedFromPending(sessionFromPending: Session) {

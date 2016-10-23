@@ -31,8 +31,14 @@ export class AbsoluteColumnComponent implements OnInit {
 
   @Input() isPublic: boolean;
 
+  @Input()
+  token: string;
+  @Input()
+  interestedSessionIds: number[];
+
   @Output() onSessionChanged = new EventEmitter<Session>();
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
+  @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
 
   containers: any[] = [];
 
@@ -57,7 +63,21 @@ export class AbsoluteColumnComponent implements OnInit {
   }
 
   onSessionEdited(editedSession: Session) {
+    // propagate to board
     this.onSessionChanged.emit(editedSession);
+  }
+
+  onSessionInterestEdited(event: [number, boolean]) {
+    // propagate to board
+    this.onSessionInterestChanged.emit(event);
+  }
+
+  private isInterestedInSession(session: Session): boolean {
+    if(!this.interestedSessionIds) {
+      return false;
+    } else {
+      return this.interestedSessionIds.indexOf(session.id) !== -1;
+    }
   }
 
   private getColumnDate(el: HTMLElement): Date {
@@ -196,8 +216,8 @@ export class AbsoluteColumnComponent implements OnInit {
     // this.displayedSessions = this.addPlaceHolderSessions(sortedSessions);
     // console.log(this.displayedSessions);
 
-    if (this.isPublic) {
-      this.dragulaService.destroy('column');
-    }
+    // if (this.isPublic) {
+    //   this.dragulaService.destroy('column');
+    // }
   }
 }

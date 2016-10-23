@@ -25,7 +25,7 @@ export class PublicAgendaComponent implements OnInit{
   email: string;
   agendaId: number;
   token : string;
-  sessionsId: number[];
+  interestedSessionIds: number[];
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
@@ -42,24 +42,24 @@ export class PublicAgendaComponent implements OnInit{
   getAgendaById(id: number) {
     this.agendaService.getAgendaById(id).subscribe(
         agenda => {if (agenda.published) {this.agenda = agenda}},
-        error =>  console.log(error)
+        error => console.log(error)
     );
   }
 
   getViewerByToken(token: string) {
     this.publicAgendaService.getViewerByToken(this.agendaId, token).subscribe(
-      data => {
+      (data: any) => {
         this.email = data.email;
-        this.sessionsId = data.sessions;
+        this.interestedSessionIds = data.sessions;
       },
-      error =>  console.log(error)
+      (error: any) => console.log(error)
     );
   }
 
   createToken() {
     this.publicAgendaService.createToken(this.agendaId, this.email).subscribe(
-      data => this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token]),
-      error => console.log(error)
+      (data: any) => this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token]),
+      (error: any) => console.log(error)
     );
   }
 }

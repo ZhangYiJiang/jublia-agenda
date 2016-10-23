@@ -127,8 +127,7 @@ export class SessionComponent implements OnInit {
     let popularityRatio = 0;
     
     if (this.isPublic) {
-      popularityRatio = this.session.popularity / 100;// TODO: divide by highest popularity number?
-      popularityRatio = 0.5;
+      popularityRatio = this.session.popularity / 10; // TODO: divide by highest popularity number?
     }
 
     // white-pink-red gradient

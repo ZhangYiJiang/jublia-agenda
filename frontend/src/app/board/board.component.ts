@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef } from '@angular/core';
 import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -64,12 +64,16 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private PLACEHOLDER_DURATION: number = 15;
 
+  globalListenFunc: Function;
+
   constructor(private dragulaService: DragulaService,
     private agendaService: AgendaService,
     private boardService: BoardService,
     private domUtilService: DOMUtilService,
     public modal: Modal,
-    private _fb: FormBuilder) {
+    private _fb: FormBuilder,
+    private elementRef: ElementRef, 
+    private renderer: Renderer) {
     dragulaService.dropModel.subscribe((value: any) => {
       // console.log(`drop: ${value}`);
       this.dragging = false;
@@ -296,8 +300,16 @@ export class BoardComponent implements OnInit, OnDestroy {
       tags: [[]]
     });
     this.formMsg = "";
-    this.modal
-      .open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+    this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+  }
+
+  onSelected() {
+    let docs = document.getElementsByTagName("ng2-dropdown-menu");
+    for (let i = 0; i < docs.length; i++) {
+      document.getElementsByTagName("ng2-dropdown-menu")[i].addEventListener('click', function(event: any) {
+        event.stopPropagation();
+      });  
+    }
   }
 
   initSpeaker() {
@@ -345,22 +357,27 @@ export class BoardComponent implements OnInit, OnDestroy {
     //   }
     // }
     console.log(this.sessionForm.value);
-    Observable.forkJoin(observables).subscribe(
-      data => {
-        let newSpeakersCount: number = this.sessionForm.value.newSpeakers.length;
-        for (let i = 0; i < newSpeakersCount; i++) {
-          console.log('new speaker created: ' + data[i].name);
-          this.eventSpeakers.push(data[i]);
-          this.sessionForm.value.existingSpeakers.push(data[i].name);
-        }
-        for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
-          console.log('new tag created: ' + data[i].name);
-          this.eventTags.push(data[i]);
-        }
-        this.createSession();
-      },
-      error =>  this.formMsg = <any>error
-    );
+    if (observables.length > 0) {
+      Observable.forkJoin(observables).subscribe(
+        data => {
+          let newSpeakersCount: number = this.sessionForm.value.newSpeakers.length;
+          for (let i = 0; i < newSpeakersCount; i++) {
+            console.log('new speaker created: ' + data[i].name);
+            this.eventSpeakers.push(data[i]);
+            this.sessionForm.value.existingSpeakers.push(data[i].name);
+          }
+          for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
+            console.log('new tag created: ' + data[i].name);
+            this.eventTags.push(data[i]);
+          }
+          this.createSession();
+        },
+        error =>  this.formMsg = <any>error
+      );
+    }
+    else {
+      this.createSession();
+    }
   }
 
   createSession() {

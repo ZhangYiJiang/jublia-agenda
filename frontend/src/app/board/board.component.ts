@@ -84,6 +84,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.dragging = true;
     });
 
+    dragulaService.cancel.subscribe((value: any) => {
+      this.dragging = false;
+    });
+
     dragulaService.setOptions('column', {
       // copy: true,
       // copySortSource: true

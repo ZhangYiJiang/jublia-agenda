@@ -24,7 +24,7 @@ class ViewerCreateTest(BaseAPITestCase):
         self.assertEqual(viewer.token, response.data['token'])
         self.assertEmailSent()
         email = mail.outbox[-1]
-        self.assertIn(viewer.token, email.body)
+        self.assertIn(viewer.link(), email.body)
 
     def testDoubleCreate(self):
         viewer_data = factory.viewer()

@@ -27,13 +27,16 @@ class Viewer(BaseModel):
     agenda = models.ForeignKey(Agenda)
     sessions = models.ManyToManyField(Session, through='Registration')
 
+    def link(self):
+        return settings.BASE_URL + '/public/{}/{}'.format(self.agenda.pk, self.token)
+
     def send_agenda_email(self):
         # Don't send out the mail if it has been less than the minimum time
         sent_recently = self.last_email_at is not None and timezone.now() - self.last_email_at < TIME_BETWEEN_EMAIL
         if not settings.TESTING and sent_recently:
             return
         # TODO: Get this URL from the front end
-        link = settings.BASE_URL + '/{}/{}'.format(self.agenda.pk, self.token)
+        link = self.link()
         subject = _('Your personalized agenda to %s' % self.agenda.name)
         message = _("Welcome to %(title)s! Here's a link to your personalized "
                     "event agenda: %(link)s." % {'title': self.agenda.name, 'link': link})

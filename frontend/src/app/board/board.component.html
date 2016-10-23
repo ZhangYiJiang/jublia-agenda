@@ -5,6 +5,12 @@
   <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()"> 
     <md-icon>add</md-icon>
   </button>
+  <div class='timescale' *ngIf="dragging" >
+    <div class='hour' *ngFor="let hour of hours">
+    {{hour}}
+    </div>
+  </div>
+ 
   <div class="scroll">
     <div class="day" *ngFor="let date of eventDates">
       <div class="day-title">{{date | date}}</div>
@@ -19,6 +25,13 @@
         </div>  
       </div>
     </div>
+     <div class='timeline'  *ngIf="dragging">
+    <div class='hour' *ngFor="let hour of hours">
+      <div class='quarter'> </div>
+      <div class='quarter'></div>
+      <div class='quarter'></div>
+    </div>
+  </div>
   </div>
 </div>
 

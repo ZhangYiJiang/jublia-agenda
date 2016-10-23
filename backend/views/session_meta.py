@@ -67,7 +67,7 @@ class CategoryViewSet(AgendaContextMixin, ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return serializers.CreateCategorySerializer
+            return serializers.BaseCategorySerializer
         return super().get_serializer_class()
 
     def get_queryset(self):

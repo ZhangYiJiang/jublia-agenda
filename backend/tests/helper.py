@@ -54,7 +54,7 @@ def create_viewer(agenda, data):
 
 
 def create_category(agenda, data, tags=()):
-    s = CreateCategorySerializer(data=data, context={'agenda': agenda, 'tags': tags})
+    s = BaseCategorySerializer(data=data, context={'agenda': agenda, 'tags': tags})
     s.is_valid(True)
     return s.save()
 

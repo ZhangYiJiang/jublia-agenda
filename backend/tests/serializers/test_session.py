@@ -23,7 +23,7 @@ class SessionSerializerTest(SerializerTestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
 
     def update_session(self, session, data):
-        s = SessionSerializer(data=data, instance=session, partial=True)
+        s = SessionSerializer(data=data, instance=session, partial=True, context={'agenda': self.agenda})
         s.is_valid(True)
         return s.save()
 
@@ -93,6 +93,12 @@ class SessionSerializerTest(SerializerTestCase):
 
         with self.assertRaises(ValidationError) as e:
             self.update_session(s, self.start_without_duration)
+        self.assertValidationError(e.exception)
+
+    def test_unique_name(self):
+        session = create_session(self.agenda, factory.session())
+        with self.assertRaises(ValidationError) as e:
+            create_session(self.agenda, factory.session(full=True, data={'name': session.name}))
         self.assertValidationError(e.exception)
 
     @skip

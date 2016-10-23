@@ -31,6 +31,9 @@ class Track(BaseModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = ('agenda', 'name',)
+
 
 class Venue(BaseModel):
     name = models.CharField(max_length=255)
@@ -46,3 +49,6 @@ class Venue(BaseModel):
             return '{} - {}'.format(self.name, self.unit)
         else:
             return self.name
+
+    class Meta:
+        unique_together = ('agenda', 'name',)

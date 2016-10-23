@@ -1,8 +1,12 @@
+from rest_framework.fields import CharField
+
 from backend.models import Speaker
-from .base import BaseSerializer
+from .base import BaseSerializer, UniqueForAgenda
 
 
 class BaseSpeakerSerializer(BaseSerializer):
+    name = CharField(validators=[UniqueForAgenda(queryset=Speaker.objects.all())])
+
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']
         return super().create(validated_data)

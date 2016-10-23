@@ -32,7 +32,9 @@ button, .button{
 }
 
 .button-symbol {
-    padding: 3px 6px 3px 3px;
+    margin: 0;
+    padding: 3px;
+    display: inline-block;
 }
 
 .session-container-list, .session-list, .session-wrapper {

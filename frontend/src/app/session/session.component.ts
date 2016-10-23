@@ -68,7 +68,7 @@ export class SessionComponent implements OnInit {
   getDisplayedDate(): string {
     let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
     let date = new Date(startMs);
-    return moment(date).utc().format("dddd, MMMM Do YYYY");
+    return moment(date).utc().format("ddd, MMMM Do YYYY");
   }
 
   getDisplayedTime(): string {
@@ -82,6 +82,10 @@ export class SessionComponent implements OnInit {
 
   getFormattedTime(date: Date): string {
     return date.getUTCHours() + ':' + (date.getUTCMinutes() < 10 ? '0' : '') + date.getUTCMinutes();
+  }
+
+  getAltFormattedTime(date: Date): string {
+    return moment(date).utc().format("hA");
   }
 
   ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Injectable }     from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { GlobalVariable }  from '../globals';
-import { Auth } from './auth.util.service';
+import { User } from './user.util.service';
 import { Router } from '@angular/router';
 import { JwtHelper } from 'angular2-jwt';
 import * as moment from 'moment';
@@ -19,7 +19,7 @@ export class HttpClient {
     private http: Http,
     private jwtHelper: JwtHelper,
     private router: Router,
-    private auth: Auth
+    private user: User
   ) {}
 
   private TOKEN_NAME = GlobalVariable.TOKEN_NAME;
@@ -33,7 +33,7 @@ export class HttpClient {
       //expired token
       //can't refresh, send user to login
       localStorage.removeItem(this.TOKEN_NAME);
-      this.auth.user.authed = false;
+      this.user.user.authed = false;
       this.router.navigate(['']);
       return false;
     }else if (moment(expireOn).diff(moment(),'hours',true) < 1){

@@ -17,7 +17,7 @@ import '../../public/css/styles.css';
 })
 export class AppComponent {
   appName: string = GlobalVariable.APP_NAME;
-  user = this.dashBoardService.user;
+  user = this.dashBoardService.currentUser;
 
   constructor ( 
     private router: Router,
@@ -32,5 +32,9 @@ export class AppComponent {
   	console.log('log out');
     this.dashBoardService.logOut();
     this.router.navigate(['']);
+  }
+
+  goBack() {
+    this.user.agenda = false;
   }
 }

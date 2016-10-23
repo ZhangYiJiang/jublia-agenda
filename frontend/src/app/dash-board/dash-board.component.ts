@@ -21,7 +21,7 @@ export class DashBoardComponent implements OnInit {
    ){}
 
   agendas = this.dashBoardService.agendas;
-  user = this.dashBoardService.user;
+  user = this.dashBoardService.currentUser;
   errorMsg: string;
   successMsg: string;
   loginEmail: string;
@@ -136,6 +136,7 @@ export class DashBoardComponent implements OnInit {
 
   onSelect(agenda: Agenda) {
     this.router.navigate(['/agenda', agenda.id]);
+    this.user.agenda = true;
   }
 
   toggleSigningUp() {

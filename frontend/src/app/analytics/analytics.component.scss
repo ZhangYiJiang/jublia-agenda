@@ -1,0 +1,11 @@
+@import '../../../public/css/variables';
+
+.agenda-title {
+	color: $color-primary;
+	font-size: $size-large-text;
+	margin: 20px;
+}
+button {
+	margin: 10px;
+    border: 2px solid $color-primary;	
+}

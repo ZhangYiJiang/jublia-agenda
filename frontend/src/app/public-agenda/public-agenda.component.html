@@ -1,0 +1,17 @@
+<div *ngIf="!agenda">
+  Agenda is not public.
+</div>
+<div *ngIf="agenda">
+  <span class="agenda-title">Published view for {{agenda.name}}</span>
+  <div *ngIf="!user.authed && !token">
+  	<form (ngSubmit)="createToken()">
+		<md-input required placeholder="Email" [(ngModel)]="email" name="email"></md-input>
+		<button md-button type="submit">Create a personalised schedule</button>
+	</form>
+  </div>
+  <div class="viewer-profile" *ngIf="token">
+  	Email: {{email}}
+  </div>
+  <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true">
+  </board>
+</div>

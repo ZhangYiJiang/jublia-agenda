@@ -4,7 +4,7 @@
     <li class="session-container"
       *ngFor="let container of containers"
       [class.empty-container]="container.sessions.length === 0">
-      <ul class="session-list"
+      <ul *ngIf="!isPublic" class="session-list"
         [dragula]='"column"' [dragulaModel]='container.sessions'
         [attr.data-column-type]="'absolute'"
         [attr.data-date]="day.toISOString()"
@@ -22,7 +22,16 @@
             (onSessionEdited)="onSessionEdited($event)"></my-session>
         </li>
       </ul>
-      
+      <ul *ngIf="isPublic" class="session-list">
+        <li class="session-wrapper"
+          *ngFor="let session of container.sessions"
+          [class.placeholder]="session.placeholder">
+          <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
+            [token]="token"
+            [interested]="isInterestedInSession(session)"
+            (onSessionInterestEdited)="onSessionInterestEdited($event)"></my-session>
+        </li>
+      </ul>
     </li>
   </ul>
 </div>

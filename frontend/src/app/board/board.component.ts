@@ -45,6 +45,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   agenda: Agenda;
   @Input()
   isPublic: boolean;
+  @Input()
+  token: string;
+  @Input()
+  interestedSessionIds: number[];
 
   offsetDate: Date;
   eventDates: Date[];
@@ -82,6 +86,10 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     dragulaService.drag.subscribe((value: any) => {
       this.dragging = true;
+    });
+
+    dragulaService.cancel.subscribe((value: any) => {
+      this.dragging = false;
     });
 
     dragulaService.setOptions('column', {
@@ -132,6 +140,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         && this.allSessions[i].start_at < (startAt + draggingSession.duration)
         // existing session ends after the dragging session start
         && (this.allSessions[i].start_at + this.allSessions[i].duration) > startAt) {
+        console.log('collision with');
+        console.log(this.allSessions[i]);
         return true;
       }
     }
@@ -142,6 +152,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     console.log('session changed in board');
     console.log(changedSession);
     this.agendaService.updateSession(this.agenda.id, changedSession);
+  }
+
+  onSessionInterestChanged(event: [number, boolean]) {
+    console.log('session ' + event[0] + ' changed to ' + event[1]);
+    this.agendaService.updateSessionInterest(this.agenda.id, event[0], event[1], this.token);
   }
 
   onSessionMovedFromPending(sessionFromPending: Session) {
@@ -183,9 +198,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   isOnSameDay(day1: Date, day2: Date) {
-    return day1.getFullYear() === day2.getFullYear() 
-           && day1.getMonth() === day2.getMonth() 
-           && day1.getDate() === day2.getDate();
+    return day1.getUTCFullYear() === day2.getUTCFullYear() 
+           && day1.getUTCMonth() === day2.getUTCMonth() 
+           && day1.getUTCDate() === day2.getUTCDate();
   }
 
   changeSessionToPending(sessionId: number) {

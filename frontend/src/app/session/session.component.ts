@@ -40,7 +40,16 @@ export class SessionComponent implements OnInit {
   agenda: Agenda;
   @Input() isPublic: boolean;
 
+  @Input()
+  token: string;
+
+  @Input()
+  interested: boolean;
+
+  interestedButtonText: string;
+
   @Output() onSessionEdited = new EventEmitter<Session>();
+  @Output() onSessionInterestEdited = new EventEmitter<[number, boolean]>();
 
   speakersObj = {};
   trackObj = {};
@@ -53,6 +62,12 @@ export class SessionComponent implements OnInit {
   green: number;
   blue: number;
 
+  updateInterest() {
+    this.interested = !this.interested;
+    this.updateInterestButtonText();
+    this.onSessionInterestEdited.emit([this.session.id, this.interested]);
+  }
+
   updateSession(event: any) {
     console.log(event);
     if(typeof event.description === 'string') {
@@ -63,10 +78,8 @@ export class SessionComponent implements OnInit {
   }
 
   clicked(event: DocumentEvent) {
-    console.log(event);
     this.modal
       .open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
-    console.log();
   }
 
   getDisplayedDate(): string {
@@ -92,10 +105,20 @@ export class SessionComponent implements OnInit {
     return moment(date).utc().format("hA");
   }
 
+  updateInterestButtonText() {
+    if(this.interested) {
+      this.interestedButtonText = 'Interested. Click to revert.';
+    } else {
+      this.interestedButtonText = 'Click to indicate interest.';
+    }
+  }
+
   ngOnInit(): void {
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
+
+    this.updateInterestButtonText();
 
     if (this.session.start_at != null) {
       this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;

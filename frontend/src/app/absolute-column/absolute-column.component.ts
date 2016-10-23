@@ -14,8 +14,7 @@ import { DOMUtilService } from '../util/dom.util.service';
 @Component({
   selector: 'absolute-column',
   templateUrl: './absolute-column.component.html',
-  styleUrls: ['./absolute-column.component.css'],
-  viewProviders: [DragulaService]
+  styleUrls: ['./absolute-column.component.css']
 })
 export class AbsoluteColumnComponent implements OnInit {
   @Input() sessions: Session[];
@@ -198,11 +197,7 @@ export class AbsoluteColumnComponent implements OnInit {
     // console.log(this.displayedSessions);
 
     if (this.isPublic) {
-      this.dragulaService.setOptions('column', {
-        moves: function () {
-          return false; // elements are always draggable by default
-        }
-      });
+      this.dragulaService.destroy('column');
     }
   }
 }

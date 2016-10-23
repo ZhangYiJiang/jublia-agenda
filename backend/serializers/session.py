@@ -1,9 +1,8 @@
 from django.utils.translation import ugettext as _
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import CharField
 
 from backend.models import Session
-from .base import BaseSerializer, AgendaPrimaryKeyRelatedField, UniqueForAgenda
+from .base import BaseSerializer, AgendaPrimaryKeyRelatedField
 
 
 class DefaultTrack:
@@ -15,7 +14,6 @@ class DefaultTrack:
 
 
 class SessionSerializer(BaseSerializer):
-    name = CharField(validators=[UniqueForAgenda(queryset=Session.objects.all())])
     track = AgendaPrimaryKeyRelatedField(klass='Track', default=DefaultTrack())
     speakers = AgendaPrimaryKeyRelatedField(many=True, required=False, klass='Speaker')
     venue = AgendaPrimaryKeyRelatedField(required=False, klass='Venue')

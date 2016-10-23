@@ -55,7 +55,6 @@ class Session(BaseModel):
 
     class Meta:
         ordering = ('start_at',)
-        unique_together = ('agenda', 'name',)
 
 
 class Category(BaseModel):

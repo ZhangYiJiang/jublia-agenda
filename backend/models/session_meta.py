@@ -29,7 +29,7 @@ class Track(BaseModel):
         super().delete(using, keep_parents)
 
     def __str__(self):
-        return self.name
+        return self.agenda.name + ' - ' + self.name
 
     class Meta:
         unique_together = ('agenda', 'name',)

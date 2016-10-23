@@ -96,10 +96,9 @@ class SessionSerializerTest(SerializerTestCase):
         self.assertValidationError(e.exception)
 
     def test_unique_name(self):
+        # Sessions can have non-unique names
         session = create_session(self.agenda, factory.session())
-        with self.assertRaises(ValidationError) as e:
-            create_session(self.agenda, factory.session(full=True, data={'name': session.name}))
-        self.assertValidationError(e.exception)
+        create_session(self.agenda, factory.session(full=True, data={'name': session.name}))
 
     @skip
     def test_create_outside_agenda_duration(self):

@@ -55,7 +55,6 @@ class Session(BaseModel):
 
     class Meta:
         ordering = ('start_at',)
-        unique_together = ('agenda', 'name',)
 
 
 class Category(BaseModel):
@@ -88,3 +87,6 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = 'categories'

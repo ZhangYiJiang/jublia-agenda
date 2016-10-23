@@ -132,6 +132,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         && this.allSessions[i].start_at < (startAt + draggingSession.duration)
         // existing session ends after the dragging session start
         && (this.allSessions[i].start_at + this.allSessions[i].duration) > startAt) {
+        console.log('collision with');
+        console.log(this.allSessions[i]);
         return true;
       }
     }
@@ -188,9 +190,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   isOnSameDay(day1: Date, day2: Date) {
-    return day1.getFullYear() === day2.getFullYear() 
-           && day1.getMonth() === day2.getMonth() 
-           && day1.getDate() === day2.getDate();
+    return day1.getUTCFullYear() === day2.getUTCFullYear() 
+           && day1.getUTCMonth() === day2.getUTCMonth() 
+           && day1.getUTCDate() === day2.getUTCDate();
   }
 
   changeSessionToPending(sessionId: number) {

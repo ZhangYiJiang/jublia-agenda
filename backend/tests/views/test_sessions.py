@@ -40,11 +40,14 @@ class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
             create_speaker(self.agenda, factory.speaker()),
             create_speaker(self.agenda, factory.speaker(full=True)),
         ]
+        category = create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
 
         session_data = factory.session(full=True, data={
             'speakers': [s.pk for s in speakers],
             'track': track.pk,
+            'tags': [t.pk for t in category.tag_set.all()],
         })
+
         response = self.client.post(self.url, session_data)
 
         self.assertCreatedOk(response)
@@ -54,7 +57,16 @@ class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
         self.assertTrue(track.session_set.filter(pk=pk).exists())
         for speaker in speakers:
             self.assertTrue(speaker.session_set.filter(pk=pk).exists())
-        self.assertEqualExceptMeta(session_data, response.data, ignore=('popularity',))
+            self.assertIn(speaker.pk, response.data['speakers'])
+
+        # Tags are represented as categories but received as arrays
+        session_data.pop('tags')
+        for tag in category.tag_set.all():
+            self.assertTrue(tag.session_set.filter(pk=pk).exists())
+            self.assertIn(tag.pk, response.data['categories'][category.pk])
+
+        self.assertEqualExceptMeta(session_data, response.data,
+                                   ignore=('popularity', 'categories',))
 
     def test_create_on_track(self):
         self.login(self.user)

@@ -39,7 +39,7 @@ export class DashBoardComponent implements OnInit {
   formMsg: string;
   options = {
     placeholder: "+ track",
-    secondaryPlaceholder: "Enter a new track (optional)"
+    secondaryPlaceholder: "Enter a track (optional)"
   }
 
   ngOnInit() {

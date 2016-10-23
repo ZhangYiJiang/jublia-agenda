@@ -1,5 +1,6 @@
 import { Component, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { DashBoardService } from './dash-board/dash-board.service';
 
@@ -22,6 +23,7 @@ export class AppComponent {
   constructor ( 
     private router: Router,
   	private dashBoardService: DashBoardService,
+    private location: Location,
     overlay: Overlay, 
     vcRef: ViewContainerRef, 
     public modal: Modal) {
@@ -36,5 +38,6 @@ export class AppComponent {
 
   goBack() {
     this.user.agenda = false;
+    this.location.back();
   }
 }

@@ -24,8 +24,11 @@ export class DashBoardComponent implements OnInit {
   user = this.dashBoardService.currentUser;
   errorMsg: string;
   successMsg: string;
-  loginEmail: string;
-  loginPassword: string;
+  //loginEmail: string;
+  //loginPassword: string;
+  //for testing
+  loginEmail = 'meganmckenzie@gmail.com';
+  loginPassword = '^Z2AwhuJ)T';
   registerEmail: string;
   registerPassword: string;
   organiser: string;

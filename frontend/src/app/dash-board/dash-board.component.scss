@@ -75,6 +75,8 @@
     h2 {
         margin-top: 100px;
     }
+    position: relative;
+    left: 25%;
 
 }
 
@@ -93,7 +95,14 @@ form {
     margin-left: 20px;
     display: inline-block;
 }
-snack-bar-container {
-    background: $color-primary;
+
+.agenda-list-card, .new-agenda-card {
+    display: table-cell;
 }
+
+.agenda-list-card {
+    padding-right: 150px;
+
+}
+
 

@@ -43,6 +43,9 @@ export class BoardComponent implements OnInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input()
   agenda: Agenda;
+  @Input()
+  isPublic: boolean;
+
   offsetDate: Date;
   eventDates: Date[];
   eventTracks: Track[];

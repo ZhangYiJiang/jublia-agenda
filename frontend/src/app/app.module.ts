@@ -15,6 +15,8 @@ import { RelativeColumnComponent } from './relative-column/relative-column.compo
 import { SessionComponent } from './session/session.component.ts';
 import { DashBoardComponent } from './dash-board/dash-board.component.ts';
 import { AgendaComponent } from './agenda/agenda.component.ts';
+import { PublicAgendaComponent } from './public-agenda/public-agenda.component.ts';
+import { AnalyticsComponent } from './analytics/analytics.component.ts';
 import { AgendaService } from './agenda/agenda.service.ts';
 import { DashBoardService } from './dash-board/dash-board.service.ts';
 import { BoardService } from './board/board.service.ts';
@@ -44,6 +46,8 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     RouterModule.forRoot([
       { path: 'agenda/:id', component: AgendaComponent, canActivate: [LoggedInGuard] },
       { path: '', component: DashBoardComponent },
+      { path: 'public/agenda/:id', component: PublicAgendaComponent },
+      { path: 'analytics/agenda/:id', component: AnalyticsComponent },
       { path: '**', component: DashBoardComponent } // TODO: implement 404 page component
     ]),
     DragulaModule,
@@ -62,6 +66,8 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     SessionComponent,
     DashBoardComponent,
     AgendaComponent,
+    PublicAgendaComponent,
+    AnalyticsComponent,
     OrderBy,
     Where,
     NdvEditComponent,

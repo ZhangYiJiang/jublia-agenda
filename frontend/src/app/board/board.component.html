@@ -1,8 +1,8 @@
 <div class="board"
   [class.not-dragging]="!dragging">
-  <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda">
+  <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda" *ngIf="!isPublic">
   </relative-column>
-  <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()"> 
+  <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()" *ngIf="!isPublic"> 
     <md-icon>add</md-icon>
   </button>
   <div class='timescale' *ngIf="dragging" >
@@ -18,7 +18,7 @@
         <div class="track" *ngFor="let track of eventTracks">
           <div class="track-title">{{track.name}}</div>
           <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
-            [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda"
+            [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
             (onSessionChanged)="onSessionChanged($event)"
             (onSessionMovedFromPending)="onSessionMovedFromPending($event)">
           </absolute-column>

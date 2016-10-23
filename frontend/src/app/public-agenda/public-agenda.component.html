@@ -1,0 +1,9 @@
+<div *ngIf="!agenda">
+  Agenda is not public.
+</div>
+<div *ngIf="agenda">
+  <span class="agenda-title">Published view for {{agenda.name}}</span>
+  <br>
+  <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true">
+  </board>
+</div>

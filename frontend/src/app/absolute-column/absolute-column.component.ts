@@ -14,7 +14,8 @@ import { DOMUtilService } from '../util/dom.util.service';
 @Component({
   selector: 'absolute-column',
   templateUrl: './absolute-column.component.html',
-  styleUrls: ['./absolute-column.component.css']
+  styleUrls: ['./absolute-column.component.css'],
+  viewProviders: [DragulaService]
 })
 export class AbsoluteColumnComponent implements OnInit {
   @Input() sessions: Session[];
@@ -28,6 +29,8 @@ export class AbsoluteColumnComponent implements OnInit {
 
   // event start date
   @Input() offsetDate: Date;
+
+  @Input() isPublic: boolean;
 
   @Output() onSessionChanged = new EventEmitter<Session>();
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
@@ -47,7 +50,7 @@ export class AbsoluteColumnComponent implements OnInit {
 
   displayedSessions: Session[];
 
-  constructor(private dragulaService: DragulaService,
+  constructor(private dragulaService: DragulaService, 
     private domUtilService: DOMUtilService) {
     dragulaService.dropModel.subscribe((value: any) => {
       this.onDrop(value.slice(1));
@@ -193,5 +196,13 @@ export class AbsoluteColumnComponent implements OnInit {
     // let sortedSessions = _.sortBy(this.sessions, ['start_at']);
     // this.displayedSessions = this.addPlaceHolderSessions(sortedSessions);
     // console.log(this.displayedSessions);
+
+    if (this.isPublic) {
+      this.dragulaService.setOptions('column', {
+        moves: function () {
+          return false; // elements are always draggable by default
+        }
+      });
+    }
   }
 }

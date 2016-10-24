@@ -3,7 +3,6 @@ from django.contrib.auth.views import password_reset, password_reset_done, passw
 from rest_framework.routers import SimpleRouter
 from rest_framework_jwt.views import refresh_jwt_token
 
-import backend.views.session_meta
 from . import views
 
 agenda_id = r'(?P<agenda_id>[1-9][0-9]*)/'
@@ -44,21 +43,24 @@ urlpatterns = [
 
     # Session speakers
     url(agenda_id + r'speakers/(?P<pk>[1-9][0-9]*)',
-        backend.views.session_meta.SpeakerDetail.as_view(), name='speaker_detail'),
+        views.session_meta.SpeakerDetail.as_view(), name='speaker_detail'),
     url(agenda_id + r'speakers$',
-        backend.views.session_meta.SpeakerList.as_view(), name='speaker_list'),
+        views.session_meta.SpeakerList.as_view(), name='speaker_list'),
 
     # Session tracks
     url(agenda_id + r'tracks/(?P<pk>[1-9][0-9]*)',
-        backend.views.session_meta.TrackDetail.as_view(), name='track_detail'),
+        views.session_meta.TrackDetail.as_view(), name='track_detail'),
     url(agenda_id + r'tracks$',
-        backend.views.session_meta.TrackList.as_view(), name='track_list'),
+        views.session_meta.TrackList.as_view(), name='track_list'),
 
     # Session venues
     url(agenda_id + r'venues/(?P<pk>[1-9][0-9]*)',
-        backend.views.session_meta.VenueDetail.as_view(), name='venue_detail'),
+        views.session_meta.VenueDetail.as_view(), name='venue_detail'),
     url(agenda_id + r'venues$',
-        backend.views.session_meta.VenueList.as_view(), name='venue_list'),
+        views.session_meta.VenueList.as_view(), name='venue_list'),
+    
+    # Session analytics
+    url(agenda_id + 'data', views.analytics, name='analytics'),
 
     # Agenda viewers
     url(agenda_id + r'viewers/(?P<token>\w+)/(?P<session_id>[1-9][0-9]*)',

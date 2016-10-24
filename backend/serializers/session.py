@@ -1,5 +1,8 @@
-from django.utils.translation import ugettext as _
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import IntegerField
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from backend.models import Session, Tag
@@ -24,6 +27,11 @@ class SessionSerializer(HideFieldsMixin, BaseSerializer):
     speakers = AgendaPrimaryKeyRelatedField(many=True, required=False, klass='Speaker')
     venue = AgendaPrimaryKeyRelatedField(required=False, klass='Venue')
     tags = TagPrimaryKeyRelatedField(many=True, required=False)
+
+    duration = IntegerField(required=False, allow_null=True, validators=[
+        MinValueValidator(1, _("Duration must be larger than zero")),
+        MaxValueValidator(24 * 60, _("A session cannot be longer than 24 hours long")),
+    ])
 
     def validate(self, attrs):
         no_duration = 'duration' not in attrs and (not self.instance or 'duration' not in self.instance)

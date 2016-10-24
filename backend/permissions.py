@@ -18,6 +18,12 @@ def check_agenda_permission(agenda, request):
     return False
 
 
+class IsAgendaOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        agenda = get_object_or_404(Agenda.objects, pk=view.kwargs['agenda_id'])
+        return request.user == agenda.profile.user
+
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """Custom permission to only allow owners of an object to edit it."""
     def has_object_permission(self, request, view, obj):

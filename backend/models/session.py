@@ -1,8 +1,6 @@
 from collections import defaultdict
 
-from django.core.validators import MinValueValidator
 from django.db import models
-from django.utils.translation import ugettext as _
 from rest_framework.reverse import reverse
 
 from .agenda import Agenda
@@ -26,10 +24,7 @@ class Session(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     start_at = models.IntegerField(blank=True, null=True)
-    duration = models.IntegerField(blank=True, null=True, validators=[
-        MinValueValidator(1, _("Duration must be larger than zero")),
-        MinValueValidator(24 * 60, _("A session cannot be longer than 24 hours long")),
-    ])
+    duration = models.IntegerField(blank=True, null=True)
 
     # Denormalized aggregate of the number of registrations on the model
     popularity = models.IntegerField(default=0, editable=False)

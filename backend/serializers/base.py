@@ -1,8 +1,9 @@
 from collections import OrderedDict
 
+from django.utils.translation import ugettext as _
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SkipField
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, CharField
-from rest_framework.validators import UniqueValidator
 
 from backend.models import Agenda
 
@@ -21,10 +22,25 @@ class AgendaPrimaryKeyRelatedField(PrimaryKeyRelatedField):
         return getattr(Agenda.objects.get(pk=pk), set_name)
 
 
-class UniqueForAgenda(UniqueValidator):
-    def set_context(self, serializer_field):
-        super().set_context(serializer_field)
-        self.queryset = self.queryset.filter(agenda=serializer_field.parent.context['agenda'])
+def unique_for_agenda(field):
+    def validator(self, value):
+        model = self.Meta.model
+        queryset = model.objects.filter(**{
+            'agenda': self.context['agenda'],
+            field: value,
+        })
+
+        if self.instance:
+            queryset = queryset.exclude(pk=self.instance.pk)
+
+        if queryset.exists():
+            raise ValidationError(_('There is already a %(model)s with the same %(field)s ') % {
+                'model': model._meta.verbose_name.title(),
+                'field': field,
+            })
+
+        return value
+    return validator
 
 
 class BaseSerializer(ModelSerializer):

@@ -1,11 +1,9 @@
-from rest_framework.fields import CharField
-
 from backend.models import Venue
-from .base import BaseSerializer, UniqueForAgenda
+from .base import BaseSerializer, unique_for_agenda
 
 
 class BaseVenueSerializer(BaseSerializer):
-    name = CharField(validators=[UniqueForAgenda(queryset=Venue.objects.all())])
+    validate_name = unique_for_agenda('name')
 
     def create(self, validated_data):
         validated_data['agenda'] = self.context['agenda']

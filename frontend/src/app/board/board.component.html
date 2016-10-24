@@ -21,7 +21,9 @@
           <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
             [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
             (onSessionChanged)="onSessionChanged($event)"
-            (onSessionMovedFromPending)="onSessionMovedFromPending($event)">
+            (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
+            (onSessionInterestChanged)="onSessionInterestChanged($event)"
+            [token]="token" [interestedSessionIds]="interestedSessionIds">
           </absolute-column>
         </div>  
       </div>
@@ -49,9 +51,9 @@
         <tr><md-input type="text" formControlName="description" placeholder="Description"></md-input></tr>
         <tr><md-input type="text" formControlName="duration" placeholder="Duration (in minutes)"></md-input></tr>
         <tr>Tags</tr>
-        <tr><tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" [autocompleteItems]="eventTagsName" [autocomplete]="true"></tag-input></tr>
+        <tr><tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" [autocompleteItems]="eventTagsName" [autocomplete]="true" (onSelect)="onSelected()"></tag-input></tr>
         <tr>Speakers</tr>
-        <tr><tag-input [ngModel]="sessionForm.existingSpeakers" [placeholder]="options.placeholderSpeakers" [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" formControlName="existingSpeakers" [onlyFromAutocomplete]="true" [autocompleteItems]="eventSpeakersName" [autocomplete]="true"></tag-input></tr>
+        <tr><tag-input [ngModel]="sessionForm.existingSpeakers" [placeholder]="options.placeholderSpeakers" [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" formControlName="existingSpeakers" [onlyFromAutocomplete]="true" [autocompleteItems]="eventSpeakersName" [autocomplete]="true" (onSelect)="onSelected()"></tag-input></tr>
         </table>
         <div formArrayName="newSpeakers">
           <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">

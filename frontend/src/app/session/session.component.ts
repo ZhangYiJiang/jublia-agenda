@@ -40,7 +40,16 @@ export class SessionComponent implements OnInit {
   agenda: Agenda;
   @Input() isPublic: boolean;
 
+  @Input()
+  token: string;
+
+  @Input()
+  interested: boolean;
+
+  interestedButtonText: string;
+
   @Output() onSessionEdited = new EventEmitter<Session>();
+  @Output() onSessionInterestEdited = new EventEmitter<[number, boolean]>();
 
   speakersObj = {};
   trackObj = {};
@@ -53,6 +62,12 @@ export class SessionComponent implements OnInit {
   green: number;
   blue: number;
 
+  updateInterest() {
+    this.interested = !this.interested;
+    this.updateInterestButtonText();
+    this.onSessionInterestEdited.emit([this.session.id, this.interested]);
+  }
+
   updateSession(event: any) {
     console.log(event);
     if(typeof event.description === 'string') {
@@ -63,19 +78,23 @@ export class SessionComponent implements OnInit {
   }
 
   clicked(event: DocumentEvent) {
-    console.log(event);
     this.modal
       .open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
-    console.log();
   }
 
   getDisplayedDate(): string {
+    if(this.session.start_at == null) {
+      return ''
+    }
     let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
     let date = new Date(startMs);
     return moment(date).utc().format("ddd, MMMM Do YYYY");
   }
 
   getDisplayedTime(): string {
+    if(this.session.start_at == null) {
+      return '';
+    }
     let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
     let startDate = new Date(startMs);
     let endDate = new Date(startMs + 60000 * this.session.duration);
@@ -92,10 +111,20 @@ export class SessionComponent implements OnInit {
     return moment(date).utc().format("hA");
   }
 
+  updateInterestButtonText() {
+    if(this.interested) {
+      this.interestedButtonText = 'Interested. Click to revert.';
+    } else {
+      this.interestedButtonText = 'Click to indicate interest.';
+    }
+  }
+
   ngOnInit(): void {
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
+
+    this.updateInterestButtonText();
 
     if (this.session.start_at != null) {
       this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;
@@ -104,8 +133,7 @@ export class SessionComponent implements OnInit {
     let popularityRatio = 0;
     
     if (this.isPublic) {
-      popularityRatio = this.session.popularity / 100;// TODO: divide by highest popularity number?
-      popularityRatio = 0.5;
+      popularityRatio = this.session.popularity / 10; // TODO: divide by highest popularity number?
     }
 
     // white-pink-red gradient

@@ -10,7 +10,8 @@ export const enum METHOD {
   GET = 0,
   POST,
   PATCH,
-  PUT
+  PUT,
+  DELETE
 }
 
 @Injectable()
@@ -114,5 +115,12 @@ export class HttpClient {
       return this.refreshThenRequest(METHOD.PUT,url,body);
     }
       return this.http.put(url, body, this.createRequestOptions());
+  }
+
+  delete(url: string, body: string) {
+    if (localStorage.getItem(GlobalVariable.TOKEN_NAME) && this.shouldRefreshToken()){
+      return this.refreshThenRequest(METHOD.DELETE,url,body);
+    }
+      return this.http.delete(url, this.createRequestOptions());
   }
 }

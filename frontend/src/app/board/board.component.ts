@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef } from '@angular/core';
 import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -45,6 +45,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   agenda: Agenda;
   @Input()
   isPublic: boolean;
+  @Input()
+  token: string;
+  @Input()
+  interestedSessionIds: number[];
 
   offsetDate: Date;
   eventDates: Date[];
@@ -64,12 +68,16 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private PLACEHOLDER_DURATION: number = 15;
 
+  globalListenFunc: Function;
+
   constructor(private dragulaService: DragulaService,
     private agendaService: AgendaService,
     private boardService: BoardService,
     private domUtilService: DOMUtilService,
     public modal: Modal,
-    private _fb: FormBuilder) {
+    private _fb: FormBuilder,
+    private elementRef: ElementRef, 
+    private renderer: Renderer) {
     dragulaService.dropModel.subscribe((value: any) => {
       // console.log(`drop: ${value}`);
       this.dragging = false;
@@ -78,6 +86,10 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     dragulaService.drag.subscribe((value: any) => {
       this.dragging = true;
+    });
+
+    dragulaService.cancel.subscribe((value: any) => {
+      this.dragging = false;
     });
 
     dragulaService.setOptions('column', {
@@ -128,6 +140,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         && this.allSessions[i].start_at < (startAt + draggingSession.duration)
         // existing session ends after the dragging session start
         && (this.allSessions[i].start_at + this.allSessions[i].duration) > startAt) {
+        console.log('collision with');
+        console.log(this.allSessions[i]);
         return true;
       }
     }
@@ -138,6 +152,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     console.log('session changed in board');
     console.log(changedSession);
     this.agendaService.updateSession(this.agenda.id, changedSession);
+  }
+
+  onSessionInterestChanged(event: [number, boolean]) {
+    console.log('session ' + event[0] + ' changed to ' + event[1]);
+    this.agendaService.updateSessionInterest(this.agenda.id, event[0], event[1], this.token);
   }
 
   onSessionMovedFromPending(sessionFromPending: Session) {
@@ -179,9 +198,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   isOnSameDay(day1: Date, day2: Date) {
-    return day1.getFullYear() === day2.getFullYear() 
-           && day1.getMonth() === day2.getMonth() 
-           && day1.getDate() === day2.getDate();
+    return day1.getUTCFullYear() === day2.getUTCFullYear() 
+           && day1.getUTCMonth() === day2.getUTCMonth() 
+           && day1.getUTCDate() === day2.getUTCDate();
   }
 
   changeSessionToPending(sessionId: number) {
@@ -296,8 +315,16 @@ export class BoardComponent implements OnInit, OnDestroy {
       tags: [[]]
     });
     this.formMsg = "";
-    this.modal
-      .open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+    this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+  }
+
+  onSelected() {
+    let docs = document.getElementsByTagName("ng2-dropdown-menu");
+    for (let i = 0; i < docs.length; i++) {
+      document.getElementsByTagName("ng2-dropdown-menu")[i].addEventListener('click', function(event: any) {
+        event.stopPropagation();
+      });  
+    }
   }
 
   initSpeaker() {
@@ -345,22 +372,27 @@ export class BoardComponent implements OnInit, OnDestroy {
     //   }
     // }
     console.log(this.sessionForm.value);
-    Observable.forkJoin(observables).subscribe(
-      data => {
-        let newSpeakersCount: number = this.sessionForm.value.newSpeakers.length;
-        for (let i = 0; i < newSpeakersCount; i++) {
-          console.log('new speaker created: ' + data[i].name);
-          this.eventSpeakers.push(data[i]);
-          this.sessionForm.value.existingSpeakers.push(data[i].name);
-        }
-        for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
-          console.log('new tag created: ' + data[i].name);
-          this.eventTags.push(data[i]);
-        }
-        this.createSession();
-      },
-      error =>  this.formMsg = <any>error
-    );
+    if (observables.length > 0) {
+      Observable.forkJoin(observables).subscribe(
+        data => {
+          let newSpeakersCount: number = this.sessionForm.value.newSpeakers.length;
+          for (let i = 0; i < newSpeakersCount; i++) {
+            console.log('new speaker created: ' + data[i].name);
+            this.eventSpeakers.push(data[i]);
+            this.sessionForm.value.existingSpeakers.push(data[i].name);
+          }
+          for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
+            console.log('new tag created: ' + data[i].name);
+            this.eventTags.push(data[i]);
+          }
+          this.createSession();
+        },
+        error =>  this.formMsg = <any>error
+      );
+    }
+    else {
+      this.createSession();
+    }
   }
 
   createSession() {

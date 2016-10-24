@@ -28,7 +28,7 @@ class SessionSerializer(HideFieldsMixin, BaseSerializer):
     venue = AgendaPrimaryKeyRelatedField(required=False, klass='Venue')
     tags = TagPrimaryKeyRelatedField(many=True, required=False)
 
-    duration = IntegerField(required=False, validators=[
+    duration = IntegerField(required=False, allow_null=True, validators=[
         MinValueValidator(1, _("Duration must be larger than zero")),
         MaxValueValidator(24 * 60, _("A session cannot be longer than 24 hours long")),
     ])

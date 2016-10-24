@@ -1,8 +1,10 @@
+from django.core.validators import MinValueValidator
 from django.db.models import F
 from django.db.transaction import atomic
 from django.utils import timezone
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import IntegerField
 
 from backend.models import Agenda
 from .base import BaseSerializer
@@ -14,6 +16,10 @@ from .venue import BaseVenueSerializer
 
 
 class BaseAgendaSerializer(BaseSerializer):
+    duration = IntegerField(required=False, allow_null=True, validators=[
+        MinValueValidator(1, _("The duration of the event must be at least one day long")),
+    ])
+
     def validate_name(self, value):
         profile = self.context['user'].profile
         if profile.agenda_set.filter(name__iexact=value).exists():

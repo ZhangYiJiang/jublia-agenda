@@ -1,9 +1,7 @@
 from datetime import timedelta
 
-from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F
-from django.utils.translation import ugettext as _
 from rest_framework.reverse import reverse
 
 from .base import BaseModel
@@ -17,9 +15,7 @@ class Agenda(BaseModel):
     description = models.TextField(blank=True)
     published = models.BooleanField(default=False)
     start_at = models.DateField(blank=True, null=True)
-    duration = models.IntegerField(blank=True, null=True, validators=[
-        MinValueValidator(1, _("The duration of the event must be at least one day long"))
-    ])
+    duration = models.IntegerField(blank=True, null=True)
 
     @property
     def owner(self):

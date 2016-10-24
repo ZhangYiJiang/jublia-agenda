@@ -10,12 +10,18 @@ from backend.tests.serializers.test_serializers import SerializerTestCase
 
 class SessionSerializerTest(SerializerTestCase):
     # Invalid test cases
-    negative_duration = {
-        'duration': -30,
-    }
+    invalid = {
+        'negative_duration': {
+            'duration': -30,
+        },
 
-    start_without_duration = {
-        'start_at': 12 * 60,
+        'start_without_duration': {
+            'start_at': 12 * 60,
+        },
+
+        'long_duration': {
+            'duration': 26 * 60,
+        }
     }
 
     def setUp(self):
@@ -76,24 +82,17 @@ class SessionSerializerTest(SerializerTestCase):
         self.assertEquals(3, session.speakers.count())
 
     def test_invalid_session(self):
-        with self.assertRaises(ValidationError) as e:
-            create_session(self.agenda, factory.session(data=self.negative_duration))
-        self.assertValidationError(e.exception)
-
-        with self.assertRaises(ValidationError) as e:
-            create_session(self.agenda, factory.session(data=self.start_without_duration))
-        self.assertValidationError(e.exception)
+        for case_name, data in self.invalid.items():
+            with self.assertRaises(ValidationError) as e:
+                create_session(self.agenda, factory.session(data=data))
+            self.assertValidationError(e.exception)
 
     def test_invalid_update(self):
         s = create_session(self.agenda, factory.session())
-
-        with self.assertRaises(ValidationError) as e:
-            self.update_session(s, self.negative_duration)
-        self.assertValidationError(e.exception)
-
-        with self.assertRaises(ValidationError) as e:
-            self.update_session(s, self.start_without_duration)
-        self.assertValidationError(e.exception)
+        for case_name, data in self.invalid.items():
+            with self.assertRaises(ValidationError) as e:
+                self.update_session(s, factory.session(data=data))
+            self.assertValidationError(e.exception)
 
     def test_unique_name(self):
         # Sessions can have non-unique names

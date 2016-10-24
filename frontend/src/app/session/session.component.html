@@ -16,7 +16,7 @@
       </button>
     </div>
     <div class="page-header">
-      <h1><ndv-edit [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-edit></h1>
+      <h1 class="full-width"><ndv-edit [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-edit></h1>
     </div>
     <div class="jumbotron">
       <p *ngIf="session.start_at"><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>
@@ -24,13 +24,13 @@
       <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
       <div *ngIf="session.description">
         <!-- <p>{{session.description}}</p> -->
-        <p>
+        <p class="full-width">
           <ndv-area [title]="'description'" [placeholder]="session.description" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
         </p>
       </div>
       <div *ngIf="!session.description">
         <!-- <p>Description not available.</p> -->
-        <p>
+        <p class="full-width">
           <ndv-area [title]="'description'" [placeholder]="'Description not empty.'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
         </p>
       </div>

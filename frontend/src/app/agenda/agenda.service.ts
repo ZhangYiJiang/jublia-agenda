@@ -21,17 +21,17 @@ export class AgendaService {
   }
 
   publishAgenda(id: number) {
-    let data = JSON.stringify({published: true});
+    let data = {published: true};
     return this.updateAgenda(id, data);
   }
 
   unpublishAgenda(id: number) {
-    let data = JSON.stringify({published: false});
+    let data = {published: false};
     return this.updateAgenda(id, data);
   }
 
-  updateAgenda(id: number, data: string): Observable<Agenda> {
-    return this.httpClient.patch(this.BASE_URL + '/'+ id, data)
+  updateAgenda(id: number, data: {}): Observable<Agenda> {
+    return this.httpClient.patch(this.BASE_URL + '/'+ id, JSON.stringify(data))
                     .map(this.extractData)
                     .catch(this.handleError);
   }

@@ -2,6 +2,7 @@ import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulatio
 import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
+import * as moment from 'moment';
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
@@ -226,10 +227,18 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   getEventDates(): Date[] {
     let dates: Date[] = [];
-    // create cloned Date to avoid mutating start date
-    // TODO: use moment.js to refactor this part
-    let tempDate: Date = new Date(this.agenda.start_at);
-    while (tempDate <= new Date(this.agenda.end_at)) {
+    let endDate: Date;
+    if(this.agenda.end_at == null) {
+      // initial deafult duration 3 days for empty agenda
+      // endDate is the last day of the event
+      endDate = moment.utc(this.agenda.start_at).add(2, 'd').toDate();
+    } else {
+      endDate = moment.utc(this.agenda.end_at).toDate();  
+    }
+    let tempDate: Date = moment.utc(this.agenda.start_at).toDate();
+    
+    while (tempDate <= endDate) {
+      // create cloned Date to avoid mutating start date
       dates.push(new Date(tempDate.getTime()));
       tempDate.setDate(tempDate.getDate() + 1);
     }

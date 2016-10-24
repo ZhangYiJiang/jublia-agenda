@@ -307,6 +307,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.eventTagsName = this.getEventTagsName();
     this.eventSpeakers = this.getEventSpeakers();
     this.eventSpeakersName = this.getEventSpeakersName();
+    if(this.agenda.sessions == null) {
+      this.agenda.sessions = [];
+    }
     this.allSessions = this.agenda.sessions;
     let partioned = _.partition(this.allSessions, function(o:Session){return o.hasOwnProperty('start_at')});
     this.pendingSessions = partioned[1];

@@ -48,8 +48,10 @@ export class AgendaComponent implements OnInit{
 
   updateAgenda(event: any) {
     console.log(event);
-    if(typeof event.name === 'string') {
-      this.agendaService.updateAgenda(this.agenda.id, {name: event.name})
+    if(typeof event.name === 'string' || 
+        typeof event.description === 'string' ||
+        typeof event.location === 'string') {
+      this.agendaService.updateAgenda(this.agenda.id, event)
         .subscribe(
           agenda => this.agenda = agenda,
           error => console.log(error)

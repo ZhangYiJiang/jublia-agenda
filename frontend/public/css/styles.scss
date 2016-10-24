@@ -43,12 +43,12 @@ button, .button{
     text-align: center;
 }
 
-.session-wrapper.gu-transit .session-tile {
-    height: $height-per-15-min !important;
-    .session-content {
-        display: none;
-    }
-}
+// .session-wrapper.gu-transit .session-tile {
+//     height: $height-per-15-min !important;
+//     .session-content {
+//         display: none;
+//     }
+// }
 
 .session-container {
     padding-left: 0px;
@@ -64,10 +64,17 @@ input:-webkit-autofill {
 }
 
 // drag-and-drop
-.gu-transit {
+.session-wrapper.gu-transit  {
+    z-index: $session-z-index;
+    position: relative;
+    pointer-events: none;
     opacity: 0.7;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
     filter: alpha(opacity=70);
+}
+
+.not-dragging .gu-transit {
+    pointer-events: initial;
 }
 
 .gu-mirror {

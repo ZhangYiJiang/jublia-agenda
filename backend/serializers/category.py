@@ -1,8 +1,7 @@
 from django.db.transaction import atomic
-from rest_framework.fields import CharField
 
 from backend.models import Category, Tag
-from backend.serializers.base import BaseSerializer, UniqueForAgenda
+from backend.serializers.base import BaseSerializer, unique_for_agenda
 
 
 class TagSerializer(BaseSerializer):
@@ -16,7 +15,7 @@ class TagSerializer(BaseSerializer):
 
 
 class BaseCategorySerializer(BaseSerializer):
-    name = CharField(validators=[UniqueForAgenda(queryset=Category.objects.all())])
+    validate_name = unique_for_agenda('name')
 
     @atomic
     def create(self, validated_data):

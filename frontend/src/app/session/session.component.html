@@ -16,7 +16,7 @@
       </button>
     </div>
     <div class="page-header">
-      <h1><ndv-area [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area></h1>
+      <h1><ndv-edit [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-edit></h1>
     </div>
     <div class="jumbotron">
       <p *ngIf="session.start_at"><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>

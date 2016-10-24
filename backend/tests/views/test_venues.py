@@ -53,6 +53,14 @@ class VenueDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(new_data['name'], response.data['name'])
 
+    def test_put(self):
+        self.login(self.user)
+        venue = create_venue(self.agenda, factory.venue(full=True))
+        data = factory.venue()
+        response = self.client.put(venue.get_absolute_url(), data)
+        self.assertEqualExceptMeta(data, response.data)
+
+
     def test_delete(self):
         self.login(self.user)
         response = self.client.delete(self.url)

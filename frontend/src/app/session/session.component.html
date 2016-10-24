@@ -19,8 +19,8 @@
       <h1><ndv-area [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area></h1>
     </div>
     <div class="jumbotron">
-      <p><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>
-      <p><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}}</p>
+      <p *ngIf="session.start_at"><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>
+      <p *ngIf="session.start_at"><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}}</p>
       <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
       <div *ngIf="session.description">
         <!-- <p>{{session.description}}</p> -->

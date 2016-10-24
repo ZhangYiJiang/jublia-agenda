@@ -1,0 +1,22 @@
+@import '../../../public/css/variables';
+
+.agenda-title {
+	color: $color-primary;
+	font-size: $size-large-text;
+	margin: 20px;
+}
+button {
+	margin: 10px;
+    border: 2px solid $color-primary;	
+}
+
+.viewer-profile {
+	font-size: 14px;
+    border: 2px solid green;
+    padding: 10px;
+    color: green;
+    width: 300px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

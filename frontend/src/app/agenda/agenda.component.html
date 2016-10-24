@@ -6,6 +6,6 @@
   <button md-button class="secondary" *ngIf="!agenda.published" (click)="publishAgenda()">Publish</button>
   <button md-button class="secondary" *ngIf="agenda.published" (click)="unpublishAgenda()">Unpublish</button>
 
-  <board *ngIf="agenda" [agenda]="agenda">
+  <board *ngIf="agenda" [agenda]="agenda" [isPublic]="false">
   </board>
 </div>

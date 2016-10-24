@@ -1,6 +1,7 @@
 <div *ngIf="session.placeholder" class="placeholder-session"></div>
 <div *ngIf="!session.placeholder" class="session-tile"
   [style.height]="session.start_at == null?'initial':height + 'px'"
+  [style.background-color]="'rgb('+red+','+green+','+blue+')'"
   [class.pending]="session.start_at == null"
   (click)="clicked($event)">
   <div class="session-content">

@@ -38,6 +38,7 @@ export class SessionComponent implements OnInit {
   @Input() offsetDate: Date;
   @Input()
   agenda: Agenda;
+  @Input() isPublic: boolean;
 
   @Output() onSessionEdited = new EventEmitter<Session>();
 
@@ -48,6 +49,9 @@ export class SessionComponent implements OnInit {
   VERTICAL_MARGIN = 4;
 
   height: number;
+  red: number;
+  green: number;
+  blue: number;
 
   updateSession(event: any) {
     console.log(event);
@@ -96,5 +100,17 @@ export class SessionComponent implements OnInit {
     if (this.session.start_at != null) {
       this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;
     }
+
+    let popularityRatio = 0;
+    
+    if (this.isPublic) {
+      popularityRatio = this.session.popularity / 100;// TODO: divide by highest popularity number?
+      popularityRatio = 0.5;
+    }
+
+    // white-pink-red gradient
+    this.red = 255;
+    this.green = 95 + (1 - popularityRatio) * 160;
+    this.blue = 95 + (1 - popularityRatio) * 160;
   }
 }

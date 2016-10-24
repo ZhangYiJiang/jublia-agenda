@@ -19,7 +19,8 @@
       <h1>Agenda Settings</h1>
     </div>
     <div class="jumbotron">
-      <h2>Event Name: <ndv-edit [title]="'name'" [placeholder]="agenda.name" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></h2>
+      <h2>Event Name:</h2>
+      <p class="full-width"><ndv-edit [title]="'name'" [placeholder]="agenda.name" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
     </div>
     <div class="clearfix">
       <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>

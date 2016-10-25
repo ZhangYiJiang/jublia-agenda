@@ -13,6 +13,8 @@ from .base import BaseAPITestCase
 
 
 class TestAnalyticsView(BaseAPITestCase):
+    days = 14
+
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
@@ -40,10 +42,12 @@ class TestAnalyticsView(BaseAPITestCase):
         self.login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # The response should contain 14 days
+        self.assertEqual(self.days, len(response.data[self.session.pk]))
         self.assertIn(10, response.data[self.session.pk].values())
 
     def test_multiple_days(self):
-        self.create_registrations(self.session)
+        self.create_registrations(self.session, count=10)
         dates = defaultdict(int)
         for pk in Registration.objects.values_list('pk', flat=True):
             # Create random datetimes from today to 7 days ago
@@ -53,7 +57,22 @@ class TestAnalyticsView(BaseAPITestCase):
 
         self.login(self.user)
         response = self.client.get(self.url)
-        self.assertEqual(dict(response.data[self.session.pk]), dict(dates))
+        for date, count in dates.items():
+            self.assertEqual(count, response.data[self.session.pk][date])
+
+    def test_cumulative(self):
+        self.create_registrations(self.session, count=10)
+        for pk in Registration.objects.values_list('pk', flat=True):
+            # Create random datetimes from 14 to 21 days ago
+            minutes = random.randint(24 * 60 * self.days, 24 * 60 * (7 + self.days))
+            time = timezone.now() - timedelta(minutes=minutes)
+            Registration.objects.filter(pk=pk).update(created_at=time)
+
+        self.login(self.user)
+        response = self.client.get(self.url)
+        for i in response.data[self.session.pk].values():
+            # Check that there have been 10 registrations even though they are outside the range
+            self.assertEqual(10, i)
 
     def test_multiple_session(self):
         count = 5

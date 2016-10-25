@@ -308,6 +308,35 @@ sessions and speakers require authentication to fetch.
 
 + Response 204
 
+## GET /{agenda_id}/data 
+
+**Authentication required.** Retrieve agenda session popularity over time. A object will be returned 
+mapping session ID to a mapping of daily cumulative number of registrations for that session over the last 
+14 days. 
+
++ Response 200 (application/json)
+
+    {
+        "4": {
+            "2016-08-09": 24, 
+            "2016-08-10": 28, 
+            "2016-08-11": 33, 
+            "2016-08-12": 40, 
+            "2016-08-13": 54,
+            "2016-08-14": 60,
+            "2016-08-15": 60,
+            "2016-08-16": 65,
+            "2016-08-17": 70,
+            "2016-08-18": 72,
+            "2016-08-19": 80,
+            "2016-08-20": 91,
+            "2016-08-21": 100,
+            "2016-08-22": 102,
+            "2016-08-23": 104
+        }
+    }
+
+
 # Group Event Session
 
 A session represents something happening at a specific time at the event. 
@@ -776,6 +805,7 @@ in a 404 response.
 + description: The greatest JavaScript conference under the sun! (string) - Long description of the event 
 + location: Suntec City Hall 2A (string) - Where the event is happening
 + published: false (boolean, default) - Is the agenda publicly visible
++ duration: 3 (number) - Number of days the event will go on for 
 + start_at (date) - When the event is starting
 
 ### Session
@@ -785,7 +815,7 @@ in a 404 response.
 + duration (number) - Durating of the session in integer minutes 
 
 ### Category
-+ name: Technology Covered (string, required)
++ name: Technology (string, required)
 
 ### Tag
 + name: JavaScript (string, required)
@@ -812,7 +842,7 @@ in a 404 response.
 
 ### Agenda Item (Agenda)
 + Include Item
-+ end_at (date) - When the event is ending, computed from the session information. 
++ end_at (date) - When the event is ending, computed from duration, or the session information if that is not available 
 
 ### Session Item (Session)
 + Include Item

@@ -15,3 +15,6 @@ class CategorySerializerTest(SerializerTestCase):
         with self.assertRaises(ValidationError) as e:
             create_category(self.agenda, factory.category({'name': category.name}))
         self.assertValidationError(e.exception)
+
+    def test_created_with_agenda(self):
+        self.assertTrue(self.agenda.category_set.count())

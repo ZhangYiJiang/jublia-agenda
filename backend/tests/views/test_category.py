@@ -24,13 +24,14 @@ class CategoryViewSetTest(ListAuthTestMixin, BaseAPITestCase):
            'tags': ['Test Tag 1', 'Test Tag 2'],
         }))
         self.assertCreatedOk(response)
-        self.assertEqual(2, len(self.agenda.category_set.first().tag_set.all()))
+        pk = response.data['id']
+        self.assertEqual(2, len(self.agenda.category_set.get(pk=pk).tag_set.all()))
 
     def test_list(self):
         create_category(self.agenda, factory.category())
         create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
         response = self.client.get(self.url)
-        self.assertEqual(2, len(response.data))
+        self.assertEqual(3, len(response.data))
 
 
 class CategoryDetailTest(DetailAuthTestMixin, BaseAPITestCase):
@@ -56,7 +57,7 @@ class CategoryDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.login(self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(0, self.agenda.category_set.count())
+        self.assertEqual(1, self.agenda.category_set.count())
 
 
 class TagListTest(ListAuthTestMixin, BaseAPITestCase):

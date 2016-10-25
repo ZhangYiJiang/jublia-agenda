@@ -14,7 +14,8 @@
 .timeline {
     margin-top: 68px;
     position: absolute;
-    z-index: -1;
+    z-index: $timeline-z-index;
+    pointer-events: none;
     .hour {
         border-top: 2px solid $color-accent;
         height: $height-per-15-min*4-2;

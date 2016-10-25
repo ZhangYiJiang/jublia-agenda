@@ -5,7 +5,7 @@ import { Speaker } from '../speaker/speaker';
 
 export class Agenda {
   id: number;
-  title: string;
+  name: string;
   start_at: string;
   end_at: string;
   sessions: Session[];

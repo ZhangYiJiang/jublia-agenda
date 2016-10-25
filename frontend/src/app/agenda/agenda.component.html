@@ -2,10 +2,32 @@
   Loading...
 </div>
 <div *ngIf="agenda">
-  <span class="agenda-title">Agenda Builder for {{agenda.name}}</span>
-  <button md-button class="secondary" *ngIf="!agenda.published" (click)="publishAgenda()">Publish</button>
-  <button md-button class="secondary" *ngIf="agenda.published" (click)="unpublishAgenda()">Unpublish</button>
-
+  <div class="clearfix">
+    <span class="agenda-title">Agenda Builder for {{agenda.name}}</span>
+    <button md-button class="secondary float" *ngIf="!agenda.published" (click)="publishAgenda()">Publish</button>
+    <button md-button class="secondary float" *ngIf="agenda.published" (click)="unpublishAgenda()">Unpublish</button>
+    <button md-button class="secondary float" (click)="showAgendaSettings()">
+      <i class="fa fa-cog" aria-hidden="true"></i> Event Settings
+    </button>
+  </div>
   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="false">
   </board>
 </div>
+<template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+  <div class="modal-container">
+    <div class="page-header">
+      <h1>Event Settings</h1>
+    </div>
+    <div class="jumbotron">
+      <h2>Event Name:</h2>
+      <p class="full-width"><ndv-edit [title]="'name'" [placeholder]="agenda.name" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
+      <h2>Description:</h2>
+      <p class="full-width"><ndv-edit [title]="'description'" [placeholder]="agenda.description" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
+      <h2>Location:</h2>
+      <p class="full-width"><ndv-edit [title]="'location'" [placeholder]="agenda.location" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
+    </div>
+    <div class="clearfix">
+      <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
+    </div>
+  </div>
+</template>

@@ -34,6 +34,8 @@
             position: absolute;
             margin-left: 6px;
             z-index: 1;
+            font-size: 1.1rem;
+            line-height: 1.5rem;
         }
         .ndv-comp:hover {
             border: 1px solid grey;
@@ -70,8 +72,8 @@
                     <span *ngIf='!show' (click)='makeEditable()'>{{text || '-Empty Field-'}}</span>
                 </span>
                 <div class='ndv-buttons' *ngIf='show'>
-                    <button class='btn-x-sm' (click)='callSave()'><i>✔</i></button>
-                    <button class='btn-x-sm' (click)='cancelEditable()'><i>✖</i></button>
+                    <a class='button primary button-symbol' (click)='callSave()'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                    <a class='button secondary button-symbol' (click)='cancelEditable()'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
                 </div>`,
     host: {
         "(document: click)": "compareEvent($event)",

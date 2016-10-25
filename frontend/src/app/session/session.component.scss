@@ -1,5 +1,7 @@
 @import '../../../public/css/variables';
 .session-tile {
+    z-index: $session-z-index;
+    position: relative;
     box-sizing: border-box;
     background: white;
     max-width: 180px;
@@ -27,10 +29,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-}
-
-h1 {
-    line-height: 2.5rem;
 }
 
 // .placeholder-session {

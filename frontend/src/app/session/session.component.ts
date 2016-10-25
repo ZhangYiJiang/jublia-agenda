@@ -74,6 +74,9 @@ export class SessionComponent implements OnInit {
       console.log(this.session);
       this.session.description = event.description;
       this.onSessionEdited.emit(this.session);
+    } else if(typeof event.name === 'string') {
+      this.session.name = event.name;
+      this.onSessionEdited.emit(this.session);
     }
   }
 

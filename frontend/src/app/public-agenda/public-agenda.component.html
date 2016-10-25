@@ -2,7 +2,9 @@
   Agenda is not public.
 </div>
 <div *ngIf="agenda">
-  <span class="agenda-title">Agenda for {{agenda.name}}</span>
+  <div class="agenda-title">Agenda for {{agenda.name}}</div>
+  <div class="agenda-subtitle">{{agenda.description}}</div>
+  <div class="agenda-subtitle">Location: {{agenda.location}}</div>
   <div *ngIf="!token">
   	<form (ngSubmit)="createToken()">
 		<md-input required placeholder="Email" [(ngModel)]="email" name="email"></md-input>

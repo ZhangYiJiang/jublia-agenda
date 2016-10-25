@@ -14,6 +14,8 @@ from .speaker import BaseSpeakerSerializer
 from .track import BaseTrackSerializer
 from .venue import BaseVenueSerializer
 
+DEFAULT_CATEGORY = 'Tags'
+
 
 class BaseAgendaSerializer(BaseSerializer):
     duration = IntegerField(required=False, allow_null=True, validators=[
@@ -57,6 +59,7 @@ class BaseAgendaSerializer(BaseSerializer):
     def create(self, validated_data):
         validated_data['profile'] = self.context['user'].profile
         agenda = super().create(validated_data)
+        agenda.category_set.create(name=DEFAULT_CATEGORY)
         self.create_tracks(agenda)
         return agenda
 

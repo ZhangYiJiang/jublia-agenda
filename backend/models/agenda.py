@@ -15,7 +15,7 @@ class Agenda(BaseModel):
     description = models.TextField(blank=True)
     published = models.BooleanField(default=False)
     start_at = models.DateField(blank=True, null=True)
-    duration = models.IntegerField(blank=True, null=True)
+    duration = models.IntegerField()
 
     @property
     def owner(self):

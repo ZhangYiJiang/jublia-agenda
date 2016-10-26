@@ -25,6 +25,10 @@ class AgendaSerializerTest(SerializerTestCase):
         create_agenda(self.user, factory.agenda(full=True))
         self.assertEqual(2, self.user.profile.agenda_set.count())
 
+    def test_default_duration(self):
+        agenda = create_agenda(self.user, factory.agenda())
+        self.assertTrue(agenda.duration)
+
     def test_update_agenda(self):
         agenda = create_agenda(self.user, factory.agenda())
 

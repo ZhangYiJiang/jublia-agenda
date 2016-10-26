@@ -132,7 +132,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       if(this.allSessions[i].start_at == null) {
         continue;
       }
-      console.log('checking with: ' + this.allSessions[i].start_at);
       // no collision with itself
       if(this.allSessions[i].id !== draggingSessionId
         // same track
@@ -228,12 +227,20 @@ export class BoardComponent implements OnInit, OnDestroy {
   getEventDates(): Date[] {
     let dates: Date[] = [];
     let endDate: Date;
-    if(this.agenda.end_at == null) {
+    // duration has higher precedence of end_date
+    console.log(this.agenda);
+    if(!(this.agenda.duration == null) && this.agenda.duration > 0) {
+      console.log('Using duration: ' + this.agenda.duration);
+      endDate = moment.utc(this.agenda.start_at).add(this.agenda.duration - 1, 'd').toDate();
+      console.log('End date: ' + endDate.toISOString());
+    } else if(this.agenda.end_at == null) {
+      console.log('No duration or end date, use 3 days default.');
       // initial deafult duration 3 days for empty agenda
       // endDate is the last day of the event
       endDate = moment.utc(this.agenda.start_at).add(2, 'd').toDate();
     } else {
       endDate = moment.utc(this.agenda.end_at).toDate();  
+      console.log('Using end date: ' + endDate.toISOString());
     }
     let tempDate: Date = moment.utc(this.agenda.start_at).toDate();
     
@@ -314,6 +321,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     let partioned = _.partition(this.allSessions, function(o:Session){return o.hasOwnProperty('start_at')});
     this.pendingSessions = partioned[1];
     this.nonPendingSessions = partioned[0];
+  }
+
+  refreshAgenda(newAgenda: Agenda) {
+    this.agenda = newAgenda;
+    this.eventDates = this.getEventDates();
   }
 
   createSessionModal() {

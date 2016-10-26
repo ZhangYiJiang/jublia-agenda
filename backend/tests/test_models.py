@@ -11,7 +11,7 @@ class AgendaTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(**factory.user())
         self.profile = Profile.objects.create(user=self.user)
-        self.agenda = Agenda.objects.create(profile=self.profile, name='Test')
+        self.agenda = Agenda.objects.create(profile=self.profile, name='Test', duration=3)
         self.track = Track.objects.create(agenda=self.agenda)
 
     def create_session(self, start, duration):
@@ -20,18 +20,6 @@ class AgendaTest(TestCase):
             'duration': duration,
             'track': self.track,
         }))
-
-    def test_end_at_sessions(self):
-        self.assertIsNone(self.agenda.end_at)
-
-        # Create some session and check that the end date for the last
-        self.agenda.start_at = factory.today
-        for i in range(6):
-            self.create_session(24 * 60 * i, 60)
-        self.create_session(24 * 60 * 6, 120)
-        Session.objects.create(agenda=self.agenda, track=self.track, **factory.session())
-
-        self.assertEqual(self.agenda.end_at, factory.today + timedelta(minutes=24 * 60 * 6 + 120))
 
     def test_end_at_duration(self):
         self.agenda.duration = 4
@@ -44,7 +32,7 @@ class CategoryTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(**factory.user())
         self.profile = Profile.objects.create(user=self.user)
-        self.agenda = Agenda.objects.create(profile=self.profile, **factory.agenda())
+        self.agenda = Agenda.objects.create(profile=self.profile, duration=3, **factory.agenda())
         self.category = Category.objects.create(agenda=self.agenda, name='test')
 
     def assertTagsEqual(self, category, tags, msg=None):
@@ -82,7 +70,7 @@ class SessionTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(**factory.user())
         self.profile = Profile.objects.create(user=self.user)
-        self.agenda = Agenda.objects.create(profile=self.profile, name='Test')
+        self.agenda = Agenda.objects.create(profile=self.profile, name='Test', duration=3)
         self.track = Track.objects.create(agenda=self.agenda)
 
     def test_default_sort(self):

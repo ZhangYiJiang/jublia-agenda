@@ -10,7 +10,7 @@
       <i class="fa fa-cog" aria-hidden="true"></i> Event Settings
     </button>
   </div>
-  <board *ngIf="agenda" [agenda]="agenda" [isPublic]="false">
+  <board #board *ngIf="agenda" [agenda]="agenda" [isPublic]="false">
   </board>
 </div>
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
@@ -23,6 +23,8 @@
       <p class="full-width"><ndv-edit [title]="'name'" [placeholder]="agenda.name" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
       <h2>Description:</h2>
       <p class="full-width"><ndv-edit [title]="'description'" [placeholder]="agenda.description" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
+      <h2>Duration:</h2>
+      <p><ndv-edit [title]="'duration'" [placeholder]="agenda.duration" (onSave)="updateAgenda($event)" [permission]="true" [regex]="'^[1-9]$'" [error]="'Please enter a number between 1 to 9.'" class="small-input"></ndv-edit> days</p>
       <h2>Location:</h2>
       <p class="full-width"><ndv-edit [title]="'location'" [placeholder]="agenda.location" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
     </div>

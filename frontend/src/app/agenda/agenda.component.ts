@@ -4,6 +4,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Session } from '../session/session';
 import { Agenda } from './agenda';
 import { AgendaService } from '../agenda/agenda.service';
+import { BoardComponent } from '../board/board.component';
 
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
@@ -38,6 +39,7 @@ export class AgendaComponent implements OnInit{
   agenda: Agenda;
 
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
+  @ViewChild(BoardComponent) public myBoard: BoardComponent;
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
@@ -56,7 +58,25 @@ export class AgendaComponent implements OnInit{
           agenda => this.agenda = agenda,
           error => console.log(error)
         );
+    } else if(typeof event.duration === 'string') {
+      event.duration = +event.duration;
+      if(this.isInt(event.duration)) {
+        this.agendaService.updateAgenda(this.agenda.id, event)
+          .subscribe(
+            agenda => {
+              this.agenda = agenda;
+              this.myBoard.refreshAgenda(agenda);
+            },
+            error => console.log(error)
+          );
+      }
     }
+  }
+
+  isInt(value: any) {
+    return !isNaN(value) && 
+           parseInt(value, 10) == value && 
+           !isNaN(parseInt(value, 10));
   }
 
   showAgendaSettings(event: DocumentEvent) {

@@ -15,6 +15,7 @@ from rest_framework_jwt.views import JSONWebTokenAPIView
 
 from backend.helper import get_token
 from backend.models import Profile
+from backend.serializers import BaseAgendaSerializer
 from backend.serializers import UserSerializer, UserJWTSerializer
 
 
@@ -28,8 +29,11 @@ def sign_up(request):
 
         # Create and attach a new agenda if 'event_name' is included in the
         # request so that the user can get started with the app immediately
-        if 'event_name' in request.data:
-            user.profile.agenda_set.create(name=request.data['event_name'])
+        event_name = request.data.get('event_name')
+        if event_name:
+            agenda = BaseAgendaSerializer(data={'name': event_name}, context={'user': user})
+            agenda.is_valid(True)
+            agenda.save()
 
         return Response(status=status.HTTP_201_CREATED)
 

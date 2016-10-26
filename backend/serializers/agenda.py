@@ -18,7 +18,7 @@ DEFAULT_CATEGORY = 'Tags'
 
 
 class BaseAgendaSerializer(BaseSerializer):
-    duration = IntegerField(required=False, allow_null=True, validators=[
+    duration = IntegerField(default=3, validators=[
         MinValueValidator(1, _("The duration of the event must be at least one day long")),
     ])
 
@@ -45,7 +45,7 @@ class BaseAgendaSerializer(BaseSerializer):
         return value
 
     def create_tracks(self, agenda):
-        if self.context['tracks']:
+        if self.context.get('tracks', False):
             tracks = [{'name': name} for name in self.context['tracks']]
         else:
             tracks = [{}]

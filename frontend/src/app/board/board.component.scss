@@ -38,7 +38,7 @@
     position: fixed;
     height: 100%;
     width: calc(100% - 250px);
-    top: 150px;
+    top: $main-content-top-offset;
 }
 
 .board {
@@ -92,7 +92,7 @@
 	position: fixed;
 	height: 56px;
 	width: 56px;
-    top: 100px;
+    top: $main-content-top-offset - 40px;
     left: 80px;
     color: white;
     background-color: $color-accent;

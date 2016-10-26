@@ -1,7 +1,7 @@
 @import '../../../public/css/variables';
 .rel-col {
     position: fixed;
-    top: 150px;
+    top: $main-content-top-offset;
     background: $color-secondary;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
     height: 860px;

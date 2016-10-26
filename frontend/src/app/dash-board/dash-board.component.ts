@@ -18,7 +18,7 @@ export class DashBoardComponent implements OnInit {
     private _fb: FormBuilder,
     private dashBoardService: DashBoardService,
     private agendaService: AgendaService
-   ){}
+  ){}
 
   agendas = this.dashBoardService.agendas;
   user = this.dashBoardService.currentUser;
@@ -40,7 +40,7 @@ export class DashBoardComponent implements OnInit {
   options = {
     placeholder: "+ track",
     secondaryPlaceholder: "Enter a track (optional)"
-  }
+  };
 
   ngOnInit() {
     this.agendaForm = this._fb.group({
@@ -62,7 +62,8 @@ export class DashBoardComponent implements OnInit {
     }else{
       setTimeout(()=>{this.errorMsg = undefined;},3000);
     }
-  }
+  };
+  
   signUp() {
     if (!this.registerEmail || !this.registerPassword) { 
       this.errorMsg = "Please enter email and password";
@@ -78,7 +79,7 @@ export class DashBoardComponent implements OnInit {
         }
       },
       error =>  {
-        this.errorMsg = <any>error
+        this.errorMsg = <any>error;
         this.clearMsg(false);
       }
     );
@@ -108,8 +109,7 @@ export class DashBoardComponent implements OnInit {
     this.dashBoardService.getAgendas().subscribe(
       data => {
         console.log(data);
-        this.agendas = [];
-        this.agendas.push(...data);
+        this.agendas = _.sortBy(data, agenda => -agenda.id);
       },
       error => {
        this.errorMsg = <any>error;
@@ -131,9 +131,9 @@ export class DashBoardComponent implements OnInit {
     this.dashBoardService.createAgenda(this.agendaForm.value.name, this.agendaForm.value.abstract, this.agendaForm.value.location, this.agendaForm.value.start, this.agendaForm.value.tracks).subscribe(
       data => { 
         this.formMsg = 'New agenda created!';
-        this.agendas.push(data);
+        this.agendas.unshift(data);
       },
-      error =>  this.formMsg = <any>error
+      error => this.formMsg = <any>error
     );
   }
 

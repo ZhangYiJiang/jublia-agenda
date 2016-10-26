@@ -34,7 +34,7 @@
 	<div class = "agenda-list-card">
 		<h2>All Events</h2>
 		<ul class="agenda-list">
-		  <li *ngFor="let agenda of agendas | orderBy : 'id'"
+		  <li *ngFor="let agenda of agendas"
 		    (click)="onSelect(agenda)">
 		    {{agenda.name}}
 		  </li>

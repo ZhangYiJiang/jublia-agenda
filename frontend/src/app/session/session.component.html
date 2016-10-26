@@ -19,8 +19,16 @@
       <h1 class="full-width"><ndv-edit [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-edit></h1>
     </div>
     <div class="jumbotron">
-      <p *ngIf="session.start_at"><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}}</p>
-      <p *ngIf="session.start_at"><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}}</p>
+      <h2 *ngIf="session.start_at"><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}} </h2>
+      <h2 *ngIf="session.start_at"><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}} </h2>
+      <h2 *ngIf="session.duration"><i class="fa fa-hourglass-o" aria-hidden="true"></i> 
+        Duration: <ndv-edit [title]="'duration'" [placeholder]="session.duration" (onSave)="updateSession($event)" [permission]="!isPublic" [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
+        </ndv-edit> mins
+      </h2>
+      <div *ngIf="session.duration">
+        <button class="primary" md-button (click)="adjustSessionDuration(15)">Extend by 15 mins</button>
+        <button class="primary" md-button (click)="adjustSessionDuration(-15)">Reduce by 15 mins</button>
+      </div>
       <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
       <div *ngIf="session.description">
         <!-- <p>{{session.description}}</p> -->

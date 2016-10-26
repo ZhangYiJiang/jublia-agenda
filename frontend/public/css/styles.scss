@@ -120,3 +120,54 @@ input:-webkit-autofill {
 .not-dragging .empty-container {
     pointer-events: none;
 }
+
+.center {
+    display: inline-block;
+    position: absolute;
+    transform: translateX(-50%) translateX(0px);
+}
+
+// slider toggle
+.md-slide-toggle-bar {
+    background: #d3d3d3;
+}
+
+.md-slide-toggle-thumb {
+    background: white;
+}
+
+.md-checked {
+    .md-slide-toggle-bar {
+        background: lighten($color-primary, 30%);
+    }
+    .md-slide-toggle-thumb {
+        background: $color-primary;
+    }
+}
+
+.hide-no-interest .session-tile.not-interested {
+    display: none;
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+/* start commented backslash hack \*/
+* html .clearfix {
+    height: 1%;
+}
+
+.clearfix {
+    display: block;
+}
+/* close commented backslash hack */

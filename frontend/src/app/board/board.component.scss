@@ -1,10 +1,16 @@
 @import '../../../public/css/variables';
 
 .timescale {
-    margin-top: 60px;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding-right: 5px;
+    left: 0px;
+    padding-top: 60px;
     color: $color-accent;
     font-size: $size-normal-text;
     position: absolute;
+    -webkit-transition: left 0.1s; /* Safari */
+    transition: left 0.1s;
     //margin-left: 245px;
     .hour {
         margin-bottom: $height-per-15-min * 4 - 19;
@@ -17,11 +23,11 @@
     z-index: $timeline-z-index;
     pointer-events: none;
     .hour {
-        border-top: 2px solid $color-accent;
+        border-top: 2px solid lighten($color-accent, 15%);
         height: $height-per-15-min*4-2;
         width: 200px;
         .quarter {
-            border-bottom: 1px dashed $color-accent;
+            border-bottom: 1px dashed lighten($color-accent,15%);
             height: $height-per-15-min - 1;
         }
     }
@@ -31,7 +37,7 @@
 	margin-left: 250px;
     position: fixed;
     height: 100%;
-    width: 100%;
+    width: calc(100% - 250px);
     top: 150px;
 }
 

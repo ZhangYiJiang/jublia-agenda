@@ -14,3 +14,4 @@ import 'font-awesome/css/font-awesome.css';
 import 'lodash';
 import 'moment';
 import 'hammerjs';
+import 'jquery';

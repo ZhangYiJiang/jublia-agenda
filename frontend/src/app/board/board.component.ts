@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -17,6 +17,7 @@ import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import * as $ from 'jquery';
 
 import {
   VEXBuiltInThemes,
@@ -40,7 +41,7 @@ import {
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class BoardComponent implements OnInit, OnDestroy {
+export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input()
   agenda: Agenda;
@@ -98,6 +99,15 @@ export class BoardComponent implements OnInit, OnDestroy {
       // copySortSource: true
       accepts: this.canDropSession.bind(this)
     });
+  }
+
+  ngAfterViewInit() {
+    $('.schedule').on('scroll', this.keepfix);
+  }
+
+  keepfix() {
+    var $w = $('.schedule');
+    $('.position-fixed-x').css('left', $w.scrollLeft());
   }
 
   ngOnDestroy() {

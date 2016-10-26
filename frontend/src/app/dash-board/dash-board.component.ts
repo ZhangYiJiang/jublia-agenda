@@ -107,7 +107,7 @@ export class DashBoardComponent implements OnInit {
 
   getAgendas() {
     this.dashBoardService.getAgendas().subscribe(
-      data => {
+      (data: Agenda[]) => {
         console.log(data);
         this.agendas = _.sortBy(data, agenda => -agenda.id);
       },

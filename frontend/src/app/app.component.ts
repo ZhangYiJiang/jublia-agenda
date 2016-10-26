@@ -28,6 +28,9 @@ export class AppComponent {
     vcRef: ViewContainerRef, 
     public modal: Modal) {
     overlay.defaultViewContainer = vcRef;
+    this.router.events.pairwise().subscribe((e) => {
+            console.log(e);
+        });
   }
 
   logOut() {
@@ -38,6 +41,7 @@ export class AppComponent {
 
   goBack() {
     this.user.agenda = false;
-    this.location.back();
+    //this.location.back();
+    this.location.go('/');
   }
 }

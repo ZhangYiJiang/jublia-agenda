@@ -1,14 +1,14 @@
 @import '../../../public/css/variables';
 
 .timescale {
-	margin-top: 60px;
-	color: $color-accent;
-	font-size: $size-normal-text;
-	position: absolute;
+    margin-top: 60px;
+    color: $color-accent;
+    font-size: $size-normal-text;
+    position: absolute;
     //margin-left: 245px;
-	.hour {
-		margin-bottom: 41px;
-	}
+    .hour {
+        margin-bottom: $height-per-15-min * 4 - 19;
+    }
 }
 
 .timeline {
@@ -28,19 +28,19 @@
 }
 
 .board,.schedule {
-	position: relative;
+    position: relative;
 }
 
 .scroll {
-	margin-left: 40px;
+    margin-left: 40px;
 }
 .board, .schedule,.row, .scroll{
-	display: flex;
+    display: flex;
 }
 
 .day {
-	flex-direction: column;	
-	flex-shrink: 0;
+    flex-direction: column; 
+    flex-shrink: 0;
 }
 
 .schedule,.scroll {
@@ -49,28 +49,28 @@
 }
 
 .day-title {
-	background: $color-primary;
+    background: $color-primary;
 }
 
 .track-title {
-	background: $color-secondary;
+    background: $color-secondary;
 }
 
 .day-title, .track-title {
-	color: white;
-	margin-right: 10px;
-	min-width: 200px;
+    color: white;
+    margin-right: 10px;
+    min-width: 200px;
     height: 30px;
     line-height: 30px;
 }
 
 .fab-add {
-	top: 10px;
-	left: -40px;
-	color: white;
-	background-color: $color-accent;
+    top: 10px;
+    left: -40px;
+    color: white;
+    background-color: $color-accent;
 }
 
 .ng2-dropdown-menu-container {
-	z-index: 10000;
+    z-index: 10000;
 }

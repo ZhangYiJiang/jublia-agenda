@@ -54,7 +54,7 @@ export class SessionComponent implements OnInit {
   speakersObj = {};
   trackObj = {};
 
-  HEIGHT_PER_15_MINS = 15; // px
+  HEIGHT_PER_15_MINS = 20; // px
   VERTICAL_MARGIN = 4;
 
   height: number;

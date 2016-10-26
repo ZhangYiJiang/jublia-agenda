@@ -8,6 +8,7 @@ export class Agenda {
   name: string;
   start_at: string;
   end_at: string;
+  duration: number; // number of days
   sessions: Session[];
   tracks: Track[];
   speakers: Speaker[];

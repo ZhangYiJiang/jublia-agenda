@@ -35,6 +35,9 @@ button, .button{
     .full-width input, .full-width textarea {
         width: 100%;
     }
+    .small-input input {
+        width: 50px;
+    }
     input {
         font-size: inherit;
     }

@@ -68,6 +68,16 @@ export class SessionComponent implements OnInit {
     this.onSessionInterestEdited.emit([this.session.id, this.interested]);
   }
 
+  adjustSessionDuration(mins: number) {
+    console.log(mins);
+    let newDuration = this.session.duration + mins;
+    if(newDuration > 0) {
+      this.updateSession({
+        duration: newDuration
+      });  
+    }
+  }
+
   updateSession(event: any) {
     console.log(event);
     if(typeof event.description === 'string') {
@@ -77,7 +87,20 @@ export class SessionComponent implements OnInit {
     } else if(typeof event.name === 'string') {
       this.session.name = event.name;
       this.onSessionEdited.emit(this.session);
+    } else if(typeof event.duration === 'string' || typeof event.duration === 'number') {
+      event.duration = +event.duration;
+      if (this.isInt(event.duration)) {
+        this.session.duration = event.duration;
+        this.onSessionEdited.emit(this.session);
+        this.updateHeight();
+      }
     }
+  }
+
+  isInt(value: any) {
+    return !isNaN(value) && 
+           parseInt(value, 10) == value && 
+           !isNaN(parseInt(value, 10));
   }
 
   clicked(event: DocumentEvent) {
@@ -122,6 +145,10 @@ export class SessionComponent implements OnInit {
     }
   }
 
+  updateHeight() {
+    this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;
+  }
+
   ngOnInit(): void {
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
@@ -130,7 +157,7 @@ export class SessionComponent implements OnInit {
     this.updateInterestButtonText();
 
     if (this.session.start_at != null) {
-      this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;
+      this.updateHeight();
     }
 
     let popularityRatio = 0;

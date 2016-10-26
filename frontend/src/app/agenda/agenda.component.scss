@@ -1,21 +1,21 @@
 @import '../../../public/css/variables';
 
 .agenda-title {
-	color: $color-primary;
-	font-size: $size-large-text;
-	margin: 10px;
-	display: inline-block;
-	height: 40px;
+    color: $color-primary;
+    font-size: $size-large-text;
+    margin: 10px;
+    display: inline-block;
+    height: 40px;
     line-height: 40px;
 }
 button {
-	height: 40px;
-	margin: 10px;
-    border: 2px solid $color-primary;	
+    height: 40px;
+    margin: 10px;
+    border: 2px solid $color-primary;   
 }
 
 .float {
-	float: right;
+    float: right;
 }
 
 .clearfix:after {

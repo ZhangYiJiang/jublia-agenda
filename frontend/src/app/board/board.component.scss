@@ -7,7 +7,7 @@
     position: absolute;
     //margin-left: 245px;
     .hour {
-        margin-bottom: 41px;
+        margin-bottom: $height-per-15-min * 4 - 19;
     }
 }
 

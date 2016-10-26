@@ -6,7 +6,7 @@
     <md-icon>add</md-icon>
   </button>
   <div class = "schedule">
-  <div class='timescale' *ngIf="dragging" >
+  <div class='timescale'>
     <div class='hour' *ngFor="let hour of hours">
     {{hour}}
     </div>
@@ -28,11 +28,11 @@
         </div>  
       </div>
     </div>
-     <div class='timeline'  *ngIf="dragging">
-      <div class='hour' *ngFor="let hour of hours">
-        <div class='quarter'> </div>
-        <div class='quarter'></div>
-        <div class='quarter'></div>
+     <div class='timeline'>
+      <div class='hour' [style.border-color]="dragging ? '#EB9587': '#efefef' " *ngFor="let hour of hours">
+        <div class='quarter' *ngIf="dragging" > </div>
+        <div class='quarter' *ngIf="dragging" ></div>
+        <div class='quarter' *ngIf="dragging" ></div>
       </div>
     </div>
   </div>

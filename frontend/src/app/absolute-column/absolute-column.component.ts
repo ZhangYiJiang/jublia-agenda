@@ -169,7 +169,8 @@ export class AbsoluteColumnComponent implements OnInit {
         }
       }
     }
-
+    console.error('cannot find session ' + sessionId + ' in containers:');
+    console.log(this.containers);
     return null;
   }
 

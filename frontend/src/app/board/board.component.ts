@@ -132,7 +132,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       if(this.allSessions[i].start_at == null) {
         continue;
       }
-      console.log('checking with: ' + this.allSessions[i].start_at);
       // no collision with itself
       if(this.allSessions[i].id !== draggingSessionId
         // same track

@@ -12,14 +12,14 @@
 }
 
 .timeline {
-    margin-top: 68px;
+    //margin-top: 68px;
     position: absolute;
     z-index: $timeline-z-index;
     pointer-events: none;
     .hour {
         border-top: 2px solid $color-accent;
         height: $height-per-15-min*4-2;
-        width: 77.7vw; //994.55
+        width: 200px;
         .quarter {
             border-bottom: 1px dashed $color-accent;
             height: $height-per-15-min - 1;
@@ -27,12 +27,20 @@
     }
 }
 
-.board,.schedule {
+.schedule {
+	margin-left: 250px;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 150px;
+}
+
+.board {
     position: relative;
 }
 
 .scroll {
-    margin-left: 40px;
+    margin-left: 50px;
 }
 .board, .schedule,.row, .scroll{
     display: flex;
@@ -43,9 +51,11 @@
     flex-shrink: 0;
 }
 
+
 .schedule,.scroll {
     flex: 1;
     overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 .day-title {
@@ -64,9 +74,20 @@
     line-height: 30px;
 }
 
+.not-dragging .quarter {
+    display: none;
+}
+
+.not-dragging .hour {
+    border-color: #efefef;
+}
+
 .fab-add {
-    top: 10px;
-    left: -40px;
+	position: fixed;
+	height: 56px;
+	width: 56px;
+    top: 100px;
+    left: 80px;
     color: white;
     background-color: $color-accent;
 }

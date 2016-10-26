@@ -45,10 +45,10 @@
 		<form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm(agendaForm.valid)">
 		  	<table>
 			<tr><md-input type="text" formControlName="name" placeholder="Name"></md-input></tr>
-			<tr><md-input type="text" formControlName="abstract" placeholder="Abstract"></md-input></tr> <!-- TODO: change to and style textarea (not in md yet) -->
+			<tr><md-input type="text" formControlName="description" placeholder="Abstract"></md-input></tr> <!-- TODO: change to and style textarea (not in md yet) -->
 			<tr><md-input type="text" formControlName="location" placeholder="Location"></md-input></tr>
 			<tr><md-input type="date" formControlName="start" placeholder="Start Date"></md-input></tr>
-			<tr><md-input type="date" formControlName="end" placeholder="End Date"></md-input></tr>
+			<tr><md-input type="number" formControlName="duration" placeholder="Duration (days)"></md-input></tr>
 			<tr><tag-input [ngModel]="agendaForm.tracks" [placeholder]="options.placeholder" [secondaryPlaceholder]="options.secondaryPlaceholder" formControlName="tracks"></tag-input></tr>
 			</table>
 		    <button class="primary" md-button type="submit">Submit</button>

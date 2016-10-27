@@ -40,6 +40,10 @@
     height: 100%;
     width: calc(100% - 250px);
     top: $main-content-top-offset;
+    &.analytics {
+        margin-left: 20px;
+        width: 97%;
+    }
 }
 
 .board {

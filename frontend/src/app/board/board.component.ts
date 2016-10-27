@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -17,6 +17,7 @@ import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import * as $ from 'jquery';
 
 import {
   VEXBuiltInThemes,
@@ -40,7 +41,7 @@ import {
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class BoardComponent implements OnInit, OnDestroy {
+export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input()
   agenda: Agenda;
@@ -65,7 +66,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   dragging: boolean = false;
 
-  hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
+  hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
 
   private PLACEHOLDER_DURATION: number = 15;
 
@@ -98,6 +99,15 @@ export class BoardComponent implements OnInit, OnDestroy {
       // copySortSource: true
       accepts: this.canDropSession.bind(this)
     });
+  }
+
+  ngAfterViewInit() {
+    $('.schedule').on('scroll', this.keepfix);
+  }
+
+  keepfix() {
+    var $w = $('.schedule');
+    $('.position-fixed-x').css('left', $w.scrollLeft());
   }
 
   ngOnDestroy() {

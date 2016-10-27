@@ -45,11 +45,12 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     HttpModule,
     JsonpModule,
     RouterModule.forRoot([
+      //order matters, goes to first match
       { path: 'agenda/:id', component: AgendaComponent, canActivate: [LoggedInGuard] },
-      { path: '', component: DashBoardComponent },
-      { path: 'public/agenda/:id', component: PublicAgendaComponent },
       { path: 'public/agenda/:id/:token', component: PublicAgendaComponent },
+      { path: 'public/agenda/:id', component: PublicAgendaComponent },
       { path: 'analytics/agenda/:id', component: AnalyticsComponent, canActivate: [LoggedInGuard] },
+      { path: '', component: DashBoardComponent },
       { path: '**', component: DashBoardComponent } // TODO: implement 404 page component
     ]),
     DragulaModule,

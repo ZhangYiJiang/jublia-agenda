@@ -2,7 +2,8 @@
 
 .abs-col {
     background-color: rgba(242,242,242,0.5);
-    height: 1000px;
+    overflow: hidden;
+    height: 1300px;
     width: 200px;
     margin-right: 10px;
     .session-container-list {

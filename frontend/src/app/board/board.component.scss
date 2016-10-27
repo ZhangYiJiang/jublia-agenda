@@ -1,10 +1,16 @@
 @import '../../../public/css/variables';
 
 .timescale {
-    margin-top: 60px;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding-right: 5px;
+    left: 0px;
+    padding-top: 60px;
     color: $color-accent;
     font-size: $size-normal-text;
     position: absolute;
+    -webkit-transition: left 0.1s; /* Safari */
+    transition: left 0.1s;
     //margin-left: 245px;
     .hour {
         margin-bottom: $height-per-15-min * 4 - 19;
@@ -12,27 +18,35 @@
 }
 
 .timeline {
-    margin-top: 68px;
+    margin-top: 8px;
     position: absolute;
     z-index: $timeline-z-index;
     pointer-events: none;
     .hour {
-        border-top: 2px solid $color-accent;
+        border-top: 2px solid lighten($color-accent, 15%);
         height: $height-per-15-min*4-2;
-        width: 77.7vw; //994.55
+        width: 200px;
         .quarter {
-            border-bottom: 1px dashed $color-accent;
+            border-bottom: 1px dashed lighten($color-accent,15%);
             height: $height-per-15-min - 1;
         }
     }
 }
 
-.board,.schedule {
+.schedule {
+	margin-left: 250px;
+    position: fixed;
+    height: 100%;
+    width: calc(100% - 250px);
+    top: $main-content-top-offset;
+}
+
+.board {
     position: relative;
 }
 
 .scroll {
-    margin-left: 40px;
+    margin-left: 50px;
 }
 .board, .schedule,.row, .scroll{
     display: flex;
@@ -43,9 +57,11 @@
     flex-shrink: 0;
 }
 
+
 .schedule,.scroll {
     flex: 1;
     overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 .day-title {
@@ -64,9 +80,20 @@
     line-height: 30px;
 }
 
+.not-dragging .quarter {
+    display: none;
+}
+
+.not-dragging .hour {
+    border-color: #efefef;
+}
+
 .fab-add {
-    top: 10px;
-    left: -40px;
+	position: fixed;
+	height: 56px;
+	width: 56px;
+    top: $main-content-top-offset - 40px;
+    left: 80px;
     color: white;
     background-color: $color-accent;
 }

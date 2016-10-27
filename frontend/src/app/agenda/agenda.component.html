@@ -2,7 +2,7 @@
   Loading...
 </div>
 <div *ngIf="agenda">
-  <div class="clearfix">
+  <div class="clearfix fixed agenda-menu">
     <span class="agenda-title">Agenda Builder for {{agenda.name}}</span>
     <button md-button class="secondary float" *ngIf="!agenda.published" (click)="publishAgenda()">Publish</button>
     <button md-button class="secondary float" *ngIf="agenda.published" (click)="unpublishAgenda()">Unpublish</button>

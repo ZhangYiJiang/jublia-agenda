@@ -26,6 +26,8 @@ export class PublicAgendaComponent implements OnInit{
   agendaId: number;
   token : string;
   interestedSessionIds: number[];
+
+  interestToggleModel = false;
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {

@@ -19,6 +19,7 @@
     "@angular/platform-browser": "2.0.0",
     "@angular/platform-browser-dynamic": "2.0.0",
     "@angular/router": "3.0.0",
+    "@types/jquery": "^2.0.33",
     "@types/lodash": "^4.14.37",
     "angular2-jwt": "^0.1.24",
     "angular2-modal": "^2.0.1",
@@ -27,6 +28,7 @@
     "font-awesome": "^4.6.3",
     "hammerjs": "^2.0.8",
     "intl": "1.1.0",
+    "jquery": "^3.1.1",
     "lodash": "^4.16.4",
     "moment": "^2.15.1",
     "ng2-dragula": "^1.2.1",
@@ -63,9 +65,9 @@
     "to-string-loader": "^1.1.5",
     "typescript": "^2.0.2",
     "typings": "^1.3.2",
+    "url-loader": "^0.5.5",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1",
-    "webpack-merge": "^0.14.0",
-    "url-loader": "^0.5.5"
+    "webpack-merge": "^0.14.0"
   }
 }

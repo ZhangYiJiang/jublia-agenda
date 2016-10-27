@@ -42,6 +42,8 @@ export class AbsoluteColumnComponent implements OnInit {
 
   containers: any[] = [];
 
+  hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+
   private PLACEHOLDER_DURATION: number = 15;
   private DEFAULT_DAY_START_OFFSET_MIN: number = 8 * 60; // default start time for column is 8AM
 

@@ -33,6 +33,8 @@
     padding: 0;
     width: 15em;
     display: inline-block;
+    height: 350px;
+    overflow: scroll;
     li {
         cursor: pointer;
         position: relative;
@@ -58,11 +60,8 @@
     margin-top: 100px;
 }
 
-
-
 .user-form {
     margin-top: 150px;
-    
 }
 
 .log-in-card {

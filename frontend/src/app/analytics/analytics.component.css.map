@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAEA,aAAc,CACb,KAAK,CCHU,OAAO,CDItB,SAAS,CCDQ,IAAI,CDErB,MAAM,CAAE,IAAI,CAEb,MAAO,CACN,MAAM,CAAE,IAAI,CACT,MAAM,CAAE,iBAAwB",
+"mappings": "AAEA,aAAc,CACb,KAAK,CCHU,OAAO,CDItB,SAAS,CCDQ,IAAI,CDErB,MAAM,CAAE,IAAI,CAEb,MAAO,CACN,MAAM,CAAE,IAAI,CACT,MAAM,CAAE,iBAAwB,CAEpC,SAAU,CACT,WAAW,CAAE,IAAI,CACjB,KAAK,CAAE,IAAI",
 "sources": ["analytics.component.scss","../../../public/css/variables.scss"],
 "names": [],
 "file": "analytics.component.css"

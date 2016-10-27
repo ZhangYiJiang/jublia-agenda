@@ -1,6 +1,6 @@
 import { Session } from '../session/session';
 import { Track } from '../track/track';
-import { Tag } from '../tag/tag';
+import { Category } from '../category/category';
 import { Speaker } from '../speaker/speaker';
 
 export class Agenda {
@@ -12,6 +12,6 @@ export class Agenda {
   sessions: Session[];
   tracks: Track[];
   speakers: Speaker[];
-  tags: Tag[];
+  categories: Category[];
   published: boolean;
 }

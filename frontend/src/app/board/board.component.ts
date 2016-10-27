@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Track } from '../track/track';
+import { Category} from '../category/category';
 import { Tag } from '../tag/tag';
 import { Speaker } from '../speaker/speaker';
 import { AgendaService } from '../agenda/agenda.service';
@@ -48,6 +49,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   isPublic: boolean;
   @Input()
+  isAnalytics: boolean;
+  @Input()
   token: string;
   @Input()
   interestedSessionIds: number[];
@@ -55,6 +58,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   offsetDate: Date;
   eventDates: Date[];
   eventTracks: Track[];
+  eventCategories: Category[];
   eventTags: Tag[];
   eventTagsName: String[];
   eventSpeakers: Speaker[];
@@ -270,17 +274,27 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getEventTags(): Tag[] { // using tracks for testing
-    // if (!this.agenda.tags || this.agenda.tags.length === 0) {
-    //   return [];
-    // } else {
-    //   return this.agenda.tags;
-    // }
-    if (!this.agenda.tracks || this.agenda.tracks.length === 0) {
+  getEventCategories(): Category[] {
+    if (!this.agenda.categories || this.agenda.categories.length === 0) {
+      let defaultCategoryName: string = 'Tags';
+      this.boardService.createCategory(this.agenda.id, defaultCategoryName).subscribe(
+        data => { 
+          console.log('created default category: ' + defaultCategoryName);
+          return [data];
+        },
+        error =>  console.log('error creating default category')
+      );
+    } else {
+      return this.agenda.categories;
+    }
+  }
+
+  getEventTags(): Tag[] { // only from first (default) category for now
+    if (!this.eventCategories[0].tags || this.eventCategories[0].tags.length === 0) {
       return [];
     } else {
-      return this.agenda.tracks;
-    }  
+      return this.eventCategories[0].tags;
+    }
   }
 
   getEventTagsName(): String[] {
@@ -320,6 +334,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.offsetDate = new Date(this.agenda.start_at);
     this.eventDates = this.getEventDates();
     this.eventTracks = this.getEventTracks();
+    this.eventCategories = this.getEventCategories();
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
     this.eventSpeakers = this.getEventSpeakers();
@@ -399,12 +414,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sessionForm.value.tags = [];
     }
     let newTagsCount: number = 0;
-    // for (let tag of this.sessionForm.value.tags) {
-    //   if (!this.eventTagsName.some(function(existingTag) {return existingTag === tag})) {
-    //     observables.push(this.boardService.createTag(this.agenda.id, tag));
-    //     newTagsCount += 1;
-    //   }
-    // }
+    for (let tag of this.sessionForm.value.tags) {
+      if (!this.eventTagsName.some(function(existingTag) {return existingTag === tag})) {
+        observables.push(this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)); // create in default category for now
+        newTagsCount += 1;
+      }
+    }
     console.log(this.sessionForm.value);
     if (observables.length > 0) {
       Observable.forkJoin(observables).subscribe(
@@ -413,11 +428,13 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
           for (let i = 0; i < newSpeakersCount; i++) {
             console.log('new speaker created: ' + data[i].name);
             this.eventSpeakers.push(data[i]);
+            this.eventSpeakersName.push(data[i].name);
             this.sessionForm.value.existingSpeakers.push(data[i].name);
           }
           for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
             console.log('new tag created: ' + data[i].name);
             this.eventTags.push(data[i]);
+            this.eventTagsName.push(data[i].name);
           }
           this.createSession();
         },

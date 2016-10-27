@@ -25,7 +25,7 @@
         Duration: <ndv-edit [title]="'duration'" [placeholder]="session.duration" (onSave)="updateSession($event)" [permission]="!isPublic" [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
         </ndv-edit> mins
       </h2>
-      <div *ngIf="session.duration">
+      <div *ngIf="session.duration && !isPublic">
         <button class="primary" md-button (click)="adjustSessionDuration(15)">Extend by 15 mins</button>
         <button class="primary" md-button (click)="adjustSessionDuration(-15)">Reduce by 15 mins</button>
       </div>

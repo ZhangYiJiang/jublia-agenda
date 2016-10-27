@@ -11,7 +11,7 @@ export class BoardService {
   }
 
   createSession(agendaId: number, name: string, description: string, duration: number, speakers: number[], tags: number[]): Observable<any> {
-    let body = JSON.stringify({name: name, description: description, duration: duration, speakers: speakers});
+    let body = JSON.stringify({name: name, description: description, duration: duration, speakers: speakers, tags: tags});
     return this.httpClient.post('/api/' + agendaId + '/sessions', body)
                     .map(this.extractData)
                     .catch(this.handleError);
@@ -24,10 +24,16 @@ export class BoardService {
                     .catch(this.handleError);
   }
 
-  // TODO
-  createTag(agendaId: number, name: string): Observable<any> {
+  createCategory(agendaId: number, name: string): Observable<any> {
     let body = JSON.stringify({name: name});
-    return this.httpClient.post('/api/' + agendaId + '/tags', body)
+    return this.httpClient.post('/api/' + agendaId + '/categories/', body)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
+  createTag(agendaId: number, categoryId: number, name: string): Observable<any> {
+    let body = JSON.stringify({name: name});
+    return this.httpClient.post('/api/' + agendaId + '/categories/' + categoryId + '/tags/', body)
                     .map(this.extractData)
                     .catch(this.handleError);
   }

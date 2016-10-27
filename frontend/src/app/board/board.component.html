@@ -4,7 +4,7 @@
   <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()" *ngIf="!isPublic">
     <md-icon>add</md-icon>
   </button>
-  <div class="schedule">
+  <div class="schedule" [class.analytics]="isAnalytics">
     <div class="scroll-container">
       <div class="timescale position-fixed-x">
         <div class="hour" *ngFor="let hour of hours">

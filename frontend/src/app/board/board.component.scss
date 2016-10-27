@@ -4,8 +4,9 @@
     z-index: 10;
     background-color: rgba(255, 255, 255, 0.8);
     padding-right: 5px;
-    left: 0px;
     padding-top: 60px;
+    padding-bottom: 100px;
+    left: 0px;
     color: $color-accent;
     font-size: $size-normal-text;
     position: absolute;
@@ -40,6 +41,10 @@
     height: calc(100% - #{$main-content-top-offset});
     width: calc(100% - 250px);
     top: $main-content-top-offset;
+    &.analytics {
+        margin-left: 20px;
+        width: 97%;
+    }
 }
 
 .board {

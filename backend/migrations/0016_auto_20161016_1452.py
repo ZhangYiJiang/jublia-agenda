@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import backend.models.profile
 from django.db import migrations, models
 import django.utils.crypto
+from django.utils import timezone
 
 
 class Migration(migrations.Migration):
@@ -22,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='profile',
             name='verification_expiry',
-            field=models.DateTimeField(default=backend.models.profile.token_expiry),
+            field=models.DateTimeField(default=timezone.now),
         ),
         migrations.AddField(
             model_name='profile',

@@ -37,7 +37,9 @@
 
 .public .schedule {
     top: $main-content-top-offset + $public-extra-offset;
-    margin-left: 100px;
+    height: calc(100% - #{$main-content-top-offset + $public-extra-offset});
+    margin-left: 20px;
+    width: 97%;
 }
 
 .schedule {
@@ -47,8 +49,7 @@
     width: calc(100% - 250px);
     top: $main-content-top-offset;
     &.analytics {
-        margin-left: 20px;
-        width: 97%;
+        // nothing special for now
     }
 }
 

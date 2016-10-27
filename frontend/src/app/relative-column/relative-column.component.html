@@ -6,7 +6,7 @@
       <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda"></my-session>
     </li>
   </ul>
-  <button class="pending-toggle" (click)="toggleState()">
+  <button class="pending-toggle" (click)="toggleState()" style="display:none">
     <i [@iconTrigger]="colState" class="fa fa-arrow-left" aria-hidden="true"></i>
   </button>
 </div>

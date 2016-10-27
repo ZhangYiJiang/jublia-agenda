@@ -28,7 +28,7 @@ class Viewer(BaseModel):
     sessions = models.ManyToManyField(Session, through='Registration')
 
     def link(self):
-        return settings.BASE_URL + '/public/{}/{}'.format(self.agenda.pk, self.token)
+        return settings.BASE_URL + '/public/agenda/{}/{}'.format(self.agenda.pk, self.token)
 
     def send_agenda_email(self):
         # Don't send out the mail if it has been less than the minimum time

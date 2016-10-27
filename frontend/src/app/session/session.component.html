@@ -23,9 +23,9 @@
       <h2 *ngIf="session.start_at"><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}} </h2>
       <div class="one-row">
         <div>
-          <h2 *ngIf="session.duration"><i class="fa fa-hourglass-o" aria-hidden="true"></i> 
+          <h2><i class="fa fa-hourglass-o" aria-hidden="true"></i> 
           Duration: 
-          <ndv-edit class="small-input" [title]="'duration'" [placeholder]="session.duration" (onSave)="updateSession($event)" [permission]="!isPublic" [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
+          <ndv-edit class="small-input" [title]="'duration'" [placeholder]="session.duration || '0'" (onSave)="updateSession($event)" [permission]="!isPublic" [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
           </ndv-edit> mins
           </h2>
         </div>
@@ -75,9 +75,8 @@
       <div *ngIf="session.popularity == null">
         <p>Popularity information not available.</p>
       </div>
-    </div>
-    <div class="clearfix">
-      <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
+
+      <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>

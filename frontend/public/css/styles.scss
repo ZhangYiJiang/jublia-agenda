@@ -39,8 +39,8 @@ body {
 }
 
 button[md-button], 
-.button[md-button] {
-    margin-top: 30px;
+.button[md-button],
+.button {
     border: 2px solid $color-primary;
     cursor: pointer;
     

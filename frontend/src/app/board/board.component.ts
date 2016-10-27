@@ -38,7 +38,6 @@ import {
   './board.component.css',
   '../session/css/vex.css',
   '../session/css/vex-theme-default.css',
-  '../dash-board/dash-board.component.css'
   ],
   encapsulation: ViewEncapsulation.None
 })

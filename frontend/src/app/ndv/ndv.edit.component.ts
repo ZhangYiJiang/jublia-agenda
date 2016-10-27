@@ -4,6 +4,10 @@
 @Component({
     selector: 'ndv-edit',
     styles: [`
+        :host {
+            position: relative;
+        }
+        
         #ndv-ic {
             color: #ccc;
         }
@@ -39,7 +43,9 @@
             outline: none;
             padding: 3px;
             position: absolute;
-            margin-left: 6px;
+            left: 0;
+            width: 80px;
+            margin: -6px 0 0 6px;
             z-index: 1;
             font-size: 1.1rem;
             line-height: 1.5rem;
@@ -60,28 +66,32 @@
         
         .ng-invalid {
             background: #ffb8b8;
+            border-color: red;
         }
             
         .err-bubble {
             position: absolute;
-            margin: 16px 100px;
             border: 1px solid red;
             font-size: 14px;
             background: #ffb8b8;
-            padding: 10px;
-            border-radius: 7px;
+            padding: 6px 12px;
+            width: 200px;
+            line-height: 1.3;
+            left: 0;
+            top: 0;
+            transform: translateY(calc(-100% - 10px));
         }
 
     `],
-    template: `<span *ngIf="!permission">{{text}}</span><span *ngIf="permission" class='ndv-comp' [ngClass]="{'ndv-active':show}">
+    template: `<span *ngIf="!permission">{{text}}</span><span *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}">
                     <input *ngIf='show' [ngClass]="{'ng-invalid': invalid}" (ngModelChange)="validate($event)" type='text' [(ngModel)]='text' />
                     <div class='err-bubble' *ngIf="invalid">{{error || " must contain " + min + " to -" + max +" chars."}}</div>
                     <i id='ndv-ic' *ngIf='!show'>✎</i>
-                    <span *ngIf='!show' (click)='makeEditable()'>{{text || '-Empty Field-'}}</span>
+                    <span *ngIf='!show'>{{text || '-Empty Field-'}}</span>
                 </span>
                 <div class='ndv-buttons' *ngIf='show'>
-                    <a class='button primary button-symbol' (click)='callSave()'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
-                    <a class='button secondary button-symbol' (click)='cancelEditable()'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
+                    <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                    <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
                 </div>`,
     host: {
         "(document: click)": "compareEvent($event)",
@@ -158,7 +168,12 @@ export class NdvEditComponent {
         this.text = this.originalText;
     }
 
-    callSave() {
+    callCancel(evt: any) {
+        this.cancelEditable();
+        evt.stopPropagation();
+    }
+
+    callSave(evt: any) {
         if (!this.invalid) {
             var data = {};  //BUILD OBJ FOR EXPORT.
             data["" + this.fieldName] = this.text;
@@ -167,6 +182,6 @@ export class NdvEditComponent {
             this.save.emit(data);
             this.show = false;
         }
-        
+        evt.stopPropagation();
     }
 }

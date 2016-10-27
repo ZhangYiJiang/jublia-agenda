@@ -34,6 +34,11 @@
     }
 }
 
+.public .schedule {
+    top: $main-content-top-offset + $public-extra-offset;
+    margin-left: 100px;
+}
+
 .schedule {
 	margin-left: 250px;
     position: fixed;

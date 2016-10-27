@@ -2,23 +2,25 @@
   Agenda is not public.
 </div>
 <div *ngIf="agenda">
-  <div class="agenda-title">Agenda for {{agenda.name}}</div>
-  <div class="agenda-subtitle">{{agenda.description}}</div>
-  <div class="agenda-subtitle">Location: {{agenda.location}}</div>
-  <div *ngIf="!token">
-    <form (ngSubmit)="createToken()">
-      <md-input required placeholder="Email" [(ngModel)]="email" name="email"></md-input>
-      <button type="submit" class="primary">Create a personalised schedule</button>
-    </form>
-  </div>
-  <div class="clearfix">
-    <div class="viewer-profile center" *ngIf="token">
-      Personal schedule for {{email}}
+  <div class="clearfix fixed agenda-menu">
+    <div class="agenda-title">Agenda for {{agenda.name}}</div>
+    <div class="agenda-subtitle">{{agenda.description}}</div>
+    <div class="agenda-subtitle">Location: {{agenda.location}}</div>
+    <div *ngIf="!token">
+      <form (ngSubmit)="createToken()">
+        <md-input required placeholder="Email" [(ngModel)]="email" name="email"></md-input>
+        <button type="submit" class="primary">Create a personalised schedule</button>
+      </form>
     </div>
-    <div class="float-right">
-      <md-slide-toggle [color]="'black'" [(ngModel)]="interestToggleModel">
-        Filter by interested
-      </md-slide-toggle>
+    <div class="clearfix" *ngIf="token">
+      <div class="viewer-profile center">
+        Personal schedule for {{email}}
+      </div>
+      <div class="float-right">
+        <md-slide-toggle [color]="'black'" [(ngModel)]="interestToggleModel">
+          Filter by interested
+        </md-slide-toggle>
+      </div>
     </div>
   </div>
   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" [interestedSessionIds]="interestedSessionIds" [class.hide-no-interest]="interestToggleModel">

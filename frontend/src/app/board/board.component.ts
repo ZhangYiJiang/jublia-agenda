@@ -358,7 +358,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sessionForm = this._fb.group({
       name: ['', [<any>Validators.required]],
       description: [''],
-      duration: ['', [<any>Validators.required]],
+      duration: [null],
       existingSpeakers: [[]],
       newSpeakers: this._fb.array([]),
       tags: [[]]

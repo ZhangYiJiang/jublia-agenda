@@ -43,13 +43,13 @@
       <form [formGroup]="sessionForm" novalidate (ngSubmit)="submitSessionForm(sessionForm.valid)">
         <table>
           <tr>
-            <md-input type="text" formControlName="name" placeholder="Session Name"></md-input>
+            <md-input type="text" formControlName="name" placeholder="Session Name" required></md-input>
           </tr>
           <tr>
             <md-input type="text" formControlName="description" placeholder="Description"></md-input>
           </tr>
           <tr>
-            <md-input type="text" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
+            <md-input type="number" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
           </tr>
           <tr>Tags</tr>
           <tr>
@@ -64,7 +64,7 @@
           <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">
             <table>
               <tr>
-                <button md-mini-fab disableRipple *ngIf="sessionForm.controls.newSpeakers.controls.length > 0" (click)="removeSpeaker(i)">
+                <button type="button" md-mini-fab disableRipple *ngIf="sessionForm.controls.newSpeakers.controls.length > 0" (click)="removeSpeaker(i)">
                   <md-icon>remove</md-icon>
                 </button>
                 New Speaker {{i + 1}}
@@ -89,7 +89,7 @@
                 </small>
                 </tr>
                 <tr>
-                  <md-input type="text" formControlName="email" placeholder="Email"></md-input>
+                  <md-input type="email" formControlName="email" placeholder="Email"></md-input>
                   <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.email.valid">
                   Email is required
                 </small>
@@ -101,14 +101,14 @@
                   <md-input type="text" formControlName="company_description" placeholder="Company description"></md-input>
                 </tr>
                 <tr>
-                  <md-input type="text" formControlName="company_url" placeholder="Company website"></md-input>
+                  <md-input type="url" formControlName="company_url" placeholder="Company website"></md-input>
                 </tr>
               </div>
             </table>
           </div>
         </div>
         <div>
-          <button md-mini-fab disableRipple (click)="addSpeaker()">
+          <button type="button" md-mini-fab disableRipple (click)="addSpeaker()">
             <md-icon>add</md-icon>
           </button>
           Add a New Speaker
@@ -117,8 +117,6 @@
         <button class="primary" md-button type="submit">Submit</button>
         <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
       </form>
-    </div>
-    <div class="clearfix">
     </div>
   </div>
 </template>

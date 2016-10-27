@@ -11,10 +11,11 @@
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container">
     <div *ngIf="token">
-      <button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
+      <button md-button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
         <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
     </div>
+    
     <div class="page-header">
       <h1 class="full-width"><ndv-edit [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-edit></h1>
     </div>
@@ -77,6 +78,11 @@
       </div>
 
       <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
+
+      <button md-button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested"
+              (click)="updateInterest()" *ngIf="token">
+        <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
+      </button>
     </div>
   </div>
 </template>

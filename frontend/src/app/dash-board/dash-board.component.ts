@@ -139,7 +139,6 @@ export class DashBoardComponent implements OnInit {
 
   onSelect(agenda: Agenda) {
     this.router.navigate(['/agenda', agenda.id]);
-    this.user.agenda = true;
   }
 
   toggleSigningUp() {

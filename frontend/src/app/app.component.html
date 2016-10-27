@@ -1,7 +1,7 @@
 <main>
     <div class="header fixed">
         <p class="title" routerLink="">
-        <i *ngIf="user.agenda" class="fa fa-arrow-left" aria-hidden="true"></i>
+        <i *ngIf="!isOnDashBoard" class="fa fa-arrow-left" aria-hidden="true"></i>
         {{appName}}
         </p>
         <button *ngIf="user.authed" (click)="logOut()">Log Out</button>

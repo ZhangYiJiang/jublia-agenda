@@ -38,18 +38,19 @@ body {
     color: $color-primary;
 }
 
-button, .button {
+button[md-button], 
+.button[md-button] {
     margin-top: 30px;
     border: 2px solid $color-primary;
     cursor: pointer;
     
-    &.primary{
+    &.primary {
         background-color: $color-primary;
         color: white;
     }
     
-    &.secondary{
-        background-color: white;
+    &.secondary {
+        background-color: transparent;
         color: $color-primary;
     }
 }

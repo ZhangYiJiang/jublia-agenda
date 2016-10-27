@@ -5,12 +5,13 @@
   <div class="clearfix fixed agenda-menu">
     <span class="agenda-title">Agenda Builder for {{agenda.name}}</span>
     <button md-button class="secondary float" *ngIf="!agenda.published" (click)="publishAgenda()">Publish</button>
+    <button md-button class="secondary float" *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
     <button md-button class="secondary float" *ngIf="agenda.published" (click)="unpublishAgenda()">Unpublish</button>
     <button md-button class="secondary float" (click)="showAgendaSettings()">
       <i class="fa fa-cog" aria-hidden="true"></i> Event Settings
     </button>
   </div>
-  <board #board *ngIf="agenda" [agenda]="agenda" [isPublic]="false">
+  <board #board *ngIf="agenda" [agenda]="agenda" [isPublic]="false" [isAnalytics]="false">
   </board>
 </div>
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">

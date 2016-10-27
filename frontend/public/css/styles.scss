@@ -14,6 +14,10 @@ body {
     height: 100%;
 }
 
+.agenda-menu {
+    top: $top-bar-height;
+}
+
 .fixed {
     position: fixed;
     width: 100%;

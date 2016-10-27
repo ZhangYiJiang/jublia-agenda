@@ -57,14 +57,14 @@
         </div>
       </div>
       <div *ngIf="!session.speakers">
-        <p>Speaker inforamtion not available.</p>
+        <p>Speaker information not available.</p>
       </div>
       <h2><i class="fa fa-list-ol" aria-hidden="true"></i> Track</h2>
       <div *ngIf="session.track">
         <p>{{trackObj[session.track].name}}</p>
       </div>
       <div *ngIf="!session.track">
-        <p>Track inforamtion not available.</p>
+        <p>This session has not been assigned to a track yet</p>
       </div>
       <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
       <div *ngIf="!(session.popularity == null)">
@@ -73,7 +73,7 @@
         <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
       </div>
       <div *ngIf="session.popularity == null">
-        <p>Popularity inforamtion not available.</p>
+        <p>Popularity information not available.</p>
       </div>
     </div>
     <div class="clearfix">

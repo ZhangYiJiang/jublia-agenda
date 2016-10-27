@@ -3,15 +3,24 @@
 </div>
 <div *ngIf="agenda">
   <div class="clearfix fixed agenda-menu">
-    <div class="agenda-info">
+    <section class="agenda-info">
       <h1 class="agenda-title">Agenda for {{agenda.name}}</h1>
+      
       <p class="agenda-subtitle">
-        <i class="fa fa-map-o" title="Location"></i> <strong>{{agenda.location}}</strong>
+        <a href="http://maps.google.com/?q={{agenda.location | encodeURIComponent}}" target="_blank">
+          <i class="fa fa-map-o" title="Location"></i> <strong>{{agenda.location}}</strong>
+        </a>
       </p>
+      
       <p class="agenda-desc">{{agenda.description}}</p>
+    </section>
+    
+    <div>
+      <iframe frameborder="0" class="map" [src]="mapsEmbedUrl" allowfullscreen></iframe>
     </div>
     
-    <div class="viewer">
+    
+    <section class="viewer">
       <div *ngIf="!token">
         <h2>Personalize this agenda</h2>
         <p>Bookmark sessions you want to attend, receive updates from the organizers and more! 
@@ -32,7 +41,7 @@
           </md-slide-toggle>
         </div>
       </div>
-    </div>
+    </section>
   </div>
   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" 
          [interestedSessionIds]="interestedSessionIds" [class.hide-no-interest]="interestToggleModel">

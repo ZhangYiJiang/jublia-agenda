@@ -28,6 +28,7 @@ import { User } from './util/user.util.service';
 
 import { OrderBy } from './pipes/orderby.pipe';
 import { Where } from './pipes/where.pipe';
+import { EncodeURIComponentPipe } from 'angular-pipes/src/string/encode-uri-component.pipe';
 
 import { LoggedInGuard } from './auth.guard.ts';
 
@@ -73,6 +74,7 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     AnalyticsComponent,
     OrderBy,
     Where,
+    EncodeURIComponentPipe,
     NdvEditComponent,
     NdvEditAreaComponent
   ],

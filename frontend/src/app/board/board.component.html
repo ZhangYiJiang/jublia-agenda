@@ -37,6 +37,9 @@
       <h1>Add New Session</h1>
     </div>
     <div class="jumbotron">
+      <div class="form-msg">
+        <small *ngIf="formMsg">{{formMsg}}</small>
+      </div>
       <form [formGroup]="sessionForm" novalidate (ngSubmit)="submitSessionForm(sessionForm.valid)">
         <table>
           <tr>
@@ -110,15 +113,12 @@
           </button>
           Add a New Speaker
         </div>
-        <br>
+        
         <button class="primary" md-button type="submit">Submit</button>
+        <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
       </form>
-      <div class="form-msg">
-        <small *ngIf="formMsg">{{formMsg}}</small>
-      </div>
     </div>
     <div class="clearfix">
-      <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>

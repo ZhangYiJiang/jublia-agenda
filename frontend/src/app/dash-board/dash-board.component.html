@@ -17,7 +17,7 @@
 <div class="user-form" *ngIf = "!user.authed && !signingUp">
 	<div class="log-in-card">
 		<h2>Log In</h2>
-		<form >
+		<form>
 			<table>
 			<tr><md-input required placeholder="Email" [(ngModel)]="loginEmail" name="email"> </md-input></tr>
 			<tr><md-input required placeholder="Password" type="password" [(ngModel)]="loginPassword" name="password"> </md-input></tr>

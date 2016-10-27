@@ -4,14 +4,18 @@
 @Component({
     selector: 'ndv-area',
     styles: [`
-       #ndv-ic {
-        margin-left: 10px;
-        color: #d9d9d9;
+        #ndv-ic {
+            color: #ccc;
+        }
+        
+        .ndv-comp:hover #ndv-ic {
+            color: #999;
         }
 
         .ndv-comp {
             padding:6px;
             border-radius: 3px;
+            border: 1px solid #ccc;
         }
         .active-ndv {
             background-color: #f0f0f0;
@@ -39,9 +43,6 @@
         }
         .ndv-comp:hover {
             border: 1px solid grey;
-        }
-        .ndv-comp:hover > ndv-ic {
-            display:block;
         }
 
         .ndv-save {

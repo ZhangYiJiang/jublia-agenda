@@ -34,7 +34,8 @@
     width: 15em;
     display: inline-block;
     height: 350px;
-    overflow: scroll;
+    overflow: auto;
+    
     li {
         cursor: pointer;
         position: relative;

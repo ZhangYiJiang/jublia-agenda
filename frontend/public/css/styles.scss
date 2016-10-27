@@ -10,10 +10,10 @@ body {
     background: #fff;
     color: #4A4A4A;
     font: 100% Avenir, Helvetica, sans-serif;
-    margin: 0px;
+    margin: 0;
 }
 
-.contenr-under-header {
+.content-under-header {
     position:fixed;
     top: 56px;
     width: 100%;
@@ -38,14 +38,16 @@ body {
     color: $color-primary;
 }
 
-button, .button{
+button, .button {
     margin-top: 30px;
     border: 2px solid $color-primary;
     cursor: pointer;
+    
     &.primary{
         background-color: $color-primary;
         color: white;
     }
+    
     &.secondary{
         background-color: white;
         color: $color-primary;
@@ -56,9 +58,11 @@ button, .button{
     .full-width input, .full-width textarea {
         width: 100%;
     }
+    
     .small-input input {
         width: 50px;
     }
+    
     input {
         font-size: inherit;
     }
@@ -68,7 +72,8 @@ button, .button{
     }
 
     p {
-        line-height: 2.5rem;
+        line-height: 1.2rem;
+        
         textarea {
             font-size: inherit;
         }
@@ -81,8 +86,9 @@ button, .button{
     display: inline-block;
 }
 
-.session-container-list, .session-list, .session-wrapper {
-    padding-left: 0px;
+.session-container-list, 
+.session-list, .session-wrapper {
+    padding-left: 0;
     list-style: none;
     text-align: center;
 }
@@ -95,7 +101,7 @@ button, .button{
 // }
 
 .session-container {
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 .md-visually-hidden {
@@ -103,7 +109,7 @@ button, .button{
 }
 
 input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px white inset; 
+    -webkit-box-shadow: 0 0 0 1000px white inset; 
     -webkit-text-fill-color: $color-secondary !important;
 }
 
@@ -113,8 +119,6 @@ input:-webkit-autofill {
     position: relative;
     pointer-events: none;
     opacity: 0.7;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
 }
 
 .not-dragging .gu-transit {
@@ -123,8 +127,7 @@ input:-webkit-autofill {
 
 .gu-mirror {
     opacity: 0.3;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-    filter: alpha(opacity=30);
+    
     .session-time {
         display: none;
     }
@@ -163,24 +166,7 @@ input:-webkit-autofill {
 }
 
 .clearfix:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
+    content: "";
+    display: table;
     clear: both;
-    height: 0;
 }
-
-.clearfix {
-    display: inline-block;
-}
-
-/* start commented backslash hack \*/
-* html .clearfix {
-    height: 1%;
-}
-
-.clearfix {
-    display: block;
-}
-/* close commented backslash hack */

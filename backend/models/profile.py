@@ -14,10 +14,6 @@ from .base import BaseModel
 EXPIRY = timedelta(hours=6)
 
 
-def token_expiry():
-    return timezone.now() + EXPIRY
-
-
 class Profile(BaseModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE)
     company = models.CharField(max_length=255, blank=True)
@@ -26,12 +22,12 @@ class Profile(BaseModel):
         max_length=50,
         default=UniqueTokenGenerator('Profile', field='verification_token')
     )
-    verification_expiry = models.DateTimeField(default=token_expiry)
+    verification_expiry = models.DateTimeField(default=timezone.now)
 
-    def send_verification_email(self):
+    def send_verification_email(self, force=False):
         # Don't send out any verification email if one has been sent out in the last 5 min
         sent_recently = timezone.now() + EXPIRY - self.verification_expiry < timedelta(minutes=5)
-        if self.is_verified or (sent_recently and not settings.TESTING):
+        if not force and self.is_verified or (sent_recently and not settings.TESTING):
             return
 
         # Generate a new token
@@ -47,7 +43,7 @@ class Profile(BaseModel):
 
         # Only update DB after send_mail, in case send_mail fails for whatever reason
         self.verification_token = token
-        self.verification_expiry = token_expiry()
+        self.verification_expiry = timezone.now() + EXPIRY
         self.save()
 
     def verify_email(self, request):

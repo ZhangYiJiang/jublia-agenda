@@ -1,4 +1,4 @@
-<div class="board" [class.not-dragging]="!dragging">
+<div class="board" [class.not-dragging]="!dragging" [class.public]="isPublic">
   <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda" *ngIf="!isPublic">
   </relative-column>
   <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()" *ngIf="!isPublic">

@@ -4,25 +4,32 @@
 @Component({
     selector: 'ndv-edit',
     styles: [`
-       #ndv-ic {
-        margin-left: 10px;
-        color: #d9d9d9;
+        #ndv-ic {
+            color: #ccc;
+        }
+        
+        .ndv-comp:hover #ndv-ic {
+            color: #999;
         }
 
         .ndv-comp {
             padding:6px;
             border-radius: 3px;
+            border: 1px solid #ccc;
         }
+        
         .active-ndv {
             background-color: #f0f0f0;
             border: 1px solid #d9d9d9;
         }
+        
         input {
             border-radius: 5px;
             box-shadow: none;
             border: 1px solid #dedede;
             min-width: 5px;
         }
+        
         .ndv-buttons {
             background-color: #f0f0f0;
             border: 1px solid #ccc;
@@ -37,23 +44,24 @@
             font-size: 1.1rem;
             line-height: 1.5rem;
         }
+        
         .ndv-comp:hover {
-            border: 1px solid grey;
+            border-color: #999;
         }
-        .ndv-comp:hover > ndv-ic {
-            display:block;
-        }
-
+        
         .ndv-save {
             margin-right:3px;
         }
+        
         .ndv-active {
             background-color: #f0f0f0;
             border: 1px solid #d9d9d9;
         }
+        
         .ng-invalid {
-                background: #ffb8b8;
-            }
+            background: #ffb8b8;
+        }
+            
         .err-bubble {
             position: absolute;
             margin: 16px 100px;

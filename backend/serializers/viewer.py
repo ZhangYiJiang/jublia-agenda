@@ -19,7 +19,7 @@ class ViewerSerializer(BaseSerializer):
     sessions = AgendaPrimaryKeyRelatedField(klass='session', many=True, required=False)
 
     def validate_email(self, email):
-        existing = Viewer.objects.filter(email=email).first()
+        existing = Viewer.objects.filter(email=email, agenda=self.context['agenda']).first()
         if existing:
             msg = _("This email has already been used. We have sent the link "
                     "to your personalized agenda to your email.")

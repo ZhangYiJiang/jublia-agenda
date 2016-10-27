@@ -41,6 +41,19 @@
 //     height: $height-per-15-min;
 // }
 
+.one-row {
+    display: flex;
+    align-items: center;
+    div {
+        margin: auto 5px;
+    }
+    button {
+        // override md-button
+        min-width: initial;
+        width: 50px;
+    }
+}
+
 .interestBtn {
     font-size: 14px;
 }

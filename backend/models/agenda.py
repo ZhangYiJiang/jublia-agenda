@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 from django.db import models
-from django.db.models import F
 from rest_framework.reverse import reverse
 
 from .base import BaseModel
@@ -25,15 +24,7 @@ class Agenda(BaseModel):
     def end_at(self):
         if not self.start_at:
             return None
-
-        if self.duration:
-            return self.start_at + timedelta(days=self.duration)
-
-        end_at = F('duration') + F('start_at')
-        latest = self.session_set.filter(start_at__isnull=False)\
-            .annotate(end_at=end_at)\
-            .order_by('-end_at').first()
-        return self.start_at + timedelta(minutes=latest.end_at)
+        return self.start_at + timedelta(days=self.duration)
 
     def get_absolute_url(self):
         return reverse('agenda_detail', (self.pk,))

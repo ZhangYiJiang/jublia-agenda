@@ -49,6 +49,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   isPublic: boolean;
   @Input()
+  isAnalytics: boolean;
+  @Input()
   token: string;
   @Input()
   interestedSessionIds: number[];

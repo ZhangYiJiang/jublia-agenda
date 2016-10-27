@@ -17,10 +17,13 @@ export class AnalyticsComponent implements OnInit{
     private agendaService: AgendaService) { }
   
   agenda: Agenda;
+  agendaId: number;
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
-      let id = params['id'];
+      // (+) converts string 'id' to a number
+      let id = +params['id'];
+      this.agendaId = id;
       this.getAgendaById(id);
     });
   }

@@ -37,13 +37,16 @@ export class AgendaComponent implements OnInit{
     public modal: Modal) { }
   
   agenda: Agenda;
+  agendaId: number;
 
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChild(BoardComponent) public myBoard: BoardComponent;
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
-      let id = params['id'];
+        // (+) converts string 'id' to a number
+      let id = +params['id'];
+      this.agendaId = id;
       this.getAgendaById(id);
     });
   }

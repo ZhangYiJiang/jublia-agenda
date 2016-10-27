@@ -22,6 +22,7 @@
     position: absolute;
     z-index: $timeline-z-index;
     pointer-events: none;
+    
     .hour {
         border-top: 2px solid lighten($color-accent, 15%);
         height: $height-per-15-min*4-2;
@@ -36,7 +37,7 @@
 .schedule {
 	margin-left: 250px;
     position: fixed;
-    height: 100%;
+    height: calc(100% - #{$main-content-top-offset});
     width: calc(100% - 250px);
     top: $main-content-top-offset;
 }
@@ -60,8 +61,7 @@
 
 .schedule,.scroll {
     flex: 1;
-    overflow-x: scroll;
-    overflow-y: scroll;
+    overflow: auto;
 }
 
 .day-title {

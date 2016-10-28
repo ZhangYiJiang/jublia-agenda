@@ -363,6 +363,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       tags: [[]]
     });
     this.formMsg = "";
+    
     this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
   }
 
@@ -396,22 +397,30 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const control = <FormArray>this.sessionForm.controls['newSpeakers'];
     control.removeAt(i);
   }
+  
+  submitAndContinueSessionForm(evt: any) {
+    evt.preventDefault();
+    this.submitSessionForm();
+  }
 
-  submitSessionForm(isValid: boolean) {
-    if (!isValid) { 
+  submitSessionForm(dialog: any = null) {
+    if (!this.sessionForm.valid) { 
       this.formMsg = "Please fill in all required information.";
       return;
     }
     
-    // Construct new speakers and tags 
-    const requests: Promise<any>[] = [];
-    
+    console.log(this.sessionForm);
+
     _.defaults(this.sessionForm.value, {
-      existingSpeakers: [], 
+      existingSpeakers: [],
       tags: [],
     });
+
+    // Construct new speakers and tags 
+    // TODO: Error handling - this is problematic right now because of transactions. 
+    const requests: Promise<any>[] = [];
     
-    for (let speaker of this.sessionForm.value.newSpeakers) {
+    requests.push(...this.sessionForm.value.newSpeakers.map((speaker:any) => {
       const request = this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url)
         .toPromise();
       
@@ -423,34 +432,42 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       });
       
       requests.push(request);
-    }
-    
-    for (let tag of this.sessionForm.value.tags) {
-      if (!this.eventTagsName.includes(tag)) {
-        // create in default category for now
-        const request = this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)
-          .toPromise();
+    }));
 
-        request.then(data => {
-          console.log('new tag created: ' + data.name);
-          this.eventTags.push(data);
-          this.eventTagsName.push(data.name);
-        });
+    requests.push(..._.difference(this.sessionForm.value.tags, this.eventTagsName).map((tag:string) => {
+      const request = this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)
+        .toPromise();
 
-        requests.push(request);
-      }
-    }
+      request.then(data => {
+        console.log('new tag created: ' + data.name);
+        this.eventTags.push(data);
+        this.eventTagsName.push(data.name);
+      });
+      
+      return request;
+    }));
     
-    let createSessionRequest: Promise<any>; 
-    if (requests.length) {
-      createSessionRequest = Promise.all(requests).then(() => this.createSession());
-    } else {
-      createSessionRequest = this.createSession().toPromise();
-    }
-    
-    createSessionRequest.then(data => {
-      console.log(data);
-    });
+    // After all speakers and tags have been created, create the session 
+    Promise.all(requests)
+      .then(() => this.createSession())
+      .then(() => {
+        // Handle closing the dialog 
+        if (dialog) {
+          dialog.close(true);
+        } else {
+          // Have to reset to empty strings because reset uses 'null' by default, which is not what we need
+          // Should see if there is any way to deduplicate this code with the form default declared during 
+          // init
+          this.sessionForm.reset({
+            name: '',
+            description: '',
+            duration: null,
+            existingSpeakers: [],
+            newSpeakers: [],
+            tags: [],
+          });
+        }
+      });
   }
 
   createSession(): Observable<any> {

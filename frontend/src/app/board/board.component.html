@@ -40,7 +40,7 @@
       <div class="form-msg">
         <small *ngIf="formMsg">{{formMsg}}</small>
       </div>
-      <form [formGroup]="sessionForm" novalidate (ngSubmit)="submitSessionForm(sessionForm.valid)">
+      <form [formGroup]="sessionForm" novalidate (ngSubmit)="submitSessionForm(dialogRef)">
         <table>
           <tr>
             <md-input type="text" formControlName="name" placeholder="Session Name" required></md-input>
@@ -114,7 +114,8 @@
           Add a New Speaker
         </div>
         
-        <button class="primary" md-button type="submit">Submit</button>
+        <button class="primary" md-button type="submit">Save</button>
+        <button class="primary" md-button type="submit" (click)="submitAndContinueSessionForm($event)">Save and Add Another</button>
         <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
       </form>
     </div>

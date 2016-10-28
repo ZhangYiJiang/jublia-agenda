@@ -327,7 +327,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     secondaryPlaceholderTags: "Enter a custom tag",
     placeholderSpeakers: "+ speaker",
     secondaryPlaceholderSpeakers: "Add an existing speaker"
-  }
+  };
 
   ngOnInit(): void {
     this.offsetDate = new Date(this.agenda.start_at);
@@ -402,71 +402,79 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.formMsg = "Please fill in all required information.";
       return;
     }
-    let observables: Observable<any>[] = [];
-    if (!this.sessionForm.value.existingSpeakers) {
-      this.sessionForm.value.existingSpeakers = [];
-    }
+    
+    // Construct new speakers and tags 
+    const requests: Promise<any>[] = [];
+    
+    _.defaults(this.sessionForm.value, {
+      existingSpeakers: [], 
+      tags: [],
+    });
+    
     for (let speaker of this.sessionForm.value.newSpeakers) {
-      observables.push(this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url));
+      const request = this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url)
+        .toPromise();
+      
+      request.then(data => {
+        console.log('new speaker created: ' + data.name);
+        this.eventSpeakers.push(data);
+        this.eventSpeakersName.push(data.name);
+        this.sessionForm.value.existingSpeakers.push(data.name);
+      });
+      
+      requests.push(request);
     }
-    if (!this.sessionForm.value.tags) {
-      this.sessionForm.value.tags = [];
-    }
-    let newTagsCount: number = 0;
+    
     for (let tag of this.sessionForm.value.tags) {
-      if (!this.eventTagsName.some(function(existingTag) {return existingTag === tag})) {
-        observables.push(this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)); // create in default category for now
-        newTagsCount += 1;
+      if (!this.eventTagsName.includes(tag)) {
+        // create in default category for now
+        const request = this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)
+          .toPromise();
+
+        request.then(data => {
+          console.log('new tag created: ' + data.name);
+          this.eventTags.push(data);
+          this.eventTagsName.push(data.name);
+        });
+
+        requests.push(request);
       }
     }
-    console.log(this.sessionForm.value);
-    if (observables.length > 0) {
-      Observable.forkJoin(observables).subscribe(
-        data => {
-          let newSpeakersCount: number = this.sessionForm.value.newSpeakers.length;
-          for (let i = 0; i < newSpeakersCount; i++) {
-            console.log('new speaker created: ' + data[i].name);
-            this.eventSpeakers.push(data[i]);
-            this.eventSpeakersName.push(data[i].name);
-            this.sessionForm.value.existingSpeakers.push(data[i].name);
-          }
-          for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
-            console.log('new tag created: ' + data[i].name);
-            this.eventTags.push(data[i]);
-            this.eventTagsName.push(data[i].name);
-          }
-          this.createSession();
-        },
-        error =>  this.formMsg = <any>error
-      );
+    
+    let createSessionRequest: Promise<any>; 
+    if (requests.length) {
+      createSessionRequest = Promise.all(requests).then(() => this.createSession());
+    } else {
+      createSessionRequest = this.createSession().toPromise();
     }
-    else {
-      this.createSession();
-    }
+    
+    createSessionRequest.then(data => {
+      console.log(data);
+    });
   }
 
-  createSession() {
-    let speakers: Speaker[] = this.eventSpeakers;
-    let tags: Tag[] = this.eventTags;
-    function getId(name: string, lookup: any) {
-      for (let item of lookup) {
-        if (item.name === name) {
-          return item.id;
-        }
-      }
-    }
-    let speakersId: number[] = this.sessionForm.value.existingSpeakers.map(function(name: string) {return getId(name, speakers)});
-    let tagsId: number[] = this.sessionForm.value.tags.map(function(name: string) {return getId(name, tags)});
+  createSession(): Observable<any> {
+    const speakersId: number[] = this.sessionForm.value.existingSpeakers
+        .map((name: string) => _.find(this.eventSpeakers, {name}).id);
+    
+    const tagsId: number[] = this.sessionForm.value.tags
+        .map((name: string) => _.find(this.eventTags, {name}).id);
+    
     console.log(speakersId);
     console.log(tagsId);
-    this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
-                                    this.sessionForm.value.duration, speakersId, tagsId).subscribe(
+    
+    const request: Observable<any> = this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
+                                    this.sessionForm.value.duration, speakersId, tagsId);
+        
+    request.subscribe(
       data => { 
         this.formMsg = 'New session created!';
         this.allSessions.push(data);
         this.pendingSessions.push(data);
       },
-      error =>  this.formMsg = <any>error
+      error => this.formMsg = <any>error
     );
+    
+    return request;
   }
 }

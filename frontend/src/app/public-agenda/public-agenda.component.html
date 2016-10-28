@@ -4,7 +4,7 @@
 <div *ngIf="agenda">
   <div class="clearfix fixed agenda-menu">
     <section class="agenda-info">
-      <h1 class="agenda-title">Agenda for {{agenda.name}}</h1>
+      <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
       
       <p class="agenda-subtitle">
         <a href="http://maps.google.com/?q={{agenda.location | encodeURIComponent}}" target="_blank">

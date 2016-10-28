@@ -10,14 +10,20 @@
         border: 0;
         margin-right: 10px;
     }
+    
+    @media (max-width: 960px) {
+        flex-direction: column;
+    }
 }
 
 .agenda-info {
     flex: 1 auto;
+    min-width: 400px;
 
     h1 {
         color: $color-primary;
         font-size: $size-large-text;
+        font-weight: normal;
         margin: 0 0 6px;
     }
     
@@ -45,9 +51,13 @@
 }
 
 .viewer {
-    max-width: 500px;
+    max-width: 400px;
     padding: 8px 24px 16px;
     border: 1px solid $color-primary;
+    
+    @media (max-width: 1600px) {
+        width: 25vw;
+    }
     
     h2 {
         font-size: 18px;
@@ -57,6 +67,7 @@
     
     p {
         line-height: 1.4;
+        font-size: $size-normal-text;
         margin: 0 0 10px;
     }
     
@@ -67,7 +78,6 @@
 
 .viewer-register {
     display: flex;
-    align-items: flex-end;
     
     md-input {
         flex: 1 auto;

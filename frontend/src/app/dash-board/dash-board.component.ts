@@ -45,11 +45,12 @@ export class DashBoardComponent implements OnInit {
   ngOnInit() {
     this.agendaForm = this._fb.group({
       name: ['', [<any>Validators.required]],
-      description: [''],
-      location: [''],
-      start: ['', [<any>Validators.required]],
-      duration: [1],
-      tracks: [[]]
+      description: '',
+      location: '',
+      start: ['', Validators.required],
+      duration: [3, Validators.required],
+      website: '',
+      tracks: [[]],
     });
     if (this.user.authed) {
       this.getAgendas();
@@ -128,10 +129,18 @@ export class DashBoardComponent implements OnInit {
   }
 
   createAgenda() {
-    this.dashBoardService.createAgenda(this.agendaForm.value.name, this.agendaForm.value.description, this.agendaForm.value.location, this.agendaForm.value.start, this.agendaForm.value.duration, this.agendaForm.value.tracks).subscribe(
+    this.dashBoardService.createAgenda(
+      this.agendaForm.value.name, 
+      this.agendaForm.value.description, 
+      this.agendaForm.value.location, 
+      this.agendaForm.value.start, 
+      this.agendaForm.value.duration,
+      this.agendaForm.value.website,
+      this.agendaForm.value.tracks,
+    ).subscribe(
       data => { 
         this.formMsg = 'New agenda created!';
-        this.agendas.unshift(data);
+        this.agendas.unshift(data);  // New agendas are added to the top
       },
       error => this.formMsg = <any>error
     );

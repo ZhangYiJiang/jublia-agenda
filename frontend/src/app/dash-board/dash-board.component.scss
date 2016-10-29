@@ -28,7 +28,7 @@
     li {
         cursor: pointer;
         position: relative;
-        left: 0;
+        //left: 0;
         background-color: #EEE;
         margin: .5em;
         padding: .3em 0;
@@ -133,4 +133,23 @@ form {
         overflow-wrap: break-word;
         width: 300px;
     }
+}
+.fly-in {
+  animation: flyin 1.5s ease forwards;
+  -webkit-animation: flyin 1.5s ease forwards;
+  left: -200px;
+  opacity: 0;
+}
+
+@keyframes flyin {
+   100% { 
+    left: 0;
+     opacity: 1;
+   }
+}
+@-webkit-keyframes flyin {
+   100% { 
+    left: 0;
+     opacity: 1;
+   }
 }

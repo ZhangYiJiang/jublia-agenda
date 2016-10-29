@@ -33,6 +33,7 @@ export class DashBoardComponent implements OnInit {
   registerPasswordError: string;
   formErrors = { name:"",start:"",duration:"",other:""};
   today = moment().format("YYYY-MM-DD");
+  addNewAgenda = false;
 
   //loginEmail: string;
   //loginPassword: string;
@@ -187,6 +188,7 @@ export class DashBoardComponent implements OnInit {
     this.dashBoardService.createAgenda(this.agendaForm.value.name, this.agendaForm.value.description, this.agendaForm.value.location, this.agendaForm.value.start, this.agendaForm.value.duration, this.agendaForm.value.tracks).subscribe(
       data => { 
         //this.successMsg = 'New agenda created!';
+        this.addNewAgenda = true;
         this.agendas.unshift(data);
       },
       error => {
@@ -205,6 +207,10 @@ export class DashBoardComponent implements OnInit {
         }
       }
     );
+  }
+
+  trackByAgendaId (index: number, agenda: Agenda) {
+    return agenda.id;
   }
 
   onSelect(agenda: Agenda) {

@@ -44,7 +44,7 @@
 	<div class = "agenda-list-card">
 		<h2>All Events</h2>
 		<ul class="agenda-list">
-		  <li *ngFor="let agenda of agendas"
+		  <li  *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first" [class.fly-in]="isFirst&&addNewAgenda"
 		    (click)="onSelect(agenda)">
 		    {{agenda.name}}
 		  </li>

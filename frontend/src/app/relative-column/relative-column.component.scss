@@ -13,6 +13,8 @@
         padding: 20px 10px 0;
         height: calc(100% - 20px);
         margin: 0;
+        position: relative;
+        z-index: 1;
         
         li {
             margin-bottom: 10px;
@@ -39,4 +41,14 @@ button.pending-toggle {
         color: white;
         font-size: 15px;
     }
+}
+
+.instructions {
+    pointer-events: none;
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    right: 10px;
+    color: #fff;
+    font-size: $size-normal-text;
 }

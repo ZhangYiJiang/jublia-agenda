@@ -1,4 +1,11 @@
 <div class="rel-col" [@colMarginTrigger]="colState">
+  <template [ngIf]="!sessions.length">
+    <div *ngIf="!agenda.sessions.length" class="instructions">
+      Get started by adding your first session using the '+' button above</div>
+    <div *ngIf="agenda.sessions.length" class="instructions">
+      Drag sessions here to temporarily remove them from the agenda without deleting them</div>
+  </template>
+  
   <ul class="session-list pending-session-list" [dragula]='"column"' [dragulaModel]='sessions'
     [attr.data-column-type]="'relative'">
     <li class="session-wrapper" *ngFor="let session of sessions"

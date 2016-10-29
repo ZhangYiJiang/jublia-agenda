@@ -48,7 +48,7 @@ export class DashBoardComponent implements OnInit {
       description: '',
       location: '',
       start: ['', Validators.required],
-      duration: [3, Validators.required],
+      duration: 3,
       website: '',
       tracks: [[]],
     });
@@ -129,13 +129,19 @@ export class DashBoardComponent implements OnInit {
   }
 
   createAgenda() {
+    // Add URL schema if not included
+    let website = this.agendaForm.value.website;
+    if (website && !website.match(/^https?:\/\//i)) {
+      website = 'http://' + website;
+    }
+    
     this.dashBoardService.createAgenda(
       this.agendaForm.value.name, 
       this.agendaForm.value.description, 
       this.agendaForm.value.location, 
       this.agendaForm.value.start, 
       this.agendaForm.value.duration,
-      this.agendaForm.value.website,
+      website,
       this.agendaForm.value.tracks,
     ).subscribe(
       data => { 

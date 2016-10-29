@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Track } from '../track/track';
+import { Speaker } from '../speaker/speaker';
 import { AgendaService } from '../agenda/agenda.service';
 
 import { DOMUtilService } from '../util/dom.util.service';
@@ -39,6 +40,7 @@ export class AbsoluteColumnComponent implements OnInit {
   @Output() onSessionChanged = new EventEmitter<Session>();
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
+  @Output() onSpeakerChanged = new EventEmitter<Speaker>();
 
   containers: any[] = [];
 
@@ -72,6 +74,11 @@ export class AbsoluteColumnComponent implements OnInit {
   onSessionInterestEdited(event: [number, boolean]) {
     // propagate to board
     this.onSessionInterestChanged.emit(event);
+  }
+
+  onSpeakerEdited(editedSpeaker: Speaker) {
+    // propagate to board
+    this.onSpeakerChanged.emit(editedSpeaker);
   }
 
   private isInterestedInSession(session: Session): boolean {

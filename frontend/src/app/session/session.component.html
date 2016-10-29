@@ -33,11 +33,16 @@
 
         <h2><i class="fa fa-user" aria-hidden="true"></i> Speakers</h2>
         <div *ngIf="session.speakers">
-          <div *ngFor="let speakerId of session.speakers">
-            <h3>{{speakersObj[speakerId].name}}</h3>
-            <p>{{speakersObj[speakerId].position}}, {{speakersObj[speakerId].company}}</p>
-            <p>{{speakersObj[speakerId].email}}</p>
-            <p>{{speakersObj[speakerId].phone_number}}</p>
+          <div class="speaker-card" *ngFor="let speakerId of session.speakers">
+            <h3>
+              <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit>
+              <div class="delete-button" *ngIf="!isPublic">
+                <button class="primary" md-button (click)="updateSessionSpeaker(speakerId)">x</button>
+              </div>
+            </h3>
+            <p><ndv-edit [title]="'position'" [placeholder]="speakersObj[speakerId].position" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            <p>Email: <ndv-edit [title]="'email'" [placeholder]="speakersObj[speakerId].email" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            <p>Phone: <ndv-edit [title]="'phone_number'" [placeholder]="speakersObj[speakerId].phone_number" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
           </div>
         </div>
         <div *ngIf="!session.speakers">

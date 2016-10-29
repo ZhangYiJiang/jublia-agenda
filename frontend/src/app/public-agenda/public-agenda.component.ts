@@ -54,6 +54,7 @@ export class PublicAgendaComponent implements OnInit{
           if (!agenda.published) return;
           this.agenda = agenda;
           
+          // Construct the iframe URL for the embedded Google Map
           if (agenda.location) {
             const url = `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(GlobalVariable.GOOGLE_MAP_API_KEY)}&q=${encodeURIComponent(this.agenda.location)}`;
             this.mapsEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);

@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { HttpClient } from '../util/http.util.service';
-import { GlobalVariable }  from '../globals';
 import { Observable }     from 'rxjs/Observable';
-import { DashBoardService } from '../dash-board/dash-board.service';
-import { Agenda } from '../agenda/agenda';
-import { Session } from '../session/session';
 
 @Injectable()
 export class PublicAgendaService {

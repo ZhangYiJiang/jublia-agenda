@@ -52,28 +52,52 @@
 			<h2>New Event</h2>
 			<form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm()">
 				<div>
-					<md-input type="text" (focus)="formErrors.name=undefined;formErrors.other=undefined" required formControlName="name" placeholder="Name">
+					<md-input type="text" (focus)="clearError('name')" required formControlName="name" 
+										placeholder="Name">
 						<md-hint class="form-error-hint" align="start">{{formErrors.name}}</md-hint>
 					</md-input>
 				</div>
-				<div><md-input type="text" formControlName="description" placeholder="Abstract"></md-input></div>
+				
+				<div>
+					<md-input type="text" (focus)="clearError()" formControlName="description" 
+											 placeholder="Abstract">
+					</md-input>
+				</div>
+				
 				<!-- TODO: change to and style textarea (not in md yet) -->		
-				<div><md-input type="text" formControlName="location" placeholder="Location"></md-input></div>
-				<div><md-input type="date" min="{{today}}" (focus)="formErrors.start=undefined;formErrors.other=undefined" required formControlName="start" placeholder="Start Date">
-					<md-hint class="form-error-hint" align="start">{{formErrors.start}}</md-hint>
-				</md-input></div>
-				<div><md-input type="number" class="above-tags" (focus)="formErrors.duration=undefined;formErrors.other=undefined" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
-					<md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
-				</md-input></div>
-				<div><md-input type="url" (focus)="formErrors.website=undefined;formErrors.other=undefined" formControlName="website" placeholder="Organiser website">
-					<md-hint class="form-error-hint" align="start">{{formErrors.website}}</md-hint>
-				</md-input></div>
+				<div>
+					<md-input type="text" (focus)="clearError('start')" formControlName="location" 
+										placeholder="Location"></md-input>
+				</div>
+				<div>
+					<md-input type="date" min="{{today}}" (focus)="clearError('start')" required 
+										formControlName="start" placeholder="Start Date">
+						<md-hint class="form-error-hint" align="start">{{formErrors.start}}</md-hint>
+					</md-input>
+				</div>
+				
+				<div>
+					<md-input type="number" (focus)="clearError('duration')" class="above-tags" 
+										formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
+						<md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
+					</md-input>
+				</div>
+				
+				<div>
+					<md-input type="url" (focus)="clearError('website')" formControlName="website" 
+										placeholder="Organiser website">
+						<md-hint class="form-error-hint" align="start">{{formErrors.website}}</md-hint>
+					</md-input>
+				</div>
+				
 				<div class="field-with-label">
 					<p class="field-label">Tracks (max 3)</p>
-					<tag-input [ngModel]="agendaForm.tracks" [maxItems]="3" [placeholder]="options.placeholder" [secondaryPlaceholder]="options.secondaryPlaceholder" formControlName="tracks"></tag-input>
+					<tag-input [ngModel]="agendaForm.tracks" [maxItems]="3" [placeholder]="options.placeholder" 
+										 [secondaryPlaceholder]="options.secondaryPlaceholder" formControlName="tracks"></tag-input>
 				</div>
 				<div>
 					<div class="other-error form-error-hint">{{formErrors.other}}</div>
+					
 					<button class="primary" md-button type="submit">Submit</button>
 				</div>
 			</form>

@@ -12,6 +12,9 @@ body {
 .default.tag:not(.tag--readonly):focus {
     background: $color-secondary !important;
 }
+.tag-input__text-input {
+    padding: 0px !important;
+}
 .md-input-placeholder.md-empty{
     color: $color-primary;
 }
@@ -28,7 +31,6 @@ body {
 .form-error-hint {
     color: $color-warn;
     padding: 2px;
-    padding-left: 5px;
 }
 
 .agenda-menu {

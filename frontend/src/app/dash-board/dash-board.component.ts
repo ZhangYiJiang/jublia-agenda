@@ -5,6 +5,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { Agenda } from '../agenda/agenda';
 import { AgendaService } from '../agenda/agenda.service';
 import { DashBoardService } from './dash-board.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'dash-board',
@@ -30,7 +31,9 @@ export class DashBoardComponent implements OnInit {
   loginPasswordError: string;
   registerEmailError: string;
   registerPasswordError: string;
-  formErrors = { name:"",start:"",duration:""};
+  formErrors = { name:"",start:"",duration:"",other:""};
+  today = moment().format("YYYY-MM-DD");
+
   //loginEmail: string;
   //loginPassword: string;
   //for testing
@@ -46,14 +49,15 @@ export class DashBoardComponent implements OnInit {
   //formMsg: string;
   options = {
     placeholder: "+ track",
-    secondaryPlaceholder: "Enter a track (optional)"
+    //secondaryPlaceholder: "Enter a track (optional)"
+    secondaryPlaceholder: "(Themes within event)"
   };
 
   ngOnInit() {
      if (this.user.authed) {
       this.getAgendas();
     }
-
+    console.log(this.today);
     this.agendaForm = this._fb.group({
       //validators currently not in use
       name: ['', [<any>Validators.required]],
@@ -186,7 +190,19 @@ export class DashBoardComponent implements OnInit {
         this.agendas.unshift(data);
       },
       error => {
-
+        console.log(error);
+        if(error.name){
+          this.formErrors.name = error.name[0];
+        }
+        if(error.start_at){
+          this.formErrors.start = error.start_at[0];
+        }
+        if(error.duration){
+          this.formErrors.duration = error.duration[0];
+        }
+        if(error.non_field_errors){
+          this.formErrors.other = error.non_field_errors[0];
+        }
       }
     );
   }

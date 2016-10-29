@@ -20,9 +20,9 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-2.0.0.tgz#ee3206cd1683581dd57dabba93c0e23af19b4732"
 
-"@angular/material@^2.0.0-alpha.9-3":
-  version "2.0.0-alpha.9-experimental-pizza"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-2.0.0-alpha.9-experimental-pizza.tgz#fff31d82899b7daac6bf3fbeca35bc8c948c2408"
+"@angular/material":
+  version "2.0.0-alpha.9-3"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-2.0.0-alpha.9-3.tgz#77e0f6a790069b2b9d48bff3eab78b5a59d244a0"
   dependencies:
     "@types/hammerjs" "^2.0.30"
 

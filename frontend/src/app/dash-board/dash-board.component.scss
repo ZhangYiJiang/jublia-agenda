@@ -5,7 +5,6 @@
 }
 
 .success {
-    margin-top: 20px;
     font-size: 14px;
     border: 2px solid green;
     padding: 10px;
@@ -16,17 +15,6 @@
     transform: translateX(-50%) translateX(0px);
 }
 
-.error {
-    margin-top: 20px;
-    font-size: 14px;
-    border: 2px solid red;
-    padding: 10px;
-    display: inline-block;
-    color: red;
-    position: absolute;
-    top: 50px;
-    transform: translateX(-50%) translateX(0px);
-}
 .agenda-list {
     margin: 0 0 2em 0;
     list-style-type: none;
@@ -58,6 +46,9 @@
 
 .sign-up-form {
     margin-top: 100px;
+    table {
+        margin-bottom: 20px;
+    }
 }
 
 .user-form {
@@ -68,11 +59,17 @@
     width: 400px;
     display: inline-block;
     border-right: 2px solid $color-secondary;
+    table {
+        md-input {
+            margin-bottom: 20px;
+
+        }
+    }
 }
 
 .dashboard-agendas {
     h2 {
-        margin-top: 100px;
+        margin-top: 50px;
     }
     position: relative;
     left: 25%;
@@ -104,4 +101,29 @@ form {
 
 }
 
-
+.new-agenda-card {
+    form{
+        height: 350px;
+        overflow: auto;
+    }    
+    md-input {
+        margin-bottom: 5px;
+    }
+    .above-tags {
+        margin-bottom: 12px;
+    }
+    .field-with-label {
+        position:relative;
+    }
+    .field-label {
+        left: 5px;
+        top: -8px;
+        font-size: 12px;
+        position: absolute;
+        margin: 0px;
+        color: $color-secondary;
+    }
+}
+.default.tag:not(.tag--readonly):focus {
+    background: $color-secondary !important;
+}

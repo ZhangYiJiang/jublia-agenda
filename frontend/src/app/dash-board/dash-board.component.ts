@@ -22,8 +22,15 @@ export class DashBoardComponent implements OnInit {
 
   agendas = this.dashBoardService.agendas;
   user = this.dashBoardService.currentUser;
-  errorMsg: string;
-  successMsg: string;
+
+  //successMsg: string;
+
+  //feedback for input
+  loginEmailError: string;
+  loginPasswordError: string;
+  registerEmailError: string;
+  registerPasswordError: string;
+  formErrors = { name:"",start:"",duration:""};
   //loginEmail: string;
   //loginPassword: string;
   //for testing
@@ -36,71 +43,98 @@ export class DashBoardComponent implements OnInit {
   signingUp = false;
 
   agendaForm: FormGroup;
-  formMsg: string;
+  //formMsg: string;
   options = {
     placeholder: "+ track",
     secondaryPlaceholder: "Enter a track (optional)"
   };
 
   ngOnInit() {
+     if (this.user.authed) {
+      this.getAgendas();
+    }
+
     this.agendaForm = this._fb.group({
+      //validators currently not in use
       name: ['', [<any>Validators.required]],
       description: [''],
       location: [''],
       start: ['', [<any>Validators.required]],
-      duration: [1],
+      duration: [1,[Validators.required,Validators.pattern('^[1-9]$')]],
       tracks: [[]]
     });
-    if (this.user.authed) {
-      this.getAgendas();
-    }
   }
 
-  private clearMsg = (success: boolean) => {
-    if(success) {
-      setTimeout(()=>{this.successMsg = undefined;},3000);
-    }else{
-      setTimeout(()=>{this.errorMsg = undefined;},3000);
-    }
-  };
-  
+  /*private clearMsg = () => {
+    setTimeout(()=>{this.successMsg = undefined;},3000);
+  };*/
+
+  clearLoginErrors(){
+    this.loginEmailError=undefined;
+    this.loginPasswordError=undefined;
+  }
+
+  clearSignUpErrors(){
+    this.registerEmailError=undefined;
+    this.registerPasswordError=undefined;
+  }
+
   signUp() {
     if (!this.registerEmail || !this.registerPassword) { 
-      this.errorMsg = "Please enter email and password";
+      if(!this.registerEmail){
+        this.registerEmailError = "Please enter email";
+      }
+      if(!this.registerPassword){
+        this.registerPasswordError = "Please enter password";
+      }
       return;
     }
     this.dashBoardService.signUp(this.registerEmail, this.registerPassword,this.organiser,this.event).subscribe(
       status => { 
         if (status === 201){ 
-          this.successMsg = 
+          //this.successMsg = 
           'Sign Up success! Please check your email and click on the verification link.';
-          this.clearMsg(true);
           this.toggleSigningUp();
         }
       },
       error =>  {
-        this.errorMsg = <any>error;
-        this.clearMsg(false);
+        if(error.username){
+          this.registerEmailError = error.username[0];
+        }
+        if(error.password){
+          this.registerPasswordError = error.password[0];
+        }
+        if(error.non_field_errors){
+          this.registerPasswordError = error.non_field_errors[0];
+        }      
       }
     );
   }
 
   logIn() {
     if (!this.loginEmail || !this.loginPassword) { 
-      this.errorMsg = "Please enter email and password";
-      this.clearMsg(false);
+      if(!this.loginEmail){
+        this.loginEmailError = "Please enter email";
+      }
+      if(!this.loginPassword){
+        this.loginPasswordError = "Please enter password";
+      }
       return;
     }
     this.dashBoardService.logIn(this.loginEmail, this.loginPassword).subscribe(
       success => { 
-        this.successMsg = "Login success!"; 
-        //this.open();
-        this.clearMsg(true);
         this.getAgendas();
       },
       error => {
-        this.errorMsg = <any>error;
-        this.clearMsg(false);
+        if(error.username){
+          this.loginEmailError = error.username[0];
+        }
+        if(error.password){
+          this.loginPasswordError = error.password[0];
+        }
+        if(error.non_field_errors){
+          this.loginPasswordError = error.non_field_errors[0];
+        }
       }
     );
   }
@@ -112,28 +146,48 @@ export class DashBoardComponent implements OnInit {
         this.agendas = _.sortBy(data, agenda => -agenda.id);
       },
       error => {
-       this.errorMsg = <any>error;
-       this.clearMsg(false);
+       console.log(error);
       }
     );
   }
 
-  submitAgendaForm(isValid: boolean) {
-    if (!isValid) { 
-      this.formMsg = "Please fill in Name and Start Date";
-      return;
-    }
+  submitAgendaForm() {
     console.log(this.agendaForm.value);
-    this.createAgenda();
+    if(this.checkAgendaForm()){
+      this.createAgenda();
+    }
+  }
+
+  checkAgendaForm():boolean{
+    let isValid = true;
+    if(!this.agendaForm.value.name || this.agendaForm.value.name.trim() === '' ){
+      this.formErrors.name = 'Required';
+      isValid = false;
+    }
+    if(!this.agendaForm.value.start){
+      this.formErrors.start = 'Required';
+      isValid = false;
+    }
+    if(!this.agendaForm.value.duration){
+      this.formErrors.duration = 'Required';
+      isValid = false;
+    }
+    if(this.agendaForm.value.duration && (this.agendaForm.value.duration < 1 || this.agendaForm.value.duration > 9)){
+      this.formErrors.duration = 'Duration must be between 1 and 9 days';
+      isValid = false;
+    }
+    return isValid;
   }
 
   createAgenda() {
     this.dashBoardService.createAgenda(this.agendaForm.value.name, this.agendaForm.value.description, this.agendaForm.value.location, this.agendaForm.value.start, this.agendaForm.value.duration, this.agendaForm.value.tracks).subscribe(
       data => { 
-        this.formMsg = 'New agenda created!';
+        //this.successMsg = 'New agenda created!';
         this.agendas.unshift(data);
       },
-      error => this.formMsg = <any>error
+      error => {
+
+      }
     );
   }
 
@@ -144,4 +198,5 @@ export class DashBoardComponent implements OnInit {
   toggleSigningUp() {
     this.signingUp = !this.signingUp;
   }
+
 }

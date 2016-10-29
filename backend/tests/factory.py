@@ -41,6 +41,7 @@ def agenda(data=None, full=False):
             'description': fake.paragraph(),
             'location': fake.street_address(),
             'start_at': next_month.date().isoformat(),
+            'website': fake.url(),
             # This needs to be high to avoid clashing with the session timing
             'duration': random.randint(6, 8),
         }

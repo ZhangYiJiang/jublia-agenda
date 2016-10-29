@@ -15,6 +15,7 @@ class Agenda(BaseModel):
     published = models.BooleanField(default=False)
     start_at = models.DateField(blank=True, null=True)
     duration = models.IntegerField()
+    website = models.URLField(blank=True)
 
     @property
     def owner(self):

@@ -43,9 +43,9 @@
             outline: none;
             padding: 3px;
             position: absolute;
-            left: 0;
             width: 80px;
-            margin: -6px 0 0 6px;
+            left: 6px;
+            top: 100%;
             z-index: 1;
             font-size: 1.1rem;
             line-height: 1.5rem;

@@ -109,12 +109,12 @@ export class SessionComponent implements OnInit {
   }
 
   getDisplayedDate(): string {
-    if(this.session.start_at == null) {
-      return ''
+    if (this.session.start_at == null) {
+      return '';
     }
-    let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
-    let date = new Date(startMs);
-    return moment(date).utc().format("ddd, MMMM Do YYYY");
+    
+    const startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
+    return moment(startMs).utc().format("ddd, MMMM Do");
   }
 
   getDisplayedTime(): string {
@@ -122,9 +122,9 @@ export class SessionComponent implements OnInit {
       return '';
     }
     
-    let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
-    let startDate = new Date(startMs);
-    let endDate = new Date(startMs + 60000 * this.session.duration);
+    const startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
+    const startDate = new Date(startMs);
+    const endDate = new Date(startMs + 60000 * this.session.duration);
     return `${this.getFormattedTime(startDate)}–${this.getFormattedTime(endDate)}`;
   }
 

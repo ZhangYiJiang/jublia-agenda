@@ -59,6 +59,21 @@ button[md-button],
     }
 }
 
+// Vex's default theme has problem with contents of different widths
+// We try to fix this using flexbox and inline block
+body .vex.vex-theme-default {
+    display: flex;
+    align-items: flex-start;
+    padding: 10vh 0;
+
+    .vex-content {
+        // Remove the default width 
+        width: auto;
+        max-width: 960px;
+        display: inline-block;
+    }
+}
+
 .vex-content {
     .full-width input, 
     .full-width textarea {
@@ -69,16 +84,9 @@ button[md-button],
         width: 50px;
     }
     
-    input {
+    input, textarea {
         font-size: inherit;
-    }
-    
-    p {
-        line-height: 24px;
-        
-        textarea {
-            font-size: inherit;
-        }
+        line-height: inherit;
     }
 }
 

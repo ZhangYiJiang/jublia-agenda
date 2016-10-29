@@ -33,7 +33,7 @@
             padding: 6px;
             border-radius: 3px;
             border: 1px solid #ccc;
-            min-width: 60px;
+            min-width: 50px;
             display: inline-block;
             position: relative;
         }

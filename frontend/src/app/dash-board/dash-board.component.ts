@@ -66,7 +66,7 @@ export class DashBoardComponent implements OnInit {
       location: [''],
       start: ['', [<any>Validators.required]],
       duration: [1,[Validators.required,Validators.pattern('^[1-9]$')]],
-      website:[[]],
+      website:[''],
       tracks: [[]]
     });
   }

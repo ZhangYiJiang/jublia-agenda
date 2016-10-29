@@ -127,8 +127,8 @@ form md-input {
 }
 
 .fly-in {
-    -webkit-animation: flyin 1.5s ease forwards;
-    animation: flyin 1.5s ease forwards;
+    -webkit-animation: flyin .5s ease forwards;
+    animation: flyin .5s ease forwards;
     left: -200px;
     opacity: 0;
 }

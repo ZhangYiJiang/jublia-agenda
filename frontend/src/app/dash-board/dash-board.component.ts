@@ -188,7 +188,7 @@ export class DashBoardComponent implements OnInit {
   createAgenda() {
     // Add URL schema if not included
     let website = this.agendaForm.value.website;
-    if (typeof website === 'string' && !website.match(/^https?:\/\//i)) {
+    if (website && !website.match(/^https?:\/\//i)) {
       website = 'http://' + website;
     }
     

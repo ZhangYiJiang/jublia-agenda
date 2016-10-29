@@ -16,3 +16,4 @@ import 'lodash';
 import 'moment';
 import 'hammerjs';
 import 'jquery';
+//import 'modernizr';

@@ -6,6 +6,7 @@ import { Agenda } from '../agenda/agenda';
 import { AgendaService } from '../agenda/agenda.service';
 import { DashBoardService } from './dash-board.service';
 import * as moment from 'moment';
+//import * as modernizr from 'modernizr';
 
 @Component({
   selector: 'dash-board',

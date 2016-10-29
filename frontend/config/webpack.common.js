@@ -69,6 +69,10 @@ module.exports = {
         test: /\.css$/,
         include: helpers.root('src', 'app'),
         loader: 'to-string!css-loader!postcss-loader'
+      },
+      { 
+        //for modernizr
+        test: /\.json$/, loader: "json-loader" 
       }
     ],
     postcss: [

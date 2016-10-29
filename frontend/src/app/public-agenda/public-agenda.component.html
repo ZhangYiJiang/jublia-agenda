@@ -15,7 +15,7 @@
       <p class="agenda-desc">{{agenda.description}}</p>
     </section>
     
-    <div>
+    <div *ngIf="agenda.location">
       <iframe frameborder="0" class="map" [src]="mapsEmbedUrl" allowfullscreen></iframe>
     </div>
     

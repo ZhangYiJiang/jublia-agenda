@@ -1,88 +1,82 @@
-<<<<<<< HEAD
-<div class="contenr-under-header">
-<!--
-=======
-<div class="content-under-header">
->>>>>>> 12ea9bc3c264f8b55339cdad29c4c8de48abc281
-<div class = "success" *ngIf="successMsg">{{successMsg}}</div>
--->
-
-<div class="sign-up-form" *ngIf = "signingUp">
-	<h2>Register</h2>
-	<form (ngSubmit)="signUp()" novalidate>
-		<table>
-		<tr><md-input placeholder="Email" required (focus)="clearSignUpErrors()" [(ngModel)]="registerEmail" name="email" autocomplete="new-password">
-			<md-hint class="form-error-hint" align="start">{{registerEmailError}}</md-hint>
-		</md-input> </tr>
-		<tr><md-input placeholder="Password" required (focus)="clearSignUpErrors()" type="password" [(ngModel)]="registerPassword" name="password" autocomplete="new-password">
-			<md-hint class="form-error-hint" align="start">{{registerPasswordError}}</md-hint>
-		</md-input></tr>
-		<tr><md-input placeholder="Event Organiser" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
-		<tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
-		</table>
-		<button class="primary" md-button type="submit" disableRipple="true">Register</button>
-		<a class="secondary" md-button type="cancel" (click)="toggleSigningUp()">Cancel</a>			
-	</form>
-</div>
-<div class="user-form" *ngIf = "!user.authed && !signingUp">
-	<div class="log-in-card">
-		<h2>Log In</h2>
-		<form (ngSubmit)="logIn()" novalidate>
+<div class="dashboard-container">
+	<div class="sign-up-form" *ngIf = "signingUp">
+		<h2>Register</h2>
+		<form (ngSubmit)="signUp()" novalidate>
 			<table>
-			<tr><md-input (focus)="clearLoginErrors()" required placeholder="Email" [(ngModel)]="loginEmail" name="email"> 
-				<md-hint class="form-error-hint" align="start">{{loginEmailError}}</md-hint>
+			<tr><md-input placeholder="Email" required (focus)="clearSignUpErrors()" [(ngModel)]="registerEmail" name="email" autocomplete="new-password">
+				<md-hint class="form-error-hint" align="start">{{registerEmailError}}</md-hint>
+			</md-input> </tr>
+			<tr><md-input placeholder="Password" required (focus)="clearSignUpErrors()" type="password" [(ngModel)]="registerPassword" name="password" autocomplete="new-password">
+				<md-hint class="form-error-hint" align="start">{{registerPasswordError}}</md-hint>
 			</md-input></tr>
-			<tr><md-input (focus)="clearLoginErrors()" required placeholder="Password" type="password" [(ngModel)]="loginPassword" name="password"> 
-				<md-hint class="form-error-hint" align="start">{{loginPasswordError}}</md-hint>
-			</md-input></tr>
+			<tr><md-input placeholder="Event Organiser" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
+			<tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
 			</table>
-			<button class="primary" md-button type="submit" disableRipple="true">Login</button>	
+			<button class="primary" md-button type="submit" disableRipple="true">Register</button>
+			<a class="secondary" md-button type="cancel" (click)="toggleSigningUp()">Cancel</a>			
 		</form>
 	</div>
-	<div class="sign-up-card">
-		<p>Or create an account<br> and start building your event agenda</p>		
-		<button class="secondary" md-button (click)="toggleSigningUp()">Register</button>
+	
+	<div class="user-form" *ngIf = "!user.authed && !signingUp">
+		<div class="log-in-card">
+			<h2>Log In</h2>
+			<form (ngSubmit)="logIn()" novalidate>
+				<table>
+				<tr><md-input (focus)="clearLoginErrors()" required placeholder="Email" [(ngModel)]="loginEmail" name="email"> 
+					<md-hint class="form-error-hint" align="start">{{loginEmailError}}</md-hint>
+				</md-input></tr>
+				<tr><md-input (focus)="clearLoginErrors()" required placeholder="Password" type="password" [(ngModel)]="loginPassword" name="password"> 
+					<md-hint class="form-error-hint" align="start">{{loginPasswordError}}</md-hint>
+				</md-input></tr>
+				</table>
+				<button class="primary" md-button type="submit" disableRipple="true">Login</button>	
+			</form>
+		</div>
+		<div class="sign-up-card">
+			<p>Or create an account<br> and start building your event agenda</p>		
+			<button class="secondary" md-button (click)="toggleSigningUp()">Register</button>
+		</div>
 	</div>
-</div>
-<div class="dashboard-agendas" *ngIf = "user.authed">
-	<div class = "agenda-list-card">
-		<h2>All Events</h2>
-		<ul class="agenda-list">
-		  <li  *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first" [class.fly-in]="isFirst&&addNewAgenda"
-		    (click)="onSelect(agenda)">
-		    {{agenda.name}}
-		  </li>
-		</ul>
+	
+	<div class="dashboard-agendas" *ngIf = "user.authed">
+		<div class = "agenda-list-card">
+			<h2>All Events</h2>
+			<ul class="agenda-list">
+				<li *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first" [class.fly-in]="isFirst&&addNewAgenda"
+					(click)="onSelect(agenda)">
+					{{agenda.name}}
+				</li>
+			</ul>
+		</div>
+		<div class = "new-agenda-card">
+			<h2>New Event</h2>
+			<form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm()">
+				<div>
+					<md-input type="text" (focus)="formErrors.name=undefined;formErrors.other=undefined" required formControlName="name" placeholder="Name">
+						<md-hint class="form-error-hint" align="start">{{formErrors.name}}</md-hint>
+					</md-input>
+				</div>
+				<div><md-input type="text" formControlName="description" placeholder="Abstract"></md-input> </div>
+				<!-- TODO: change to and style textarea (not in md yet) -->		
+				<div><md-input type="text" formControlName="location" placeholder="Location"></md-input></div>
+				<div><md-input type="date" min="{{today}}" (focus)="formErrors.start=undefined;formErrors.other=undefined" required formControlName="start" placeholder="Start Date">
+					<md-hint class="form-error-hint" align="start">{{formErrors.start}}</md-hint>
+				</md-input></div>
+				<div><md-input type="number" class="above-tags" (focus)="formErrors.duration=undefined;formErrors.other=undefined" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
+					<md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
+				</md-input></div>
+				<div><md-input type="text" (focus)="formErrors.website=undefined;formErrors.other=undefined" formControlName="website" placeholder="Organiser website">
+					<md-hint class="form-error-hint" align="start">{{formErrors.website}}</md-hint>
+				</md-input></div>
+				<div class="field-with-label">
+					<p class="field-label">Tracks (max 3)</p>
+					<tag-input [ngModel]="agendaForm.tracks" [maxItems]="3" [placeholder]="options.placeholder" [secondaryPlaceholder]="options.secondaryPlaceholder" formControlName="tracks"></tag-input>
+				</div>
+				<div>
+					<div class="other-error form-error-hint">{{formErrors.other}}</div>
+						<button class="primary" md-button type="submit">Submit</button>
+					</div>
+			</form>
+		</div>
 	</div>
-	<div class = "new-agenda-card">
-		<h2>New Event</h2>
-		<form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm()">
-			<div>
-				<md-input type="text" (focus)="formErrors.name=undefined;formErrors.other=undefined" required formControlName="name" placeholder="Name">
-					<md-hint class="form-error-hint" align="start">{{formErrors.name}}</md-hint>
-				</md-input>
-			</div>
-			<div><md-input type="text" formControlName="description" placeholder="Abstract"></md-input> </div>
-			<!-- TODO: change to and style textarea (not in md yet) -->		
-			<div><md-input type="text" formControlName="location" placeholder="Location"></md-input></div>
-			<div><md-input type="date" min="{{today}}" (focus)="formErrors.start=undefined;formErrors.other=undefined" required formControlName="start" placeholder="Start Date">
-				<md-hint class="form-error-hint" align="start">{{formErrors.start}}</md-hint>
-			</md-input></div>
-			<div><md-input type="number" class="above-tags" (focus)="formErrors.duration=undefined;formErrors.other=undefined" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
-				<md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
-			</md-input></div>
-			<div><md-input type="text" (focus)="formErrors.website=undefined;formErrors.other=undefined" formControlName="website" placeholder="Organiser website">
-				<md-hint class="form-error-hint" align="start">{{formErrors.website}}</md-hint>
-			</md-input></div>
-			<div class="field-with-label">
-				<p class="field-label">Tracks (max 3)</p>
-				<tag-input [ngModel]="agendaForm.tracks" [maxItems]="3" [placeholder]="options.placeholder" [secondaryPlaceholder]="options.secondaryPlaceholder" formControlName="tracks"></tag-input>
-			</div>
-			<div>
-				<div class="other-error form-error-hint">{{formErrors.other}}</div>
-		    	<button class="primary" md-button type="submit">Submit</button>
-		    </div>
-		</form>
-	</div>
-</div>
 </div>

@@ -21,19 +21,22 @@
     padding: 0;
     padding-right: 100px;
     border-right: 2px solid $color-secondary;
-    width: 15em;
+    width: 17em;
     display: inline-block;
     height: 400px;
     overflow: auto;
-
+    .agenda-strip {
+        position: relative;
+    }
     li {
+        display: inline-block;
+        width: 15em;
         cursor: pointer;
         position: relative;
         //left: 0;
         background-color: #EEE;
         margin: .5em;
         padding: .3em 0;
-        height: 1.6em;
         border-radius: 4px;
         &.selected:hover {
             background-color: #BBD8DC !important;
@@ -45,6 +48,32 @@
             left: .1em;
         }
     }
+}
+
+md-icon {
+    color: $color-primary;
+    position: absolute;
+    cursor: pointer;
+    &.warn{
+        color: $color-accent;
+        right: -45px;
+        border: 1px solid;
+        top: 8px;
+    }
+    &.delete{
+        right: -70px;
+        top: 90px;
+        right: 170px;
+    }
+}
+
+.delete-label {
+    position: absolute;
+    font-size: 12px;
+    top: 97px;
+    right: 140px;
+    color: $color-primary;
+    cursor: pointer;
 }
 
 .sign-up-form {
@@ -97,6 +126,7 @@ form {
 
 .agenda-list-card, .new-agenda-card {
     display: table-cell;
+    position:relative;
 }
 
 .agenda-list-card {

@@ -71,6 +71,12 @@ export class DashBoardService {
       .map(this.extractData)
       .catch(this.handleError);
   }
+
+  deleteAgenda(agendaId: number): Observable<any> {
+    return this.httpClient.delete('/api/' + agendaId)
+      .map(this.extractStatus)
+      .catch(this.handleErrorMsg);
+  }
  
 
   //set the scope of this to the class
@@ -101,5 +107,11 @@ export class DashBoardService {
     return Observable.throw(errMsg);*/
     return Observable.throw(error.json());
   }
+  private handleErrorMsg (error: any) {
+    let errMsg = (error.message) ? error.message :
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    console.error(errMsg);
+    return Observable.throw(errMsg);
+   }
   
 }

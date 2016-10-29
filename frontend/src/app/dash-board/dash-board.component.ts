@@ -35,6 +35,8 @@ export class DashBoardComponent implements OnInit {
   formErrors = { name:"",start:"",duration:"",website:"",other:""};
   today = moment().format("YYYY-MM-DD");
   addNewAgenda = false;
+  deleting = false;
+  //hide = false;
 
   //loginEmail: string;
   //loginPassword: string;
@@ -223,6 +225,25 @@ export class DashBoardComponent implements OnInit {
         if(error.non_field_errors){
           this.formErrors.other = error.non_field_errors[0];
         }
+      }
+    );
+  }
+
+  deleteAgenda(agenda: Agenda) {
+    if(agenda.published){
+      
+    }
+    this.dashBoardService.deleteAgenda(agenda.id).subscribe(
+      data => {
+        console.log(data);
+        this.addNewAgenda = false;
+        let idx = this.agendas.indexOf(agenda,0);
+        if(idx > -1) {
+          this.agendas.splice(idx,1);
+        }
+      },
+      error => {
+        console.log(error);
       }
     );
   }

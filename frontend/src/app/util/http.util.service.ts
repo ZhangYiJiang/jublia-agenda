@@ -117,9 +117,9 @@ export class HttpClient {
       return this.http.put(url, body, this.createRequestOptions());
   }
 
-  delete(url: string, body: string) {
+  delete(url: string) {
     if (localStorage.getItem(GlobalVariable.TOKEN_NAME) && this.shouldRefreshToken()){
-      return this.refreshThenRequest(METHOD.DELETE,url,body);
+      return this.refreshThenRequest(METHOD.DELETE,url);
     }
       return this.http.delete(url, this.createRequestOptions());
   }

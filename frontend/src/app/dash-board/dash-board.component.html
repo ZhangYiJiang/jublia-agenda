@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-<div class="contenr-under-header">
-<!--
-=======
 <div class="content-under-header">
->>>>>>> 12ea9bc3c264f8b55339cdad29c4c8de48abc281
-<div class = "success" *ngIf="successMsg">{{successMsg}}</div>
--->
-
 <div class="sign-up-form" *ngIf = "signingUp">
 	<h2>Register</h2>
 	<form (ngSubmit)="signUp()" novalidate>
@@ -47,11 +39,15 @@
 <div class="dashboard-agendas" *ngIf = "user.authed">
 	<div class = "agenda-list-card">
 		<h2>All Events</h2>
+			<md-icon  class="delete" (click)="deleting=!deleting">delete</md-icon>
+			<span class="delete-label" (click)="deleting=!deleting">Delete</span>
 		<ul class="agenda-list">
-		  <li  *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first" [class.fly-in]="isFirst&&addNewAgenda"
-		    (click)="onSelect(agenda)">
-		    {{agenda.name}}
-		  </li>
+			<div class="agenda-strip" *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first">
+			  	<li [class.fly-in]="isFirst&&addNewAgenda" (click)="onSelect(agenda)">
+			    	{{agenda.name}}
+			 	 </li>
+			  <md-icon [hidden]="!deleting" (click)="deleteAgenda(agenda)" class="warn">clear</md-icon>
+			</div>
 		</ul>
 	</div>
 	<div class = "new-agenda-card">

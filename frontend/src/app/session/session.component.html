@@ -8,7 +8,7 @@
       {{getDisplayedTime()}}</div>
     <div *ngIf="!session.start_at && session.duration" class="session-time">
       {{session.duration}} min</div>
-    <div class="session-venue">{{session.venue}}</div>
+    <div class="session-venue">{{getSessionName(session.venue)}}</div>
   </div>
 </div>
 

@@ -62,6 +62,13 @@ export class SessionComponent implements OnInit {
   green: number;
   blue: number;
 
+  getSessionName(venueId: number) {
+    let venue = this.agenda.session_venues.filter(function(venue) {return venue.id === venueId});
+    if (venue.length > 0) {
+      return venue[0].name
+    }
+  }
+
   updateInterest() {
     this.interested = !this.interested;
     this.updateInterestButtonText();

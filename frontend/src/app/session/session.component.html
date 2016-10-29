@@ -46,18 +46,18 @@
       </div><!-- /.session-main -->
       
       <div class="session-meta">
-        <div *ngIf="session.start_at" class="session-info">
+        <div class="session-info">
           <div class="session-icon">
             <i class="fa fa-clock-o" aria-hidden="true"></i>
           </div>
           <div>
-            <p>{{ getDisplayedDate() }}</p>
+            <p *ngIf="session.start_at">{{ getDisplayedDate() }}</p>
             <p class="session-info-secondary">{{ getDisplayedTime() }}
               <ndv-edit class="small-input" [title]="'duration'" [placeholder]="session.duration || '0'"
                         (onSave)="updateSession($event)" [permission]="!isPublic"
                         [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
               </ndv-edit>mins
-              <span *ngIf="session.duration && !isPublic" class="duration-buttons">
+              <span *ngIf="!isPublic" class="duration-buttons">
               <button class="primary" md-button (click)="adjustSessionDuration(15)">+</button>
               <button class="primary" md-button (click)="adjustSessionDuration(-15)">-</button>
             </span>

@@ -10,6 +10,7 @@ import { Track } from '../track/track';
 import { Category} from '../category/category';
 import { Tag } from '../tag/tag';
 import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 import { AgendaService } from '../agenda/agenda.service';
 import { BoardService } from './board.service';
 
@@ -62,6 +63,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   eventTagsName: String[];
   eventSpeakers: Speaker[];
   eventSpeakersName: String[];
+  eventVenues: Venue[];
+  eventVenuesName: String[];
 
   allSessions: Session[];
   pendingSessions: Session[];
@@ -300,7 +303,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.eventTags || this.eventTags.length === 0) {
       return [];
     } else {
-      return this.eventTags.map(function(tag) {return tag.name;});
+      return this.eventTags.map(function(tag) {return tag.name});
     }
   }
 
@@ -316,7 +319,23 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.eventSpeakers || this.eventSpeakers.length === 0) {
       return [];
     } else {
-      return this.eventSpeakers.map(function(speaker) {return speaker.name;});
+      return this.eventSpeakers.map(function(speaker) {return speaker.name});
+    }
+  }
+
+  getEventVenues(): Venue[] {
+    if (!this.agenda.session_venues || this.agenda.session_venues.length === 0) {
+      return [];
+    } else {
+      return this.agenda.session_venues;
+    }
+  }
+
+  getEventVenuesName(): String[] {
+    if (!this.eventVenues || this.eventVenues.length === 0) {
+      return [];
+    } else {
+      return this.eventVenues.map(function(venue) {return venue.name});
     }
   }
 
@@ -326,8 +345,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     placeholderTags: "+ tag",
     secondaryPlaceholderTags: "Enter a custom tag",
     placeholderSpeakers: "+ speaker",
-    secondaryPlaceholderSpeakers: "Add an existing speaker"
+    secondaryPlaceholderSpeakers: "Add an existing speaker",
+    secondaryPlaceholderVenue: "Add an existing venue",
   };
+  showVenueForm: boolean = false;
 
   ngOnInit(): void {
     this.offsetDate = new Date(this.agenda.start_at);
@@ -338,6 +359,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eventTagsName = this.getEventTagsName();
     this.eventSpeakers = this.getEventSpeakers();
     this.eventSpeakersName = this.getEventSpeakersName();
+    this.eventVenues = this.getEventVenues();
+    this.eventVenuesName = this.getEventVenuesName();
     if(this.agenda.sessions == null) {
       this.agenda.sessions = [];
     }
@@ -360,7 +383,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       duration: [null],
       existingSpeakers: [[]],
       newSpeakers: this._fb.array([]),
-      tags: [[]]
+      tags: [[]],
+      existingVenue: [[]],
+      newVenue: this._fb.group({
+        name: [''],
+        unit: ['']
+      })
     });
     this.formMsg = "";
     
@@ -397,6 +425,14 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const control = <FormArray>this.sessionForm.controls['newSpeakers'];
     control.removeAt(i);
   }
+
+  addVenue() {
+    this.showVenueForm = true;
+  }
+
+  removeVenue() {
+    this.showVenueForm = false;
+  }
   
   submitAndContinueSessionForm(evt: any) {
     evt.preventDefault();
@@ -414,6 +450,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     _.defaults(this.sessionForm.value, {
       existingSpeakers: [],
       tags: [],
+      existingVenue: []
     });
 
     // Construct new speakers and tags 
@@ -446,6 +483,19 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       
       return request;
     }));
+
+    if (this.showVenueForm) {
+      const request = this.boardService.createVenue(this.agenda.id, this.sessionForm.value.newVenue.name, this.sessionForm.value.newVenue.unit)
+        .toPromise();
+      request.then(data => {
+        console.log('new venue created: ' + data.name);
+        this.eventVenues.push(data);
+        this.eventVenuesName.push(data.name);
+        this.sessionForm.value.existingVenue.pop();
+        this.sessionForm.value.existingVenue.push(data.name);
+      });
+      requests.push(request);
+    }
     
     // After all speakers and tags have been created, create the session 
     Promise.all(requests)
@@ -465,6 +515,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
             existingSpeakers: [],
             newSpeakers: [],
             tags: [],
+            existingVenue: [],
+            newVenue: this._fb.group({
+              name: ['', [<any>Validators.required]],
+              unit: ['']
+            })
           });
         }
       });
@@ -476,12 +531,16 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     
     const tagsId: number[] = this.sessionForm.value.tags
         .map((name: string) => _.find(this.eventTags, {name}).id);
+
+    const venueId: number[] = this.sessionForm.value.existingVenue
+        .map((name: string) => _.find(this.eventVenues, {name}).id);
     
     console.log(speakersId);
     console.log(tagsId);
+    console.log(venueId);
     
     const request: Observable<any> = this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
-                                    this.sessionForm.value.duration, speakersId, tagsId);
+                                    this.sessionForm.value.duration, speakersId, tagsId, venueId[0]);
         
     request.subscribe(
       data => { 

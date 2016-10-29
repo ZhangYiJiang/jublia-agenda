@@ -13,10 +13,10 @@
       </div>
       <div class="scroll">
         <div class="day" *ngFor="let date of eventDates">
-          <div class="day-title">{{date | date}}</div>
+          <div class="day-title position-fixed-y" [style.width]="dayTitleWidth">{{date | date}}</div>
           <div class="row">
             <div class="track" *ngFor="let track of eventTracks">
-              <div class="track-title">{{track.name}}</div>
+              <div class="track-title position-fixed-y">{{track.name}}</div>
               <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
                 [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
                 (onSessionChanged)="onSessionChanged($event)"

@@ -67,6 +67,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   pendingSessions: Session[];
   nonPendingSessions: Session[];
 
+  dayTitleWidth: string;
+  columnWidth = 200;
+  columnGap = 10;
+
   dragging: boolean = false;
 
   hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
@@ -110,7 +114,9 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   keepfix() {
     var $w = $('.schedule');
+    var nowTop = $w.scrollTop();
     $('.position-fixed-x').css('left', $w.scrollLeft());
+    $('.position-fixed-y').css('top', $w.scrollTop());   
   }
 
   ngOnDestroy() {
@@ -267,8 +273,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getEventTracks(): Track[] {
     if (!this.agenda.tracks || this.agenda.tracks.length === 0) {
+      this.dayTitleWidth = '0px';
       return [];
     } else {
+      this.dayTitleWidth = ((this.columnWidth +this.columnGap) * this.agenda.tracks.length - this.columnGap) + 'px';
       return this.agenda.tracks;
     }
   }

@@ -59,6 +59,7 @@
 
 .scroll {
     margin-left: 50px;
+    padding-top: 60px;
 }
 .board, .schedule,.row, .scroll{
     display: flex;
@@ -80,15 +81,21 @@
 }
 
 .track-title {
+    margin-top: 30px;
     background: $color-secondary;
 }
 
 .day-title, .track-title {
+    position: absolute;
     color: white;
     margin-right: 10px;
     min-width: 200px;
     height: 30px;
     line-height: 30px;
+    z-index: 15;
+    top:0;
+    -webkit-transition: top 0.1s; 
+    transition: top 0.1s;
 }
 
 .not-dragging .quarter {

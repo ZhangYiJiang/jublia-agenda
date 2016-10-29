@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewContainerRef, ViewEncapsulation,OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
@@ -6,7 +6,19 @@ import { Agenda } from '../agenda/agenda';
 import { AgendaService } from '../agenda/agenda.service';
 import { DashBoardService } from './dash-board.service';
 import * as moment from 'moment';
-//import * as modernizr from 'modernizr';
+import { overlayConfigFactory } from 'angular2-modal';
+import { Overlay } from 'angular2-modal';
+
+import {
+  VEXBuiltInThemes,
+  Modal,
+  DialogPreset,
+  DialogFormModal,
+  DialogPresetBuilder,
+  VEXModalContext,
+  VexModalModule,
+  providers
+} from 'angular2-modal/plugins/vex';
 
 @Component({
   selector: 'dash-board',
@@ -18,6 +30,7 @@ export class DashBoardComponent implements OnInit {
   constructor(
     private router: Router,
     private _fb: FormBuilder,
+    public modal: Modal,
     private dashBoardService: DashBoardService,
     private agendaService: AgendaService
   ){}
@@ -230,8 +243,13 @@ export class DashBoardComponent implements OnInit {
   }
 
   deleteAgenda(agenda: Agenda) {
+    /*this.modal.confirm()
+        .className(this.theme)
+        .message('Yes or No?')
+        .okBtn('Yes')
+        .cancelBtn('No');*/
     if(agenda.published){
-      
+
     }
     this.dashBoardService.deleteAgenda(agenda.id).subscribe(
       data => {

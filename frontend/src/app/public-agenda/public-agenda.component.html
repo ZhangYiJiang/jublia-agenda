@@ -5,10 +5,14 @@
   <div class="clearfix fixed agenda-menu">
     <section class="agenda-info">
       <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
-      
-      <p class="agenda-subtitle">
+      <p *ngIf="agenda.website" class="agenda-subtitle">
+        <a href="{{agenda.website | encodeURI}}" target="_blank">
+          <i class="fa fa-link" title="Event Website"></i> {{agenda.website}}
+        </a>
+      </p>
+      <p *ngIf="agenda.location" class="agenda-subtitle">
         <a href="http://maps.google.com/?q={{agenda.location | encodeURIComponent}}" target="_blank">
-          <i class="fa fa-map-o" title="Location"></i> <strong>{{agenda.location}}</strong>
+          <i class="fa fa-map-o" title="Location"></i> {{agenda.location}}
         </a>
       </p>
       
@@ -31,10 +35,7 @@
         </form>
       </div>
       <div class="clearfix" *ngIf="token">
-        <h2 class="profile">
-          Personal schedule for {{email}}
-        </h2>
-        
+        <h2>Personal schedule for {{email}}</h2>
         <div class="interested-toggle">
           <md-slide-toggle [color]="'black'" [(ngModel)]="interestToggleModel">
             Show only bookmarked sessions

@@ -4,29 +4,57 @@
 @Component({
     selector: 'ndv-area',
     styles: [`
-        #ndv-ic {
-            color: #ccc;
+        :host {
+            position: relative;
         }
         
-        .ndv-comp:hover #ndv-ic {
-            color: #999;
+        .ndv-ic {
+            position: absolute;
+            top: 0;
+            left: -1px;
+            transform: translateY(-100%);
+            padding: 3px 6px 3px 4px;
+            
+            background: #888;
+            color: #fff;
+            font-size: 13px;
+            line-height: 1;
+            font-weight: normal;
+            white-space: nowrap;
+            
+            display: none;
+        }
+        
+        .ndv-comp:hover .ndv-ic {
+            display: block;
         }
 
         .ndv-comp {
-            padding:6px;
+            padding: 6px;
             border-radius: 3px;
             border: 1px solid #ccc;
+            min-width: 60px;
+            display: block;
+            position: relative;
         }
+        
+        .ndv-comp:hover {
+            border-radius: 0 3px 3px 3px;
+        }
+        
         .active-ndv {
             background-color: #f0f0f0;
             border: 1px solid #d9d9d9;
         }
-        input {
+        
+        textarea {
             border-radius: 5px;
             box-shadow: none;
             border: 1px solid #dedede;
             min-width: 5px;
+            line-height: inherit;
         }
+        
         .ndv-buttons {
             border: 1px solid #ccc;
             border-top: none;
@@ -58,15 +86,16 @@
             border: 1px solid #d9d9d9;
         }
     `],
-    template: `<span *ngIf="!permission">{{text}}</span><form *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}"><span>
-                    <textarea rows="6" cols="55" *ngIf='show' [(ngModel)]='text' [ngModelOptions]='{standalone: true}'></textarea>
-                    <i id='ndv-ic' *ngIf='!show'>✎</i>
-                    <span *ngIf='!show' style='line-height:1.5em;word-wrap: break-word;'>{{text || '-Empty Field-'}}</span>
-                </span>
-                <div class='ndv-buttons' *ngIf='show'>
-                    <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
-                    <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
-                </div></form>`,
+    template: `<div *ngIf="!permission">{{text}}</div>
+               <form *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}"><div>
+                   <textarea rows="6" cols="55" *ngIf='show' [(ngModel)]='text' [ngModelOptions]='{standalone: true}'></textarea>
+                   <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
+                   <span *ngIf='!show' style='line-height:1.5em;word-wrap: break-word;'>{{text || '-Empty Field-'}}</span>
+               </div>
+               <div class='ndv-buttons' *ngIf='show'>
+                   <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                   <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
+               </div></form>`,
     host: {
         "(document: click)": "compareEvent($event)",
         "(click)": "trackEvent($event)"

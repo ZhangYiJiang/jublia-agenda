@@ -1,8 +1,11 @@
 @import 'variables';
 
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.15;
+}
+
 h2 {
     font-size: 24px;
-    line-height: 51px;
     margin: 15px 0;
 }
 
@@ -57,7 +60,8 @@ button[md-button],
 }
 
 .vex-content {
-    .full-width input, .full-width textarea {
+    .full-width input, 
+    .full-width textarea {
         width: 100%;
     }
     
@@ -68,13 +72,10 @@ button[md-button],
     input {
         font-size: inherit;
     }
-
-    h1 {
-        line-height: 57px;
-    }
-
+    
     p {
         line-height: 24px;
+        
         textarea {
             font-size: inherit;
         }

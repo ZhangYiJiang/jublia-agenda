@@ -53,7 +53,7 @@ class UserSerializer(HideFieldsMixin, BaseSerializer):
         profile = validated_data.pop('profile', {})
         user = User.objects.create_user(**validated_data)
         self.update_profile(Profile(user=user), profile)
-        user.profile.send_verification_email()
+        user.profile.send_verification_email(force=True)
         return user
 
     @atomic

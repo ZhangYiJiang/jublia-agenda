@@ -118,15 +118,14 @@ export class SessionComponent implements OnInit {
   }
 
   getDisplayedTime(): string {
-    if(this.session.start_at == null) {
+    if (this.session.start_at == null) {
       return '';
     }
+    
     let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
     let startDate = new Date(startMs);
     let endDate = new Date(startMs + 60000 * this.session.duration);
-    return this.getFormattedTime(startDate)
-      + ' - '
-      + this.getFormattedTime(endDate);
+    return `${this.getFormattedTime(startDate)}–${this.getFormattedTime(endDate)}`;
   }
 
   getFormattedTime(date: Date): string {
@@ -139,9 +138,9 @@ export class SessionComponent implements OnInit {
 
   updateInterestButtonText() {
     if(this.interested) {
-      this.interestedButtonText = 'Interested. Click to revert.';
+      this.interestedButtonText = 'Bookmarked. Click to remove';
     } else {
-      this.interestedButtonText = 'Click to indicate interest.';
+      this.interestedButtonText = 'Bookmark This Session';
     }
   }
 

@@ -10,10 +10,12 @@ from .base import BaseAPITestCase
 
 
 class ViewerCreateTest(BaseAPITestCase):
+    view_name = 'viewer_create'
+
     def setUp(self):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda(full=True))
-        self.url = reverse('viewer_create', [self.agenda.pk])
+        self.url = reverse(self.view_name, [self.agenda.pk])
         self.email_count = len(mail.outbox)
 
     def testCreate(self):
@@ -35,6 +37,21 @@ class ViewerCreateTest(BaseAPITestCase):
         self.assertEqual(second_response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIsErrorDetail(second_response.data)
         self.assertEmailSent(2)
+
+    def testMultipleAgenda(self):
+        viewer = factory.viewer()
+        tokens = set()
+
+        for i in range(5):
+            agenda = create_agenda(self.user, factory.agenda())
+            url = reverse(self.view_name, [agenda.pk])
+            # Create the same viewer on multiple agendas and check that each
+            # token is unique
+            response = self.client.post(url, viewer)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertNotIn(response.data['token'], tokens)
+            tokens.add(response.data['token'])
+        self.assertEmailSent(5)
 
 
 class ViewerRegisterTest(BaseAPITestCase):

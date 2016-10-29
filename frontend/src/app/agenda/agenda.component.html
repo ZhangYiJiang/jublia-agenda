@@ -14,6 +14,7 @@
   <board #board *ngIf="agenda" [agenda]="agenda" [isPublic]="false" [isAnalytics]="false">
   </board>
 </div>
+
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container">
     <div class="page-header">
@@ -21,16 +22,38 @@
     </div>
     <div class="jumbotron">
       <h2>Event Name:</h2>
-      <p class="full-width"><ndv-edit [title]="'name'" [placeholder]="agenda.name" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
+      <p class="full-width">
+        <ndv-edit [title]="'name'" [placeholder]="agenda.name" (onSave)="updateAgenda($event)" 
+                  [permission]="true"></ndv-edit>
+      </p>
+      
       <h2>Description:</h2>
-      <p class="full-width"><ndv-edit [title]="'description'" [placeholder]="agenda.description" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
-      <h2>Duration:</h2>
-      <p><ndv-edit [title]="'duration'" [placeholder]="agenda.duration" (onSave)="updateAgenda($event)" [permission]="true" [regex]="'^[1-9]$'" [error]="'Please enter a number between 1 to 9.'" class="small-input"></ndv-edit> days</p>
-      <h2>Location:</h2>
-      <p class="full-width"><ndv-edit [title]="'location'" [placeholder]="agenda.location" (onSave)="updateAgenda($event)" [permission]="true"></ndv-edit></p>
+      <p class="full-width">
+        <ndv-area [title]="'description'" [placeholder]="agenda.description" (onSave)="updateAgenda($event)" 
+                  [permission]="true"></ndv-area>
+      </p>
+      
+      <h2>Duration</h2>
+      <p>
+        <ndv-edit [title]="'duration'" [placeholder]="agenda.duration" (onSave)="updateAgenda($event)" 
+                  [permission]="true" [regex]="'^[1-9]$'" 
+                  [error]="'Please enter a number between 1 to 9.'" class="small-input"></ndv-edit> days
+      </p>
+      
+      <h2>Location</h2>
+      <p class="full-width">
+        <ndv-edit [title]="'location'" [placeholder]="agenda.location" (onSave)="updateAgenda($event)" 
+                  [permission]="true"></ndv-edit>
+      </p>
+      
+      <h2>Website</h2>
+      <p class="full-width">
+        <ndv-edit [title]="'website'" [placeholder]="agenda.website" (onSave)="updateAgenda($event)" 
+                  [permission]="true"></ndv-edit>
+      </p>
+
     </div>
-    <div class="clearfix">
-      <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
-    </div>
+    
+    <button md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
   </div>
 </template>

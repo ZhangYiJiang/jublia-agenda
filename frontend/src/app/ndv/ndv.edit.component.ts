@@ -4,25 +4,36 @@
 @Component({
     selector: 'ndv-edit',
     styles: [`
-       #ndv-ic {
-        margin-left: 10px;
-        color: #d9d9d9;
+        :host {
+            position: relative;
+        }
+        
+        #ndv-ic {
+            color: #ccc;
+        }
+        
+        .ndv-comp:hover #ndv-ic {
+            color: #999;
         }
 
         .ndv-comp {
             padding:6px;
             border-radius: 3px;
+            border: 1px solid #ccc;
         }
+        
         .active-ndv {
             background-color: #f0f0f0;
             border: 1px solid #d9d9d9;
         }
+        
         input {
             border-radius: 5px;
             box-shadow: none;
             border: 1px solid #dedede;
             min-width: 5px;
         }
+        
         .ndv-buttons {
             background-color: #f0f0f0;
             border: 1px solid #ccc;
@@ -32,48 +43,55 @@
             outline: none;
             padding: 3px;
             position: absolute;
-            margin-left: 6px;
+            width: 80px;
+            left: 6px;
+            top: 100%;
             z-index: 1;
             font-size: 1.1rem;
             line-height: 1.5rem;
         }
+        
         .ndv-comp:hover {
-            border: 1px solid grey;
+            border-color: #999;
         }
-        .ndv-comp:hover > ndv-ic {
-            display:block;
-        }
-
+        
         .ndv-save {
             margin-right:3px;
         }
+        
         .ndv-active {
             background-color: #f0f0f0;
             border: 1px solid #d9d9d9;
         }
+        
         .ng-invalid {
-                background: #ffb8b8;
-            }
+            background: #ffb8b8;
+            border-color: red;
+        }
+            
         .err-bubble {
             position: absolute;
-            margin: 16px 100px;
             border: 1px solid red;
             font-size: 14px;
             background: #ffb8b8;
-            padding: 10px;
-            border-radius: 7px;
+            padding: 6px 12px;
+            width: 200px;
+            line-height: 1.3;
+            left: 0;
+            top: 0;
+            transform: translateY(calc(-100% - 10px));
         }
 
     `],
-    template: `<span *ngIf="!permission">{{text}}</span><span *ngIf="permission" class='ndv-comp' [ngClass]="{'ndv-active':show}">
+    template: `<span *ngIf="!permission">{{text}}</span><span *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}">
                     <input *ngIf='show' [ngClass]="{'ng-invalid': invalid}" (ngModelChange)="validate($event)" type='text' [(ngModel)]='text' />
                     <div class='err-bubble' *ngIf="invalid">{{error || " must contain " + min + " to -" + max +" chars."}}</div>
                     <i id='ndv-ic' *ngIf='!show'>✎</i>
-                    <span *ngIf='!show' (click)='makeEditable()'>{{text || '-Empty Field-'}}</span>
+                    <span *ngIf='!show'>{{text || '-Empty Field-'}}</span>
                 </span>
                 <div class='ndv-buttons' *ngIf='show'>
-                    <a class='button primary button-symbol' (click)='callSave()'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
-                    <a class='button secondary button-symbol' (click)='cancelEditable()'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
+                    <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                    <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
                 </div>`,
     host: {
         "(document: click)": "compareEvent($event)",
@@ -150,7 +168,12 @@ export class NdvEditComponent {
         this.text = this.originalText;
     }
 
-    callSave() {
+    callCancel(evt: any) {
+        this.cancelEditable();
+        evt.stopPropagation();
+    }
+
+    callSave(evt: any) {
         if (!this.invalid) {
             var data = {};  //BUILD OBJ FOR EXPORT.
             data["" + this.fieldName] = this.text;
@@ -159,6 +182,6 @@ export class NdvEditComponent {
             this.save.emit(data);
             this.show = false;
         }
-        
+        evt.stopPropagation();
     }
 }

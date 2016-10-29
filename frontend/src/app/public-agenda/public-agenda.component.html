@@ -2,25 +2,49 @@
   Agenda is not public.
 </div>
 <div *ngIf="agenda">
-  <div class="agenda-title">Agenda for {{agenda.name}}</div>
-  <div class="agenda-subtitle">{{agenda.description}}</div>
-  <div class="agenda-subtitle">Location: {{agenda.location}}</div>
-  <div *ngIf="!token">
-    <form (ngSubmit)="createToken()">
-      <md-input required placeholder="Email" [(ngModel)]="email" name="email"></md-input>
-      <button type="submit" class="primary">Create a personalised schedule</button>
-    </form>
-  </div>
-  <div class="clearfix">
-    <div class="viewer-profile center" *ngIf="token">
-      Personal schedule for {{email}}
+  <div class="clearfix fixed agenda-menu">
+    <section class="agenda-info">
+      <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
+      <p *ngIf="agenda.website" class="agenda-subtitle">
+        <a href="{{agenda.website | encodeURI}}" target="_blank">
+          <i class="fa fa-link" title="Event Website"></i> {{agenda.website}}
+        </a>
+      </p>
+      <p *ngIf="agenda.location" class="agenda-subtitle">
+        <a href="http://maps.google.com/?q={{agenda.location | encodeURIComponent}}" target="_blank">
+          <i class="fa fa-map-o" title="Location"></i> {{agenda.location}}
+        </a>
+      </p>
+      
+      <p class="agenda-desc">{{agenda.description}}</p>
+    </section>
+    
+    <div *ngIf="agenda.location">
+      <iframe frameborder="0" class="map" [src]="mapsEmbedUrl" allowfullscreen></iframe>
     </div>
-    <div class="float-right">
-      <md-slide-toggle [color]="'black'" [(ngModel)]="interestToggleModel">
-        Filter by interested
-      </md-slide-toggle>
-    </div>
+    
+    
+    <section class="viewer">
+      <div *ngIf="!token">
+        <h2>Personalize this agenda</h2>
+        <p>Bookmark sessions you want to attend, receive updates from the organizers and more! 
+          Get started by entering email below.</p>
+        <form (ngSubmit)="createToken()" class="viewer-register">
+          <md-input required placeholder="Email" [(ngModel)]="email" name="email"></md-input>
+          <button md-button type="submit" class="primary">Go!</button>
+        </form>
+      </div>
+      <div class="clearfix" *ngIf="token">
+        <h2>Personal schedule for {{email}}</h2>
+        <div class="interested-toggle">
+          <md-slide-toggle [color]="'black'" [(ngModel)]="interestToggleModel">
+            Show only bookmarked sessions
+          </md-slide-toggle>
+        </div>
+      </div>
+    </section>
   </div>
-  <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" [interestedSessionIds]="interestedSessionIds" [class.hide-no-interest]="interestToggleModel">
+  <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" 
+         [interestedSessionIds]="interestedSessionIds" [class.hide-no-interest]="interestToggleModel">
   </board>
 </div>

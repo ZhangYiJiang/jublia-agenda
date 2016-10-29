@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 <div class="contenr-under-header">
 <!--
+=======
+<div class="content-under-header">
+>>>>>>> 12ea9bc3c264f8b55339cdad29c4c8de48abc281
 <div class = "success" *ngIf="successMsg">{{successMsg}}</div>
 -->
 
@@ -66,6 +70,9 @@
 			</md-input></div>
 			<div><md-input type="number" class="above-tags" (focus)="formErrors.duration=undefined;formErrors.other=undefined" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
 				<md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
+			</md-input></div>
+			<div><md-input type="text" (focus)="formErrors.website=undefined;formErrors.other=undefined" formControlName="website" placeholder="Organiser website">
+				<md-hint class="form-error-hint" align="start">{{formErrors.website}}</md-hint>
 			</md-input></div>
 			<div class="field-with-label">
 				<p class="field-label">Tracks (max 3)</p>

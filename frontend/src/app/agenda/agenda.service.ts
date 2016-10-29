@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { HttpClient } from '../util/http.util.service';
-import { GlobalVariable }  from '../globals';
 import { Observable }     from 'rxjs/Observable';
 import { DashBoardService } from '../dash-board/dash-board.service';
 import { Agenda } from './agenda';
@@ -66,28 +65,16 @@ export class AgendaService {
   updateSessionInterest(agendaId: number, sessionId: number, interested: boolean, token: string) {
     console.log('updating agenda ' + agendaId + ' session ' + sessionId);
     console.log('interest changed to ' + interested);
-    if(interested) {
-      this.httpClient
-        .put(this.BASE_URL + '/' + agendaId + '/viewers/' + token + '/' + sessionId, '')
+    
+    const method = interested ? 'put' : 'delete';
+    this.httpClient[method](this.BASE_URL + '/' + agendaId + '/viewers/' + token + '/' + sessionId, '')
         .catch(this.handleError)
         .subscribe(
-          res => {
-            console.log('update session interest successful');
-            console.log(res);
-          },
-          err => console.error(err)
+            (res : any) => {
+              console.log('update session interest successful');
+              console.log(res);
+            },
+            (err : any) => console.error(err),
         );
-    } else {
-      this.httpClient
-        .delete(this.BASE_URL + '/' + agendaId + '/viewers/' + token + '/' + sessionId, '')
-        .catch(this.handleError)
-        .subscribe(
-          res => {
-            console.log('update session interest successful');
-            console.log(res);
-          },
-          err => console.error(err)
-        );
-    }
   }
 }

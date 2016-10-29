@@ -8,6 +8,7 @@ from django.conf import settings
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
+from django.utils import timezone
 
 
 class Migration(migrations.Migration):
@@ -45,7 +46,7 @@ class Migration(migrations.Migration):
                 ('company', models.CharField(blank=True, max_length=255)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('is_verified', models.BooleanField(default=False)),
-                ('verification_expiry', models.DateTimeField(default=backend.models.profile.token_expiry)),
+                ('verification_expiry', models.DateTimeField(default=timezone.now)),
                 ('verification_token', models.CharField(default=backend.helper.UniqueTokenGenerator('Profile', field='verification_token', length=20), max_length=50)),
             ],
             options={

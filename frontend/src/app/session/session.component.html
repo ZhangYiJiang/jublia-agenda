@@ -4,30 +4,40 @@
     <div class="session-title">
       <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
     <!-- session time format is 'HH:mm - HH:mm' -->
-    <div *ngIf="session.start_at && session.duration >= 60" class="session-time">{{getDisplayedTime()}}</div>
+    <div *ngIf="session.start_at && session.duration >= 60" class="session-time">
+      {{getDisplayedTime()}}</div>
+    <div *ngIf="!session.start_at && session.duration" class="session-time">
+      {{session.duration}} min</div>
     <div class="session-venue">{{session.venue}}</div>
   </div>
 </div>
+
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container">
     <div *ngIf="token">
-      <button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
+      <button md-button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
         <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
     </div>
+    
     <div class="page-header">
       <h1 class="full-width"><ndv-edit [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-edit></h1>
     </div>
     <div class="jumbotron">
       <h2 *ngIf="session.start_at"><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}} </h2>
       <h2 *ngIf="session.start_at"><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}} </h2>
-      <h2 *ngIf="session.duration"><i class="fa fa-hourglass-o" aria-hidden="true"></i> 
-        Duration: <ndv-edit [title]="'duration'" [placeholder]="session.duration" (onSave)="updateSession($event)" [permission]="!isPublic" [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
-        </ndv-edit> mins
-      </h2>
-      <div *ngIf="session.duration && !isPublic">
-        <button class="primary" md-button (click)="adjustSessionDuration(15)">Extend by 15 mins</button>
-        <button class="primary" md-button (click)="adjustSessionDuration(-15)">Reduce by 15 mins</button>
+      <div class="one-row">
+        <div>
+          <h2><i class="fa fa-hourglass-o" aria-hidden="true"></i> 
+          Duration: 
+          <ndv-edit class="small-input" [title]="'duration'" [placeholder]="session.duration || '0'" (onSave)="updateSession($event)" [permission]="!isPublic" [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
+          </ndv-edit> mins
+          </h2>
+        </div>
+        <div *ngIf="session.duration && !isPublic">
+          <button class="primary" md-button (click)="adjustSessionDuration(15)">+</button>
+          <button class="primary" md-button (click)="adjustSessionDuration(-15)">-</button>
+        </div>
       </div>
       <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
       <div *ngIf="session.description">
@@ -52,14 +62,14 @@
         </div>
       </div>
       <div *ngIf="!session.speakers">
-        <p>Speaker inforamtion not available.</p>
+        <p>Speaker information not available.</p>
       </div>
       <h2><i class="fa fa-list-ol" aria-hidden="true"></i> Track</h2>
       <div *ngIf="session.track">
         <p>{{trackObj[session.track].name}}</p>
       </div>
       <div *ngIf="!session.track">
-        <p>Track inforamtion not available.</p>
+        <p>This session has not been assigned to a track yet</p>
       </div>
       <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
       <div *ngIf="!(session.popularity == null)">
@@ -68,11 +78,15 @@
         <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
       </div>
       <div *ngIf="session.popularity == null">
-        <p>Popularity inforamtion not available.</p>
+        <p>Popularity information not available.</p>
       </div>
-    </div>
-    <div class="clearfix">
-      <button class="vex-dialog-button-secondary vex-dialog-button" (click)="dialogRef.close(true)">Close</button>
+
+      <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
+
+      <button md-button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested"
+              (click)="updateInterest()" *ngIf="token">
+        <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
+      </button>
     </div>
   </div>
 </template>

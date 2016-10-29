@@ -55,18 +55,21 @@ export class DashBoardService {
                     .catch(this.handleError);
   }
 
-  createAgenda(name: string, description: string, location: string, start: string, duration: number, tracks: string[]): Observable<any> {
-    let body = JSON.stringify({
+  createAgenda(name: string, description: string, location: string, start: string, duration: number, website: string, tracks: string[]): Observable<any> {
+    const body = JSON.stringify({
       name: name, 
       description: description, 
       location: location, 
       published: false, 
       start_at: start, 
       duration: duration,
-      tracks: tracks});
+      tracks: tracks,
+      website: website,
+    });
+    
     return this.httpClient.post('/api/agendas', body)
-                    .map(this.extractData)
-                    .catch(this.handleError);
+      .map(this.extractData)
+      .catch(this.handleError);
   }
  
 

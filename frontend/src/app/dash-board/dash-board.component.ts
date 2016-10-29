@@ -31,7 +31,7 @@ export class DashBoardComponent implements OnInit {
   loginPasswordError: string;
   registerEmailError: string;
   registerPasswordError: string;
-  formErrors = { name:"",start:"",duration:"",other:""};
+  formErrors = { name:"",start:"",duration:"",website:"",other:""};
   today = moment().format("YYYY-MM-DD");
   addNewAgenda = false;
 
@@ -66,6 +66,7 @@ export class DashBoardComponent implements OnInit {
       location: [''],
       start: ['', [<any>Validators.required]],
       duration: [1,[Validators.required,Validators.pattern('^[1-9]$')]],
+      website:[[]],
       tracks: [[]]
     });
   }
@@ -185,9 +186,22 @@ export class DashBoardComponent implements OnInit {
   }
 
   createAgenda() {
-    this.dashBoardService.createAgenda(this.agendaForm.value.name, this.agendaForm.value.description, this.agendaForm.value.location, this.agendaForm.value.start, this.agendaForm.value.duration, this.agendaForm.value.tracks).subscribe(
+    // Add URL schema if not included
+    let website = this.agendaForm.value.website;
+    if (website && !website.match(/^https?:\/\//i)) {
+      website = 'http://' + website;
+    }
+    
+    this.dashBoardService.createAgenda(
+      this.agendaForm.value.name, 
+      this.agendaForm.value.description, 
+      this.agendaForm.value.location, 
+      this.agendaForm.value.start, 
+      this.agendaForm.value.duration,
+      this.agendaForm.value.website,
+      this.agendaForm.value.tracks
+    ).subscribe(
       data => { 
-        //this.successMsg = 'New agenda created!';
         this.addNewAgenda = true;
         this.agendas.unshift(data);
       },
@@ -201,6 +215,9 @@ export class DashBoardComponent implements OnInit {
         }
         if(error.duration){
           this.formErrors.duration = error.duration[0];
+        }
+        if(error.website){
+          this.formErrors.website = error.website[0];
         }
         if(error.non_field_errors){
           this.formErrors.other = error.non_field_errors[0];

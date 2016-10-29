@@ -3,17 +3,22 @@
     position: fixed;
     top: $main-content-top-offset;
     background: $color-secondary;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
-    height: 860px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    
     width: 225px;
+    bottom: 20px;
     margin-right: 20px;
-    // why do we need this?
-    // margin-top: 60px;
+    
     .session-list {
-        padding-top: 20px;
-        margin: 0px;
+        padding: 20px 10px 0;
+        height: calc(100% - 20px);
+        margin: 0;
+        position: relative;
+        z-index: 1;
+        overflow: auto;
+        
         li {
-            margin: 10px;
+            margin-bottom: 10px;
         }
     }
 }
@@ -37,4 +42,14 @@ button.pending-toggle {
         color: white;
         font-size: 15px;
     }
+}
+
+.instructions {
+    pointer-events: none;
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    right: 10px;
+    color: #fff;
+    font-size: $size-normal-text;
 }

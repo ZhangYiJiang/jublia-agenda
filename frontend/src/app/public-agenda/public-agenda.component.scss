@@ -1,34 +1,92 @@
 @import '../../../public/css/variables';
 
-.agenda-title {
-    color: $color-primary;
-    font-size: $size-large-text;
-    margin: 10px;
+.agenda-menu {
+    display: flex;
+    padding: 10px 30px 0 60px;
+    width: calc(100% - 90px);
+    text-align: left;
+    
+    .map {
+        border: 0;
+        margin-right: 10px;
+    }
+    
+    @media (max-width: 960px) {
+        flex-direction: column;
+    }
 }
 
-.agenda-subtitle {
-    color: $color-primary;
-    font-size: $size-normal-text;
-    margin: 5px;
+.agenda-info {
+    flex: 1 auto;
+    min-width: 400px;
+
+    h1 {
+        color: $color-primary;
+        font-size: $size-large-text;
+        font-weight: normal;
+        margin: 0 0 6px;
+    }
+    
+    p {
+        margin: 0 0 4px;
+    }
+
+    .agenda-subtitle {
+        color: $color-primary;
+        font-size: $size-normal-text;
+        font-weight: bold;
+    }
+
+    .agenda-desc {
+        font-size: $size-normal-text;
+    }
+    
+    a {
+        color: $color-primary;
+        text-decoration: none;
+        
+        &:hover {
+            color: tint($color-primary, 30%);
+        }
+    }
 }
 
-button {
-    font-size: 14px;
+.viewer {
+    max-width: 400px;
+    padding: 16px 24px;
+    border: 1px solid $color-primary;
+    
+    @media (max-width: 1600px) {
+        width: 25vw;
+    }
+    
+    h2 {
+        font-size: 18px;
+        margin: 0 0 6px;
+        line-height: 1;
+    }
+    
+    p {
+        line-height: 1.4;
+        font-size: $size-normal-text;
+        margin: 0 0 10px;
+    }
 }
 
-.viewer-profile {
-    font-size: 14px;
-    border: 2px solid green;
-    padding: 10px;
-    color: green;
-    width: 300px;
-    margin: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
+.viewer-register {
+    display: flex;
+    
+    md-input {
+        flex: 1 auto;
+        margin: 0 10px -10px 0;
+    }
+
+    button {
+        line-height: 30px;
+        font-size: 14px;
+    }
 }
 
-.float-right {
-    margin: 5px 10px;
-    float: right;
-    display: inline-block;
+.interested-toggle {
+    text-align: right;
 }

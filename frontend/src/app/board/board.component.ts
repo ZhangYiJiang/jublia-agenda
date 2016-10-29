@@ -38,7 +38,6 @@ import {
   './board.component.css',
   '../session/css/vex.css',
   '../session/css/vex-theme-default.css',
-  '../dash-board/dash-board.component.css'
   ],
   encapsulation: ViewEncapsulation.None
 })
@@ -328,7 +327,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     secondaryPlaceholderTags: "Enter a custom tag",
     placeholderSpeakers: "+ speaker",
     secondaryPlaceholderSpeakers: "Add an existing speaker"
-  }
+  };
 
   ngOnInit(): void {
     this.offsetDate = new Date(this.agenda.start_at);
@@ -358,12 +357,13 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sessionForm = this._fb.group({
       name: ['', [<any>Validators.required]],
       description: [''],
-      duration: ['', [<any>Validators.required]],
+      duration: [null],
       existingSpeakers: [[]],
       newSpeakers: this._fb.array([]),
       tags: [[]]
     });
     this.formMsg = "";
+    
     this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
   }
 
@@ -397,77 +397,101 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const control = <FormArray>this.sessionForm.controls['newSpeakers'];
     control.removeAt(i);
   }
+  
+  submitAndContinueSessionForm(evt: any) {
+    evt.preventDefault();
+    this.submitSessionForm();
+  }
 
-  submitSessionForm(isValid: boolean) {
-    if (!isValid) { 
+  submitSessionForm(dialog: any = null) {
+    if (!this.sessionForm.valid) { 
       this.formMsg = "Please fill in all required information.";
       return;
     }
-    let observables: Observable<any>[] = [];
-    if (!this.sessionForm.value.existingSpeakers) {
-      this.sessionForm.value.existingSpeakers = [];
-    }
-    for (let speaker of this.sessionForm.value.newSpeakers) {
-      observables.push(this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url));
-    }
-    if (!this.sessionForm.value.tags) {
-      this.sessionForm.value.tags = [];
-    }
-    let newTagsCount: number = 0;
-    for (let tag of this.sessionForm.value.tags) {
-      if (!this.eventTagsName.some(function(existingTag) {return existingTag === tag})) {
-        observables.push(this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)); // create in default category for now
-        newTagsCount += 1;
-      }
-    }
-    console.log(this.sessionForm.value);
-    if (observables.length > 0) {
-      Observable.forkJoin(observables).subscribe(
-        data => {
-          let newSpeakersCount: number = this.sessionForm.value.newSpeakers.length;
-          for (let i = 0; i < newSpeakersCount; i++) {
-            console.log('new speaker created: ' + data[i].name);
-            this.eventSpeakers.push(data[i]);
-            this.eventSpeakersName.push(data[i].name);
-            this.sessionForm.value.existingSpeakers.push(data[i].name);
-          }
-          for (let i = newSpeakersCount; i < newSpeakersCount+newTagsCount; i++) {
-            console.log('new tag created: ' + data[i].name);
-            this.eventTags.push(data[i]);
-            this.eventTagsName.push(data[i].name);
-          }
-          this.createSession();
-        },
-        error =>  this.formMsg = <any>error
-      );
-    }
-    else {
-      this.createSession();
-    }
+    
+    console.log(this.sessionForm);
+
+    _.defaults(this.sessionForm.value, {
+      existingSpeakers: [],
+      tags: [],
+    });
+
+    // Construct new speakers and tags 
+    // TODO: Error handling - this is problematic right now because of transactions. 
+    const requests: Promise<any>[] = [];
+    
+    requests.push(...this.sessionForm.value.newSpeakers.map((speaker:any) => {
+      const request = this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url)
+        .toPromise();
+      
+      request.then(data => {
+        console.log('new speaker created: ' + data.name);
+        this.eventSpeakers.push(data);
+        this.eventSpeakersName.push(data.name);
+        this.sessionForm.value.existingSpeakers.push(data.name);
+      });
+      
+      requests.push(request);
+    }));
+
+    requests.push(..._.difference(this.sessionForm.value.tags, this.eventTagsName).map((tag:string) => {
+      const request = this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)
+        .toPromise();
+
+      request.then(data => {
+        console.log('new tag created: ' + data.name);
+        this.eventTags.push(data);
+        this.eventTagsName.push(data.name);
+      });
+      
+      return request;
+    }));
+    
+    // After all speakers and tags have been created, create the session 
+    Promise.all(requests)
+      .then(() => this.createSession())
+      .then(() => {
+        // Handle closing the dialog 
+        if (dialog) {
+          dialog.close(true);
+        } else {
+          // Have to reset to empty strings because reset uses 'null' by default, which is not what we need
+          // Should see if there is any way to deduplicate this code with the form default declared during 
+          // init
+          this.sessionForm.reset({
+            name: '',
+            description: '',
+            duration: null,
+            existingSpeakers: [],
+            newSpeakers: [],
+            tags: [],
+          });
+        }
+      });
   }
 
-  createSession() {
-    let speakers: Speaker[] = this.eventSpeakers;
-    let tags: Tag[] = this.eventTags;
-    function getId(name: string, lookup: any) {
-      for (let item of lookup) {
-        if (item.name === name) {
-          return item.id;
-        }
-      }
-    }
-    let speakersId: number[] = this.sessionForm.value.existingSpeakers.map(function(name: string) {return getId(name, speakers)});
-    let tagsId: number[] = this.sessionForm.value.tags.map(function(name: string) {return getId(name, tags)});
+  createSession(): Observable<any> {
+    const speakersId: number[] = this.sessionForm.value.existingSpeakers
+        .map((name: string) => _.find(this.eventSpeakers, {name}).id);
+    
+    const tagsId: number[] = this.sessionForm.value.tags
+        .map((name: string) => _.find(this.eventTags, {name}).id);
+    
     console.log(speakersId);
     console.log(tagsId);
-    this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
-                                    this.sessionForm.value.duration, speakersId, tagsId).subscribe(
+    
+    const request: Observable<any> = this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
+                                    this.sessionForm.value.duration, speakersId, tagsId);
+        
+    request.subscribe(
       data => { 
         this.formMsg = 'New session created!';
         this.allSessions.push(data);
         this.pendingSessions.push(data);
       },
-      error =>  this.formMsg = <any>error
+      error => this.formMsg = <any>error
     );
+    
+    return request;
   }
 }

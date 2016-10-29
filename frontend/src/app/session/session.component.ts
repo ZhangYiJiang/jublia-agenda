@@ -3,6 +3,7 @@ import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChil
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
@@ -65,7 +66,10 @@ export class SessionComponent implements OnInit {
   blue: number;
 
   getSessionName(venueId: number) {
-    let venue = this.agenda.session_venues.filter(function(venue) {return venue.id === venueId});
+    let venue: Venue[] = [];
+    if (this.agenda.session_venues) {
+      venue = this.agenda.session_venues.filter(function(venue) {return venue.id === venueId});
+    }
     if (venue.length > 0) {
       return venue[0].name
     }

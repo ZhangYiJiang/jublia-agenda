@@ -89,9 +89,9 @@ export class DashBoardComponent implements OnInit {
       description: [''],
       location: [''],
       start: ['', [<any>Validators.required]],
-      duration: [1,[Validators.required,Validators.pattern('^[1-9]$')]],
-      website:[''],
-      tracks: [[]]
+      duration: [1, [Validators.required,Validators.pattern('^[1-9]$')]],
+      website:'',
+      tracks: [[]],
     });
   }
 
@@ -221,7 +221,7 @@ export class DashBoardComponent implements OnInit {
       this.agendaForm.value.location, 
       this.agendaForm.value.start, 
       this.agendaForm.value.duration,
-      this.agendaForm.value.website,
+      website,
       this.agendaForm.value.tracks
     ).subscribe(
       data => { 
@@ -230,52 +230,55 @@ export class DashBoardComponent implements OnInit {
       },
       error => {
         console.log(error);
-        if(error.name){
-          this.formErrors.name = error.name[0];
-        }
-        if(error.start_at){
-          this.formErrors.start = error.start_at[0];
-        }
-        if(error.duration){
-          this.formErrors.duration = error.duration[0];
-        }
-        if(error.website){
-          this.formErrors.website = error.website[0];
-        }
-        if(error.non_field_errors){
-          this.formErrors.other = error.non_field_errors[0];
-        }
+        
+        // Map the fields returned by the server to the fields used 
+        // on the client side
+        const fields = {
+          name: 'name', 
+          start_at: 'start',
+          duration: 'duration',
+          website: 'website',
+          non_field_errors: 'other',
+        };
+        
+        _.forEach(fields, (formField, serverField) => {
+          if (error[serverField]) {
+            this.formErrors[formField] = error[serverField].join(' ');
+          }
+        });
       }
     );
   }
 
   deleteAgendaCheck(agenda: Agenda) {
     this.deletedAgenda = agenda;
-    if(agenda.published){
+    if (agenda.published) {
       this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: true }, VEXModalContext));
-    }else{
+    } else {
       this.deleteAgenda(agenda);
     }   
+  }
+  
+  callDeleteAgenda(evt: any, agenda: Agenda) {
+    evt.stopPropagation();
+    this.deleteAgendaCheck(agenda);
   }
 
   deleteAgenda(agenda: Agenda, dialog?:any) {
     this.dashBoardService.deleteAgenda(agenda.id).subscribe(
-      data => {
-        console.log(data);
-        this.addNewAgenda = false;
-        let idx = this.agendas.indexOf(agenda,0);
-        if(idx > -1) {
-          this.agendas.splice(idx,1);
-        }
+      () => {
+        _.remove(this.agendas, agenda);
       },
       error => {
         console.log(error);
       }
     );
-    if(dialog){
+    
+    if (dialog){
       dialog.close(true);
     }
   }
+  
   trackByAgendaId (index: number, agenda: Agenda) {
     return agenda.id;
   }
@@ -287,5 +290,11 @@ export class DashBoardComponent implements OnInit {
   toggleSigningUp() {
     this.signingUp = !this.signingUp;
   }
-
+  
+  clearError(field: string = '') {
+    if (field.length) {
+      delete this.formErrors[field];
+    }
+    delete this.formErrors.other;
+  }
 }

@@ -2,6 +2,8 @@ import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChil
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
+import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
@@ -24,9 +26,9 @@ import {
   selector: 'my-session',
   templateUrl: './session.component.html',
   styleUrls: [
-  './session.component.css',
-  './css/vex.css',
-  './css/vex-theme-default.css'
+    './session.component.css',
+    './css/vex.css',
+    './css/vex-theme-default.css',
   ],
   encapsulation: ViewEncapsulation.None
 })
@@ -36,20 +38,18 @@ export class SessionComponent implements OnInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input() session: Session;
   @Input() offsetDate: Date;
-  @Input()
-  agenda: Agenda;
+  @Input() agenda: Agenda;
   @Input() isPublic: boolean;
 
-  @Input()
-  token: string;
+  @Input() token: string;
 
-  @Input()
-  interested: boolean;
+  @Input() interested: boolean;
 
   interestedButtonText: string;
 
   @Output() onSessionEdited = new EventEmitter<Session>();
   @Output() onSessionInterestEdited = new EventEmitter<[number, boolean]>();
+  @Output() onSpeakerEdited = new EventEmitter<Speaker>();
 
   speakersObj = {};
   trackObj = {};
@@ -61,6 +61,16 @@ export class SessionComponent implements OnInit {
   red: number;
   green: number;
   blue: number;
+
+  getSessionName(venueId: number) {
+    let venue: Venue[] = [];
+    if (this.agenda.session_venues) {
+      venue = this.agenda.session_venues.filter(function(venue) {return venue.id === venueId});
+    }
+    if (venue.length > 0) {
+      return venue[0].name
+    }
+  }
 
   updateInterest() {
     this.interested = !this.interested;
@@ -97,6 +107,29 @@ export class SessionComponent implements OnInit {
     }
   }
 
+  updateSessionSpeaker(speakerId: number) {
+    this.session.speakers = _.without(this.session.speakers, speakerId);
+    this.onSessionEdited.emit(this.session);
+  }
+
+  updateSpeaker(event: any, speakerId: number) {
+    let newSpeaker = this.agenda.speakers.filter(function(speaker) {return speaker.id === speakerId})[0];
+    console.log(event);
+    if(typeof event.name === 'string') {
+      newSpeaker.name = event.name;
+      this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.position === 'string') {
+      newSpeaker.position = event.position;
+      this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.email === 'string') {
+      newSpeaker.email = event.email;
+      this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.phone_number === 'string') {
+      newSpeaker.phone_number = event.phone_number;
+      this.onSpeakerEdited.emit(newSpeaker);
+    }
+  }
+
   isInt(value: any) {
     return !isNaN(value) && 
            parseInt(value, 10) == value && 
@@ -109,12 +142,12 @@ export class SessionComponent implements OnInit {
   }
 
   getDisplayedDate(): string {
-    if(this.session.start_at == null) {
-      return ''
+    if (this.session.start_at == null) {
+      return '';
     }
-    let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
-    let date = new Date(startMs);
-    return moment(date).utc().format("ddd, MMMM Do YYYY");
+    
+    const startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
+    return moment(startMs).utc().format("ddd, MMMM Do");
   }
 
   getDisplayedTime(): string {
@@ -122,9 +155,9 @@ export class SessionComponent implements OnInit {
       return '';
     }
     
-    let startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
-    let startDate = new Date(startMs);
-    let endDate = new Date(startMs + 60000 * this.session.duration);
+    const startMs = this.offsetDate.getTime() + 60000 * this.session.start_at;
+    const startDate = new Date(startMs);
+    const endDate = new Date(startMs + 60000 * this.session.duration);
     return `${this.getFormattedTime(startDate)}–${this.getFormattedTime(endDate)}`;
   }
 

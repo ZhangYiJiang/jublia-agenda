@@ -1,8 +1,9 @@
 import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
+import * as moment from 'moment';
+import { setImmediate } from 'core-js';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
-import * as moment from 'moment';
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
@@ -10,6 +11,7 @@ import { Track } from '../track/track';
 import { Category} from '../category/category';
 import { Tag } from '../tag/tag';
 import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 import { AgendaService } from '../agenda/agenda.service';
 import { BoardService } from './board.service';
 
@@ -62,6 +64,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   eventTagsName: String[];
   eventSpeakers: Speaker[];
   eventSpeakersName: String[];
+  eventVenues: Venue[];
+  eventVenuesName: String[];
 
   allSessions: Session[];
   pendingSessions: Session[];
@@ -182,6 +186,14 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('session from pending in board');
     console.log(sessionFromPending);
     this.agendaService.updateSession(this.agenda.id, sessionFromPending);
+  }
+
+  onSpeakerChanged(changedSpeaker: Speaker) {
+    console.log('speaker changed in board');
+    console.log(changedSpeaker);
+    this.agendaService.updateSpeaker(this.agenda.id, changedSpeaker);
+    this.eventSpeakers = this.getEventSpeakers();
+    this.eventSpeakersName = this.getEventSpeakersName();
   }
 
   private onDrop(args: [HTMLElement, HTMLElement]) {
@@ -308,7 +320,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.eventTags || this.eventTags.length === 0) {
       return [];
     } else {
-      return this.eventTags.map(function(tag) {return tag.name;});
+      return this.eventTags.map(tag => tag.name);
     }
   }
 
@@ -324,7 +336,23 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.eventSpeakers || this.eventSpeakers.length === 0) {
       return [];
     } else {
-      return this.eventSpeakers.map(function(speaker) {return speaker.name;});
+      return this.eventSpeakers.map(speaker => speaker.name);
+    }
+  }
+
+  getEventVenues(): Venue[] {
+    if (!this.agenda.session_venues || this.agenda.session_venues.length === 0) {
+      return [];
+    } else {
+      return this.agenda.session_venues;
+    }
+  }
+
+  getEventVenuesName(): String[] {
+    if (!this.eventVenues || this.eventVenues.length === 0) {
+      return [];
+    } else {
+      return this.eventVenues.map(venue => venue.name);
     }
   }
 
@@ -334,8 +362,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     placeholderTags: "+ tag",
     secondaryPlaceholderTags: "Enter a custom tag",
     placeholderSpeakers: "+ speaker",
-    secondaryPlaceholderSpeakers: "Add an existing speaker"
+    secondaryPlaceholderSpeakers: "Add an existing speaker",
+    secondaryPlaceholderVenue: "Add an existing venue",
   };
+  showVenueForm: boolean = false;
 
   ngOnInit(): void {
     this.offsetDate = new Date(this.agenda.start_at);
@@ -346,13 +376,18 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eventTagsName = this.getEventTagsName();
     this.eventSpeakers = this.getEventSpeakers();
     this.eventSpeakersName = this.getEventSpeakersName();
-    if(this.agenda.sessions == null) {
+    this.eventVenues = this.getEventVenues();
+    this.eventVenuesName = this.getEventVenuesName();
+    
+    if (this.agenda.sessions == null) {
       this.agenda.sessions = [];
     }
+    
     this.allSessions = this.agenda.sessions;
-    let partioned = _.partition(this.allSessions, function(o:Session){return o.hasOwnProperty('start_at')});
-    this.pendingSessions = partioned[1];
-    this.nonPendingSessions = partioned[0];
+    
+    const partitioned = _.partition(this.allSessions, (o:Session) => o.hasOwnProperty('start_at'));
+    this.pendingSessions = partitioned[1];
+    this.nonPendingSessions = partitioned[0];
   }
 
   refreshAgenda(newAgenda: Agenda) {
@@ -368,20 +403,37 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       duration: [null],
       existingSpeakers: [[]],
       newSpeakers: this._fb.array([]),
-      tags: [[]]
+      tags: [[]],
+      existingVenue: [[]],
+      newVenue: this._fb.group({
+        name: [''],
+        unit: ['']
+      })
     });
     this.formMsg = "";
     
-    this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
-  }
-
-  onSelected() {
-    let docs = document.getElementsByTagName("ng2-dropdown-menu");
-    for (let i = 0; i < docs.length; i++) {
-      document.getElementsByTagName("ng2-dropdown-menu")[i].addEventListener('click', function(event: any) {
-        event.stopPropagation();
-      });  
-    }
+    this.modal.open(
+      this.templateRef, 
+      overlayConfigFactory({ isBlocking: false }, VEXModalContext)
+    ).then(dialog => {
+      // Stop click events from the dropdown menu created by the tag inputs from propagating 
+      // to document body, which causes weird issues with the modal widget
+      // We're using setImmediate here because we need to wait for the widgets in the modal to be 
+      // rendered first
+      setImmediate(() => {
+        _.each(document.getElementsByTagName("ng2-dropdown-menu"), el => {
+          el.addEventListener('click', evt => evt.stopPropagation());
+        });
+      });
+      
+      // Clean up dropdown menus that were left behind by the widget
+      dialog.onDestroy.subscribe(() => {
+        // querySelectorAll uses a frozen NodeList
+        _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
+          el.parentNode.removeChild(el);
+        });
+      });
+    });
   }
 
   initSpeaker() {
@@ -405,6 +457,14 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const control = <FormArray>this.sessionForm.controls['newSpeakers'];
     control.removeAt(i);
   }
+
+  addVenue() {
+    this.showVenueForm = true;
+  }
+
+  removeVenue() {
+    this.showVenueForm = false;
+  }
   
   submitAndContinueSessionForm(evt: any) {
     evt.preventDefault();
@@ -422,6 +482,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     _.defaults(this.sessionForm.value, {
       existingSpeakers: [],
       tags: [],
+      existingVenue: []
     });
 
     // Construct new speakers and tags 
@@ -429,8 +490,16 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const requests: Promise<any>[] = [];
     
     requests.push(...this.sessionForm.value.newSpeakers.map((speaker:any) => {
-      const request = this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url)
-        .toPromise();
+      const request = this.boardService.createSpeaker(
+        this.agenda.id, 
+        speaker.name, 
+        speaker.company, 
+        speaker.position, 
+        speaker.email, 
+        speaker.phone_number, 
+        speaker.company_description, 
+        speaker.company_url,
+      ).toPromise();
       
       request.then(data => {
         console.log('new speaker created: ' + data.name);
@@ -454,6 +523,23 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       
       return request;
     }));
+
+    if (this.showVenueForm) {
+      const request = this.boardService.createVenue(
+        this.agenda.id, 
+        this.sessionForm.value.newVenue.name, 
+        this.sessionForm.value.newVenue.unit,
+      ).toPromise();
+      
+      request.then(data => {
+        console.log('new venue created: ' + data.name);
+        this.eventVenues.push(data);
+        this.eventVenuesName.push(data.name);
+        this.sessionForm.value.existingVenue.pop();
+        this.sessionForm.value.existingVenue.push(data.name);
+      });
+      requests.push(request);
+    }
     
     // After all speakers and tags have been created, create the session 
     Promise.all(requests)
@@ -473,6 +559,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
             existingSpeakers: [],
             newSpeakers: [],
             tags: [],
+            existingVenue: [],
+            newVenue: this._fb.group({
+              name: ['', [<any>Validators.required]],
+              unit: ['']
+            })
           });
         }
       });
@@ -484,12 +575,23 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     
     const tagsId: number[] = this.sessionForm.value.tags
         .map((name: string) => _.find(this.eventTags, {name}).id);
+
+    const venueId: number[] = this.sessionForm.value.existingVenue
+        .map((name: string) => _.find(this.eventVenues, {name}).id);
     
     console.log(speakersId);
     console.log(tagsId);
+    console.log(venueId);
     
-    const request: Observable<any> = this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
-                                    this.sessionForm.value.duration, speakersId, tagsId);
+    const request: Observable<any> = this.boardService.createSession(
+      this.agenda.id, 
+      this.sessionForm.value.name, 
+      this.sessionForm.value.description, 
+      this.sessionForm.value.duration, 
+      speakersId, 
+      tagsId, 
+      venueId[0],
+    );
         
     request.subscribe(
       data => { 

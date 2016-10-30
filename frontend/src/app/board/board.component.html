@@ -22,6 +22,7 @@
                 (onSessionChanged)="onSessionChanged($event)"
                 (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
                 (onSessionInterestChanged)="onSessionInterestChanged($event)"
+                (onSpeakerChanged)="onSpeakerChanged($event)"
                 [token]="token" [interestedSessionIds]="interestedSessionIds">
               </absolute-column>
             </div>  
@@ -53,11 +54,46 @@
           </tr>
           <tr>Tags</tr>
           <tr>
-            <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" [autocompleteItems]="eventTagsName" [autocomplete]="true" (onSelect)="onSelected()"></tag-input>
+            <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" 
+                       [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" 
+                       [autocompleteItems]="eventTagsName" [autocomplete]="true"></tag-input>
           </tr>
+          <tr>Venue</tr>
+          <tr>
+            <tag-input [ngModel]="sessionForm.existingVenue" [maxItems]="1" 
+                       [secondaryPlaceholder]="options.secondaryPlaceholderVenue" 
+                       formControlName="existingVenue" 
+                       [onlyFromAutocomplete]="true" 
+                       [autocompleteItems]="eventVenuesName" 
+                       [autocomplete]="true"></tag-input>
+          </tr>
+          <div *ngIf="!showVenueForm">
+            <button type="button" md-mini-fab disableRipple (click)="addVenue()">
+              <md-icon>add</md-icon>
+            </button>
+            Add a New Venue
+          </div>
+          <div formGroupName="newVenue" *ngIf="showVenueForm">
+            <button type="button" md-mini-fab disableRipple (click)="removeVenue()">
+              <md-icon>remove</md-icon>
+            </button>
+            New Venue
+            <tr>
+              <md-input type="text" formControlName="name" placeholder="Venue Name"></md-input>
+            </tr>
+            <tr>
+              <md-input type="text" formControlName="unit" placeholder="Unit Number"></md-input>
+            </tr>
+          </div>
           <tr>Speakers</tr>
           <tr>
-            <tag-input [ngModel]="sessionForm.existingSpeakers" [placeholder]="options.placeholderSpeakers" [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" formControlName="existingSpeakers" [onlyFromAutocomplete]="true" [autocompleteItems]="eventSpeakersName" [autocomplete]="true" (onSelect)="onSelected()"></tag-input>
+            <tag-input [ngModel]="sessionForm.existingSpeakers" 
+                       [placeholder]="options.placeholderSpeakers" 
+                       [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" 
+                       formControlName="existingSpeakers" 
+                       [onlyFromAutocomplete]="true" 
+                       [autocompleteItems]="eventSpeakersName" 
+                       [autocomplete]="true"></tag-input>
           </tr>
         </table>
         <div formArrayName="newSpeakers">

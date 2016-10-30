@@ -46,13 +46,13 @@
 			  	<li [class.fly-in]="isFirst&&addNewAgenda" (click)="onSelect(agenda)">
 			    	{{agenda.name}}
 			 	 </li>
-			  <md-icon [hidden]="!deleting" (click)="deleteAgenda(agenda)" class="warn">clear</md-icon>
+			  <md-icon [hidden]="!deleting" (click)="deleteAgendaCheck(agenda)" class="warn">clear</md-icon>
 			</div>
 		</ul>
 	</div>
 	<div class = "new-agenda-card">
 		<h2>New Event</h2>
-		<form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm()">
+		<form class="new-agenda-form" [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm()">
 			<div>
 				<md-input type="text" (focus)="formErrors.name=undefined;formErrors.other=undefined" required formControlName="name" placeholder="Name">
 					<md-hint class="form-error-hint" align="start">{{formErrors.name}}</md-hint>
@@ -82,3 +82,14 @@
 	</div>
 </div>
 </div>
+<template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+  	<div class="modal-container">
+    	<div class="jumbotron">
+    		<p><span class="vex-deleted-agenda-title">{{deletedAgenda.name}}</span> has been published. Public will have no access to the schedule after you deleting it. Are you sure?</p>
+    		<div class="vex-2-button-group">
+    			<button class="warn" md-button type="button" (click)="deleteAgenda(deletedAgenda,dialogRef)">Yes</button>
+    			<button class="secondary" md-button type="button" (click)="dialogRef.close(true)">No</button>
+    		</div>
+    	</div>
+  	</div>
+</template>

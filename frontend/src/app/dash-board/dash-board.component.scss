@@ -50,22 +50,6 @@
     }
 }
 
-md-icon {
-    color: $color-primary;
-    position: absolute;
-    cursor: pointer;
-    &.warn{
-        color: $color-accent;
-        right: -45px;
-        border: 1px solid;
-        top: 8px;
-    }
-    &.delete{
-        right: -70px;
-        top: 90px;
-        right: 170px;
-    }
-}
 
 .delete-label {
     position: absolute;
@@ -105,7 +89,22 @@ md-icon {
     }
     position: relative;
     left: 22%;
-
+    md-icon {
+    color: $color-primary;
+    position: absolute;
+    cursor: pointer;
+    &.warn{
+        color: $color-accent;
+        right: -45px;
+        border: 1px solid;
+        top: 8px;
+    }
+    &.delete{
+        right: -70px;
+        top: 90px;
+        right: 170px;
+    }
+}
 }
 
 h2 {
@@ -137,10 +136,11 @@ form {
 }
 
 .new-agenda-card {
-    form{
+    .new-agenda-form {
         height: 450px;
         overflow: auto;
-    }    
+    }
+    
     md-input {
         margin-bottom: 10px;
     }

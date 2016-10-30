@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef, ViewEncapsulation,OnInit } from '@angular/core';
+import { Component, ViewContainerRef, ViewEncapsulation,ViewChild,TemplateRef,OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
@@ -23,7 +23,11 @@ import {
 @Component({
   selector: 'dash-board',
   templateUrl: './dash-board.component.html',
-  styleUrls: ['./dash-board.component.css']
+  styleUrls: ['./dash-board.component.css',
+  '../session/css/vex.css',
+  '../session/css/vex-theme-default.css'
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class DashBoardComponent implements OnInit {
@@ -37,6 +41,7 @@ export class DashBoardComponent implements OnInit {
 
   agendas = this.dashBoardService.agendas;
   user = this.dashBoardService.currentUser;
+  @ViewChild('templateRef') public templateRef: TemplateRef<any>;
 
   //successMsg: string;
 
@@ -49,6 +54,7 @@ export class DashBoardComponent implements OnInit {
   today = moment().format("YYYY-MM-DD");
   addNewAgenda = false;
   deleting = false;
+  deletedAgenda: Agenda;
   //hide = false;
 
   //loginEmail: string;
@@ -242,15 +248,16 @@ export class DashBoardComponent implements OnInit {
     );
   }
 
-  deleteAgenda(agenda: Agenda) {
-    /*this.modal.confirm()
-        .className(this.theme)
-        .message('Yes or No?')
-        .okBtn('Yes')
-        .cancelBtn('No');*/
+  deleteAgendaCheck(agenda: Agenda) {
+    this.deletedAgenda = agenda;
     if(agenda.published){
+      this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: true }, VEXModalContext));
+    }else{
+      this.deleteAgenda(agenda);
+    }   
+  }
 
-    }
+  deleteAgenda(agenda: Agenda, dialog?:any) {
     this.dashBoardService.deleteAgenda(agenda.id).subscribe(
       data => {
         console.log(data);
@@ -264,8 +271,10 @@ export class DashBoardComponent implements OnInit {
         console.log(error);
       }
     );
+    if(dialog){
+      dialog.close(true);
+    }
   }
-
   trackByAgendaId (index: number, agenda: Agenda) {
     return agenda.id;
   }

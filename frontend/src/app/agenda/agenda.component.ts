@@ -38,8 +38,10 @@ export class AgendaComponent implements OnInit{
   
   agenda: Agenda;
   agendaId: number;
+  publicUrl: string;
 
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
+  @ViewChild('publishRef') public publishRef: TemplateRef<any>;  
   @ViewChild(BoardComponent) public myBoard: BoardComponent;
   
   ngOnInit() {
@@ -96,9 +98,14 @@ export class AgendaComponent implements OnInit{
     );
   }
 
+  openPublishModal() {
+    this.modal
+      .open(this.publishRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+  }
+
   publishAgenda() {
     this.agendaService.publishAgenda(this.agenda.id).subscribe(
-      agenda => this.agenda = agenda,
+      agenda => {this.agenda = agenda, this.publicUrl = 'https://agenda-demo.jublia.com/public/agenda/'+agenda.id;},
       error =>  console.log(error)
     );
   }

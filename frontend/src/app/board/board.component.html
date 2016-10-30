@@ -42,51 +42,55 @@
         <small *ngIf="formMsg">{{formMsg}}</small>
       </div>
       <form [formGroup]="sessionForm" novalidate (ngSubmit)="submitSessionForm(dialogRef)">
-        <table>
-          <tr>
-            <md-input type="text" formControlName="name" placeholder="Session Name" required></md-input>
-          </tr>
-          <tr>
-            <md-input type="text" formControlName="description" placeholder="Description"></md-input>
-          </tr>
-          <tr>
-            <md-input type="number" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
-          </tr>
-          <tr>Tags</tr>
-          <tr>
-            <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" 
-                       [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" 
-                       [autocompleteItems]="eventTagsName" [autocomplete]="true"></tag-input>
-          </tr>
-          <tr>Venue</tr>
-          <tr>
+        <div>
+          <md-input type="text" formControlName="name" placeholder="Session Name" required></md-input>
+        </div>
+        <div>
+          <md-input type="text" formControlName="description" placeholder="Description"></md-input>
+        </div>
+        <div>
+          <md-input type="number" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
+        </div>
+        
+        <div class="field-with-label">
+          <label class="field-label">Tags</label>
+          <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" 
+                     [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" 
+                     [autocompleteItems]="eventTagsName" [autocomplete]="true"></tag-input>
+        </div>
+        
+        <div class="field-with-label">
+          <label class="field-label">Venue</label>
+          <div>
             <tag-input [ngModel]="sessionForm.existingVenue" [maxItems]="1" 
                        [secondaryPlaceholder]="options.secondaryPlaceholderVenue" 
                        formControlName="existingVenue" 
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventVenuesName" 
                        [autocomplete]="true"></tag-input>
-          </tr>
-          <div *ngIf="!showVenueForm">
-            <button type="button" md-mini-fab disableRipple (click)="addVenue()">
+            <button *ngIf="!showVenueForm" type="button" md-button disableRipple (click)="addVenue()">
               <md-icon>add</md-icon>
+              Add a New Venue
             </button>
-            Add a New Venue
           </div>
+
           <div formGroupName="newVenue" *ngIf="showVenueForm">
             <button type="button" md-mini-fab disableRipple (click)="removeVenue()">
               <md-icon>remove</md-icon>
             </button>
             New Venue
-            <tr>
+            <div>
               <md-input type="text" formControlName="name" placeholder="Venue Name"></md-input>
-            </tr>
-            <tr>
+            </div>
+            <div>
               <md-input type="text" formControlName="unit" placeholder="Unit Number"></md-input>
-            </tr>
+            </div>
           </div>
-          <tr>Speakers</tr>
-          <tr>
+        </div>
+        
+        <div class="field-with-label">
+          <label class="field-label">Speakers</label>
+          <div>
             <tag-input [ngModel]="sessionForm.existingSpeakers" 
                        [placeholder]="options.placeholderSpeakers" 
                        [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" 
@@ -94,8 +98,13 @@
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventSpeakersName" 
                        [autocomplete]="true"></tag-input>
-          </tr>
-        </table>
+            <button type="button" md-button (click)="addSpeaker()">
+              <md-icon>add</md-icon>
+              Add a New Speaker
+            </button>
+          </div>
+        </div>
+    
         <div formArrayName="newSpeakers">
           <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">
             <table>
@@ -143,13 +152,7 @@
             </table>
           </div>
         </div>
-        <div>
-          <button type="button" md-mini-fab disableRipple (click)="addSpeaker()">
-            <md-icon>add</md-icon>
-          </button>
-          Add a New Speaker
-        </div>
-        
+
         <button class="primary" md-button type="submit">Save</button>
         <button class="primary" md-button type="submit" (click)="submitAndContinueSessionForm($event)">Save and Add Another</button>
         <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>

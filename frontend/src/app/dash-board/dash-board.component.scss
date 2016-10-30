@@ -4,7 +4,7 @@ h2 {
     color: $color-primary;
 }
 
-form md-input {
+form md-input, form .field-with-label {
     width: 300px;
 }
 
@@ -143,21 +143,6 @@ form md-input {
     
     .above-tags {
         margin-bottom: 18px;
-    }
-    
-    .field-with-label {
-        position: relative;
-        max-width: 300px;
-        margin-bottom: 20px;
-    }
-    
-    .field-label {
-        left: 1px;
-        top: -10px;
-        font-size: 12px;
-        position: absolute;
-        margin: 0;
-        color: $color-secondary;
     }
     
     .other-error {

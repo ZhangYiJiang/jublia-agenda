@@ -12,28 +12,68 @@ h2 {
 body {
     background: #fff;
     color: #4A4A4A;
-    font: 100% 'Roboto', sans-serif;
+    font: 100% $body-font-family;
     margin: 0;
 }
 
-.tag-input.default {
-    border-bottom: 1px solid black !important;
-}
-
-.default.tag:not(.tag--readonly):focus {
-    background: $color-secondary !important;
-}
-
-.tag-input__text-input {
-    padding: 0px !important;
-}
-
-.md-input-placeholder.md-empty{
-    color: $color-primary;
-}
-
-.md-input-placeholder.md-float:not(.md-empty), .md-input-placeholder.md-float.md-focused{
+// Mimic md-input's label
+.field-label {
+    display: block;
+    font-size: 12px;
+    margin: -10px 0 0 1px;
     color: $color-secondary;
+    text-align: left;
+    line-height: 1;
+}
+
+.field-with-label {
+    padding: 12px 0;
+}
+
+// Overrides - using the body tag to override the specificity of some of these 
+// themed widget's themes 
+body {
+    // Reset some of tag-input's styles to match ours
+    .tag-input.default {
+        border-bottom: 1px solid #444;
+        padding: 0;
+    }
+
+    .default.tag:not(.tag--readonly):focus {
+        background: $color-secondary;
+    }
+
+    .tag-input__text-input {
+        padding: 0;
+        background: none;
+    }
+
+    .md-input-placeholder.md-empty {
+        color: $color-primary;
+    }
+
+    .md-input-placeholder.md-float:not(.md-empty), .md-input-placeholder.md-float.md-focused {
+        color: $color-secondary;
+    }
+
+    // Vex's default theme fixes the width of the modal. This doesn't work for us 
+    // because we need the modal to be more flexible. We use flexbox and 
+    // inline-block instead for centering    
+    .vex.vex-theme-default {
+        display: flex;
+        align-items: flex-start;
+        padding: 10vh 0;
+
+        .vex-content {
+            // Reset the font to our global font
+            font-family: inherit;
+
+            // Remove the default width 
+            width: auto;
+            max-width: 960px;
+            display: inline-block;
+        }
+    }
 }
 
 .form-error-hint {
@@ -96,21 +136,6 @@ button[md-button],
     width: 18%;
 }
 
-// Vex's default theme fixes the width of the modal. This doesn't work for us 
-// because we need the modal to be more flexible. We use flexbox and 
-// inline-block instead for centering    
-body .vex.vex-theme-default {
-    display: flex;
-    align-items: flex-start;
-    padding: 10vh 0;
-
-    .vex-content {
-        // Remove the default width 
-        width: auto;
-        max-width: 960px;
-        display: inline-block;
-    }
-}
 
 .vex-content {
     .full-width .ndv-comp,

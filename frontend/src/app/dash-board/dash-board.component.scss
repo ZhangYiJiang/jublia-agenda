@@ -1,5 +1,20 @@
 @import '../../../public/css/variables';
 
+h2 {
+    color: $color-primary;
+}
+
+form md-input, form .field-with-label {
+    width: 300px;
+}
+
+.dashboard-container {
+    padding-top: $top-bar-height;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
 .dash-board-title {
     background: gray;
 }
@@ -15,51 +30,6 @@
     transform: translateX(-50%) translateX(0px);
 }
 
-.agenda-list {
-    margin: 0 0 2em 0;
-    list-style-type: none;
-    padding: 0;
-    padding-right: 100px;
-    border-right: 2px solid $color-secondary;
-    width: 17em;
-    display: inline-block;
-    height: 400px;
-    overflow: auto;
-    .agenda-strip {
-        position: relative;
-    }
-    li {
-        display: inline-block;
-        width: 15em;
-        cursor: pointer;
-        position: relative;
-        //left: 0;
-        background-color: #EEE;
-        margin: .5em;
-        padding: .3em 0;
-        border-radius: 4px;
-        &.selected:hover {
-            background-color: #BBD8DC !important;
-            color: white;
-        }
-        &:hover {
-            color: #607D8B;
-            background-color: #DDD;
-            left: .1em;
-        }
-    }
-}
-
-
-.delete-label {
-    position: absolute;
-    font-size: 12px;
-    top: 97px;
-    right: 140px;
-    color: $color-primary;
-    cursor: pointer;
-}
-
 .sign-up-form {
     margin-top: 100px;
     table {
@@ -68,119 +38,136 @@
 }
 
 .user-form {
+    display: flex;
+    align-items: center;
     margin-top: 150px;
 }
 
 .log-in-card {
-    width: 450px;
-    display: inline-block;
     border-right: 2px solid $color-secondary;
-    table {
-        md-input {
-            margin-bottom: 20px;
-
-        }
-    }
-}
-
-.dashboard-agendas {
-    h2 {
-        margin-top: 50px;
-    }
-    position: relative;
-    left: 22%;
-    md-icon {
-    color: $color-primary;
-    position: absolute;
-    cursor: pointer;
-    &.warn{
-        color: $color-accent;
-        right: -45px;
-        border: 1px solid;
-        top: 8px;
-    }
-    &.delete{
-        right: -70px;
-        top: 90px;
-        right: 170px;
-    }
-}
-}
-
-h2 {
-    color: $color-primary;
-}
-form {
-    display: inline-block;
-    md-input {
-        width: 300px;
+    padding: 0 40px 20px 0;
+    
+    table md-input {
+        margin-bottom: 20px;
     }
 }
 
 .sign-up-card {
     width: 300px;
     margin-left: 20px;
-    display: inline-block;
 }
 
-.agenda-list-card, .new-agenda-card {
-    display: table-cell;
-    position:relative;
+.dashboard-agendas {
+    display: flex;
+    margin-top: 50px;
+    
+    md-icon {
+        color: $color-primary;
+        cursor: pointer;
+        vertical-align: middle;
+    }
 }
 
 .agenda-list-card {
-    padding-right: 100px;
-    h2 {
-        padding-right: 100px;  
+    padding-right: 40px;
+    margin-right: 40px;
+    border-right: 2px solid $color-secondary;
+    
+    .delete-button {
+        color: $color-primary;
+        font-size: 13px;
+        cursor: pointer;
+        float: right;
+        user-select: none;
+        
+        md-icon {
+            vertical-align: -7px;
+        }
+        
+        &:hover, &:focus {
+            text-decoration: underline;
+            outline: 0;
+        }
+    }
+}
+
+.agenda-list {
+    margin: 0 0 20px 0;
+    padding: 0;
+    list-style-type: none;
+    width: 250px;
+
+    li {
+        cursor: pointer;
+        position: relative;
+        background-color: #EEE;
+        padding: 7px 16px 8px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        
+        &:hover, &:focus {
+            color: #607D8B;
+            background-color: #DDD;
+            outline: 0;
+        }
+
+        &.selected:hover {
+            background-color: #BBD8DC;
+            color: white;
+        }
+    }
+
+    md-icon.warn {
+        position: absolute;
+        border: 1px solid $color-accent;
+        color: $color-accent;
+        right: 4px;
+        top: 4px;
+        
+        &:hover, &:focus {
+            background: $color-accent;
+            color: #fff;
+            outline: 0;
+        }
     }
 }
 
 .new-agenda-card {
-    .new-agenda-form {
-        height: 450px;
+    form {
         overflow: auto;
     }
     
     md-input {
         margin-bottom: 10px;
     }
+    
     .above-tags {
         margin-bottom: 18px;
     }
-    .field-with-label {
-        position:relative;
-        max-width: 300px;
-        margin-bottom: 20px;
-    }
-    .field-label {
-        left: 1px;
-        top: -10px;
-        font-size: 12px;
-        position: absolute;
-        margin: 0px;
-        color: $color-secondary;
-    }
+    
     .other-error {
         overflow-wrap: break-word;
         width: 300px;
     }
 }
+
 .fly-in {
-  animation: flyin 1.5s ease forwards;
-  -webkit-animation: flyin 1.5s ease forwards;
-  left: -200px;
-  opacity: 0;
+    -webkit-animation: flyin .5s ease forwards;
+    animation: flyin .5s ease forwards;
+    left: -200px;
+    opacity: 0;
 }
 
 @keyframes flyin {
-   100% { 
-    left: 0;
-     opacity: 1;
+   100% {  
+       left: 0;
+       opacity: 1;
    }
 }
+
 @-webkit-keyframes flyin {
-   100% { 
-    left: 0;
-     opacity: 1;
+   100% {  
+       left: 0;
+       opacity: 1;
    }
 }

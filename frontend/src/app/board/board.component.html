@@ -1,5 +1,10 @@
 <div class="board" [class.not-dragging]="!dragging" [class.public]="isPublic">
-  <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda" *ngIf="!isPublic">
+  <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda"
+    (onSessionChanged)="onSessionChanged($event)"
+    (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
+    (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
+    (onSessionInterestChanged)="onSessionInterestChanged($event)"
+    (onSpeakerChanged)="onSpeakerChanged($event)" *ngIf="!isPublic">
   </relative-column>
   <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()" *ngIf="!isPublic">
     <md-icon>add</md-icon>
@@ -20,8 +25,10 @@
               <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
                 [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
                 (onSessionChanged)="onSessionChanged($event)"
+                (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
                 (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
                 (onSessionInterestChanged)="onSessionInterestChanged($event)"
+                (onSpeakerChanged)="onSpeakerChanged($event)"
                 [token]="token" [interestedSessionIds]="interestedSessionIds">
               </absolute-column>
             </div>  
@@ -32,7 +39,7 @@
   </div>
 </div>
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-  <div class="modal-container">
+  <div class="new-session modal-container">
     <div class="page-header">
       <h1>Add New Session</h1>
     </div>
@@ -41,79 +48,107 @@
         <small *ngIf="formMsg">{{formMsg}}</small>
       </div>
       <form [formGroup]="sessionForm" novalidate (ngSubmit)="submitSessionForm(dialogRef)">
-        <table>
-          <tr>
-            <md-input type="text" formControlName="name" placeholder="Session Name" required></md-input>
-          </tr>
-          <tr>
-            <md-input type="text" formControlName="description" placeholder="Description"></md-input>
-          </tr>
-          <tr>
-            <md-input type="number" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
-          </tr>
-          <tr>Tags</tr>
-          <tr>
-            <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" [autocompleteItems]="eventTagsName" [autocomplete]="true" (onSelect)="onSelected()"></tag-input>
-          </tr>
-          <tr>Speakers</tr>
-          <tr>
-            <tag-input [ngModel]="sessionForm.existingSpeakers" [placeholder]="options.placeholderSpeakers" [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" formControlName="existingSpeakers" [onlyFromAutocomplete]="true" [autocompleteItems]="eventSpeakersName" [autocomplete]="true" (onSelect)="onSelected()"></tag-input>
-          </tr>
-        </table>
-        <div formArrayName="newSpeakers">
-          <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">
-            <table>
-              <tr>
-                <button type="button" md-mini-fab disableRipple *ngIf="sessionForm.controls.newSpeakers.controls.length > 0" (click)="removeSpeaker(i)">
-                  <md-icon>remove</md-icon>
-                </button>
-                New Speaker {{i + 1}}
-              </tr>
-              <div [formGroupName]="i">
-                <tr>
-                  <md-input type="text" formControlName="name" placeholder="Name"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.name.valid">
-                  Name is required
-                </small>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="company" placeholder="Company"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.company.valid">
-                  Company is required
-                </small>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="position" placeholder="Position"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.position.valid">
-                  Position is required
-                </small>
-                </tr>
-                <tr>
-                  <md-input type="email" formControlName="email" placeholder="Email"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.email.valid">
-                  Email is required
-                </small>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="phone_number" placeholder="Phone number"></md-input>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="company_description" placeholder="Company description"></md-input>
-                </tr>
-                <tr>
-                  <md-input type="url" formControlName="company_url" placeholder="Company website"></md-input>
-                </tr>
-              </div>
-            </table>
-          </div>
+        <div>
+          <md-input type="text" formControlName="name" placeholder="Session Name" required></md-input>
         </div>
         <div>
-          <button type="button" md-mini-fab disableRipple (click)="addSpeaker()">
-            <md-icon>add</md-icon>
-          </button>
-          Add a New Speaker
+          <md-input type="text" formControlName="description" placeholder="Description"></md-input>
+        </div>
+        <div>
+          <md-input type="number" min="0" step="15" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
         </div>
         
+        <div class="field-with-label">
+          <label class="field-label">Tags</label>
+          <tag-input [ngModel]="sessionForm.tags" 
+                     placeholder=" + Tags" 
+                     secondaryPlaceholder="Add Tags" 
+                     formControlName="tags" 
+                     [autocompleteItems]="eventTagsName" 
+                     [autocomplete]="true"></tag-input>
+        </div>
+        
+        <div class="field-with-label">
+          <label class="field-label">Venue</label>
+          <div class="field-row">
+            <tag-input [ngModel]="sessionForm.existingVenue" [maxItems]="1"
+                       secondaryPlaceholder="Session Venue" 
+                       formControlName="existingVenue" 
+                       [onlyFromAutocomplete]="true" 
+                       [autocompleteItems]="eventVenuesName" 
+                       [autocomplete]="true"></tag-input>
+            <button *ngIf="!showVenueForm" md-button type="button" class="secondary" (click)="addVenue()">
+              <md-icon>add</md-icon> New Venue
+            </button>
+          </div>
+
+          <div formGroupName="newVenue" *ngIf="showVenueForm">
+            <button type="button" md-mini-fab disableRipple (click)="removeVenue()">
+              <md-icon>remove</md-icon>
+            </button>
+            New Venue
+            <div>
+              <md-input type="text" formControlName="name" placeholder="Venue Name"></md-input>
+            </div>
+            <div>
+              <md-input type="text" formControlName="unit" placeholder="Unit Number"></md-input>
+            </div>
+          </div>
+        </div>
+        
+        <div class="field-with-label">
+          <label class="field-label">Speakers</label>
+          <div class="field-row">
+            <tag-input [ngModel]="sessionForm.existingSpeakers" 
+                       placeholder=" + speaker" 
+                       secondaryPlaceholder="Add Speakers" 
+                       formControlName="existingSpeakers" 
+                       [onlyFromAutocomplete]="true" 
+                       [autocompleteItems]="eventSpeakersName" 
+                       [autocomplete]="true"></tag-input>
+            <button md-button type="button" class="secondary" (click)="addSpeaker()">
+              <md-icon>add</md-icon> New Speaker
+            </button>
+          </div>
+        </div>
+    
+        <div formArrayName="newSpeakers">
+          <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">
+            <div>
+              <button type="button" md-mini-fab disableRipple *ngIf="sessionForm.controls.newSpeakers.controls.length > 0" (click)="removeSpeaker(i)">
+                <md-icon>remove</md-icon>
+              </button>
+              New Speaker {{i + 1}}
+            </div>
+            <div [formGroupName]="i">
+              <div>
+                <md-input type="text" formControlName="name" placeholder="Name" required></md-input>
+              </div>
+              <div>
+                <md-input type="text" formControlName="company" placeholder="Company" required></md-input>
+              </div>
+              <div>
+                <md-input type="text" formControlName="profile" placeholder="Profile"></md-input>
+              </div>
+              <div>
+                <md-input type="text" formControlName="position" placeholder="Position"></md-input>
+              </div>
+              <div>
+                <md-input type="email" formControlName="email" placeholder="Email"></md-input>
+              </div>
+              <div>
+                <md-input type="text" formControlName="phone_number" placeholder="Phone number"></md-input>
+              </div>
+              <div>
+                <md-input type="text" formControlName="company_description" placeholder="Company description"></md-input>
+              </div>
+              <div>
+                <md-input type="url" formControlName="company_url" placeholder="Company website"></md-input>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button class="primary" md-button type="submit">Save</button>
         <button class="primary" md-button type="submit" (click)="submitAndContinueSessionForm($event)">Save and Add Another</button>
         <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>

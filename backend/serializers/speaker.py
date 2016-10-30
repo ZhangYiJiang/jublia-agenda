@@ -11,4 +11,5 @@ class BaseSpeakerSerializer(BaseSerializer):
 
     class Meta:
         model = Speaker
-        fields = ('id', 'name', 'company', 'position', 'email', 'phone_number', 'company_description', 'company_url',)
+        fields = ('id', 'name', 'profile', 'company', 'position', 'email',
+                  'phone_number', 'company_description', 'company_url',)

@@ -7,9 +7,16 @@ import * as moment from 'moment';
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Track } from '../track/track';
+import { Speaker } from '../speaker/speaker';
 import { AgendaService } from '../agenda/agenda.service';
 
 import { DOMUtilService } from '../util/dom.util.service';
+import { GlobalVariable } from '../globals';
+
+export class Container {
+  start_at: number;
+  sessions: Session[];
+}
 
 @Component({
   selector: 'absolute-column',
@@ -37,17 +44,19 @@ export class AbsoluteColumnComponent implements OnInit {
   interestedSessionIds: number[];
 
   @Output() onSessionChanged = new EventEmitter<Session>();
+  @Output() onSessionDeletedColumn = new EventEmitter<Session>();
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
+  @Output() onSpeakerChanged = new EventEmitter<Speaker>();
 
-  containers: any[] = [];
+  containers: Container[] = [];
 
   hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
 
   private PLACEHOLDER_DURATION: number = 15;
   private DEFAULT_DAY_START_OFFSET_MIN: number = 8 * 60; // default start time for column is 8AM
 
-  private DEFAULT_NEW_DURATION: number = 60;
+  
 
   // offset from start of the column's date to start of displayed time withn the date (8AM, etc)
   private dayStartOffsetMin: number;
@@ -72,6 +81,26 @@ export class AbsoluteColumnComponent implements OnInit {
   onSessionInterestEdited(event: [number, boolean]) {
     // propagate to board
     this.onSessionInterestChanged.emit(event);
+  }
+
+  onSpeakerEdited(editedSpeaker: Speaker) {
+    // propagate to board
+    this.onSpeakerChanged.emit(editedSpeaker);
+  }
+
+  onSessionDeleted(deletedSession: Session) {
+    // propagate to board
+    console.log('session delete in abs column');
+    this.removeSession(deletedSession);
+    this.onSessionDeletedColumn.emit(deletedSession);
+  }
+
+  private removeSession(session: Session) {
+    for (var i = 0; i < this.containers.length; i++) {
+      for (var j = 0; j < this.containers[i].sessions.length; ++j) {
+        _.remove(this.containers[i].sessions, (s: Session) => s.id === session.id);
+      }
+    }
   }
 
   private isInterestedInSession(session: Session): boolean {
@@ -145,7 +174,7 @@ export class AbsoluteColumnComponent implements OnInit {
     let isFromPending = (session.start_at == null);
     session.start_at = newStartTime;
     if (session.duration == null) {
-      session.duration = this.DEFAULT_NEW_DURATION;
+      session.duration = GlobalVariable.DEFAULT_NEW_DURATION;
     }
     session.track = trackId;
     if(isFromPending) {
@@ -172,7 +201,12 @@ export class AbsoluteColumnComponent implements OnInit {
       }
     }
     console.error('cannot find session ' + sessionId + ' in containers:');
-    console.log(this.containers);
+    for (var i = 0; i < this.containers.length; i++) {
+      for (var j = 0; j < this.containers[i].sessions.length; ++j) {
+        console.log(this.containers[i].start_at);
+        console.log(this.containers[i].sessions[j]);
+      }
+    }
     return null;
   }
 

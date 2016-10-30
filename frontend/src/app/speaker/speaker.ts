@@ -7,5 +7,6 @@ export class Speaker {
 	name: string;
 	phone_number: string;
 	position: string;
+	profile: string;
 	url: string;
 }

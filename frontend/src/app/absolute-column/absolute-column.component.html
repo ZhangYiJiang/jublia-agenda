@@ -25,7 +25,10 @@
           [attr.data-session-duration]="session.duration"
           [class.placeholder]="session.placeholder">
           <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
-            (onSessionEdited)="onSessionEdited($event)"></my-session>
+            (onSessionEdited)="onSessionEdited($event)"
+            (onSpeakerEdited)="onSpeakerEdited($event)"
+            (onSessionDeleted)="onSessionDeleted($event)"
+            ></my-session>
         </li>
       </ul>
       <ul *ngIf="isPublic" class="session-list">

@@ -1,41 +1,70 @@
-﻿import { Component, Input, EventEmitter, ElementRef } from '@angular/core';
+﻿import {Component, Input, EventEmitter, ElementRef, HostListener} from '@angular/core';
 
 
 @Component({
     selector: 'ndv-area',
     styles: [`
-        #ndv-ic {
-            color: #ccc;
+        :host {
+            position: relative;
         }
         
-        .ndv-comp:hover #ndv-ic {
-            color: #999;
+        .ndv-ic {
+            position: absolute;
+            top: 0;
+            left: -1px;
+            transform: translateY(-100%);
+            padding: 3px 6px 3px 4px;
+            
+            background: #888;
+            color: #fff;
+            font-size: 13px;
+            line-height: 1;
+            font-weight: normal;
+            white-space: nowrap;
+            
+            display: none;
+        }
+        
+        .ndv-comp:hover .ndv-ic {
+            display: block;
         }
 
         .ndv-comp {
-            padding:6px;
+            padding: 6px;
             border-radius: 3px;
             border: 1px solid #ccc;
+            min-width: 60px;
+            display: block;
+            position: relative;
         }
+        
+        .ndv-comp:hover {
+            border-radius: 0 3px 3px 3px;
+        }
+        
         .active-ndv {
             background-color: #f0f0f0;
             border: 1px solid #d9d9d9;
         }
-        input {
+        
+        textarea {
             border-radius: 5px;
             box-shadow: none;
             border: 1px solid #dedede;
             min-width: 5px;
+            line-height: inherit;
         }
+        
         .ndv-buttons {
             border: 1px solid #ccc;
             border-top: none;
             border-radius: 0 0 3px 3px;
             box-shadow: 0 3px 6px rgba(111,111,111,0.2);
             outline: none;
-            padding: 8px 5px;
+            padding: 5px;
             position: absolute;
-            margin: -6px 0 0 6px;
+            top: 100%;
+            left: 6px;
             z-index: 1;
             font-size: 1.1rem;
             line-height: 1.5rem;
@@ -49,27 +78,21 @@
         .ndv-comp textarea {
             resize: vertical;
         }
-
-        .ndv-save {
-            margin-right:3px;
-        }
-        .ndv-active {
-            background-color: #f0f0f0;
-            border: 1px solid #d9d9d9;
-        }
     `],
-    template: `<span *ngIf="!permission">{{text}}</span><form *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}"><span>
-                    <textarea rows="6" cols="55" *ngIf='show' [(ngModel)]='text' [ngModelOptions]='{standalone: true}'></textarea>
-                    <i id='ndv-ic' *ngIf='!show'>✎</i>
-                    <span *ngIf='!show' style='line-height:1.5em;word-wrap: break-word;'>{{text || '-Empty Field-'}}</span>
-                </span>
-                <div class='ndv-buttons' *ngIf='show'>
-                    <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
-                    <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
-                </div></form>`,
+    template: `<div *ngIf="!permission">{{text}}</div>
+               <form *ngIf="permission" class='ndv-comp' (click)='makeEditable()' (submit)="callSave($event)" [ngClass]="{'ndv-active':show}">
+                   <div>
+                       <textarea rows="6" cols="55" *ngIf='show' [(ngModel)]='text' [ngModelOptions]='{standalone: true}'></textarea>
+                       <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
+                       <span *ngIf='!show'>{{text || 'Empty'}}</span>
+                   </div>
+                   <div class='ndv-buttons' *ngIf='show'>
+                       <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                       <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
+                   </div>
+               </form>`,
     host: {
         "(document: click)": "compareEvent($event)",
-        "(click)": "trackEvent($event)"
     },
     outputs: ['save : onSave']
 })
@@ -78,6 +101,7 @@ export class NdvEditAreaComponent {
     @Input('placeholder') text: any;
     @Input('title') fieldName: any;
     @Input() permission = true;
+    editedText: any;
     originalText: any;
     tracker: any;
     el: ElementRef;
@@ -94,6 +118,11 @@ export class NdvEditAreaComponent {
 
     makeEditable() {
         if (this.show == false) {
+            // Restore the user's last saved text, if possible
+            if (this.editedText) {
+                this.text = this.editedText;
+            }
+
             this.show = true;
         }
     }
@@ -104,27 +133,42 @@ export class NdvEditAreaComponent {
         }
     }
 
-    trackEvent(newHostEvent: any) {
+    @HostListener('click', ['$event']) trackEvent(newHostEvent: any) {
         this.tracker = newHostEvent;
     }
 
-    cancelEditable() {
+    cancelEditable(resetInput: boolean = false) {
+        // Save a copy of the text the user was editing
+        if (!resetInput) {
+            this.editedText = this.text;
+        } else {
+            this.editedText = null;
+        }
+
         this.show = false;
         this.text = this.originalText;
     }
     
     callCancel(evt: any) {
-        this.cancelEditable();
+        this.cancelEditable(true);
         evt.stopPropagation();
     }
 
     callSave(evt: any) {
-        var data = {};  //BUILD OBJ FOR EXPORT.
-        data["" + this.fieldName] = this.text;
-        var oldText = this.text;
-        setTimeout(() => { this.originalText = oldText; this.text = oldText }, 0);  //Sets the field with the new text;
+        const text = this.text;
+        const data = {};  //BUILD OBJ FOR EXPORT.
+        data["" + this.fieldName] = text;
+
+        setTimeout(() => {
+            this.editedText = null;
+            this.originalText = text;
+            this.text = text;
+        }, 0);  //Sets the field with the new text;
+
         this.save.emit(data);
         this.show = false;
+        
         evt.stopPropagation();
+        evt.preventDefault();
     }
 }

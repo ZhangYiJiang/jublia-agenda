@@ -5,6 +5,7 @@ import { Observable }     from 'rxjs/Observable';
 import { DashBoardService } from '../dash-board/dash-board.service';
 import { Agenda } from './agenda';
 import { Session } from '../session/session';
+import { Speaker } from '../speaker/speaker';
 
 @Injectable()
 export class AgendaService {
@@ -62,6 +63,21 @@ export class AgendaService {
         );
   }
 
+  deleteSession(agendaId: number, deletedSession: Session) {
+    console.log('deleting agenda ' + agendaId + ' session ' + deletedSession.id);
+    console.log(JSON.stringify(deletedSession, null, 4));
+    this.httpClient
+        .delete(this.BASE_URL + '/' + agendaId + '/sessions/' + deletedSession.id)
+        .catch(this.handleError)
+        .subscribe(
+          res => {
+            console.log('delete session successful');
+            // console.log(res)
+          },
+          err => console.error(err)
+        );
+  }
+
   updateSessionInterest(agendaId: number, sessionId: number, interested: boolean, token: string) {
     console.log('updating agenda ' + agendaId + ' session ' + sessionId);
     console.log('interest changed to ' + interested);
@@ -75,6 +91,21 @@ export class AgendaService {
               console.log(res);
             },
             (err : any) => console.error(err),
+        );
+  }
+
+  updateSpeaker(agendaId: number, newSpeaker: Speaker) {
+    console.log('updating speaker ' + agendaId + ' speaker ' + newSpeaker.id);
+    console.log(JSON.stringify(newSpeaker, null, 4));
+    this.httpClient
+        .put(this.BASE_URL + '/' + agendaId + '/speakers/' + newSpeaker.id, JSON.stringify(newSpeaker))
+        .catch(this.handleError)
+        .subscribe(
+          res => {
+            console.log('update speaker successful');
+            // console.log(res)
+          },
+          err => console.error(err)
         );
   }
 }

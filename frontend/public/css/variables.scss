@@ -16,6 +16,8 @@ $middle-bar-height: 60px;
 $main-content-top-offset: $top-bar-height + $middle-bar-height;
 $public-extra-offset: 110px;
 
+$body-font-family: 'Roboto', sans-serif;
+
 /// Slightly lighten a color
 /// @access public
 /// @param {Color} $color - color to tint

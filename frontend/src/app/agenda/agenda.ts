@@ -2,6 +2,7 @@ import { Session } from '../session/session';
 import { Track } from '../track/track';
 import { Category } from '../category/category';
 import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 
 export class Agenda {
   id: number;
@@ -15,5 +16,6 @@ export class Agenda {
   tracks: Track[];
   speakers: Speaker[];
   categories: Category[];
+  session_venues: Venue[];
   published: boolean;
 }

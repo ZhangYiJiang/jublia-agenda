@@ -8,85 +8,97 @@
       {{getDisplayedTime()}}</div>
     <div *ngIf="!session.start_at && session.duration" class="session-time">
       {{session.duration}} min</div>
-    <div class="session-venue">{{session.venue}}</div>
+    <div class="session-venue">{{getSessionName(session.venue)}}</div>
   </div>
 </div>
 
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container">
-    <div *ngIf="token">
-      <button md-button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
+    <div class="page-header">
+      <button *ngIf="token" md-button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
         <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
-    </div>
-    
-    <div class="page-header">
+
       <h1 class="full-width"><ndv-edit [title]="'name'" [placeholder]="session.name" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-edit></h1>
     </div>
-    <div class="jumbotron">
-      <h2 *ngIf="session.start_at"><i class="fa fa-calendar" aria-hidden="true"></i> {{getDisplayedDate()}} </h2>
-      <h2 *ngIf="session.start_at"><i class="fa fa-clock-o" aria-hidden="true"></i> {{getDisplayedTime()}} </h2>
-      <div class="one-row">
+    
+    <div class="session-body">
+      <div class="session-main">
+        
         <div>
-          <h2><i class="fa fa-hourglass-o" aria-hidden="true"></i> 
-          Duration: 
-          <ndv-edit class="small-input" [title]="'duration'" [placeholder]="session.duration || '0'" (onSave)="updateSession($event)" [permission]="!isPublic" [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
-          </ndv-edit> mins
-          </h2>
+          <p class="full-width">
+            <ndv-area [title]="'description'" [placeholder]="session.description || 'Enter description here'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
+          </p>
         </div>
-        <div *ngIf="session.duration && !isPublic">
-          <button class="primary" md-button (click)="adjustSessionDuration(15)">+</button>
-          <button class="primary" md-button (click)="adjustSessionDuration(-15)">-</button>
-        </div>
-      </div>
-      <h2><i class="fa fa-pencil" aria-hidden="true"></i> Description</h2>
-      <div *ngIf="session.description">
-        <!-- <p>{{session.description}}</p> -->
-        <p class="full-width">
-          <ndv-area [title]="'description'" [placeholder]="session.description" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
-        </p>
-      </div>
-      <div *ngIf="!session.description">
-        <!-- <p>Description not available.</p> -->
-        <p class="full-width">
-          <ndv-area [title]="'description'" [placeholder]="'Description not empty.'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
-        </p>
-      </div>
-      <h2><i class="fa fa-user" aria-hidden="true"></i> Speakers</h2>
-      <div *ngIf="session.speakers">
-        <div *ngFor="let speakerId of session.speakers">
-          <h3>{{speakersObj[speakerId].name}}</h3>
-          <p>{{speakersObj[speakerId].position}}, {{speakersObj[speakerId].company}}</p>
-          <p>{{speakersObj[speakerId].email}}</p>
-          <p>{{speakersObj[speakerId].phone_number}}</p>
-        </div>
-      </div>
-      <div *ngIf="!session.speakers">
-        <p>Speaker information not available.</p>
-      </div>
-      <h2><i class="fa fa-list-ol" aria-hidden="true"></i> Track</h2>
-      <div *ngIf="session.track">
-        <p>{{trackObj[session.track].name}}</p>
-      </div>
-      <div *ngIf="!session.track">
-        <p>This session has not been assigned to a track yet</p>
-      </div>
-      <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
-      <div *ngIf="!(session.popularity == null)">
-        <p *ngIf="session.popularity === 0">No one has expressed interest in this session yet.</p>
-        <p *ngIf="session.popularity === 1">One person is interested in this session.</p>
-        <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
-      </div>
-      <div *ngIf="session.popularity == null">
-        <p>Popularity information not available.</p>
-      </div>
 
-      <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
-
+        <h2><i class="fa fa-user" aria-hidden="true"></i> Speakers</h2>
+        <div *ngIf="session.speakers">
+          <div class="speaker-card" *ngFor="let speakerId of session.speakers">
+            <h3>
+              <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit>
+              <div class="delete-button" *ngIf="!isPublic">
+                <button class="primary" md-button (click)="updateSessionSpeaker(speakerId)">x</button>
+              </div>
+            </h3>
+            <p><ndv-edit [title]="'position'" [placeholder]="speakersObj[speakerId].position" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            <p>Email: <ndv-edit [title]="'email'" [placeholder]="speakersObj[speakerId].email" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            <p>Phone: <ndv-edit [title]="'phone_number'" [placeholder]="speakersObj[speakerId].phone_number" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+          </div>
+        </div>
+        <div *ngIf="!session.speakers">
+          <p>Speaker information not available.</p>
+        </div>
+      </div><!-- /.session-main -->
+      
+      <div class="session-meta">
+        <div class="session-info">
+          <div class="session-icon">
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+          </div>
+          <div>
+            <p *ngIf="session.start_at">{{ getDisplayedDate() }}</p>
+            <p class="session-info-secondary">{{ getDisplayedTime() }}
+              <ndv-edit class="small-input" [title]="'duration'" [placeholder]="session.duration || '0'"
+                        (onSave)="updateSession($event)" [permission]="!isPublic"
+                        [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
+              </ndv-edit>mins
+              <span *ngIf="!isPublic" class="duration-buttons">
+              <button class="primary" md-button (click)="adjustSessionDuration(15)">+</button>
+              <button class="primary" md-button (click)="adjustSessionDuration(-15)">-</button>
+            </span>
+            </p>
+          </div>
+        </div><!-- /.session-info -->
+        
+        <div *ngIf="session.track" class="session-info">
+          <div class="session-icon">
+            <i class="fa fa-list-ol" aria-hidden="true"></i>
+          </div>
+          <div>
+            <p>{{trackObj[session.track].name}}</p>
+          </div>
+        </div><!-- /.session-info -->
+        
+        <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
+        <div *ngIf="!(session.popularity == null)">
+          <p *ngIf="session.popularity === 0">No one has expressed interest in this session yet.</p>
+          <p *ngIf="session.popularity === 1">One person is interested in this session.</p>
+          <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
+        </div>
+        <div *ngIf="session.popularity == null">
+          <p>Popularity information not available.</p>
+        </div>
+      </div><!-- /.session-meta -->
+    </div><!-- /.session-body -->
+    
+    <div class="session-footer">
       <button md-button class="interestBtn" [class.primary]="interested" [class.secondary]="!interested"
               (click)="updateInterest()" *ngIf="token">
         <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
+
+      <button type="button" md-button class="warn" (click)="confirmDelete(dialogRef)">Delete</button>
+      <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>

@@ -10,15 +10,15 @@ export class BoardService {
   constructor (private httpClient: HttpClient) {
   }
 
-  createSession(agendaId: number, name: string, description: string, duration: number, speakers: number[], tags: number[]): Observable<any> {
-    let body = JSON.stringify({name: name, description: description, duration: duration, speakers: speakers, tags: tags});
+  createSession(agendaId: number, name: string, description: string, duration: number, speakers: number[], tags: number[], venue: number): Observable<any> {
+    let body = JSON.stringify({name: name, description: description, duration: duration, speakers: speakers, tags: tags, venue: venue});
     return this.httpClient.post('/api/' + agendaId + '/sessions', body)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
 
-  createSpeaker(agendaId: number, name: string, company: string, position: string, email: string, phone_number: string, company_description: string, company_url: string): Observable<any> {
-    let body = JSON.stringify({name: name, company: company, position: position, email: email, phone_number: phone_number, company_description: company_description, company_url: company_url});
+  createSpeaker(agendaId: number, name: string, company: string, profile: string, position: string, email: string, phone_number: string, company_description: string, company_url: string): Observable<any> {
+    const body = JSON.stringify({name, company, profile, position, email, phone_number, company_description, company_url});
     return this.httpClient.post('/api/' + agendaId + '/speakers', body)
                     .map(this.extractData)
                     .catch(this.handleError);
@@ -34,6 +34,13 @@ export class BoardService {
   createTag(agendaId: number, categoryId: number, name: string): Observable<any> {
     let body = JSON.stringify({name: name});
     return this.httpClient.post('/api/' + agendaId + '/categories/' + categoryId + '/tags/', body)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
+  createVenue(agendaId: number, name: string, unit: string): Observable<any> {
+    let body = JSON.stringify({name: name, unit: unit});
+    return this.httpClient.post('/api/' + agendaId + '/venues', body)
                     .map(this.extractData)
                     .catch(this.handleError);
   }

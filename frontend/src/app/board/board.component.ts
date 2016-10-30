@@ -1,8 +1,9 @@
 import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
+import * as moment from 'moment';
+import { setImmediate } from 'core-js';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
-import * as moment from 'moment';
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
@@ -403,16 +404,28 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.formMsg = "";
     
-    this.modal.open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
-  }
-
-  onSelected() {
-    let docs = document.getElementsByTagName("ng2-dropdown-menu");
-    for (let i = 0; i < docs.length; i++) {
-      document.getElementsByTagName("ng2-dropdown-menu")[i].addEventListener('click', function(event: any) {
-        event.stopPropagation();
-      });  
-    }
+    this.modal.open(
+      this.templateRef, 
+      overlayConfigFactory({ isBlocking: false }, VEXModalContext)
+    ).then(dialog => {
+      // Stop click events from the dropdown menu created by the tag inputs from propagating 
+      // to document body, which causes weird issues with the modal widget
+      // We're using setImmediate here because we need to wait for the widgets in the modal to be 
+      // rendered first
+      setImmediate(() => {
+        _.each(document.getElementsByTagName("ng2-dropdown-menu"), el => {
+          el.addEventListener('click', evt => evt.stopPropagation());
+        });
+      });
+      
+      // Clean up dropdown menus that were left behind by the widget
+      dialog.onDestroy.subscribe(() => {
+        // querySelectorAll uses a frozen NodeList
+        _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
+          el.parentNode.removeChild(el);
+        });
+      });
+    });
   }
 
   initSpeaker() {

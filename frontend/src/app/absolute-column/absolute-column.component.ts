@@ -69,6 +69,7 @@ export class AbsoluteColumnComponent implements OnInit {
   constructor(private dragulaService: DragulaService, 
     private domUtilService: DOMUtilService) {
     dragulaService.dropModel.subscribe((value: any) => {
+      console.log('drop event in abs col');
       this.onDrop(value.slice(1));
     });
   }
@@ -162,8 +163,12 @@ export class AbsoluteColumnComponent implements OnInit {
 
   private handleSessionDropped(sessionId: number, trackId: number, startAt: number) {
     let movedSession = this.getSessionById(sessionId);
-    let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(startAt);
-    this.updateDroppedSession(movedSession, globalStartTime, trackId);
+    if(movedSession) {
+      let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(startAt);
+      this.updateDroppedSession(movedSession, globalStartTime, trackId);
+    } else {
+      console.log('moved session ID ' + sessionId + ' cannot be found in board');
+    }
   }
 
   private getGlobalStartTimeFromDisplayedStartTime(displayedStartTime: number) {
@@ -202,8 +207,8 @@ export class AbsoluteColumnComponent implements OnInit {
     }
     console.error('cannot find session ' + sessionId + ' in containers:');
     for (var i = 0; i < this.containers.length; i++) {
+        console.log(this.containers[i]);
       for (var j = 0; j < this.containers[i].sessions.length; ++j) {
-        console.log(this.containers[i].start_at);
         console.log(this.containers[i].sessions[j]);
       }
     }

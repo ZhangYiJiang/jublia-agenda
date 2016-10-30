@@ -42,6 +42,8 @@ export class DashBoardComponent implements OnInit {
   agendas = this.dashBoardService.agendas;
   user = this.dashBoardService.currentUser;
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
+  @ViewChild('signUpSuccessRef') public signUpSuccessRef: TemplateRef<any>;
+
 
   //successMsg: string;
 
@@ -120,8 +122,7 @@ export class DashBoardComponent implements OnInit {
     this.dashBoardService.signUp(this.registerEmail, this.registerPassword,this.organiser,this.event).subscribe(
       status => { 
         if (status === 201){ 
-          //this.successMsg = 
-          'Sign Up success! Please check your email and click on the verification link.';
+          this.modal.open(this.signUpSuccessRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
           this.toggleSigningUp();
         }
       },

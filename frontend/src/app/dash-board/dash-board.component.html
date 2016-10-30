@@ -93,3 +93,13 @@
     	</div>
   	</div>
 </template>
+<template #signUpSuccessRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+	<div class="modal-container">
+    	<div class="jumbotron">
+    		<p>Sign Up success! Please check your email and click on the verification link.</p>
+    		<div class="vex-1-button-group">
+    			<button class="primary" md-button type="button" (click)="dialogRef.close(true)">OK</button>
+    		</div>
+    	</div>
+    </div>	
+</template>

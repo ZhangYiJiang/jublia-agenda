@@ -64,14 +64,7 @@ form md-input {
     md-icon {
         color: $color-primary;
         cursor: pointer;
-
-        &.warn {
-            color: $color-accent;
-            border: 1px solid;
-        }
-
-        &.delete {
-        }
+        vertical-align: middle;
     }
 }
 
@@ -79,6 +72,23 @@ form md-input {
     padding-right: 40px;
     margin-right: 40px;
     border-right: 2px solid $color-secondary;
+    
+    .delete-button {
+        color: $color-primary;
+        font-size: 13px;
+        cursor: pointer;
+        float: right;
+        user-select: none;
+        
+        md-icon {
+            vertical-align: -7px;
+        }
+        
+        &:hover, &:focus {
+            text-decoration: underline;
+            outline: 0;
+        }
+    }
 }
 
 .agenda-list {
@@ -95,14 +105,29 @@ form md-input {
         margin-bottom: 5px;
         border-radius: 4px;
         
-        &:hover {
+        &:hover, &:focus {
             color: #607D8B;
             background-color: #DDD;
+            outline: 0;
         }
 
         &.selected:hover {
             background-color: #BBD8DC;
             color: white;
+        }
+    }
+
+    md-icon.warn {
+        position: absolute;
+        border: 1px solid $color-accent;
+        color: $color-accent;
+        right: 4px;
+        top: 4px;
+        
+        &:hover, &:focus {
+            background: $color-accent;
+            color: #fff;
+            outline: 0;
         }
     }
 }
@@ -125,6 +150,7 @@ form md-input {
         max-width: 300px;
         margin-bottom: 20px;
     }
+    
     .field-label {
         left: 1px;
         top: -10px;
@@ -133,6 +159,7 @@ form md-input {
         margin: 0;
         color: $color-secondary;
     }
+    
     .other-error {
         overflow-wrap: break-word;
         width: 300px;

@@ -38,22 +38,24 @@
     </div>
   </div>
   
-  <div class="dashboard-agendas" *ngIf = "user.authed">
-    <div class="agenda-list-card">
+  <div class="dashboard-agendas" *ngIf="user.authed">
+    <div class="agenda-list-card clearfix">
       <h2>All Events</h2>
+      
       <ul class="agenda-list">
         <li *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first" 
-						[class.fly-in]="isFirst&&addNewAgenda" (click)="onSelect(agenda)">
+						[class.fly-in]="isFirst&&addNewAgenda" (click)="onSelect(agenda)" 
+            role="link" tabindex="0">
           {{agenda.name}}
 
-					<md-icon [hidden]="!deleting" (click)="callDeleteAgenda($event, agenda)" class="warn">clear</md-icon>
+					<md-icon [hidden]="!deleting" (click)="callDeleteAgenda($event, agenda)" class="warn" 
+                   role="button" tabindex="0">clear</md-icon>
         </li>
       </ul>
-			
-			<div>
-				<md-icon class="delete" (click)="deleting=!deleting">delete</md-icon>
-				<span class="delete-label" (click)="deleting=!deleting">Delete</span>
-			</div>
+      
+      <a class="delete-button" (click)="deleting =! deleting" role="button" tabindex="0">
+        <md-icon class="delete">delete</md-icon>Delete Events
+      </a>
     </div>
     <div class = "new-agenda-card">
       <h2>New Event</h2>

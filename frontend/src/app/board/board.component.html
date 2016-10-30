@@ -55,7 +55,7 @@
           <md-input type="text" formControlName="description" placeholder="Description"></md-input>
         </div>
         <div>
-          <md-input type="number" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
+          <md-input type="number" min="0" step="15" formControlName="duration" placeholder="Duration (in minutes)"></md-input>
         </div>
         
         <div class="field-with-label">
@@ -77,7 +77,7 @@
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventVenuesName" 
                        [autocomplete]="true"></tag-input>
-            <button *ngIf="!showVenueForm" type="button" md-button disableRipple (click)="addVenue()">
+            <button *ngIf="!showVenueForm" md-button type="button" class="secondary" (click)="addVenue()">
               <md-icon>add</md-icon> New Venue
             </button>
           </div>
@@ -106,7 +106,7 @@
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventSpeakersName" 
                        [autocomplete]="true"></tag-input>
-            <button type="button" md-button (click)="addSpeaker()">
+            <button md-button type="button" class="secondary" (click)="addSpeaker()">
               <md-icon>add</md-icon> New Speaker
             </button>
           </div>
@@ -128,10 +128,13 @@
                 <md-input type="text" formControlName="company" placeholder="Company" required></md-input>
               </div>
               <div>
-                <md-input type="text" formControlName="position" placeholder="Position" required></md-input>
+                <md-input type="text" formControlName="profile" placeholder="Profile"></md-input>
               </div>
               <div>
-                <md-input type="email" formControlName="email" placeholder="Email" required></md-input>
+                <md-input type="text" formControlName="position" placeholder="Position"></md-input>
+              </div>
+              <div>
+                <md-input type="email" formControlName="email" placeholder="Email"></md-input>
               </div>
               <div>
                 <md-input type="text" formControlName="phone_number" placeholder="Phone number"></md-input>

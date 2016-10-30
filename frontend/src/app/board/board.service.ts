@@ -17,8 +17,8 @@ export class BoardService {
                     .catch(this.handleError);
   }
 
-  createSpeaker(agendaId: number, name: string, company: string, position: string, email: string, phone_number: string, company_description: string, company_url: string): Observable<any> {
-    let body = JSON.stringify({name: name, company: company, position: position, email: email, phone_number: phone_number, company_description: company_description, company_url: company_url});
+  createSpeaker(agendaId: number, name: string, company: string, profile: string, position: string, email: string, phone_number: string, company_description: string, company_url: string): Observable<any> {
+    const body = JSON.stringify({name, company, profile, position, email, phone_number, company_description, company_url});
     return this.httpClient.post('/api/' + agendaId + '/speakers', body)
                     .map(this.extractData)
                     .catch(this.handleError);

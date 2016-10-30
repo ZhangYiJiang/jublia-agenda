@@ -451,11 +451,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     return this._fb.group({
         name: ['', Validators.required],
         company: ['', Validators.required],
-        position: ['', Validators.required],
-        email: ['', Validators.required],
-        phone_number: [''],
-        company_description: [''],
-        company_url: ['']
+        position: '',
+        profile: '',
+        email: '',
+        phone_number: '',
+        company_description: '',
+        company_url: '',
     });
   }
 
@@ -505,6 +506,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.agenda.id, 
         speaker.name, 
         speaker.company, 
+        speaker.profile,
         speaker.position, 
         speaker.email, 
         speaker.phone_number, 

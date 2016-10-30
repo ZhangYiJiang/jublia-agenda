@@ -78,6 +78,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dragging: boolean = false;
 
+  dropSub: any;
+  dragSub: any;
+  cancelSub: any;
+
   hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
 
   private PLACEHOLDER_DURATION: number = 15;
@@ -92,18 +96,19 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     private _fb: FormBuilder,
     private elementRef: ElementRef, 
     private renderer: Renderer) {
-    dragulaService.dropModel.subscribe((value: any) => {
+    console.log('board constructor');
+    this.dropSub = dragulaService.dropModel.subscribe((value: any) => {
       console.log('drop event in board');
       // console.log(`drop: ${value}`);
       this.dragging = false;
       this.onDrop(value.slice(1));
     });
 
-    dragulaService.drag.subscribe((value: any) => {
+    this.dragSub = dragulaService.drag.subscribe((value: any) => {
       this.dragging = true;
     });
 
-    dragulaService.cancel.subscribe((value: any) => {
+    this.cancelSub = dragulaService.cancel.subscribe((value: any) => {
       this.dragging = false;
     });
 
@@ -126,6 +131,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    console.log('ondestroy board');
+    this.dropSub.unsubscribe();
+    this.dragSub.unsubscribe();
+    this.cancelSub.unsubscribe();
     this.dragulaService.destroy('column');
   }
 

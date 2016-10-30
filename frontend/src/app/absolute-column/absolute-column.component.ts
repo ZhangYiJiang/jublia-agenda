@@ -38,16 +38,15 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
 
   @Input() isPublic: boolean;
 
-  @Input()
-  token: string;
-  @Input()
-  interestedSessionIds: number[];
+  @Input() token: string;
+  @Input() interestedSessionIds: number[];
 
   @Output() onSessionChanged = new EventEmitter<Session>();
   @Output() onSessionDeletedColumn = new EventEmitter<Session>();
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerChanged = new EventEmitter<Speaker>();
+  @Output() onCreateSessionWithStart = new EventEmitter<number>();
 
   containers: Container[] = [];
 
@@ -222,8 +221,15 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
     return null;
   }
 
+  addNewSession(container: Container){
+    let startTime = this.dayStartOffsetMin+this.eventStartOffsetMin+container.start_at;
+    //console.log(startTime);
+    this.onCreateSessionWithStart.emit(startTime);
+  }
+
   private generateContainers() {
     // mins are relative to start of the day i.e. 8AM
+    this.containers = [];
     for (var mins = 0; mins < 12 * 60; mins += this.PLACEHOLDER_DURATION) {
       this.containers.push({
         start_at: mins,
@@ -247,6 +253,12 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
       console.warn('multiple sessions with same start time');
     }
     return sessions;
+  }
+
+  addInNewSession(session:Session) {
+    this.displayedSessions.push(session);
+    this.generateContainers();
+    console.log('col called');
   }
 
   ngOnInit(): void {

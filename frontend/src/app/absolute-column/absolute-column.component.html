@@ -9,7 +9,7 @@
   <ul class="session-container-list">
     <li class="session-container"
       *ngFor="let container of containers"
-      [class.empty-container]="container.sessions.length === 0">
+      [class.empty-container]="container.sessions.length === 0" (click)="container.sessions.length === 0&&addNewSession(container)">
       <ul *ngIf="!isPublic" class="session-list"
         [dragula]='"column"' [dragulaModel]='container.sessions'
         [attr.data-column-type]="'absolute'"

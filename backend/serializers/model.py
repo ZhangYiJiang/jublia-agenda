@@ -18,17 +18,8 @@ class SpeakerSerializer(BaseSpeakerSerializer):
 
     class Meta:
         model = Speaker
-        fields = (
-            'id',
-            'name',
-            'company',
-            'position',
-            'email',
-            'phone_number',
-            'company_description',
-            'company_url',
-            'sessions',
-        )
+        fields = ('id', 'name', 'profile', 'company', 'position', 'email', 'phone_number',
+                  'company_description', 'company_url', 'sessions',)
 
 
 class VenueSerializer(BaseVenueSerializer):

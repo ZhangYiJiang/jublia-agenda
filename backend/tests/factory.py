@@ -77,13 +77,14 @@ def speaker(data=None, full=False):
     speaker = {
         'name': fake.name(),
         'company': fake.company(),
-        'position': fake.job(),
-        'email': fake.email(),
     }
 
     if full:
         speaker = {
             **speaker,
+            'profile': '\n'.join(fake.paragraphs()),
+            'email': fake.email(),
+            'position': fake.job(),
             'phone_number': fake.phone_number(),
             'company_description': fake.catch_phrase(),
             'company_url': fake.url(),

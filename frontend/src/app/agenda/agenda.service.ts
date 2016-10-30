@@ -14,6 +14,12 @@ export class AgendaService {
 
   private BASE_URL = '/api'
 
+  getAgendaAnalytics(id: number): Observable<any> {
+    return this.httpClient.get(this.BASE_URL + '/'+ id + '/data')
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
   getAgendaById(id: number): Observable<Agenda> {
     return this.httpClient.get(this.BASE_URL + '/'+ id)
                     .map(this.extractData)

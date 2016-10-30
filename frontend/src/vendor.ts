@@ -16,4 +16,5 @@ import 'lodash';
 import 'moment';
 import 'hammerjs';
 import 'jquery';
+import 'chart.js';
 //import 'modernizr';

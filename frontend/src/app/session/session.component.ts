@@ -72,6 +72,10 @@ export class SessionComponent implements OnInit {
       return venue[0].name
     }
   }
+  
+  getVenue(): Venue {
+    return _.find(this.agenda.session_venues, {id: this.session.venue});
+  }
 
   updateInterest() {
     this.interested = !this.interested;

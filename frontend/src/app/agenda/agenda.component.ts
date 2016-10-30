@@ -51,6 +51,7 @@ export class AgendaComponent implements OnInit{
       this.agendaId = id;
       this.getAgendaById(id);
     });
+    this.publicUrl = 'https://agenda-demo.jublia.com/public/agenda/'+this.agendaId;
   }
 
   updateAgenda(event: any) {
@@ -105,7 +106,7 @@ export class AgendaComponent implements OnInit{
 
   publishAgenda() {
     this.agendaService.publishAgenda(this.agenda.id).subscribe(
-      agenda => {this.agenda = agenda, this.publicUrl = 'https://agenda-demo.jublia.com/public/agenda/'+agenda.id;},
+      agenda => this.agenda = agenda,
       error =>  console.log(error)
     );
   }

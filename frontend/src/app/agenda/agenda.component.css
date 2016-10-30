@@ -1,1 +1,1 @@
-.agenda-title{color:#41B6AB;font-size:24px;margin:10px;display:inline-block;height:40px;line-height:40px;position:fixed;left:290px}button{height:40px;margin:10px;border:2px solid #41B6AB}.float{float:right}.modal-container{width:500px}
+.agenda-header{top:56px;left:300px;right:0;position:fixed;height:60px;display:flex;align-items:center}.agenda-title{flex:1 auto;margin:0;text-align:left;font-weight:normal;color:#41B6AB;font-size:24px}.agenda-menu button{height:40px;margin-right:10px}.modal-container{width:500px}a{color:#41B6AB}.vex-2-button-group{margin:auto;width:50%}

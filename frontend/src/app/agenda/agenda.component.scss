@@ -1,25 +1,41 @@
 @import '../../../public/css/variables';
 
-.agenda-title {
-    color: $color-primary;
-    font-size: $size-large-text;
-    margin: 10px;
-    display: inline-block;
-    height: 40px;
-    line-height: 40px;
+.agenda-header {
+    top: $top-bar-height;
+    left: 300px;
+    right: 0;
     position: fixed;
-    left: 290px;
-}
-button {
-    height: 40px;
-    margin: 10px;
-    border: 2px solid $color-primary;   
+    
+    height: 60px;
+    display: flex;
+    align-items: center;
 }
 
-.float {
-    float: right;
+.agenda-title {
+    flex: 1 auto;
+    margin: 0;
+    text-align: left;
+    font-weight: normal;
+    color: $color-primary;
+    font-size: $size-large-text;
+}
+
+.agenda-menu {
+    button {
+        height: 40px;
+        margin-right: 10px;
+    }
 }
 
 .modal-container {
     width: 500px;
+}
+
+a {
+    color: $color-primary;
+}
+
+.vex-2-button-group {
+    margin: auto;
+    width: 50%;
 }

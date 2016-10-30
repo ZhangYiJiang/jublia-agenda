@@ -181,6 +181,14 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.agendaService.updateSession(this.agenda.id, sessionFromPending);
   }
 
+  onSpeakerChanged(changedSpeaker: Speaker) {
+    console.log('speaker changed in board');
+    console.log(changedSpeaker);
+    this.agendaService.updateSpeaker(this.agenda.id, changedSpeaker);
+    this.eventSpeakers = this.getEventSpeakers();
+    this.eventSpeakersName = this.getEventSpeakersName();
+  }
+
   private onDrop(args: [HTMLElement, HTMLElement]) {
     let [e, el] = args;
     // console.log('drop board');

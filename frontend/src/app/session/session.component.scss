@@ -141,4 +141,28 @@
             border-width: 1px;
         }
     }
+
+    .speaker-card {
+        border-bottom: 1px solid #ccc;
+        margin-left: 20px;
+    }
+
+    .speaker-card:last-child {
+        border-bottom: 0px;
+    }
+
+    .delete-button {
+        float: right;
+
+        button {
+            min-width: initial;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            line-height: 1;
+            background-color: #EB9587;
+            border: 0;
+        }
+    }
+
 }

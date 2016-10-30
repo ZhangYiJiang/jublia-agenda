@@ -2,6 +2,8 @@ import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChil
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
+import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
@@ -47,6 +49,7 @@ export class SessionComponent implements OnInit {
 
   @Output() onSessionEdited = new EventEmitter<Session>();
   @Output() onSessionInterestEdited = new EventEmitter<[number, boolean]>();
+  @Output() onSpeakerEdited = new EventEmitter<Speaker>();
 
   speakersObj = {};
   trackObj = {};
@@ -60,7 +63,10 @@ export class SessionComponent implements OnInit {
   blue: number;
 
   getSessionName(venueId: number) {
-    let venue = this.agenda.session_venues.filter(function(venue) {return venue.id === venueId});
+    let venue: Venue[] = [];
+    if (this.agenda.session_venues) {
+      venue = this.agenda.session_venues.filter(function(venue) {return venue.id === venueId});
+    }
     if (venue.length > 0) {
       return venue[0].name
     }
@@ -98,6 +104,29 @@ export class SessionComponent implements OnInit {
         this.onSessionEdited.emit(this.session);
         this.updateHeight();
       }
+    }
+  }
+
+  updateSessionSpeaker(speakerId: number) {
+    this.session.speakers = _.without(this.session.speakers, speakerId);
+    this.onSessionEdited.emit(this.session);
+  }
+
+  updateSpeaker(event: any, speakerId: number) {
+    let newSpeaker = this.agenda.speakers.filter(function(speaker) {return speaker.id === speakerId})[0];
+    console.log(event);
+    if(typeof event.name === 'string') {
+      newSpeaker.name = event.name;
+      this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.position === 'string') {
+      newSpeaker.position = event.position;
+      this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.email === 'string') {
+      newSpeaker.email = event.email;
+      this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.phone_number === 'string') {
+      newSpeaker.phone_number = event.phone_number;
+      this.onSpeakerEdited.emit(newSpeaker);
     }
   }
 

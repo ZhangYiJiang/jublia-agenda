@@ -376,13 +376,6 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sessionForm: FormGroup;
   formMsg: string;
-  options = {
-    placeholderTags: "+ tag",
-    secondaryPlaceholderTags: "Enter a custom tag",
-    placeholderSpeakers: "+ speaker",
-    secondaryPlaceholderSpeakers: "Add an existing speaker",
-    secondaryPlaceholderVenue: "Add an existing venue",
-  };
   showVenueForm: boolean = false;
 
   ngOnInit(): void {

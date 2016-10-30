@@ -60,23 +60,25 @@
         
         <div class="field-with-label">
           <label class="field-label">Tags</label>
-          <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" 
-                     [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" 
-                     [autocompleteItems]="eventTagsName" [autocomplete]="true"></tag-input>
+          <tag-input [ngModel]="sessionForm.tags" 
+                     placeholder=" + Tags" 
+                     secondaryPlaceholder="Add Tags" 
+                     formControlName="tags" 
+                     [autocompleteItems]="eventTagsName" 
+                     [autocomplete]="true"></tag-input>
         </div>
         
         <div class="field-with-label">
           <label class="field-label">Venue</label>
           <div class="field-row">
-            <tag-input [ngModel]="sessionForm.existingVenue" [maxItems]="1" 
-                       [secondaryPlaceholder]="options.secondaryPlaceholderVenue" 
+            <tag-input [ngModel]="sessionForm.existingVenue" [maxItems]="1"
+                       secondaryPlaceholder="Session Venue" 
                        formControlName="existingVenue" 
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventVenuesName" 
                        [autocomplete]="true"></tag-input>
             <button *ngIf="!showVenueForm" type="button" md-button disableRipple (click)="addVenue()">
-              <md-icon>add</md-icon>
-              Add a New Venue
+              <md-icon>add</md-icon> New Venue
             </button>
           </div>
 
@@ -98,64 +100,61 @@
           <label class="field-label">Speakers</label>
           <div class="field-row">
             <tag-input [ngModel]="sessionForm.existingSpeakers" 
-                       [placeholder]="options.placeholderSpeakers" 
-                       [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" 
+                       placeholder=" + speaker" 
+                       secondaryPlaceholder="Add Speakers" 
                        formControlName="existingSpeakers" 
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventSpeakersName" 
                        [autocomplete]="true"></tag-input>
             <button type="button" md-button (click)="addSpeaker()">
-              <md-icon>add</md-icon>
-              Add a New Speaker
+              <md-icon>add</md-icon> New Speaker
             </button>
           </div>
         </div>
     
         <div formArrayName="newSpeakers">
           <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">
-            <table>
-              <tr>
-                <button type="button" md-mini-fab disableRipple *ngIf="sessionForm.controls.newSpeakers.controls.length > 0" (click)="removeSpeaker(i)">
-                  <md-icon>remove</md-icon>
-                </button>
-                New Speaker {{i + 1}}
-              </tr>
-              <div [formGroupName]="i">
-                <tr>
-                  <md-input type="text" formControlName="name" placeholder="Name"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.name.valid">
+            <div>
+              <button type="button" md-mini-fab disableRipple *ngIf="sessionForm.controls.newSpeakers.controls.length > 0" (click)="removeSpeaker(i)">
+                <md-icon>remove</md-icon>
+              </button>
+              New Speaker {{i + 1}}
+            </div>
+            <div [formGroupName]="i">
+              <div>
+                <md-input type="text" formControlName="name" placeholder="Name"></md-input>
+                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.name.valid">
                   Name is required
                 </small>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="company" placeholder="Company"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.company.valid">
+              </div>
+              <div>
+                <md-input type="text" formControlName="company" placeholder="Company"></md-input>
+                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.company.valid">
                   Company is required
                 </small>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="position" placeholder="Position"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.position.valid">
+              </div>
+              <div>
+                <md-input type="text" formControlName="position" placeholder="Position"></md-input>
+                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.position.valid">
                   Position is required
                 </small>
-                </tr>
-                <tr>
-                  <md-input type="email" formControlName="email" placeholder="Email"></md-input>
-                  <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.email.valid">
+              </div>
+              <div>
+                <md-input type="email" formControlName="email" placeholder="Email"></md-input>
+                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.email.valid">
                   Email is required
                 </small>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="phone_number" placeholder="Phone number"></md-input>
-                </tr>
-                <tr>
-                  <md-input type="text" formControlName="company_description" placeholder="Company description"></md-input>
-                </tr>
-                <tr>
-                  <md-input type="url" formControlName="company_url" placeholder="Company website"></md-input>
-                </tr>
               </div>
-            </table>
+              <div>
+                <md-input type="text" formControlName="phone_number" placeholder="Phone number"></md-input>
+              </div>
+              <div>
+                <md-input type="text" formControlName="company_description" placeholder="Company description"></md-input>
+              </div>
+              <div>
+                <md-input type="url" formControlName="company_url" placeholder="Company website"></md-input>
+              </div>
+            </div>
           </div>
         </div>
 

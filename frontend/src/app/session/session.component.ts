@@ -36,15 +36,12 @@ export class SessionComponent implements OnInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input() session: Session;
   @Input() offsetDate: Date;
-  @Input()
-  agenda: Agenda;
+  @Input() agenda: Agenda;
   @Input() isPublic: boolean;
 
-  @Input()
-  token: string;
+  @Input() token: string;
 
-  @Input()
-  interested: boolean;
+  @Input() interested: boolean;
 
   interestedButtonText: string;
 

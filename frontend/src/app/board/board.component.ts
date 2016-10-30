@@ -303,7 +303,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.eventTags || this.eventTags.length === 0) {
       return [];
     } else {
-      return this.eventTags.map(function(tag) {return tag.name});
+      return this.eventTags.map(tag => tag.name);
     }
   }
 
@@ -319,7 +319,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.eventSpeakers || this.eventSpeakers.length === 0) {
       return [];
     } else {
-      return this.eventSpeakers.map(function(speaker) {return speaker.name});
+      return this.eventSpeakers.map(speaker => speaker.name);
     }
   }
 
@@ -335,7 +335,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.eventVenues || this.eventVenues.length === 0) {
       return [];
     } else {
-      return this.eventVenues.map(function(venue) {return venue.name});
+      return this.eventVenues.map(venue => venue.name);
     }
   }
 
@@ -361,13 +361,16 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eventSpeakersName = this.getEventSpeakersName();
     this.eventVenues = this.getEventVenues();
     this.eventVenuesName = this.getEventVenuesName();
-    if(this.agenda.sessions == null) {
+    
+    if (this.agenda.sessions == null) {
       this.agenda.sessions = [];
     }
+    
     this.allSessions = this.agenda.sessions;
-    let partioned = _.partition(this.allSessions, function(o:Session){return o.hasOwnProperty('start_at')});
-    this.pendingSessions = partioned[1];
-    this.nonPendingSessions = partioned[0];
+    
+    const partitioned = _.partition(this.allSessions, (o:Session) => o.hasOwnProperty('start_at'));
+    this.pendingSessions = partitioned[1];
+    this.nonPendingSessions = partitioned[0];
   }
 
   refreshAgenda(newAgenda: Agenda) {
@@ -458,8 +461,16 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const requests: Promise<any>[] = [];
     
     requests.push(...this.sessionForm.value.newSpeakers.map((speaker:any) => {
-      const request = this.boardService.createSpeaker(this.agenda.id, speaker.name, speaker.company, speaker.position, speaker.email, speaker.phone_number, speaker.company_description, speaker.company_url)
-        .toPromise();
+      const request = this.boardService.createSpeaker(
+        this.agenda.id, 
+        speaker.name, 
+        speaker.company, 
+        speaker.position, 
+        speaker.email, 
+        speaker.phone_number, 
+        speaker.company_description, 
+        speaker.company_url,
+      ).toPromise();
       
       request.then(data => {
         console.log('new speaker created: ' + data.name);
@@ -485,8 +496,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }));
 
     if (this.showVenueForm) {
-      const request = this.boardService.createVenue(this.agenda.id, this.sessionForm.value.newVenue.name, this.sessionForm.value.newVenue.unit)
-        .toPromise();
+      const request = this.boardService.createVenue(
+        this.agenda.id, 
+        this.sessionForm.value.newVenue.name, 
+        this.sessionForm.value.newVenue.unit,
+      ).toPromise();
+      
       request.then(data => {
         console.log('new venue created: ' + data.name);
         this.eventVenues.push(data);
@@ -539,8 +554,15 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log(tagsId);
     console.log(venueId);
     
-    const request: Observable<any> = this.boardService.createSession(this.agenda.id, this.sessionForm.value.name, this.sessionForm.value.description, 
-                                    this.sessionForm.value.duration, speakersId, tagsId, venueId[0]);
+    const request: Observable<any> = this.boardService.createSession(
+      this.agenda.id, 
+      this.sessionForm.value.name, 
+      this.sessionForm.value.description, 
+      this.sessionForm.value.duration, 
+      speakersId, 
+      tagsId, 
+      venueId[0],
+    );
         
     request.subscribe(
       data => { 

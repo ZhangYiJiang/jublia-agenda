@@ -53,7 +53,9 @@
           </tr>
           <tr>Tags</tr>
           <tr>
-            <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" [autocompleteItems]="eventTagsName" [autocomplete]="true" (onSelect)="onSelected()"></tag-input>
+            <tag-input [ngModel]="sessionForm.tags" [placeholder]="options.placeholderTags" 
+                       [secondaryPlaceholder]="options.secondaryPlaceholderTags" formControlName="tags" 
+                       [autocompleteItems]="eventTagsName" [autocomplete]="true"></tag-input>
           </tr>
           <tr>Venue</tr>
           <tr>

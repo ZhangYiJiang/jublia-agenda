@@ -58,12 +58,16 @@
 </template>
 <template #publishRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
     <div class="modal-container">
-      <div>After publishing the event, anyone with your event's public link will be able to view and indicate interests in your event. You will get participants statistics such as popularity of the sessions in the Analytics page.</div>
+      <div>After publishing the event, anyone with your event's public link will be able to view and indicate interests in your event.</div>
+      <br>
+      <div>You will get participants statistics such as popularity of the sessions in the Analytics page (only available after publishing).</div>
+      <br>
       <div class="vex-2-button-group" *ngIf="!agenda.published">
         <button md-button class="primary" (click)="publishAgenda()">Publish</button>
         <button md-button class="secondary" (click)="dialogRef.close(true)">Cancel</button>
       </div>
-      <div *ngIf="agenda.published">{{publicUrl}}</div>
+      <div *ngIf="agenda.published">Link: <a href="{{publicUrl}}" target="blank">{{publicUrl}}</a></div>
+      <br>
       <div class="vex-2-button-group" *ngIf="agenda.published">
         <button md-button class="primary" (click)="dialogRef.close(true)">Ok</button>
         <button md-button class="secondary" (click)="unpublishAgenda()">Unpublish</button>

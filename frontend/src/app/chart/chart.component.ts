@@ -15,8 +15,16 @@ export class LineChartComponent implements OnInit {
 
   ngOnInit() {
     this.lineChartData = [
-      {data: this.dataY, label: 'New bookmarks'},
-      {data: this.getCumulativeCount(this.dataY), label: 'Cumulative no. of bookmarks'}
+      {
+        data: this.dataY, 
+        cubicInterpolationMode: 'monotone', 
+        label: 'New bookmarks'
+      },
+      {
+        data: this.getCumulativeCount(this.dataY), 
+        cubicInterpolationMode: 'monotone', 
+        label: 'Cumulative no. of bookmarks'
+      }
     ];
     this.lineChartLabels = this.dataX;
     this.isEmpty = _.sum(this.dataY) === 0;

@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, ContentChildren,QueryList,TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { setImmediate } from 'core-js';
@@ -22,7 +22,7 @@ import { Overlay } from 'angular2-modal';
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import * as $ from 'jquery';
-
+import { AbsoluteColumnComponent } from '../absolute-column/absolute-column.component';
 import {
   VEXBuiltInThemes,
   Modal,
@@ -46,6 +46,7 @@ import {
 })
 export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
+  @ContentChildren(AbsoluteColumnComponent) private absCol: QueryList<AbsoluteColumnComponent>;
   @Input()
   agenda: Agenda;
   @Input()
@@ -77,6 +78,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   columnGap = 10;
 
   dragging: boolean = false;
+
+  //for adding new session by clicking on abs-col
+  addingSessionWithStart = false;
+  sessionStartTime:number;
 
   hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
 
@@ -176,6 +181,13 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     return false;
+  }
+
+  onCreateSessionWithStart(startTime: number) {
+    //console.log('in board '+startTime);
+    this.addingSessionWithStart = true;
+    this.sessionStartTime = startTime;
+    this.createSessionModal();
   }
 
   onSessionChanged(changedSession: Session) {
@@ -502,8 +514,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     // TODO: Error handling - this is problematic right now because of transactions. 
     const requests: Promise<any>[] = [];
     
-    requests.push(...this.sessionForm.value.newSpeakers.map((speaker:any) => {
-      const request = this.boardService.createSpeaker(
+    requests.push(...this.sessionForm.value.newSpeakers.map((speaker:any) => { 
+        const request = this.boardService.createSpeaker(
         this.agenda.id, 
         speaker.name, 
         speaker.company, 
@@ -596,22 +608,44 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log(speakersId);
     console.log(tagsId);
     console.log(venueId);
-    
-    const request: Observable<any> = this.boardService.createSession(
-      this.agenda.id, 
-      this.sessionForm.value.name, 
-      this.sessionForm.value.description, 
-      this.sessionForm.value.duration, 
-      speakersId, 
-      tagsId, 
-      venueId[0],
-    );
+    var request:Observable<any>;
+    if(this.addingSessionWithStart){
+      if(!this.sessionForm.value.duration){
+        this.sessionForm.value.duration = 60;
+      }
+      request = this.boardService.createSession(
+        this.agenda.id, 
+        this.sessionForm.value.name, 
+        this.sessionForm.value.description, 
+        this.sessionForm.value.duration, 
+        speakersId, 
+        tagsId, 
+        venueId[0],
+        this.sessionStartTime
+      );
+    }else{ 
+      request = this.boardService.createSession(
+        this.agenda.id, 
+        this.sessionForm.value.name, 
+        this.sessionForm.value.description, 
+        this.sessionForm.value.duration, 
+        speakersId, 
+        tagsId, 
+        venueId[0]
+      );
+     }
         
     request.subscribe(
       data => { 
         this.formMsg = 'New session created!';
         this.allSessions.push(data);
+        if(!this.addingSessionWithStart){
         this.pendingSessions.push(data);
+        }else{
+          this.absCol.addInNewSession(data);
+          this.addingSessionWithStart = false;
+        }
+
       },
       error => this.formMsg = <any>error
     );

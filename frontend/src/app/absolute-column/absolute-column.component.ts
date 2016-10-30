@@ -8,6 +8,7 @@ import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Track } from '../track/track';
 import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 import { AgendaService } from '../agenda/agenda.service';
 
 import { DOMUtilService } from '../util/dom.util.service';
@@ -46,6 +47,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerChanged = new EventEmitter<Speaker>();
+  @Output() onVenueChanged = new EventEmitter<Venue>();
   @Output() onCreateSessionWithStart = new EventEmitter<number>();
 
   containers: Container[] = [];
@@ -93,6 +95,11 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   onSpeakerEdited(editedSpeaker: Speaker) {
     // propagate to board
     this.onSpeakerChanged.emit(editedSpeaker);
+  }
+
+  onVenueEdited(editedVenue: Venue) {
+    // propagate to board
+    this.onVenueChanged.emit(editedVenue);
   }
 
   onSessionDeleted(deletedSession: Session) {

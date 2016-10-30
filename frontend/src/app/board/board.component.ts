@@ -237,6 +237,14 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eventSpeakersName = this.getEventSpeakersName();
   }
 
+  onVenueChanged(changedVenue: Venue) {
+    console.log('venue changed in board');
+    console.log(changedVenue);
+    this.agendaService.updateVenue(this.agenda.id, changedVenue);
+    this.eventVenues = this.getEventVenues();
+    this.eventVenuesName = this.getEventVenuesName();
+  }
+
   private onDrop(args: [HTMLElement, HTMLElement]) {
     let [e, el] = args;
     // console.log('drop board');
@@ -430,7 +438,9 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   createSessionModal() {
-    console.log("session modal");
+    console.log("session form");
+    this.eventTags = this.getEventTags(); // update autocomplete when tags are added through the session modal
+    this.eventTagsName = this.getEventTagsName();
     this.sessionForm = this._fb.group({
       name: ['', [<any>Validators.required]],
       description: [''],
@@ -576,6 +586,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.eventVenuesName.push(data.name);
         this.sessionForm.value.existingVenue.pop();
         this.sessionForm.value.existingVenue.push(data.name);
+        if (!this.agenda.session_venues) {
+          this.agenda.session_venues = [];
+        }
+        this.agenda.session_venues.push(data);
       });
       requests.push(request);
     }

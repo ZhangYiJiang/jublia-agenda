@@ -5,7 +5,8 @@
     (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
     (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
     (onSessionInterestChanged)="onSessionInterestChanged($event)"
-    (onSpeakerChanged)="onSpeakerChanged($event)" *ngIf="!isPublic">
+    (onSpeakerChanged)="onSpeakerChanged($event)"
+    (onVenueChanged)="onVenueChanged($event)" *ngIf="!isPublic">
   </relative-column>
   <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()" *ngIf="!isPublic">
     <md-icon>add</md-icon>
@@ -30,6 +31,7 @@
                 (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
                 (onSessionInterestChanged)="onSessionInterestChanged($event)"
                 (onSpeakerChanged)="onSpeakerChanged($event)"
+                (onVenueChanged)="onVenueChanged($event)"
                 (onCreateSessionWithStart)="onCreateSessionWithStart($event)"
                 [token]="token" [interestedSessionIds]="interestedSessionIds">
               </absolute-column>

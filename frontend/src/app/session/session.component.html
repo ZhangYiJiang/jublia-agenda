@@ -8,7 +8,7 @@
       {{getDisplayedTime()}}</div>
     <div *ngIf="!session.start_at && session.duration" class="session-time">
       {{session.duration}} min</div>
-    <div class="session-venue">{{getSessionName(session.venue)}}</div>
+    <div class="session-venue" *ngIf="session.venue">{{ getVenue().name }}</div>
   </div>
 </div>
 
@@ -35,14 +35,16 @@
         <div *ngIf="session.speakers">
           <div class="speaker-card" *ngFor="let speakerId of session.speakers">
             <h3>
-              <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit>
+              <!-- name not editable for now to avoid uniqueness conflicts -->
+              <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
+              <p>{{ speakersObj[speakerId].name }}</p>
               <div class="delete-button" *ngIf="!isPublic">
                 <button class="primary" md-button (click)="updateSessionSpeaker(speakerId)">x</button>
               </div>
             </h3>
-            <p><ndv-edit [title]="'position'" [placeholder]="speakersObj[speakerId].position" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
-            <p>Email: <ndv-edit [title]="'email'" [placeholder]="speakersObj[speakerId].email" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
-            <p>Phone: <ndv-edit [title]="'phone_number'" [placeholder]="speakersObj[speakerId].phone_number" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            <p><ndv-edit [title]="'position'" [placeholder]="speakersObj[speakerId].position || 'Company\'s position not given'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            <p>Email: <ndv-edit [title]="'email'" [placeholder]="speakersObj[speakerId].email || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            <p>Phone: <ndv-edit [title]="'phone_number'" [placeholder]="speakersObj[speakerId].phone_number || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
           </div>
         </div>
         <div *ngIf="!session.speakers && !isPublic">
@@ -77,7 +79,8 @@
           </div>
           <div>
             <p>{{ getVenue().name }}</p>
-            <p class="session-info-secondary" *ngIf="getVenue().unit">{{ getVenue().unit }}</p>
+            <p class="session-info-secondary"><ndv-edit [title]="'unit'" [placeholder]="getVenue().unit || 'Unit number not given'" (onSave)="updateVenue($event)" [permission]="!isPublic"></ndv-edit></p>
+            <!-- <p class="session-info-secondary" *ngIf="getVenue().unit">{{ getVenue().unit }}</p> -->
           </div>
         </div><!-- /.session-info -->
 

@@ -54,6 +54,7 @@ export class SessionComponent implements OnInit {
   @Output() onSessionDeleted = new EventEmitter<Session>();
   @Output() onSessionInterestEdited = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerEdited = new EventEmitter<Speaker>();
+  @Output() onVenueEdited = new EventEmitter<Venue>();
 
   speakersObj = {};
   trackObj = {};
@@ -68,16 +69,6 @@ export class SessionComponent implements OnInit {
   red: number;
   green: number;
   blue: number;
-
-  getSessionName(venueId: number) {
-    let venue: Venue[] = [];
-    if (this.agenda.session_venues) {
-      venue = this.agenda.session_venues.filter(function(venue) {return venue.id === venueId});
-    }
-    if (venue.length > 0) {
-      return venue[0].name
-    }
-  }
   
   getVenue(): Venue {
     return _.find(this.agenda.session_venues, {id: this.session.venue});
@@ -160,6 +151,15 @@ export class SessionComponent implements OnInit {
     }
   }
 
+  updateVenue(event: any) {
+    console.log(event);
+    let newVenue = this.getVenue();
+    if(typeof event.unit === 'string') {
+      newVenue.unit = event.unit;
+      this.onVenueEdited.emit(newVenue);
+    }
+  }
+
   removeTag(name: string) {
     let tagId: number = _.find(this.eventTags, {name}).id;
     let defaultCategoryId: number = this.agenda.categories[0].id;
@@ -206,6 +206,8 @@ export class SessionComponent implements OnInit {
   }
 
   clicked(event: DocumentEvent) {
+    this.eventTags = this.getEventTags();
+    this.eventTagsName = this.getEventTagsName();
     this.sessionTagsName = _.values(_.values(this.session.categories)[0])
         .map((id: number) => _.find(this.eventTags, {id}).name);
     this.modal.open(
@@ -292,8 +294,6 @@ export class SessionComponent implements OnInit {
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
-    this.eventTags = this.getEventTags();
-    this.eventTagsName = this.getEventTagsName();
 
     this.updateInterestButtonText();
 

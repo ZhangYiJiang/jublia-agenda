@@ -2,9 +2,10 @@ import { Input, Component,trigger, state, style, transition, animate, Output, Ev
 
 import * as _ from 'lodash';
 
-import {Session} from '../session/session';
+import { Session } from '../session/session';
 import { Speaker } from '../speaker/speaker';
 import { Agenda } from '../agenda/agenda';
+import { Venue } from '../venue/venue';
 
 const MARGIN_LEFT_SHOW: string = '0px';
 const MARGIN_LEFT_HIDE: string = '-200px';
@@ -39,6 +40,7 @@ export class RelativeColumnComponent {
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerChanged = new EventEmitter<Speaker>();
+  @Output() onVenueChanged = new EventEmitter<Venue>();
 
   colState = 'open';
   isColShown = true;
@@ -56,6 +58,11 @@ export class RelativeColumnComponent {
   onSpeakerEdited(editedSpeaker: Speaker) {
     // propagate to board
     this.onSpeakerChanged.emit(editedSpeaker);
+  }
+
+  onVenueEdited(editedVenue: Venue) {
+    // propagate to board
+    this.onVenueChanged.emit(editedVenue);
   }
 
   onSessionDeleted(deletedSession: Session) {

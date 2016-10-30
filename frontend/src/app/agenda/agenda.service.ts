@@ -6,6 +6,7 @@ import { DashBoardService } from '../dash-board/dash-board.service';
 import { Agenda } from './agenda';
 import { Session } from '../session/session';
 import { Speaker } from '../speaker/speaker';
+import { Venue } from '../venue/venue';
 
 @Injectable()
 export class AgendaService {
@@ -109,6 +110,21 @@ export class AgendaService {
         .subscribe(
           res => {
             console.log('update speaker successful');
+            // console.log(res)
+          },
+          err => console.error(err)
+        );
+  }
+
+  updateVenue(agendaId: number, newVenue: Venue) {
+    console.log('updating venue ' + agendaId + ' venue ' + newVenue.id);
+    console.log(JSON.stringify(newVenue, null, 4));
+    this.httpClient
+        .put(this.BASE_URL + '/' + agendaId + '/venues/' + newVenue.id, JSON.stringify(newVenue))
+        .catch(this.handleError)
+        .subscribe(
+          res => {
+            console.log('update venue successful');
             // console.log(res)
           },
           err => console.error(err)

@@ -33,7 +33,7 @@
   </div>
 </div>
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-  <div class="modal-container">
+  <div class="new-session modal-container">
     <div class="page-header">
       <h1>Add New Session</h1>
     </div>
@@ -61,7 +61,7 @@
         
         <div class="field-with-label">
           <label class="field-label">Venue</label>
-          <div>
+          <div class="field-row">
             <tag-input [ngModel]="sessionForm.existingVenue" [maxItems]="1" 
                        [secondaryPlaceholder]="options.secondaryPlaceholderVenue" 
                        formControlName="existingVenue" 
@@ -90,7 +90,7 @@
         
         <div class="field-with-label">
           <label class="field-label">Speakers</label>
-          <div>
+          <div class="field-row">
             <tag-input [ngModel]="sessionForm.existingSpeakers" 
                        [placeholder]="options.placeholderSpeakers" 
                        [secondaryPlaceholder]="options.secondaryPlaceholderSpeakers" 

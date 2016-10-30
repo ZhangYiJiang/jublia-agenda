@@ -20,14 +20,14 @@ body {
 .field-label {
     display: block;
     font-size: 12px;
-    margin: -10px 0 0 1px;
+    margin: -12px 0 0 1px;
     color: $color-secondary;
     text-align: left;
     line-height: 1;
 }
 
 .field-with-label {
-    padding: 12px 0;
+    padding: 16px 0;
 }
 
 // Overrides - using the body tag to override the specificity of some of these 
@@ -52,8 +52,19 @@ body {
         color: $color-primary;
     }
 
-    .md-input-placeholder.md-float:not(.md-empty), .md-input-placeholder.md-float.md-focused {
+    .md-input-placeholder.md-float:not(.md-empty), 
+    .md-input-placeholder.md-float.md-focused {
         color: $color-secondary;
+    }
+    
+    .tag-input.default .tags-container .tag {
+        background: $color-secondary;
+        
+        &:hover:not(.tag--readonly),
+        &:focus:not(.tag--readonly) {
+            background: $color-primary;
+            color: #fff;
+        }
     }
 
     // Vex's default theme fixes the width of the modal. This doesn't work for us 

@@ -119,3 +119,28 @@
 .ng2-dropdown-menu-container {
     z-index: 10000;
 }
+
+.new-session.modal-container {
+    width: 500px;
+    
+    h1 {
+        margin-bottom: 0;
+    }
+    
+    md-input {
+        width: 100%;
+    }
+    
+    .field-row {
+        display: flex;
+        
+        tag-input {
+            flex: 1 auto;
+            margin-right: 20px;
+        }
+
+        button md-icon {
+            vertical-align: middle;
+        }
+    }
+}

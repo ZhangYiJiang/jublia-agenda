@@ -439,6 +439,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createSessionModal() {
     console.log("session form");
+    this.showVenueForm = false;
     this.eventTags = this.getEventTags(); // update autocomplete when tags are added through the session modal
     this.eventTagsName = this.getEventTagsName();
     this.sessionForm = this._fb.group({
@@ -512,6 +513,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   submitAndContinueSessionForm(evt: any) {
+    this.showVenueForm = false;
     evt.preventDefault();
     this.submitSessionForm();
   }

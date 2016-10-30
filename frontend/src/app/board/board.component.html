@@ -85,18 +85,20 @@
               <md-icon>add</md-icon> New Venue
             </button>
           </div>
+        </div>
 
-          <div formGroupName="newVenue" *ngIf="showVenueForm">
-            <button type="button" md-mini-fab disableRipple (click)="removeVenue()">
-              <md-icon>remove</md-icon>
-            </button>
+        <div class="subform" formGroupName="newVenue" *ngIf="showVenueForm">
+          <div class="subform-header">
             New Venue
-            <div>
-              <md-input type="text" formControlName="name" placeholder="Venue Name"></md-input>
+            <div class="delete-button">
+              <button class="primary" md-button (click)="removeVenue()">x</button>
             </div>
-            <div>
-              <md-input type="text" formControlName="unit" placeholder="Unit Number"></md-input>
-            </div>
+          </div>
+          <div>
+            <md-input type="text" formControlName="name" placeholder="Venue Name"></md-input>
+          </div>
+          <div>
+            <md-input type="text" formControlName="unit" placeholder="Unit Number"></md-input>
           </div>
         </div>
         
@@ -116,13 +118,13 @@
           </div>
         </div>
     
-        <div formArrayName="newSpeakers">
+        <div class="subform" formArrayName="newSpeakers">
           <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">
-            <div>
-              <button type="button" md-mini-fab disableRipple *ngIf="sessionForm.controls.newSpeakers.controls.length > 0" (click)="removeSpeaker(i)">
-                <md-icon>remove</md-icon>
-              </button>
+            <div class="subform-header">
               New Speaker {{i + 1}}
+              <div class="delete-button" *ngIf="sessionForm.controls.newSpeakers.controls.length > 0">
+                <button class="primary" md-button (click)="removeSpeaker(i)">x</button>
+              </div>
             </div>
             <div [formGroupName]="i">
               <div>

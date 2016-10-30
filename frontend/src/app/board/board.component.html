@@ -122,28 +122,16 @@
             </div>
             <div [formGroupName]="i">
               <div>
-                <md-input type="text" formControlName="name" placeholder="Name"></md-input>
-                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.name.valid">
-                  Name is required
-                </small>
+                <md-input type="text" formControlName="name" placeholder="Name" required></md-input>
               </div>
               <div>
-                <md-input type="text" formControlName="company" placeholder="Company"></md-input>
-                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.company.valid">
-                  Company is required
-                </small>
+                <md-input type="text" formControlName="company" placeholder="Company" required></md-input>
               </div>
               <div>
-                <md-input type="text" formControlName="position" placeholder="Position"></md-input>
-                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.position.valid">
-                  Position is required
-                </small>
+                <md-input type="text" formControlName="position" placeholder="Position" required></md-input>
               </div>
               <div>
-                <md-input type="email" formControlName="email" placeholder="Email"></md-input>
-                <small [hidden]="sessionForm.controls.newSpeakers.controls[i].controls.email.valid">
-                  Email is required
-                </small>
+                <md-input type="email" formControlName="email" placeholder="Email" required></md-input>
               </div>
               <div>
                 <md-input type="text" formControlName="phone_number" placeholder="Phone number"></md-input>

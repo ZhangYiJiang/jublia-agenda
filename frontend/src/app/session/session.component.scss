@@ -57,6 +57,7 @@
 }
 
 .modal-container {
+    width: 720px;
     padding: 10px;
     
     .page-header {
@@ -94,11 +95,12 @@
     }
     
     .session-main {
-        min-width: 400px;
+        width: 400px;
+        line-height: 1.5;
     }
     
     .session-meta {
-        max-width: 280px;
+        width: 280px;
         margin-left: 20px;
         padding-left: 20px;
         border-left: 1px solid #ccc;
@@ -118,7 +120,7 @@
         .session-icon {
             display: flex;
             align-items: center;
-            width: 35px;
+            width: 25px;
             color: #999;
         }
 

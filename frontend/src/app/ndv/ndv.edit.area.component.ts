@@ -90,7 +90,7 @@
                <form *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}"><div>
                    <textarea rows="6" cols="55" *ngIf='show' [(ngModel)]='text' [ngModelOptions]='{standalone: true}'></textarea>
                    <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
-                   <span *ngIf='!show' style='line-height:1.5em;word-wrap: break-word;'>{{text || '-Empty Field-'}}</span>
+                   <span *ngIf='!show'>{{text || '-Empty Field-'}}</span>
                </div>
                <div class='ndv-buttons' *ngIf='show'>
                    <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>

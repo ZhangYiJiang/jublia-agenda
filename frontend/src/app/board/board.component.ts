@@ -14,6 +14,7 @@ import { Speaker } from '../speaker/speaker';
 import { Venue } from '../venue/venue';
 import { AgendaService } from '../agenda/agenda.service';
 import { BoardService } from './board.service';
+import { GlobalVariable } from '../globals';
 
 import { DOMUtilService } from '../util/dom.util.service';
 import { overlayConfigFactory } from 'angular2-modal';
@@ -150,6 +151,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if(draggingSession == null) {
       console.error('Session not found in board for id: ' + draggingSessionId);
     }
+    let draggingDuration = draggingSession.duration;
+    // use default new duration is session does not have duration
+    if(draggingDuration == null) {
+      draggingDuration = GlobalVariable.DEFAULT_NEW_DURATION;
+    }
     for (var i = 0; i < this.allSessions.length; i++) {
       // skip pending session
       if(this.allSessions[i].start_at == null) {
@@ -160,7 +166,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         // same track
         && this.allSessions[i].track === trackId
         // existing session starts before the dragging session ends
-        && this.allSessions[i].start_at < (startAt + draggingSession.duration)
+        && this.allSessions[i].start_at < (startAt + draggingDuration)
         // existing session ends after the dragging session start
         && (this.allSessions[i].start_at + this.allSessions[i].duration) > startAt) {
         console.log('collision with');

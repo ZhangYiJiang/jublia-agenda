@@ -53,7 +53,7 @@ export class DashBoardComponent implements OnInit {
   registerEmailError: string;
   registerPasswordError: string;
   formErrors = { name:"",start:"",duration:"",website:"",other:""};
-  today = moment().format("YYYY-MM-DD");
+  today = moment().add(1, 'day').format("YYYY-MM-DD");
   addNewAgenda = false;
   deleting = false;
   deletedAgenda: Agenda;
@@ -89,15 +89,11 @@ export class DashBoardComponent implements OnInit {
       description: [''],
       location: [''],
       start: ['', [<any>Validators.required]],
-      duration: [1, [Validators.required,Validators.pattern('^[1-9]$')]],
+      duration: [3, [Validators.required,Validators.pattern('^[1-9]$')]],
       website:'',
       tracks: [[]],
     });
   }
-
-  /*private clearMsg = () => {
-    setTimeout(()=>{this.successMsg = undefined;},3000);
-  };*/
 
   clearLoginErrors(){
     this.loginEmailError=undefined;

@@ -42,9 +42,9 @@
     <div class="agenda-list-card clearfix">
       <h2>All Events</h2>
       
-      <ul class="agenda-list">
+      <ul class="agenda-list" [class.deleting]="deleting">
         <li *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first" 
-						[class.fly-in]="isFirst&&addNewAgenda" (click)="onSelect(agenda)" 
+						[class.fly-in]="isFirst && addNewAgenda" (click)="onSelect(agenda)" 
             role="link" tabindex="0">
           {{agenda.name}}
 
@@ -57,7 +57,7 @@
         <md-icon class="delete">delete</md-icon>Delete Events
       </a>
     </div>
-    <div class = "new-agenda-card">
+    <div class="new-agenda-card">
       <h2>New Event</h2>
       <form [formGroup]="agendaForm" novalidate (ngSubmit)="submitAgendaForm()">
         <div>
@@ -75,26 +75,25 @@
         
         <!-- TODO: change to and style textarea (not in md yet) -->    
         <div>
-          <md-input type="text" (focus)="clearError('start')" formControlName="location" 
-                    placeholder="Location"></md-input>
+          <md-input type="text" formControlName="location" placeholder="Location"></md-input>
         </div>
-        <div>
-          <md-input type="date" min="{{today}}" (focus)="clearError('start')" required 
-                    formControlName="start" placeholder="Start Date">
-            <md-hint class="form-error-hint" align="start">{{formErrors.start}}</md-hint>
-          </md-input>
+        
+        <div class="date-row">
+          <div>
+            <md-input type="date" min="{{today}}" required formControlName="start" placeholder="Start Date">
+              <md-hint class="form-error-hint" align="start">{{formErrors.start}}</md-hint>
+            </md-input>
+          </div>
+          
+          <div>
+            <md-input type="number" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
+              <md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
+            </md-input>
+          </div>
         </div>
         
         <div>
-          <md-input type="number" (focus)="clearError('duration')" class="above-tags" 
-                    formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
-            <md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
-          </md-input>
-        </div>
-        
-        <div>
-          <md-input type="url" (focus)="clearError('website')" formControlName="website" 
-                    placeholder="Organiser website">
+          <md-input type="url" (focus)="clearError('website')" formControlName="website" placeholder="Event website">
             <md-hint class="form-error-hint" align="start">{{formErrors.website}}</md-hint>
           </md-input>
         </div>

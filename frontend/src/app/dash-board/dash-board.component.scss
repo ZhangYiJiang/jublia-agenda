@@ -15,21 +15,6 @@ form md-input, form .field-with-label {
     height: 100%;
 }
 
-.dash-board-title {
-    background: gray;
-}
-
-.success {
-    font-size: 14px;
-    border: 2px solid green;
-    padding: 10px;
-    display: inline-block;
-    color: green;
-    position: absolute;
-    top: 50px;
-    transform: translateX(-50%) translateX(0px);
-}
-
 .sign-up-form {
     margin-top: 100px;
     table {
@@ -116,6 +101,10 @@ form md-input, form .field-with-label {
             color: white;
         }
     }
+    
+    &.deleting li {
+        padding-right: 36px;
+    }
 
     md-icon.warn {
         position: absolute;
@@ -133,16 +122,18 @@ form md-input, form .field-with-label {
 }
 
 .new-agenda-card {
-    form {
-        overflow: auto;
-    }
-    
     md-input {
         margin-bottom: 10px;
     }
     
-    .above-tags {
-        margin-bottom: 18px;
+    .date-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        
+        md-input {
+            width: 130px;
+        }
     }
     
     .other-error {

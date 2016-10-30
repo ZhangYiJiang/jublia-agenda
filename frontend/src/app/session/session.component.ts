@@ -48,6 +48,7 @@ export class SessionComponent implements OnInit {
   interestedButtonText: string;
 
   @Output() onSessionEdited = new EventEmitter<Session>();
+  @Output() onSessionDeleted = new EventEmitter<Session>();
   @Output() onSessionInterestEdited = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerEdited = new EventEmitter<Speaker>();
 
@@ -86,6 +87,25 @@ export class SessionComponent implements OnInit {
         duration: newDuration
       });  
     }
+  }
+
+  confirmDelete(dialogRef: any) {
+    console.log('confirm delete');
+    let dialog = this.modal.confirm()
+      .message('Confirm delete?')
+      .okBtn('Delete')
+      .cancelBtn('Cancel')
+      .open();
+    dialog.then((resultPromise) => {
+      return resultPromise.result.then((result) => {
+        this.deleteSession();
+        dialogRef.close(true);
+      }, () => {});
+    });
+  }
+
+  deleteSession() {
+    this.onSessionDeleted.emit(this.session);
   }
 
   updateSession(event: any) {

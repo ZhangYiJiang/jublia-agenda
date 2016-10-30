@@ -10,7 +10,11 @@
     [attr.data-column-type]="'relative'">
     <li class="session-wrapper" *ngFor="let session of sessions"
       [attr.data-session-id]="session.id">
-      <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda"></my-session>
+      <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda"
+        (onSessionEdited)="onSessionEdited($event)"
+        (onSpeakerEdited)="onSpeakerEdited($event)"
+        (onSessionDeleted)="onSessionDeleted($event)">
+      </my-session>
     </li>
   </ul>
   <button class="pending-toggle" (click)="toggleState()" style="display:none">

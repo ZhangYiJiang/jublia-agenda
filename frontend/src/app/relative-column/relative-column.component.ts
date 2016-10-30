@@ -1,6 +1,9 @@
-import { Input, Component,trigger, state, style, transition,animate } from '@angular/core';
+import { Input, Component,trigger, state, style, transition, animate, Output, EventEmitter } from '@angular/core';
+
+import * as _ from 'lodash';
 
 import {Session} from '../session/session';
+import { Speaker } from '../speaker/speaker';
 import { Agenda } from '../agenda/agenda';
 
 const MARGIN_LEFT_SHOW: string = '0px';
@@ -31,8 +34,40 @@ export class RelativeColumnComponent {
   @Input()
   agenda: Agenda;
 
+  @Output() onSessionChanged = new EventEmitter<Session>();
+  @Output() onSessionDeletedColumn = new EventEmitter<Session>();
+  @Output() onSessionMovedFromPending = new EventEmitter<Session>();
+  @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
+  @Output() onSpeakerChanged = new EventEmitter<Speaker>();
+
   colState = 'open';
   isColShown = true;
+
+  onSessionEdited(editedSession: Session) {
+    // propagate to board
+    this.onSessionChanged.emit(editedSession);
+  }
+
+  onSessionInterestEdited(event: [number, boolean]) {
+    // propagate to board
+    this.onSessionInterestChanged.emit(event);
+  }
+
+  onSpeakerEdited(editedSpeaker: Speaker) {
+    // propagate to board
+    this.onSpeakerChanged.emit(editedSpeaker);
+  }
+
+  onSessionDeleted(deletedSession: Session) {
+    // propagate to board
+    console.log('session delete in rel column');
+    this.removeSession(deletedSession);
+    this.onSessionDeletedColumn.emit(deletedSession);
+  }
+
+  removeSession(session: Session) {
+    _.remove(this.sessions, (s: Session) => s.id === session.id);
+  }
 
   toggleState(): void {
     this.colState = this.isColShown ? 'close' : 'open';

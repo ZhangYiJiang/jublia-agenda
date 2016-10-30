@@ -26,7 +26,9 @@
           [class.placeholder]="session.placeholder">
           <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
             (onSessionEdited)="onSessionEdited($event)"
-            (onSpeakerEdited)="onSpeakerEdited($event)"></my-session>
+            (onSpeakerEdited)="onSpeakerEdited($event)"
+            (onSessionDeleted)="onSessionDeleted($event)"
+            ></my-session>
         </li>
       </ul>
       <ul *ngIf="isPublic" class="session-list">

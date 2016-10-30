@@ -183,6 +183,18 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.agendaService.updateSession(this.agenda.id, changedSession);
   }
 
+  onSessionDeletedColumn(deletedSession: Session) {
+    console.log('session delete in board');
+    console.log(deletedSession);
+    this.agendaService.deleteSession(this.agenda.id, deletedSession);
+    _.remove(this.allSessions, (s: Session) => s.id === deletedSession.id);
+    if(deletedSession.start_at == null) {
+      _.remove(this.pendingSessions, (s: Session) => s.id === deletedSession.id);
+    } else {
+      _.remove(this.nonPendingSessions, (s: Session) => s.id === deletedSession.id);
+    }
+  }
+
   onSessionInterestChanged(event: [number, boolean]) {
     console.log('session ' + event[0] + ' changed to ' + event[1]);
     this.agendaService.updateSessionInterest(this.agenda.id, event[0], event[1], this.token);

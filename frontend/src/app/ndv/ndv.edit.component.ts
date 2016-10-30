@@ -47,6 +47,10 @@
             border: 1px solid #d9d9d9;
         }
         
+        form {
+            display: inline;
+        }
+        
         input {
             border-radius: 5px;
             box-shadow: none;
@@ -101,19 +105,22 @@
             top: 0;
             transform: translateY(calc(-100% - 10px));
         }
-
     `],
     template: `<span *ngIf="!permission">{{text}}</span>
                <span *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}">
-                   <input *ngIf='show' [ngClass]="{'ng-invalid': invalid}" (ngModelChange)="validate($event)" type='text' [(ngModel)]='text' />
-                   <div class='err-bubble' *ngIf="invalid">{{error || " must contain " + min + " to -" + max +" chars."}}</div>
-                   <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
-                   <span *ngIf='!show'>{{text || '-Empty Field-'}}</span>
-               </span>
-               <div class='ndv-buttons' *ngIf='show'>
-                   <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
-                   <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
-               </div>`,
+                   <form (submit)="callSave($event)">
+                       <input *ngIf='show' [ngClass]="{'ng-invalid': invalid}" (ngModelChange)="validate($event)" 
+                              type='text' [(ngModel)]='text' [ngModelOptions]="{standalone: true}" />
+                       <div class='err-bubble' *ngIf="invalid">{{error || " must contain " + min + " to -" + max +" chars."}}</div>
+                       <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
+                       <span *ngIf='!show'>{{text || '-Empty Field-'}}</span>
+                   
+                       <span class='ndv-buttons' *ngIf='show'>
+                           <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                           <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
+                       </span>
+                   </form>
+               </span>`,
     host: {
         "(document: click)": "compareEvent($event)",
         "(click)": "trackEvent($event)"
@@ -204,5 +211,6 @@ export class NdvEditComponent {
             this.show = false;
         }
         evt.stopPropagation();
+        evt.preventDefault();
     }
 }

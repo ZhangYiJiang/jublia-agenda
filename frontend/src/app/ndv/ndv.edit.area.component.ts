@@ -61,9 +61,10 @@
             border-radius: 0 0 3px 3px;
             box-shadow: 0 3px 6px rgba(111,111,111,0.2);
             outline: none;
-            padding: 8px 5px;
+            padding: 5px;
             position: absolute;
-            margin: -6px 0 0 6px;
+            top: 100%;
+            left: 6px;
             z-index: 1;
             font-size: 1.1rem;
             line-height: 1.5rem;
@@ -87,15 +88,17 @@
         }
     `],
     template: `<div *ngIf="!permission">{{text}}</div>
-               <form *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}"><div>
-                   <textarea rows="6" cols="55" *ngIf='show' [(ngModel)]='text' [ngModelOptions]='{standalone: true}'></textarea>
-                   <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
-                   <span *ngIf='!show'>{{text || '-Empty Field-'}}</span>
-               </div>
-               <div class='ndv-buttons' *ngIf='show'>
-                   <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
-                   <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
-               </div></form>`,
+               <form *ngIf="permission" class='ndv-comp' (click)='makeEditable()' (submit)="callSave($event)" [ngClass]="{'ndv-active':show}">
+                   <div>
+                       <textarea rows="6" cols="55" *ngIf='show' [(ngModel)]='text' [ngModelOptions]='{standalone: true}'></textarea>
+                       <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
+                       <span *ngIf='!show'>{{text || '-Empty Field-'}}</span>
+                   </div>
+                   <div class='ndv-buttons' *ngIf='show'>
+                       <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                       <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
+                   </div>
+               </form>`,
     host: {
         "(document: click)": "compareEvent($event)",
         "(click)": "trackEvent($event)"
@@ -155,5 +158,6 @@ export class NdvEditAreaComponent {
         this.save.emit(data);
         this.show = false;
         evt.stopPropagation();
+        evt.preventDefault();
     }
 }

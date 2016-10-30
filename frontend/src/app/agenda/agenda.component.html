@@ -2,13 +2,15 @@
   Loading...
 </div>
 <div *ngIf="agenda">
-  <div class="clearfix fixed agenda-menu">
-    <span class="agenda-title">Agenda Builder for {{agenda.name}}</span>
-    <button md-button class="float" [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
-    <button md-button class="secondary float" *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
-    <button md-button class="secondary float" (click)="showAgendaSettings()">
-      <i class="fa fa-cog" aria-hidden="true"></i> Event Settings
-    </button>
+  <div class="agenda-header">
+    <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
+    <div class="agenda-menu">
+      <button md-button [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
+      <button md-button class="secondary" *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
+      <button md-button class="secondary" (click)="showAgendaSettings()">
+        <i class="fa fa-cog" aria-hidden="true"></i> Event Settings
+      </button>
+    </div>
   </div>
   <board #board *ngIf="agenda" [agenda]="agenda" [isPublic]="false" [isAnalytics]="false">
   </board>

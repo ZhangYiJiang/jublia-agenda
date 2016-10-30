@@ -1,0 +1,15 @@
+@import '../../../public/css/variables';
+
+.chart-wrapper {
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.status {
+    width: 100%;
+    color: $color-primary;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}

@@ -1,0 +1,16 @@
+<div *ngIf="isEmpty" class="status">
+  There are no analytics data for this event yet.
+</div>
+<div *ngIf="!isEmpty" class="chart-wrapper">
+  <canvas baseChart
+    [datasets]="lineChartData"
+    [labels]="lineChartLabels"
+    [options]="lineChartOptions"
+    [colors]="lineChartColors"
+    [legend]="lineChartLegend"
+    [chartType]="lineChartType"
+    (chartHover)="chartHovered($event)"
+    (chartClick)="chartClicked($event)">
+  </canvas>
+</div>
+

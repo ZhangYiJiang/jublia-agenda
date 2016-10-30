@@ -2,19 +2,21 @@
 
 .timescale {
     z-index: 10;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding-right: 5px;
-    padding-top: 60px;
-    padding-bottom: 100px;
-    left: 0px;
+    background-color: rgba(#fff, 0.8);
+    left: 0;
     color: $color-accent;
     font-size: $size-normal-text;
+    line-height: 1.5;
+    
+    padding: 60px 5px 100px 0;
     position: absolute;
+    
     -webkit-transition: left 0.1s; /* Safari */
     transition: left 0.1s;
+    
     //margin-left: 245px;
     .hour {
-        margin-bottom: $height-per-15-min * 4 - 19;
+        height: $height-per-15-min * 4;
     }
 }
 
@@ -42,15 +44,21 @@
     width: 97%;
 }
 
+.analytics {
+    .schedule {
+        top: $main-content-top-offset + $analytics-extra-offset;
+        height: calc(100% - #{$main-content-top-offset + $analytics-extra-offset});
+        margin-left: 20px;
+        width: 97%;
+    }
+}
+
 .schedule {
-	margin-left: 250px;
+    margin-left: 250px;
     position: fixed;
     height: calc(100% - #{$main-content-top-offset});
     width: calc(100% - 250px);
     top: $main-content-top-offset;
-    &.analytics {
-        // nothing special for now
-    }
 }
 
 .board {
@@ -107,9 +115,9 @@
 }
 
 .fab-add {
-	position: fixed;
-	height: 56px;
-	width: 56px;
+    position: fixed;
+    height: 56px;
+    width: 56px;
     top: $main-content-top-offset - 40px;
     left: 80px;
     color: white;

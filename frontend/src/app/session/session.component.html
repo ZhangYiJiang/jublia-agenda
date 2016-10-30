@@ -45,8 +45,8 @@
             <p>Phone: <ndv-edit [title]="'phone_number'" [placeholder]="speakersObj[speakerId].phone_number" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
           </div>
         </div>
-        <div *ngIf="!session.speakers">
-          <p>Speaker information not available.</p>
+        <div *ngIf="!session.speakers && !isPublic">
+          <p>No speakers have been assigned to this session</p>
         </div>
       </div><!-- /.session-main -->
       
@@ -57,19 +57,30 @@
           </div>
           <div>
             <p *ngIf="session.start_at">{{ getDisplayedDate() }}</p>
+            <p *ngIf="!session.start_at && !isPublic">Duration</p>
             <p class="session-info-secondary">{{ getDisplayedTime() }}
               <ndv-edit class="small-input" [title]="'duration'" [placeholder]="session.duration || '0'"
                         (onSave)="updateSession($event)" [permission]="!isPublic"
                         [regex]="'^[0-9]+$'" [error]="'Please enter a number.'">
               </ndv-edit>mins
               <span *ngIf="!isPublic" class="duration-buttons">
-              <button class="primary" md-button (click)="adjustSessionDuration(15)">+</button>
-              <button class="primary" md-button (click)="adjustSessionDuration(-15)">-</button>
-            </span>
+                <button class="primary" md-button (click)="adjustSessionDuration(15)">+</button>
+                <button class="primary" md-button (click)="adjustSessionDuration(-15)">-</button>
+              </span>
             </p>
           </div>
         </div><!-- /.session-info -->
         
+        <div class="session-info" *ngIf="session.venue">
+          <div class="session-icon">
+            <i class="fa fa-map-marker" aria-hidden="true"></i>
+          </div>
+          <div>
+            <p>{{ getVenue().name }}</p>
+            <p class="session-info-secondary" *ngIf="getVenue().unit">{{ getVenue().unit }}</p>
+          </div>
+        </div><!-- /.session-info -->
+
         <div *ngIf="session.track" class="session-info">
           <div class="session-icon">
             <i class="fa fa-list-ol" aria-hidden="true"></i>
@@ -78,16 +89,18 @@
             <p>{{trackObj[session.track].name}}</p>
           </div>
         </div><!-- /.session-info -->
-        
-        <h2><i class="fa fa-tachometer" aria-hidden="true"></i> Popularity</h2>
-        <div *ngIf="!(session.popularity == null)">
-          <p *ngIf="session.popularity === 0">No one has expressed interest in this session yet.</p>
-          <p *ngIf="session.popularity === 1">One person is interested in this session.</p>
-          <p *ngIf="session.popularity > 1">{{session.popularity}} people are interested in this session.</p>
-        </div>
-        <div *ngIf="session.popularity == null">
-          <p>Popularity information not available.</p>
-        </div>
+
+        <div class="session-info">
+          <div class="session-icon">
+            <i class="fa fa-fire" aria-hidden="true"></i>
+          </div>
+          <div>
+            <p *ngIf="!agenda.published">Once this event has been published, you can see how many people have 
+              bookmarked this session here</p>
+            <p *ngIf="agenda.published">
+              {{ session.popularity }} {{ session.popularity === 1 ? 'Bookmark' : 'Bookmarks' }}</p>
+          </div>
+        </div><!-- /.session-info -->
       </div><!-- /.session-meta -->
     </div><!-- /.session-body -->
     

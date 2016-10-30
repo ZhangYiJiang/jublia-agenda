@@ -13,3 +13,12 @@ button {
 	margin-left: 20px;
 	width: 100%;
 }
+
+.chart {
+    top: $main-content-top-offset;
+    height: $analytics-extra-offset;
+    width: 97%;
+    margin: 0 20px;
+    position: fixed;
+    display: flex;
+}

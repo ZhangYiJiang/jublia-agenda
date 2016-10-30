@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import * as _ from 'lodash';
@@ -23,7 +23,7 @@ export class Container {
   templateUrl: './absolute-column.component.html',
   styleUrls: ['./absolute-column.component.css']
 })
-export class AbsoluteColumnComponent implements OnInit {
+export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   @Input() sessions: Session[];
 
   @Input()
@@ -65,12 +65,19 @@ export class AbsoluteColumnComponent implements OnInit {
 
   displayedSessions: Session[];
 
+  dropSub: any;
+
   constructor(private dragulaService: DragulaService, 
     private domUtilService: DOMUtilService) {
-    dragulaService.dropModel.subscribe((value: any) => {
+    this.dropSub = dragulaService.dropModel.subscribe((value: any) => {
       console.log('drop event in abs col');
       this.onDrop(value.slice(1));
     });
+  }
+
+  ngOnDestroy() {
+    console.log('ondestroy abs');
+    this.dropSub.unsubscribe();
   }
 
   onSessionEdited(editedSession: Session) {

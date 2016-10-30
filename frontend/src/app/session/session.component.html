@@ -97,6 +97,7 @@
         <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
+      <button type="button" md-button class="warn" (click)="confirmDelete(dialogRef)">Delete</button>
       <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>

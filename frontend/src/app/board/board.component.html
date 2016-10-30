@@ -1,5 +1,10 @@
 <div class="board" [class.not-dragging]="!dragging" [class.public]="isPublic">
-  <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda" *ngIf="!isPublic">
+  <relative-column [sessions]="pendingSessions" [offsetDate]="offsetDate" [agenda]="agenda"
+    (onSessionChanged)="onSessionChanged($event)"
+    (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
+    (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
+    (onSessionInterestChanged)="onSessionInterestChanged($event)"
+    (onSpeakerChanged)="onSpeakerChanged($event)" *ngIf="!isPublic">
   </relative-column>
   <button md-mini-fab class="fab-add" disableRipple (click)="createSessionModal()" *ngIf="!isPublic">
     <md-icon>add</md-icon>
@@ -20,6 +25,7 @@
               <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
                 [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
                 (onSessionChanged)="onSessionChanged($event)"
+                (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
                 (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
                 (onSessionInterestChanged)="onSessionInterestChanged($event)"
                 (onSpeakerChanged)="onSpeakerChanged($event)"

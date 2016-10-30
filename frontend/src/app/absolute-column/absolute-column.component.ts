@@ -44,6 +44,7 @@ export class AbsoluteColumnComponent implements OnInit {
   interestedSessionIds: number[];
 
   @Output() onSessionChanged = new EventEmitter<Session>();
+  @Output() onSessionDeletedColumn = new EventEmitter<Session>();
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerChanged = new EventEmitter<Speaker>();
@@ -85,6 +86,21 @@ export class AbsoluteColumnComponent implements OnInit {
   onSpeakerEdited(editedSpeaker: Speaker) {
     // propagate to board
     this.onSpeakerChanged.emit(editedSpeaker);
+  }
+
+  onSessionDeleted(deletedSession: Session) {
+    // propagate to board
+    console.log('session delete in abs column');
+    this.removeSession(deletedSession);
+    this.onSessionDeletedColumn.emit(deletedSession);
+  }
+
+  private removeSession(session: Session) {
+    for (var i = 0; i < this.containers.length; i++) {
+      for (var j = 0; j < this.containers[i].sessions.length; ++j) {
+        _.remove(this.containers[i].sessions, (s: Session) => s.id === session.id);
+      }
+    }
   }
 
   private isInterestedInSession(session: Session): boolean {

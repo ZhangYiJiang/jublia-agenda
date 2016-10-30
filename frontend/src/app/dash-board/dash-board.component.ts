@@ -23,11 +23,11 @@ import {
 @Component({
   selector: 'dash-board',
   templateUrl: './dash-board.component.html',
-  styleUrls: ['./dash-board.component.css',
-  '../session/css/vex.css',
-  '../session/css/vex-theme-default.css'
+  styleUrls: [
+    './dash-board.component.css',
+    '../session/css/vex.css',
+    '../session/css/vex-theme-default.css'
   ],
-  encapsulation: ViewEncapsulation.None
 })
 
 export class DashBoardComponent implements OnInit {
@@ -267,6 +267,7 @@ export class DashBoardComponent implements OnInit {
   deleteAgenda(agenda: Agenda, dialog?:any) {
     this.dashBoardService.deleteAgenda(agenda.id).subscribe(
       () => {
+        this.addNewAgenda = false;
         _.remove(this.agendas, agenda);
       },
       error => {

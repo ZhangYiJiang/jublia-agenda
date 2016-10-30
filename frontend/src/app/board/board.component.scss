@@ -42,15 +42,21 @@
     width: 97%;
 }
 
+.analytics {
+    .schedule {
+        top: $main-content-top-offset + $analytics-extra-offset;
+        height: calc(100% - #{$main-content-top-offset + $analytics-extra-offset});
+        margin-left: 20px;
+        width: 97%;
+    }
+}
+
 .schedule {
 	margin-left: 250px;
     position: fixed;
     height: calc(100% - #{$main-content-top-offset});
     width: calc(100% - 250px);
     top: $main-content-top-offset;
-    &.analytics {
-        // nothing special for now
-    }
 }
 
 .board {

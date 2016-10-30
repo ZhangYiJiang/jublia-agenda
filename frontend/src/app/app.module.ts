@@ -21,6 +21,7 @@ import { AgendaService } from './agenda/agenda.service.ts';
 import { DashBoardService } from './dash-board/dash-board.service.ts';
 import { BoardService } from './board/board.service.ts';
 import { PublicAgendaService } from './public-agenda/public-agenda.service.ts';
+import { LineChartComponent } from './chart/chart.component.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
@@ -40,6 +41,8 @@ import { JwtHelper } from 'angular2-jwt';
 
 import { NdvEditComponent } from './ndv/ndv.edit.component.ts';
 import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
+
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 @NgModule({
   imports: [
@@ -61,7 +64,8 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     ReactiveFormsModule,
     TagInputModule,
     ModalModule.forRoot(),
-    VexModalModule
+    VexModalModule,
+    ChartsModule
   ],
   declarations: [
     AppComponent,
@@ -80,7 +84,8 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
     EncodeURIPipe,
     
     NdvEditComponent,
-    NdvEditAreaComponent
+    NdvEditAreaComponent,
+    LineChartComponent
   ],
   providers: [
     AgendaService,

@@ -93,6 +93,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     private elementRef: ElementRef, 
     private renderer: Renderer) {
     dragulaService.dropModel.subscribe((value: any) => {
+      console.log('drop event in board');
       // console.log(`drop: ${value}`);
       this.dragging = false;
       this.onDrop(value.slice(1));
@@ -265,9 +266,9 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getSessionById(sessionId: number): Session {
-    for (var i = 0; i < this.agenda.sessions.length; ++i) {
-      if(this.agenda.sessions[i].id === sessionId) {
-        return this.agenda.sessions[i];
+    for (var i = 0; i < this.allSessions.length; ++i) {
+      if(this.allSessions[i].id === sessionId) {
+        return this.allSessions[i];
       }
     }
     return null;

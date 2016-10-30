@@ -4,6 +4,8 @@ import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Speaker } from '../speaker/speaker';
 import { Venue } from '../venue/venue';
+import { Tag} from '../tag/tag';
+import { BoardService } from '../board/board.service';
 
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
@@ -33,7 +35,8 @@ import {
   encapsulation: ViewEncapsulation.None
 })
 export class SessionComponent implements OnInit {
-  constructor(public modal: Modal) {
+  constructor(public modal: Modal,
+    private boardService: BoardService) {
   }
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input() session: Session;
@@ -54,6 +57,9 @@ export class SessionComponent implements OnInit {
 
   speakersObj = {};
   trackObj = {};
+  sessionTagsName: string[] = [];
+  eventTags: Tag[] = [];
+  eventTagsName: string[] = [];
 
   HEIGHT_PER_15_MINS = 20; // px
   VERTICAL_MARGIN = 4;
@@ -154,6 +160,45 @@ export class SessionComponent implements OnInit {
     }
   }
 
+  removeTag(name: string) {
+    let tagId: number = _.find(this.eventTags, {name}).id;
+    let defaultCategoryId: number = this.agenda.categories[0].id;
+    this.session.categories[defaultCategoryId] = _.without(this.session.categories[defaultCategoryId], tagId);
+    this.session.tags = this.session.categories[defaultCategoryId]; // api takes in an array of tag ids
+    this.onSessionEdited.emit(this.session);
+  }
+
+  addTag(name: string) {
+    let defaultCategoryId: number = this.agenda.categories[0].id;
+    if (!this.session.categories) {
+      this.session.categories = {};
+      this.session.categories[defaultCategoryId] = [];
+    }
+    let tagId: number;
+    if (_.includes(this.eventTagsName, name)) {
+      tagId = _.find(this.eventTags, {name}).id;
+      this.session.categories[defaultCategoryId].push(tagId);
+      this.session.tags = this.session.categories[defaultCategoryId]; // api takes in an array of tag ids
+      this.onSessionEdited.emit(this.session);
+    }
+    else {
+      this.boardService.createTag(this.agenda.id, defaultCategoryId, name).subscribe(
+        (data: Tag) => {
+          console.log('new tag created: ' + data.name);
+          tagId = data.id;
+          this.session.categories[defaultCategoryId].push(tagId);
+          this.session.tags = this.session.categories[defaultCategoryId]; // api takes in an array of tag ids
+          this.onSessionEdited.emit(this.session);
+          this.eventTags.push(data);
+          this.eventTagsName.push(data.name);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+    }
+  }
+
   isInt(value: any) {
     return !isNaN(value) && 
            parseInt(value, 10) == value && 
@@ -161,8 +206,30 @@ export class SessionComponent implements OnInit {
   }
 
   clicked(event: DocumentEvent) {
-    this.modal
-      .open(this.templateRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+    this.sessionTagsName = _.values(_.values(this.session.categories)[0])
+        .map((id: number) => _.find(this.eventTags, {id}).name);
+    this.modal.open(
+      this.templateRef, 
+      overlayConfigFactory({ isBlocking: false }, VEXModalContext)
+    ).then(dialog => {
+      // Stop click events from the dropdown menu created by the tag inputs from propagating 
+      // to document body, which causes weird issues with the modal widget
+      // We're using setImmediate here because we need to wait for the widgets in the modal to be 
+      // rendered first
+      setImmediate(() => {
+        _.each(document.getElementsByTagName("ng2-dropdown-menu"), el => {
+          el.addEventListener('click', evt => evt.stopPropagation());
+        });
+      });
+      
+      // Clean up dropdown menus that were left behind by the widget
+      dialog.onDestroy.subscribe(() => {
+        // querySelectorAll uses a frozen NodeList
+        _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
+          el.parentNode.removeChild(el);
+        });
+      });
+    });
   }
 
   getDisplayedDate(): string {
@@ -209,6 +276,8 @@ export class SessionComponent implements OnInit {
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
+    this.eventTags = this.agenda.categories[0].tags;
+    this.eventTagsName = this.eventTags.map(tag => tag.name);
 
     this.updateInterestButtonText();
 

@@ -101,6 +101,22 @@
               {{ session.popularity }} {{ session.popularity === 1 ? 'Bookmark' : 'Bookmarks' }}</p>
           </div>
         </div><!-- /.session-info -->
+
+        <div class="session-info">
+          <div class="session-icon">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+          </div>
+          <div>
+            <tag-input [(ngModel)]="sessionTagsName"
+                       placeholder=" + Tags" 
+                       secondaryPlaceholder="Add Tags" 
+                       [autocompleteItems]="eventTagsName" 
+                       [autocomplete]="true"
+                       [readonly]="isPublic"
+                       (onRemove)="removeTag($event)"
+                       (onAdd)="addTag($event)"></tag-input>
+          </div>
+        </div><!-- /.session-info -->        
       </div><!-- /.session-meta -->
     </div><!-- /.session-body -->
     

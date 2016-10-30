@@ -62,11 +62,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   eventTracks: Track[];
   eventCategories: Category[];
   eventTags: Tag[];
-  eventTagsName: String[];
+  eventTagsName: string[];
   eventSpeakers: Speaker[];
-  eventSpeakersName: String[];
+  eventSpeakersName: string[];
   eventVenues: Venue[];
-  eventVenuesName: String[];
+  eventVenuesName: string[];
 
   allSessions: Session[];
   pendingSessions: Session[];
@@ -344,7 +344,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getEventTagsName(): String[] {
+  getEventTagsName(): string[] {
     if (!this.eventTags || this.eventTags.length === 0) {
       return [];
     } else {
@@ -360,7 +360,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getEventSpeakersName(): String[] {
+  getEventSpeakersName(): string[] {
     if (!this.eventSpeakers || this.eventSpeakers.length === 0) {
       return [];
     } else {
@@ -376,7 +376,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getEventVenuesName(): String[] {
+  getEventVenuesName(): string[] {
     if (!this.eventVenues || this.eventVenues.length === 0) {
       return [];
     } else {
@@ -529,8 +529,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.eventSpeakers.push(data);
         this.eventSpeakersName.push(data.name);
         this.sessionForm.value.existingSpeakers.push(data.name);
+        if (!this.agenda.speakers) {
+          this.agenda.speakers = [];
+        }
+        this.agenda.speakers.push(data);
       });
-      
       requests.push(request);
     }));
 

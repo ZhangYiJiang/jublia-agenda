@@ -9,7 +9,9 @@ export class Session {
   url: string;
   venue: number;
   popularity: number;
+  categories: any;
   //not from api
+  tags: number[];
   placeholder: boolean;
   order: number;
 }

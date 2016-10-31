@@ -145,6 +145,10 @@ button[md-button],
     }
 }
 
+a, button {
+    transition: all .2s;
+}
+
 md-icon.delete {
     border: 1px solid $color-accent;
     color: $color-accent;

@@ -107,6 +107,31 @@ class ViewerRegisterTest(BaseAPITestCase):
         session.refresh_from_db()
         self.assertEqual(5, session.popularity)
 
+    def testMarkSessionDirty(self):
+        self.agenda.published = True
+        self.agenda.save()
+        session = create_session(self.agenda, factory.session())
+        viewer = create_viewer(self.agenda, factory.viewer())
+
+        response = self.client.put(self.url(session.pk, viewer.token))
+        self.assertEqual(response, status.HTTP_204_NO_CONTENT)
+
+        self.login(self.user)
+        response = self.client.patch(session.get_absolute_url(), {
+            'name': 'New Session Name',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check that is_dirty is set
+        response = self.client.get(session.get_absolute_url())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['is_dirty'])
+
+        # Check that session is in dirty set
+        response = self.client.get(reverse('dirty_sessions', [self.agenda.pk]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(session.pk, response.data)
+
     def testRegisterError(self):
         response = self.client.put(self.url(1))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

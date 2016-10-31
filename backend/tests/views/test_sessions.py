@@ -66,7 +66,7 @@ class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
             self.assertIn(tag.pk, response.data['categories'][category.pk])
 
         self.assertEqualExceptMeta(session_data, response.data,
-                                   ignore=('popularity', 'categories',))
+                                   ignore=('popularity', 'categories', 'is_dirty'))
 
     def test_create_on_track(self):
         self.login(self.user)
@@ -74,7 +74,7 @@ class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
 
 class SessionDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def assertSessionEqual(self, original, response, msg=None):
-        self.assertEqualExceptMeta(original, response, ignore=('track', 'popularity',))
+        self.assertEqualExceptMeta(original, response, ignore=('track', 'popularity', 'is_dirty',))
 
     def setUp(self):
         self.user = create_user(factory.user())

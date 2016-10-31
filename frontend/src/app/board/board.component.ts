@@ -38,9 +38,7 @@ import {
   selector: 'board',
   templateUrl: './board.component.html',
   styleUrls: [
-  './board.component.css',
-  '../session/css/vex.css',
-  '../session/css/vex-theme-default.css',
+    './board.component.css'
   ],
   encapsulation: ViewEncapsulation.None
 })

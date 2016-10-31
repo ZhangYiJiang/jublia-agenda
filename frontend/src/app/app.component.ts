@@ -10,6 +10,8 @@ import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/vex';
 
 
+import '../../public/css/vex.css';
+import '../../public/css/vex-theme-default.css';
 import '../../public/css/styles.css';
 
 @Component({

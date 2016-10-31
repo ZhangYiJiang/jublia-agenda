@@ -28,9 +28,7 @@ import {
   selector: 'my-session',
   templateUrl: './session.component.html',
   styleUrls: [
-    './session.component.css',
-    './css/vex.css',
-    './css/vex-theme-default.css',
+    './session.component.css'
   ],
   encapsulation: ViewEncapsulation.None
 })

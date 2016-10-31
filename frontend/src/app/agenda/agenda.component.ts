@@ -24,9 +24,7 @@ import {
   selector: 'agenda',
   templateUrl: './agenda.component.html',
   styleUrls: [
-    './agenda.component.css',
-    '../session/css/vex.css',
-    '../session/css/vex-theme-default.css'
+    './agenda.component.css'
   ]
 })
 export class AgendaComponent implements OnInit{

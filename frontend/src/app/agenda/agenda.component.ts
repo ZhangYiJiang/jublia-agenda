@@ -39,6 +39,7 @@ export class AgendaComponent implements OnInit{
   agenda: Agenda;
   agendaId: number;
   publicUrl: string;
+  clipboardStatus: string;
 
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChild('publishRef') public publishRef: TemplateRef<any>;  

@@ -130,12 +130,14 @@
 
 .new-session.modal-container {
     width: 500px;
+    padding: 20px;
     
     h1 {
-        margin-bottom: 0;
+        margin: 0;
     }
     
-    md-input, .field-with-label {
+    md-input, 
+    .field-with-label {
         width: 100%;
     }
     
@@ -167,6 +169,14 @@
         }
 
         .delete {
+            float: right;
+        }
+    }
+    
+    .footer-buttons {
+        margin-top: 20px;
+        
+        .secondary {
             float: right;
         }
     }

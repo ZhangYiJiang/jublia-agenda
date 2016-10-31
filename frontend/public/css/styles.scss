@@ -81,6 +81,8 @@ body {
         padding: 10vh 0;
 
         .vex-content {
+            padding: 30px;
+            
             // Reset the font to our global font
             font-family: inherit;
 
@@ -90,6 +92,10 @@ body {
             display: inline-block;
         }
     }
+}
+
+.modal-container.narrow {
+    width: 460px;
 }
 
 .form-error-hint {

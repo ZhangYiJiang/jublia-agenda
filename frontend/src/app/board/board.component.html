@@ -153,10 +153,12 @@
             </div>
           </div>
         </div>
-
-        <button class="primary" md-button type="submit">Save</button>
-        <button class="primary" md-button type="submit" (click)="submitAndContinueSessionForm($event)">Save and Add Another</button>
-        <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+        
+        <div class="footer-buttons clearfix">
+          <button class="primary" md-button type="submit">Save</button>
+          <button class="primary" md-button type="submit" (click)="submitAndContinueSessionForm($event)">Save and Add Another</button>
+          <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+        </div>
       </form>
     </div>
   </div>

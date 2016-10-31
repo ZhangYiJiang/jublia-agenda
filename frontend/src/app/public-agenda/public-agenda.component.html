@@ -7,12 +7,12 @@
       <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
       <p *ngIf="agenda.website" class="agenda-subtitle">
         <a href="{{agenda.website | encodeURI}}" target="_blank">
-          <i class="fa fa-link" title="Event Website"></i> {{agenda.website}}
+          <i class="fa fa-link fa-fw" title="Event Website"></i> {{agenda.website}}
         </a>
       </p>
       <p *ngIf="agenda.location" class="agenda-subtitle">
         <a href="http://maps.google.com/?q={{agenda.location | encodeURIComponent}}" target="_blank">
-          <i class="fa fa-map-o" title="Location"></i> {{agenda.location}}
+          <i class="fa fa-map-o fa-fw" title="Location"></i> {{agenda.location}}
         </a>
       </p>
       

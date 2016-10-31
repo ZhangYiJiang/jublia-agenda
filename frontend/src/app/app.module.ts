@@ -43,6 +43,7 @@ import { NdvEditComponent } from './ndv/ndv.edit.component.ts';
 import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { ClipboardModule } from 'angular2-clipboard';
 
 @NgModule({
   imports: [
@@ -65,7 +66,8 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     TagInputModule,
     ModalModule.forRoot(),
     VexModalModule,
-    ChartsModule
+    ChartsModule,
+    ClipboardModule,
   ],
   declarations: [
     AppComponent,

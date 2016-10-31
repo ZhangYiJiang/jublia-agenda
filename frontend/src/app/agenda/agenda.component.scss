@@ -31,11 +31,53 @@
     width: 500px;
 }
 
-a {
-    color: $color-primary;
-}
+.publish-agenda {
+    p {
+        margin: 0 0 20px;
+    }
+    
+    .share-link {
+        border: 1px solid $color-primary;
+        display: flex;
+        color: $color-primary;
+        border-radius: 3px;
+        overflow: hidden;
 
-.vex-2-button-group {
-    margin: auto;
-    width: 50%;
+        .share-link-url {
+            flex: 1;
+            padding: 6px 12px;
+
+            -webkit-user-select: all;
+            -moz-user-select: all;
+            user-select: all;
+        }
+
+        button {
+            padding: 0 6px 0 9px;
+            border: 0;
+            cursor: pointer;
+            background: $color-primary;
+            color: #fff;
+
+            &:hover {
+                background: tint($color-primary, 30);
+            }
+        }
+    }
+    
+    .clipboard-status {
+        color: $color-primary;
+        font-size: $size-normal-text;
+        text-align: center;
+    }
+    
+    .bottom-buttons {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        
+        button {
+            margin: 0 5px;
+        }
+    }
 }

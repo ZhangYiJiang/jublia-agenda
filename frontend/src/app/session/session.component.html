@@ -4,7 +4,7 @@
     <div class="session-title">
       <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
     <!-- session time format is 'HH:mm - HH:mm' -->
-    <div *ngIf="session.start_at && session.duration >= 30" class="session-time">
+    <div *ngIf="session.start_at && session.duration > 30" class="session-time">
       {{getDisplayedTime()}}</div>
     <div *ngIf="!session.start_at && session.duration" class="session-time">
       {{session.duration}} min</div>

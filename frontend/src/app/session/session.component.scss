@@ -12,6 +12,15 @@
                 inset 0 1px 0 rgba(#000, 0.3);
     cursor: move;
     
+    &.dark {
+        color: #fff;
+
+        .session-time,
+        .session-venue {
+            color: rgba(#fff, .85);
+        }
+    }
+    
     &.static {
         cursor: pointer;
     }

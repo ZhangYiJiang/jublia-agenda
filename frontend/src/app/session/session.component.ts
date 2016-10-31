@@ -8,7 +8,7 @@ import { Tag} from '../tag/tag';
 import { BoardService } from '../board/board.service';
 
 import { overlayConfigFactory } from 'angular2-modal';
-import { Overlay } from 'angular2-modal';
+import { GlobalVariable } from '../globals';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -70,9 +70,8 @@ export class SessionComponent implements OnInit {
   VERTICAL_MARGIN = 4;
 
   height: number;
-  red: number;
-  green: number;
-  blue: number;
+  color: string;
+  useDarkTheme: boolean; // Dark if lightness < 50%, Light otherwise 
   
   getVenue(): Venue {
     return _.find(this.agenda.session_venues, {id: this.session.venue});
@@ -312,13 +311,13 @@ export class SessionComponent implements OnInit {
     let popularityRatio = 0;
     
     if (this.isPublic) {
-      popularityRatio = (this.session.popularity - this.agenda.minPopularity) / this.agenda.maxPopularity;
+      popularityRatio = (this.session.popularity - this.agenda.minPopularity) / 
+          (this.agenda.maxPopularity - this.agenda.minPopularity);
     }
 
-    // white-pink-red gradient
-    const colorMax = 255, colorMin = 160;
-    this.red = colorMax;
-    this.green = colorMin + Math.floor((1 - popularityRatio) * (colorMax - colorMin));
-    this.blue = colorMin + Math.floor((1 - popularityRatio) * (colorMax - colorMin));
+    const primary = GlobalVariable.COLOR_PRIMARY;
+    const l = primary.l + (100 - primary.l) * Math.sqrt(1 - popularityRatio);
+    this.color = `hsl(${primary.h}, ${primary.s}%, ${l}%)`;
+    this.useDarkTheme = l < 75;
   }
 }

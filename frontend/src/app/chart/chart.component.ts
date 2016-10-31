@@ -10,10 +10,15 @@ export class LineChartComponent implements OnInit {
   dataX: string[];
   @Input()
   dataY: number[];
+  @Input()
+  dataType: string;
 
   isEmpty: boolean;
 
   ngOnInit() {
+    if(this.dataType == null) {
+      this.dataType = 'item';
+    }
     this.lineChartData = [
       {
         data: this.dataY, 

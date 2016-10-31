@@ -1,2 +1,2 @@
-.chart-wrapper{display:block;width:90%;margin:0 auto}.status{width:100%;color:#41B6AB;align-items:center;display:flex;justify-content:center}
+.chart-wrapper{display:block;width:90%;margin:0 auto}.status{width:100%;color:#41B6AB;align-items:center;display:flex;justify-content:center;min-height:60px}
 /*# sourceMappingURL=chart.component.css.map */

@@ -61,8 +61,6 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   private PLACEHOLDER_DURATION: number = 15;
   private DEFAULT_DAY_START_OFFSET_MIN: number = 8 * 60; // default start time for column is 8AM
 
-  
-
   // offset from start of the column's date to start of displayed time withn the date (8AM, etc)
   private dayStartOffsetMin: number;
 
@@ -84,6 +82,18 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.log('ondestroy abs');
     this.dropSub.unsubscribe();
+  }
+
+  private getAnalyticsDataForSession(session: Session): any {
+    if(this.analyticsData == null) {
+      console.log('no analytics');
+      return null;
+    } else {
+      return _.find(this.analyticsData, (v: any, key: string) => {
+        // console.log(key === (session.id + ''));
+        return key === (session.id + '');
+      });
+    }
   }
 
   onSessionEdited(editedSession: Session) {

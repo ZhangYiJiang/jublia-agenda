@@ -2,11 +2,13 @@
   Analytics is only available after agenda is published.
 </div>
 <div *ngIf="agenda">
-	<div class="clearfix fixed agenda-menu">
-	    <span class="agenda-title">Analytics for {{agenda.name}}</span>
-	    <button md-button class="secondary float" routerLink="/agenda/{{agendaId}}">Builder</button>
-	 </div>
-   <line-chart class="chart" [dataY]="analyticsDataCombinedY" [dataX]="analyticsDataCombinedX"></line-chart>
-	 <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [isAnalytics]="true" [analyticsData]="analyticsData">
-	 </board>
+  <div class="clearfix fixed agenda-menu">
+      <span class="agenda-title">Analytics for {{agenda.name}}</span>
+      <button md-button class="secondary float" routerLink="/agenda/{{agendaId}}">Builder</button>
+   </div>
+   <line-chart class="chart" [dataY]="analyticsDataCombinedY" [dataX]="analyticsDataCombinedX"
+    [dataType]="'event'">
+   </line-chart>
+   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [isAnalytics]="true" [analyticsData]="analyticsData">
+   </board>
 </div>

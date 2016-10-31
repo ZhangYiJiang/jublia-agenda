@@ -45,8 +45,14 @@ export class SessionComponent implements OnInit {
   @Input() token: string;
 
   @Input() interested: boolean;
+  @Input()
+  analyticsData: {};
+  @Input()
+  isAnalytics: boolean;
 
   interestedButtonText: string;
+  analyticsDataCombinedX: any[];
+  analyticsDataCombinedY: any[];
 
   @Output() onSessionEdited = new EventEmitter<Session>();
   @Output() onSessionDeleted = new EventEmitter<Session>();
@@ -289,6 +295,10 @@ export class SessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // console.log(this.analyticsData);
+    this.analyticsDataCombinedY = _.values(this.analyticsData);
+    this.analyticsDataCombinedX = _.keys(this.analyticsData);
+
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');

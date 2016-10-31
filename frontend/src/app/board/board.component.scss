@@ -164,20 +164,10 @@
         .subform-header {
             margin-top: 16px;
             margin-bottom: 8px;
+        }
 
-            .delete-button {
-                float: right;
-
-                button {
-                    min-width: initial;
-                    width: 20px;
-                    height: 20px;
-                    padding: 0;
-                    line-height: 1;
-                    background-color: #EB9587;
-                    border: 0;
-                }
-            }
+        .delete-button {
+            float: right;
         }
     }
 }

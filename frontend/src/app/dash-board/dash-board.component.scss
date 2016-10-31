@@ -45,12 +45,6 @@ form md-input, form .field-with-label {
 .dashboard-agendas {
     display: flex;
     margin-top: 50px;
-    
-    md-icon {
-        color: $color-primary;
-        cursor: pointer;
-        vertical-align: middle;
-    }
 }
 
 .agenda-list-card {
@@ -58,7 +52,7 @@ form md-input, form .field-with-label {
     margin-right: 40px;
     border-right: 2px solid $color-secondary;
     
-    .delete-button {
+    .delete-toggle {
         color: $color-primary;
         font-size: 13px;
         cursor: pointer;
@@ -106,18 +100,10 @@ form md-input, form .field-with-label {
         padding-right: 36px;
     }
 
-    md-icon.warn {
+    md-icon.delete {
         position: absolute;
-        border: 1px solid $color-accent;
-        color: $color-accent;
         right: 4px;
         top: 4px;
-        
-        &:hover, &:focus {
-            background: $color-accent;
-            color: #fff;
-            outline: 0;
-        }
     }
 }
 
@@ -149,14 +135,14 @@ form md-input, form .field-with-label {
     opacity: 0;
 }
 
-@keyframes flyin {
-   100% {  
-       left: 0;
-       opacity: 1;
-   }
+@-webkit-keyframes flyin {
+    100% {
+        left: 0;
+        opacity: 1;
+    }
 }
 
-@-webkit-keyframes flyin {
+@keyframes flyin {
    100% {  
        left: 0;
        opacity: 1;
@@ -171,7 +157,6 @@ form md-input, form .field-with-label {
 .vex-deleted-agenda-title {
     color: $color-accent;
 }
-
 
 .vex-1-button-group {
     margin: auto;

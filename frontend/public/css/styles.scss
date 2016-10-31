@@ -134,6 +134,18 @@ button[md-button],
     }
 }
 
+md-icon.delete {
+    border: 1px solid $color-accent;
+    color: $color-accent;
+    font-size: 23px;
+    cursor: pointer;
+
+    &:hover, &:focus {
+        background: $color-accent;
+        color: #fff;
+        outline: 0;
+    }
+}
 
 .vex-content {
     .full-width .ndv-comp,

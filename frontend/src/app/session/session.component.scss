@@ -108,7 +108,7 @@
 
     .session-info {
         display: flex;
-        margin-bottom: 12px;
+        margin-bottom: 24px;
         line-height: 1.2;
         
         p {
@@ -154,18 +154,7 @@
         border-bottom: 0px;
     }
 
-    .delete-button {
+    .delete {
         float: right;
-
-        button {
-            min-width: initial;
-            width: 20px;
-            height: 20px;
-            padding: 0;
-            line-height: 1;
-            background-color: #EB9587;
-            border: 0;
-        }
     }
-
 }

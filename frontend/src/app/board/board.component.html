@@ -90,9 +90,9 @@
         <div class="subform" formGroupName="newVenue" *ngIf="showVenueForm">
           <div class="subform-header">
             New Venue
-            <div class="delete-button">
-              <button class="primary" md-button (click)="removeVenue()">x</button>
-            </div>
+
+            <md-icon class="delete" tabindex="0" role="button"
+                     (click)="removeVenue()">clear</md-icon>
           </div>
           <div>
             <md-input type="text" formControlName="name" placeholder="Venue Name"></md-input>
@@ -112,7 +112,7 @@
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventSpeakersName" 
                        [autocomplete]="true"></tag-input>
-            <button md-button type="button" class="secondary" (click)="addSpeaker()">
+            <button md-button disableRipple type="button" class="secondary" (click)="addSpeaker()">
               <md-icon>add</md-icon> New Speaker
             </button>
           </div>
@@ -122,9 +122,8 @@
           <div *ngFor="let speaker of sessionForm.controls.newSpeakers.controls; let i=index ">
             <div class="subform-header">
               New Speaker {{i + 1}}
-              <div class="delete-button" *ngIf="sessionForm.controls.newSpeakers.controls.length > 0">
-                <button class="primary" md-button (click)="removeSpeaker(i)">x</button>
-              </div>
+              <md-icon class="delete" tabindex="0" role="button"
+                       (click)="removeSpeaker(i)">clear</md-icon>
             </div>
             <div [formGroupName]="i">
               <div>

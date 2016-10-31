@@ -48,13 +48,16 @@
             role="link" tabindex="0">
           {{agenda.name}}
 
-					<md-icon [hidden]="!deleting" (click)="callDeleteAgenda($event, agenda)" class="warn" 
+					<md-icon [hidden]="!deleting" 
+                   (click)="callDeleteAgenda($event, agenda)" 
+                   class="delete" 
                    role="button" tabindex="0">clear</md-icon>
+          
         </li>
       </ul>
       
-      <a class="delete-button" (click)="deleting =! deleting" role="button" tabindex="0">
-        <md-icon class="delete">delete</md-icon>Delete Events
+      <a class="delete-toggle" (click)="deleting =! deleting" role="button" tabindex="0">
+        <md-icon class="delete-icon">delete</md-icon>Delete Events
       </a>
     </div>
     <div class="new-agenda-card">

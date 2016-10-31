@@ -59,11 +59,11 @@ export class DashBoardComponent implements OnInit {
   deletedAgenda: Agenda;
   //hide = false;
 
-  //loginEmail: string;
-  //loginPassword: string;
+  loginEmail: string;
+  loginPassword: string;
   //for testing
-  loginEmail = 'meganmckenzie@gmail.com';
-  loginPassword = '^Z2AwhuJ)T';
+  // loginEmail = 'meganmckenzie@gmail.com';
+  // loginPassword = '^Z2AwhuJ)T';
   registerEmail: string;
   registerPassword: string;
   organiser: string;

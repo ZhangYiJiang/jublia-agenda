@@ -445,7 +445,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sessionForm = this._fb.group({
       name: ['', [<any>Validators.required]],
       description: [''],
-      duration: [null],
+      duration: [60],
       existingSpeakers: [[]],
       newSpeakers: this._fb.array([]),
       tags: [[]],
@@ -610,7 +610,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.sessionForm.reset({
             name: '',
             description: '',
-            duration: null,
+            duration: 60,
             existingSpeakers: [],
             newSpeakers: [],
             tags: [],

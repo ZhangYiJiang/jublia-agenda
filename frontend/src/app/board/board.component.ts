@@ -624,6 +624,23 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  getDisplayedTime(start:number,duration:number): string {
+    if (start == null) {
+      return '';
+    }
+    if(duration == null || !duration) {
+      duration = 0;
+    }  
+    const startMs = this.offsetDate.getTime() + 60000 * start;
+    const startDate = new Date(startMs);
+    const endDate = new Date(startMs + 60000 * duration);
+    return 'On '+moment(startMs).utc().format("ddd, MMMM Do")+ ', ' + `${this.getFormattedTime(startDate)}–${this.getFormattedTime(endDate)}`;
+  }
+
+  getFormattedTime(date: Date): string {
+    return date.getUTCHours() + ':' + (date.getUTCMinutes() < 10 ? '0' : '') + date.getUTCMinutes();
+  }
+
   createSession(): Observable<any> {
     const speakersId: number[] = this.sessionForm.value.existingSpeakers
         .map((name: string) => _.find(this.eventSpeakers, {name}).id);

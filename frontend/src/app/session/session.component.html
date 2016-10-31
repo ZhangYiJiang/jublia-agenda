@@ -36,39 +36,39 @@
     <line-chart *ngIf="isAnalytics" class="chart" [dataY]="analyticsDataCombinedY" [dataX]="analyticsDataCombinedX" [dataType]="'session'"></line-chart>
     <div class="session-body">
       <div class="session-main">
-        <div>
-          <p class="full-width">
-            <ndv-area title="description" [placeholder]="session.description || 'Enter description here'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
-          </p>
-        </div>
-
-        <h2><i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers</h2>
-        <div *ngIf="session.speakers">
-          <div class="speaker-card" *ngFor="let speakerId of session.speakers">
-            <h3>{{ speakersObj[speakerId].name }}
-              <md-icon class="delete" tabindex="0" role="button" 
-                       *ngIf="!isPublic" (click)="updateSessionSpeaker(speakerId)">clear</md-icon>
-              <!-- name not editable for now to avoid uniqueness conflicts -->
-              <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
-            </h3>
-            <p><ndv-edit title="position" 
-                         [placeholder]="speakersObj[speakerId].position || 'Add company position'" 
-                         (onSave)="updateSpeaker($event, speakerId)" 
-                         [permission]="!isPublic"></ndv-edit>
-            </p>
-            <p>
-              <ndv-area title="profile" 
-                        [placeholder]="speakersObj[speakerId].profile || 'Add speaker profile'"
-                        (onSave)="updateSpeaker($event, speakerId)" 
-                        [permission]="!isPublic"></ndv-area>
-            </p>
-            <p>Email: <ndv-edit title="email" [placeholder]="speakersObj[speakerId].email || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
-            <p>Phone: <ndv-edit title="phone_number" [placeholder]="speakersObj[speakerId].phone_number || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+        <p class="full-width" *ngIf="!isPublic || session.description">
+          <ndv-area title="description" [placeholder]="session.description || 'Enter description here'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
+        </p>
+        
+        <template [ngIf]="!isPublic || (session.speakers && session.speakers.length)">
+          <h2><i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers</h2>
+          <div *ngIf="session.speakers">
+            <div class="speaker-card" *ngFor="let speakerId of session.speakers">
+              <h3>{{ speakersObj[speakerId].name }}
+                <md-icon class="delete" tabindex="0" role="button" 
+                         *ngIf="!isPublic" (click)="updateSessionSpeaker(speakerId)">clear</md-icon>
+                <!-- name not editable for now to avoid uniqueness conflicts -->
+                <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
+              </h3>
+              <p><ndv-edit title="position" 
+                           [placeholder]="speakersObj[speakerId].position || 'Add company position'" 
+                           (onSave)="updateSpeaker($event, speakerId)" 
+                           [permission]="!isPublic"></ndv-edit>
+              </p>
+              <p>
+                <ndv-area title="profile" 
+                          [placeholder]="speakersObj[speakerId].profile || 'Add speaker profile'"
+                          (onSave)="updateSpeaker($event, speakerId)" 
+                          [permission]="!isPublic"></ndv-area>
+              </p>
+              <p>Email: <ndv-edit title="email" [placeholder]="speakersObj[speakerId].email || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+              <p>Phone: <ndv-edit title="phone_number" [placeholder]="speakersObj[speakerId].phone_number || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+            </div>
           </div>
-        </div>
-        <div *ngIf="!session.speakers && !isPublic">
-          <p>No speakers have been assigned to this session</p>
-        </div>
+          <div *ngIf="!session.speakers">
+            <p>No speakers have been assigned to this session</p>
+          </div>
+        </template>
       </div><!-- /.session-main -->
       
       <div class="session-meta">

@@ -18,4 +18,8 @@ export class Agenda {
   categories: Category[];
   session_venues: Venue[];
   published: boolean;
+  
+  // Front-end only 
+  maxPopularity: number;
+  minPopularity: number;
 }

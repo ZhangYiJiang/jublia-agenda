@@ -312,12 +312,13 @@ export class SessionComponent implements OnInit {
     let popularityRatio = 0;
     
     if (this.isPublic) {
-      popularityRatio = this.session.popularity / 10; // TODO: divide by highest popularity number?
+      popularityRatio = (this.session.popularity - this.agenda.minPopularity) / this.agenda.maxPopularity;
     }
 
     // white-pink-red gradient
-    this.red = 255;
-    this.green = 95 + (1 - popularityRatio) * 160;
-    this.blue = 95 + (1 - popularityRatio) * 160;
+    const colorMax = 255, colorMin = 160;
+    this.red = colorMax;
+    this.green = colorMin + Math.floor((1 - popularityRatio) * (colorMax - colorMin));
+    this.blue = colorMin + Math.floor((1 - popularityRatio) * (colorMax - colorMin));
   }
 }

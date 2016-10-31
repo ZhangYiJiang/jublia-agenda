@@ -70,6 +70,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   eventSpeakersName: string[];
   eventVenues: Venue[];
   eventVenuesName: string[];
+  
+  changedSessions: Session[];
 
   allSessions: Session[];
   pendingSessions: Session[];

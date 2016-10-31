@@ -57,6 +57,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   token: string;
   @Input()
   interestedSessionIds: number[];
+  @Input()
+  analyticsData: {};
 
   offsetDate: Date;
   eventDates: Date[];
@@ -422,10 +424,6 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eventSpeakersName = this.getEventSpeakersName();
     this.eventVenues = this.getEventVenues();
     this.eventVenuesName = this.getEventVenuesName();
-    
-    if (this.agenda.sessions == null) {
-      this.agenda.sessions = [];
-    }
     
     this.allSessions = this.agenda.sessions;
     

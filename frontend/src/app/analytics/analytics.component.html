@@ -7,6 +7,6 @@
 	    <button md-button class="secondary float" routerLink="/agenda/{{agendaId}}">Builder</button>
 	 </div>
    <line-chart class="chart" [dataY]="analyticsDataCombinedY" [dataX]="analyticsDataCombinedX"></line-chart>
-	 <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [isAnalytics]="true">
+	 <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [isAnalytics]="true" [analyticsData]="analyticsData">
 	 </board>
 </div>

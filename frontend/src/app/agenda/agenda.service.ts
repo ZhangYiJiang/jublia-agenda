@@ -23,7 +23,7 @@ export class AgendaService {
 
   getAgendaById(id: number): Observable<Agenda> {
     return this.httpClient.get(this.BASE_URL + '/'+ id)
-                    .map(this.extractData)
+                    .map(this.extractAgenda)
                     .catch(this.handleError);
   }
 
@@ -39,13 +39,23 @@ export class AgendaService {
 
   updateAgenda(id: number, data: {}): Observable<Agenda> {
     return this.httpClient.patch(this.BASE_URL + '/'+ id, JSON.stringify(data))
-                    .map(this.extractData)
+                    .map(this.extractAgenda)
                     .catch(this.handleError);
   }
 
   private extractData(res: Response) {
     console.log(res.json());
     return res.json();
+  }
+
+  private extractAgenda(res: Response) {
+    let agenda = res.json();
+    if (agenda.sessions == null) {
+      console.log('added empty sessions array');
+      agenda.sessions = [];
+    }
+    console.log(agenda);
+    return agenda;
   }
 
   private handleError (error: any) {

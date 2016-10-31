@@ -24,9 +24,7 @@ import {
   selector: 'dash-board',
   templateUrl: './dash-board.component.html',
   styleUrls: [
-    './dash-board.component.css',
-    '../session/css/vex.css',
-    '../session/css/vex-theme-default.css'
+    './dash-board.component.css'
   ],
 })
 

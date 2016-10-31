@@ -43,6 +43,8 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
 
   @Input() token: string;
   @Input() interestedSessionIds: number[];
+  @Input()
+  analyticsData: {};
 
   @Output() onSessionChanged = new EventEmitter<Session>();
   @Output() onSessionDeletedColumn = new EventEmitter<Session>();

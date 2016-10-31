@@ -8,7 +8,7 @@ import { Tag} from '../tag/tag';
 import { BoardService } from '../board/board.service';
 
 import { overlayConfigFactory } from 'angular2-modal';
-import { Overlay } from 'angular2-modal';
+import { GlobalVariable } from '../globals';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -45,8 +45,14 @@ export class SessionComponent implements OnInit {
   @Input() token: string;
 
   @Input() interested: boolean;
+  @Input()
+  analyticsData: {};
+  @Input()
+  isAnalytics: boolean;
 
   interestedButtonText: string;
+  analyticsDataCombinedX: any[];
+  analyticsDataCombinedY: any[];
 
   @Output() onSessionEdited = new EventEmitter<Session>();
   @Output() onSessionDeleted = new EventEmitter<Session>();
@@ -64,9 +70,8 @@ export class SessionComponent implements OnInit {
   VERTICAL_MARGIN = 4;
 
   height: number;
-  red: number;
-  green: number;
-  blue: number;
+  color: string;
+  useDarkTheme: boolean; // Dark if lightness < 50%, Light otherwise 
   
   getVenue(): Venue {
     return _.find(this.agenda.session_venues, {id: this.session.venue});
@@ -289,6 +294,10 @@ export class SessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // console.log(this.analyticsData);
+    this.analyticsDataCombinedY = _.values(this.analyticsData);
+    this.analyticsDataCombinedX = _.keys(this.analyticsData);
+
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
@@ -302,12 +311,13 @@ export class SessionComponent implements OnInit {
     let popularityRatio = 0;
     
     if (this.isPublic) {
-      popularityRatio = this.session.popularity / 10; // TODO: divide by highest popularity number?
+      popularityRatio = (this.session.popularity - this.agenda.minPopularity) / 
+          (this.agenda.maxPopularity - this.agenda.minPopularity);
     }
 
-    // white-pink-red gradient
-    this.red = 255;
-    this.green = 95 + (1 - popularityRatio) * 160;
-    this.blue = 95 + (1 - popularityRatio) * 160;
+    const primary = GlobalVariable.COLOR_PRIMARY;
+    const l = primary.l + (100 - primary.l) * Math.sqrt(1 - popularityRatio);
+    this.color = `hsl(${primary.h}, ${primary.s}%, ${l}%)`;
+    this.useDarkTheme = l < 75;
   }
 }

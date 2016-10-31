@@ -46,5 +46,5 @@ class SessionSerializer(HideFieldsMixin, BaseSerializer):
     class Meta:
         model = Session
         fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',
-                  'venue', 'categories', 'tags', 'popularity',)
+                  'venue', 'categories', 'tags', 'popularity', 'is_dirty')
         hidden_fields = ('tags',)

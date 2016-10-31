@@ -44,16 +44,20 @@ export class AgendaService {
   }
 
   private extractData(res: Response) {
-    console.log(res.json());
+    // console.log(res.json());
     return res.json();
   }
 
   private extractAgenda(res: Response) {
-    let agenda = res.json();
+    const agenda = res.json();
     if (agenda.sessions == null) {
       console.log('added empty sessions array');
       agenda.sessions = [];
     }
+    
+    const popularity = agenda.sessions.map((session: Session) => session.popularity);
+    agenda.maxPopularity = _.max(popularity) || 0;
+    agenda.minPopularity = _.min(popularity)|| 0;
     console.log(agenda);
     return agenda;
   }

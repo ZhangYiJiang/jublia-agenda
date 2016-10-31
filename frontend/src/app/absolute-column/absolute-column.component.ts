@@ -33,6 +33,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   // column's date
   @Input() day: Date;
   @Input() track: Track;
+  @Input() colIndex: number;
 
   // event start date
   @Input() offsetDate: Date;
@@ -49,7 +50,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerChanged = new EventEmitter<Speaker>();
   @Output() onVenueChanged = new EventEmitter<Venue>();
-  @Output() onCreateSessionWithStart = new EventEmitter<number>();
+  @Output() onCreateSessionWithStart = new EventEmitter<[number,number]>();
 
   containers: Container[] = [];
 
@@ -114,6 +115,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
     for (var i = 0; i < this.containers.length; i++) {
       for (var j = 0; j < this.containers[i].sessions.length; ++j) {
         _.remove(this.containers[i].sessions, (s: Session) => s.id === session.id);
+        _.remove(this.displayedSessions,(s: Session) => s.id === session.id);
       }
     }
   }
@@ -234,7 +236,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
     console.log('analytics '+this.isAnalytics);
     let startTime = this.dayStartOffsetMin+this.eventStartOffsetMin+container.start_at;
     //console.log(startTime);
-    this.onCreateSessionWithStart.emit(startTime);
+    this.onCreateSessionWithStart.emit([startTime,this.colIndex]);
   }
 
   private generateContainers() {
@@ -283,6 +285,8 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
     this.displayedSessions = this.sessions;
 
     this.generateContainers();
+    console.log('col index '+this.colIndex);
+
     // let sortedSessions = _.sortBy(this.sessions, ['start_at']);
     // this.displayedSessions = this.addPlaceHolderSessions(sortedSessions);
     // console.log(this.displayedSessions);

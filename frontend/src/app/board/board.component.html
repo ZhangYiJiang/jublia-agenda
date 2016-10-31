@@ -19,13 +19,13 @@
         </div>
       </div>
       <div class="scroll">
-        <div class="day" *ngFor="let date of eventDates">
+        <div class="day" *ngFor="let date of eventDates; let dateIndex=index">
           <div class="day-title position-fixed-y" [style.width]="dayTitleWidth">{{date | date}}</div>
           <div class="row">
-            <div class="track" *ngFor="let track of eventTracks">
+            <div class="track" *ngFor="let track of eventTracks; let trackIndex=index">
               <div class="track-title position-fixed-y">{{track.name}}</div>
-              <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
-                [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"
+              <absolute-column #absCol [sessions]="getSessionsForColumn(date, track.id)" 
+                [day]="date" [track]="track" [colIndex]="dateIndex*eventTracks.length+trackIndex"[offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"
                 (onSessionChanged)="onSessionChanged($event)"
                 (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
                 (onSessionMovedFromPending)="onSessionMovedFromPending($event)"

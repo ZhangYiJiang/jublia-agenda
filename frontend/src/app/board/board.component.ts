@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, ContentChildren,QueryList,TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, ViewChildren,Query,QueryList,TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { setImmediate } from 'core-js';
@@ -46,7 +46,9 @@ import {
 })
 export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
-  @ViewChild(AbsoluteColumnComponent) private absCol: AbsoluteColumnComponent;
+  @ViewChildren('absCol') absCol: QueryList<AbsoluteColumnComponent>;
+   // absCol: QueryList<AbsoluteColumnComponent>;
+
   @Input()
   agenda: Agenda;
   @Input()
@@ -83,6 +85,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   //for adding new session by clicking on abs-col
   addingSessionWithStart = false;
   sessionStartTime:number;
+  sessionColIndex:number;
 
   dropSub: any;
   dragSub: any;
@@ -193,10 +196,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
 
-  onCreateSessionWithStart(startTime: number) {
+  onCreateSessionWithStart(event: [number,number]) {
     //console.log('in board '+startTime);
     this.addingSessionWithStart = true;
-    this.sessionStartTime = startTime;
+    this.sessionStartTime = event[0];
+    this.sessionColIndex = event[1];
     this.createSessionModal();
   }
 
@@ -671,10 +675,9 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         if(!this.addingSessionWithStart){
         this.pendingSessions.push(data);
         }else{
-          this.absCol.addInNewSession(data);
+          this.absCol.toArray()[this.sessionColIndex].addInNewSession(data);
           this.addingSessionWithStart = false;
         }
-
       },
       error => this.formMsg = <any>error
     );

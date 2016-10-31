@@ -46,7 +46,6 @@ export class AnalyticsComponent implements OnInit{
   }
 
   processRawData(rawData: {}) {
-    console.log(rawData);
     this.analyticsData = rawData;
 
     let combinedObj = {};
@@ -61,10 +60,7 @@ export class AnalyticsComponent implements OnInit{
       });
     });
 
-    console.log(combinedObj);
     this.analyticsDataCombinedY = _.values(combinedObj);
     this.analyticsDataCombinedX = _.keys(combinedObj);
-    console.log(this.analyticsDataCombinedX);
-    console.log(this.analyticsDataCombinedY);
   }
 }

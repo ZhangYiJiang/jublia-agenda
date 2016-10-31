@@ -10,11 +10,11 @@
     <div class="session-title">
       <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
     <!-- session time format is 'HH:mm - HH:mm' -->
-    <div *ngIf="session.start_at && session.duration >= 60" class="session-time">
+    <div *ngIf="session.start_at && session.duration >= 30" class="session-time">
       {{getDisplayedTime()}}</div>
     <div *ngIf="!session.start_at && session.duration" class="session-time">
       {{session.duration}} min</div>
-    <div class="session-venue" *ngIf="session.venue">{{ getVenue().name }}</div>
+    <div class="session-venue" *ngIf="session.venue&& session.duration >= 60">{{ getVenue().name }}</div>
   </div>
 </div>
 
@@ -32,10 +32,9 @@
                   [permission]="!isPublic"></ndv-edit>
       </h1>
     </div>
-    
+    <line-chart *ngIf="isAnalytics" class="chart" [dataY]="analyticsDataCombinedY" [dataX]="analyticsDataCombinedX" [dataType]="'session'"></line-chart>
     <div class="session-body">
       <div class="session-main">
-        
         <div>
           <p class="full-width">
             <ndv-area title="description" [placeholder]="session.description || 'Enter description here'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>

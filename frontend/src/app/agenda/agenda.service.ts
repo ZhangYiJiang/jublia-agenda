@@ -44,7 +44,7 @@ export class AgendaService {
   }
 
   private extractData(res: Response) {
-    console.log(res.json());
+    // console.log(res.json());
     return res.json();
   }
 

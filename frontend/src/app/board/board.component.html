@@ -48,6 +48,7 @@
     <div class="page-header">
       <h1>Add New Session</h1>
     </div>
+    <h3 *ngIf="addingSessionWithStart">{{getDisplayedTime(sessionStartTime,sessionForm.value.duration)}} </h3>
     <div class="jumbotron">
       <div class="form-msg">
         <small *ngIf="formMsg">{{formMsg}}</small>

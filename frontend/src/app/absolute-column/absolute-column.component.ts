@@ -86,7 +86,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
 
   private getAnalyticsDataForSession(session: Session): any {
     if(this.analyticsData == null) {
-      console.log('no analytics');
+      // console.log('no analytics');
       return null;
     } else {
       return _.find(this.analyticsData, (v: any, key: string) => {

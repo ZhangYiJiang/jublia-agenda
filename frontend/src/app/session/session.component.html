@@ -9,9 +9,9 @@
      [class.not-interested]="!interested">
   <div class="session-content">
     <div class="session-title">
-      <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
+      <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
     <!-- session time format is 'HH:mm - HH:mm' -->
-    <div *ngIf="session.start_at && session.duration >= 30" class="session-time">
+    <div *ngIf="session.start_at && session.duration > 30" class="session-time">
       {{getDisplayedTime()}}</div>
     <div *ngIf="!session.start_at && session.duration" class="session-time">
       {{session.duration}} min</div>
@@ -23,7 +23,7 @@
   <div class="modal-container session-modal">
     <div class="page-header">
       <button *ngIf="token" md-button disableRipple="true" class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
-        <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
+        <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
       <h1 class="full-width">
@@ -42,7 +42,7 @@
           </p>
         </div>
 
-        <h2><i class="fa fa-user" aria-hidden="true"></i> Speakers</h2>
+        <h2><i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers</h2>
         <div *ngIf="session.speakers">
           <div class="speaker-card" *ngFor="let speakerId of session.speakers">
             <h3>{{ speakersObj[speakerId].name }}
@@ -74,7 +74,7 @@
       <div class="session-meta">
         <div class="session-info">
           <div class="session-icon">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            <i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>
           </div>
           <div>
             <p *ngIf="session.start_at">{{ getDisplayedDate() }}</p>
@@ -98,7 +98,7 @@
         
         <div class="session-info" *ngIf="session.venue">
           <div class="session-icon">
-            <i class="fa fa-map-marker" aria-hidden="true"></i>
+            <i class="fa fa-map-marker fa-fw" aria-hidden="true"></i>
           </div>
           <div>
             <p>{{ getVenue().name }}</p>
@@ -113,7 +113,7 @@
 
         <div *ngIf="session.track" class="session-info">
           <div class="session-icon">
-            <i class="fa fa-list-ol" aria-hidden="true"></i>
+            <i class="fa fa-list-ol fa-fw" aria-hidden="true"></i>
           </div>
           <div>
             <p>{{trackObj[session.track].name}}</p>
@@ -122,7 +122,7 @@
 
         <div class="session-info">
           <div class="session-icon">
-            <i class="fa fa-fire" aria-hidden="true"></i>
+            <i class="fa fa-fire fa-fw" aria-hidden="true"></i>
           </div>
           <div>
             <p *ngIf="!agenda.published">Once this event has been published, you can see how many people have 
@@ -134,7 +134,7 @@
 
         <div *ngIf="sessionTagsName.length || !isPublic" class="session-info">
           <div class="session-icon">
-            <i class="fa fa-tags" aria-hidden="true"></i>
+            <i class="fa fa-tags fa-fw" aria-hidden="true"></i>
           </div>
           <div>
             <tag-input [(ngModel)]="sessionTagsName"
@@ -154,7 +154,7 @@
     <div class="session-footer">
       <button md-button disableRipple class="interestBtn" [class.primary]="interested" [class.secondary]="!interested"
               (click)="updateInterest()" *ngIf="token">
-        <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
+        <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
       <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>

@@ -38,6 +38,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   @Input() offsetDate: Date;
 
   @Input() isPublic: boolean;
+  @Input() isAnalytics: boolean;
 
   @Input() token: string;
   @Input() interestedSessionIds: number[];
@@ -229,6 +230,8 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   }
 
   addNewSession(container: Container){
+    console.log('public '+this.isPublic);
+    console.log('analytics '+this.isAnalytics);
     let startTime = this.dayStartOffsetMin+this.eventStartOffsetMin+container.start_at;
     //console.log(startTime);
     this.onCreateSessionWithStart.emit(startTime);

@@ -25,7 +25,7 @@
             <div class="track" *ngFor="let track of eventTracks">
               <div class="track-title position-fixed-y">{{track.name}}</div>
               <absolute-column [sessions]="getSessionsForColumn(date, track.id)" 
-                [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
+                [day]="date" [track]="track" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"
                 (onSessionChanged)="onSessionChanged($event)"
                 (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
                 (onSessionMovedFromPending)="onSessionMovedFromPending($event)"

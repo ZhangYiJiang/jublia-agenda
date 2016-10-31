@@ -126,14 +126,15 @@
           </div>
         </div><!-- /.session-info -->
 
-        <div class="session-info">
+        <div *ngIf="sessionTagsName.length || !isPublic" class="session-info">
           <div class="session-icon">
             <i class="fa fa-tags" aria-hidden="true"></i>
           </div>
           <div>
             <tag-input [(ngModel)]="sessionTagsName"
                        placeholder=" + Tags" 
-                       secondaryPlaceholder="Add Tags" 
+                       secondaryPlaceholder="Add Tags"
+                       [class.public]="isPublic"
                        [autocompleteItems]="eventTagsName" 
                        [autocomplete]="true"
                        [readonly]="isPublic"

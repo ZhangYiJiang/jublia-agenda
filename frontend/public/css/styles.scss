@@ -38,6 +38,10 @@ body {
         border-bottom: 1px solid #444;
         padding: 0;
     }
+    
+    .public .tag-input.default {
+        border-bottom: 0;
+    }
 
     .default.tag:not(.tag--readonly):focus {
         background: $color-secondary;
@@ -59,6 +63,7 @@ body {
     
     .tag-input.default .tags-container .tag {
         background: $color-secondary;
+        line-height: 30px;
         
         &:hover:not(.tag--readonly),
         &:focus:not(.tag--readonly) {

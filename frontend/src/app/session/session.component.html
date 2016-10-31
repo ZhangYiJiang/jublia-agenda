@@ -13,7 +13,7 @@
 </div>
 
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-  <div class="modal-container">
+  <div class="modal-container session-modal">
     <div class="page-header">
       <button *ngIf="token" md-button disableRipple="true" class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
         <i class="fa fa-star" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}

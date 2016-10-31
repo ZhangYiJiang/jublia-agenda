@@ -79,7 +79,7 @@
                         [placeholder]="session.duration || '0'"
                         (onSave)="updateSession($event)" 
                         [permission]="!isPublic"
-                        [regex]="'/^[0-9]+$/'" 
+                        [regex]="'^[0-9]+$'" 
                         error="Please enter a number.">
               </ndv-edit>mins
               <span *ngIf="!isPublic" class="duration-buttons">

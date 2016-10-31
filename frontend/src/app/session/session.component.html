@@ -75,11 +75,11 @@
             <p *ngIf="!session.start_at && !isPublic">Duration</p>
             <p class="session-info-secondary">{{ getDisplayedTime() }}
               <ndv-edit class="small-input" 
-                        [title]="duration" 
+                        title="duration" 
                         [placeholder]="session.duration || '0'"
                         (onSave)="updateSession($event)" 
                         [permission]="!isPublic"
-                        [regex]="'^[0-9]+$'" 
+                        regex="^[0-9]+$" 
                         error="Please enter a number.">
               </ndv-edit>mins
               <span *ngIf="!isPublic" class="duration-buttons">

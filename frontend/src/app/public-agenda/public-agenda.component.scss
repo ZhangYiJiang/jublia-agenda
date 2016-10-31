@@ -3,6 +3,8 @@
 .agenda-menu {
     display: flex;
     padding: 10px 30px 0 60px;
+    height: 155px;
+    overflow: auto;
     width: calc(100% - 90px);
     text-align: left;
     
@@ -18,7 +20,7 @@
 
 .agenda-info {
     flex: 1 auto;
-    min-width: 400px;
+    min-width: 360px;
 
     h1 {
         color: $color-primary;
@@ -52,12 +54,12 @@
 }
 
 .viewer {
-    max-width: 400px;
+    max-width: 420px;
     padding: 16px 24px;
     border: 1px solid $color-primary;
     
-    @media (max-width: 1600px) {
-        width: 25vw;
+    @media (min-width: 1260px) {
+        width: 33.333vw;
     }
     
     h2 {

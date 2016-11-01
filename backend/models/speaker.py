@@ -3,6 +3,7 @@ from rest_framework.reverse import reverse
 
 from .agenda import Agenda
 from .base import BaseModel
+from .profile import Attachment
 
 
 class Speaker(BaseModel):
@@ -16,6 +17,7 @@ class Speaker(BaseModel):
     company_url = models.URLField(blank=True)
 
     agenda = models.ForeignKey(Agenda, models.CASCADE)
+    image = models.ForeignKey(Attachment, models.SET_NULL, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('speaker_detail', args=[self.agenda.pk, self.pk])

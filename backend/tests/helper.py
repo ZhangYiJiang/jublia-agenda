@@ -1,4 +1,13 @@
+import os
+from functools import lru_cache
+
+from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 from backend import serializers
+from backend.models import Attachment
+
+TEST_IMAGE_NAME = 'kitten.jpg'
 
 
 def create_user(data):
@@ -57,6 +66,22 @@ def create_category(agenda, data, tags=()):
     s = serializers.BaseCategorySerializer(data=data, context={'agenda': agenda, 'tags': tags})
     s.is_valid(True)
     return s.save()
+
+
+def get_resource_path(filename):
+    return os.path.dirname(os.path.abspath(__file__)) + '/resource/' + filename
+
+
+def create_attachment(profile):
+    if isinstance(profile, User):
+        profile = profile.profile
+    return Attachment.objects.create(profile=profile, file=test_image())
+
+
+@lru_cache()
+def test_image():
+    with open(get_resource_path('kitten.jpg'), 'rb') as fp:
+        return SimpleUploadedFile(TEST_IMAGE_NAME, fp.read(), 'image/jpeg')
 
 
 class ErrorDetailMixin:

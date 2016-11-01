@@ -3,10 +3,11 @@ from django.db.models import F
 from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import IntegerField
 
 from backend.models import Agenda
+from .attachment import AttachmentField
 from .base import BaseSerializer
 from .category import CategorySerializer
 from .session import SessionSerializer
@@ -18,9 +19,10 @@ DEFAULT_CATEGORY = 'Tags'
 
 
 class BaseAgendaSerializer(BaseSerializer):
-    duration = IntegerField(default=3, validators=[
+    duration = serializers.IntegerField(default=3, validators=[
         MinValueValidator(1, _("The duration of the event must be at least one day long")),
     ])
+    icon = AttachmentField(required=False)
 
     def validate_name(self, value):
         profile = self.context['user'].profile
@@ -65,7 +67,7 @@ class BaseAgendaSerializer(BaseSerializer):
 
     class Meta:
         model = Agenda
-        fields = ('id', 'name', 'location', 'description', 'published',
+        fields = ('id', 'name', 'location', 'description', 'published', 'icon',
                   'start_at', 'end_at', 'duration', 'website',)
 
 
@@ -75,9 +77,10 @@ class AgendaSerializer(BaseAgendaSerializer):
     speakers = BaseSpeakerSerializer(many=True, required=False, source='speaker_set')
     session_venues = BaseVenueSerializer(many=True, required=False, source='venue_set')
     categories = CategorySerializer(many=True, required=False, source='category_set')
+    icon = serializers.CharField(source='icon__file', required=False)
 
     class Meta:
         model = Agenda
         fields = ('id', 'name', 'location', 'start_at', 'description', 'published', 'end_at',
-                  'website', 'duration',
+                  'website', 'duration', 'icon',
                   'categories', 'sessions', 'tracks', 'speakers', 'session_venues',)

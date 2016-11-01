@@ -66,3 +66,6 @@ class Profile(BaseModel):
 class Attachment(BaseModel):
     profile = models.ForeignKey(Profile)
     file = models.ImageField()
+
+    def __str__(self):
+        return self.file.path

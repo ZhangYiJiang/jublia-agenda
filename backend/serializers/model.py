@@ -29,7 +29,7 @@ class SpeakerSerializer(MarkSessionDirtyMixin, BaseSpeakerSerializer):
     class Meta:
         model = Speaker
         fields = ('id', 'name', 'profile', 'company', 'position', 'email', 'phone_number',
-                  'company_description', 'company_url', 'sessions',)
+                  'company_description', 'company_url', 'sessions', 'image',)
 
 
 class VenueSerializer(MarkSessionDirtyMixin, BaseVenueSerializer):

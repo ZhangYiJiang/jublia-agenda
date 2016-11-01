@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
-from backend.tests.helper import create_user, create_agenda, create_session, create_speaker
+from backend.tests.helper import *
 from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin
 
 
@@ -26,6 +26,13 @@ class SpeakerListTest(ListAuthTestMixin, BaseAPITestCase):
         response = self.client.post(self.url, speaker_data)
         self.assertCreatedOk(response)
         self.assertEqualExceptMeta(speaker_data, response.data)
+
+    def test_create_with_icon(self):
+        self.login(self.user)
+        attachment = create_attachment(self.user)
+        response = self.client.post(self.url, factory.speaker({'image': attachment.pk}))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn(TEST_IMAGE_NAME, response.data['image'])
 
 
 class SpeakerDetailTest(DetailAuthTestMixin, BaseAPITestCase):

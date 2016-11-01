@@ -1,5 +1,9 @@
+import os
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import mail
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -9,7 +13,13 @@ from backend.tests import factory
 from backend.tests.helper import create_user, ErrorDetailMixin
 
 
+@override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
 class BaseAPITestCase(ErrorDetailMixin, APITestCase):
+    def tearDown(self):
+        for f in os.scandir(settings.MEDIA_ROOT):
+            if f.name != '.gitignore':
+                os.remove(f.path)
+
     def authenticate(self):
         url = reverse('sign_up')
         response = self.client.post(url, factory.user())

@@ -56,6 +56,13 @@ class AgendaListTest(BaseAPITestCase):
         self.assertIn('Test Track', tracks)
         self.assertIn('Hello World', tracks)
 
+    def test_create_with_icon(self):
+        self.login(self.user)
+        attachment = create_attachment(self.user)
+        response = self.client.post(self.url, factory.agenda({'icon': attachment.pk}))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn(TEST_IMAGE_NAME, response.data['icon'])
+
     def test_unauthenticated(self):
         self.assert401WhenUnauthenticated(self.url)
 

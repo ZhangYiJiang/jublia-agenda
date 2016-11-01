@@ -46,7 +46,7 @@ class Profile(BaseModel):
         self.verification_expiry = timezone.now() + EXPIRY
         self.save()
 
-    def verify_email(self, request):
+    def verify_email(self):
         if self.is_verified:
             return True
 

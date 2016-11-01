@@ -29,7 +29,7 @@ class Session(BaseModel):
     # Denormalized aggregate of the number of registrations on the model
     popularity = models.IntegerField(default=0, editable=False)
 
-    is_dirty = models.BooleanField(default=False)
+    is_dirty = models.BooleanField(default=False, editable=False)
 
     agenda = models.ForeignKey(Agenda, models.CASCADE)
     tags = models.ManyToManyField(Tag)

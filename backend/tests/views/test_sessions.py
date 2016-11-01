@@ -158,3 +158,60 @@ class SessionDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertSessionEqual(data, response.data)
 
+
+class SessionDirtyTest(BaseAPITestCase):
+    def setUp(self):
+        self.user = create_user(factory.user())
+        self.agenda = create_agenda(self.user, factory.agenda())
+        self.sessions = [create_session(self.agenda, factory.session()) for i in range(5)]
+
+    def assertDirtiness(self, action):
+        self.agenda.published = False
+        self.agenda.save()
+        action()
+
+        for session in self.sessions:
+            session.refresh_from_db()
+            self.assertFalse(session.is_dirty)
+
+        self.agenda.published = True
+        self.agenda.save()
+        action()
+
+        for session in self.sessions:
+            session.refresh_from_db()
+            self.assertTrue(session.is_dirty)
+
+    def test_is_dirty_default(self):
+        self.assertFalse(self.sessions[0].is_dirty)
+
+    def test_modify_session(self):
+        self.login(self.user)
+
+        def action():
+            for session in self.sessions:
+                self.client.put(session.get_absolute_url(), factory.session(full=True))
+        self.assertDirtiness(action)
+
+    def test_is_dirty_speaker(self):
+        self.login(self.user)
+
+        speaker = create_speaker(self.agenda, factory.speaker(full=True))
+        for session in self.sessions:
+            session.speakers.add(speaker)
+
+        def action():
+            self.client.put(speaker.get_absolute_url(), factory.speaker(full=True))
+        self.assertDirtiness(action)
+
+    def test_is_dirty_venue(self):
+        self.login(self.user)
+
+        venue = create_venue(self.agenda, factory.venue(full=True))
+        for session in self.sessions:
+            session.venue = venue
+            session.save()
+
+        def action():
+            self.client.put(venue.get_absolute_url(), factory.venue(full=True))
+        self.assertDirtiness(action)

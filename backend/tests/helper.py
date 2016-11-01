@@ -1,8 +1,8 @@
-from backend.serializers import *
+from backend import serializers
 
 
 def create_user(data):
-    s = UserSerializer(data=data)
+    s = serializers.UserSerializer(data=data)
     s.is_valid(raise_exception=True)
     user = s.save()
     # Mark the user as verified for convenience
@@ -12,7 +12,7 @@ def create_user(data):
 
 
 def create_agenda(user, data, published=True):
-    s = AgendaSerializer(data=data, context={'user': user, 'tracks': []})
+    s = serializers.AgendaSerializer(data=data, context={'user': user, 'tracks': []})
     s.is_valid(True)
     agenda = s.save()
     if published:
@@ -22,13 +22,13 @@ def create_agenda(user, data, published=True):
 
 
 def create_session(agenda, data):
-    s = SessionSerializer(data=data, context={'agenda': agenda})
+    s = serializers.SessionSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 
 
 def create_speaker(agenda, data):
-    s = SpeakerSerializer(data=data, context={'agenda': agenda})
+    s = serializers.SpeakerSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 
@@ -36,25 +36,25 @@ def create_speaker(agenda, data):
 def create_track(agenda, data=None):
     if data is None:
         data = {}
-    s = TrackSerializer(data=data, context={'agenda': agenda})
+    s = serializers.TrackSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 
 
 def create_venue(agenda, data):
-    s = VenueSerializer(data=data, context={'agenda': agenda})
+    s = serializers.VenueSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 
 
 def create_viewer(agenda, data):
-    s = ViewerSerializer(data=data, context={'agenda': agenda})
+    s = serializers.ViewerSerializer(data=data, context={'agenda': agenda})
     s.is_valid(True)
     return s.save()
 
 
 def create_category(agenda, data, tags=()):
-    s = BaseCategorySerializer(data=data, context={'agenda': agenda, 'tags': tags})
+    s = serializers.BaseCategorySerializer(data=data, context={'agenda': agenda, 'tags': tags})
     s.is_valid(True)
     return s.save()
 

@@ -43,6 +43,11 @@ class SessionSerializer(HideFieldsMixin, BaseSerializer):
         validated_data['agenda'] = self.context['agenda']
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        if self.context['agenda'].published:
+            instance.is_dirty = True
+        return super().update(instance, validated_data)
+
     class Meta:
         model = Session
         fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',

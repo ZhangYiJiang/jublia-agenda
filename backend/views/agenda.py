@@ -33,5 +33,5 @@ class AgendaDetail(UserContextMixin, RetrieveUpdateDestroyAPIView):
 @permission_classes((IsAgendaOwner,))
 def dirty_sessions(request, agenda_id):
     agenda = get_object_or_404(Agenda.objects, pk=agenda_id)
-    sessions = agenda.session_set.filter(dirty=True).values_list('pk', flat=True)
+    sessions = agenda.session_set.filter(is_dirty=True).values_list('pk', flat=True)
     return Response(sessions, status.HTTP_200_OK)

@@ -33,6 +33,10 @@ urlpatterns = [
         views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^users/reset/done$', password_reset_complete, name='password_reset_complete'),
 
+    # File upload endpoints
+    url(r'^uploads/file$', views.UploadFile.as_view(), name='upload_file'),
+    url(r'^uploads/image$', views.UploadImage.as_view(), name='upload_file'),
+
     # Agenda listing, detail
     url(r'^agenda', views.AgendaList.as_view(), name='agenda_list'),
     url(r'^(?P<pk>[1-9][0-9]*)$', views.AgendaDetail.as_view(), name='agenda_detail'),

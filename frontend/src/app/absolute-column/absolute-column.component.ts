@@ -282,7 +282,6 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   addInNewSession(session:Session) {
     this.displayedSessions.push(session);
     this.generateContainers();
-    console.log('col called');
   }
 
   ngOnInit(): void {
@@ -297,7 +296,6 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
     this.displayedSessions = this.sessions;
 
     this.generateContainers();
-    console.log('col index '+this.colIndex);
 
     // let sortedSessions = _.sortBy(this.sessions, ['start_at']);
     // this.displayedSessions = this.addPlaceHolderSessions(sortedSessions);

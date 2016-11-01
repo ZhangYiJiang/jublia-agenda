@@ -1,5 +1,7 @@
 import os
 
+from django.conf import settings
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -12,11 +14,18 @@ def resource(filename):
     return os.path.dirname(os.path.abspath(__file__)) + '/../resource/' + filename
 
 
+@override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
 class UploadFileTest(BaseAPITestCase):
     url = reverse('upload-image')
 
     def setUp(self):
         self.user = create_user(factory.user())
+
+    def tearDown(self):
+        for f in os.scandir(settings.MEDIA_ROOT):
+            if f.name == '.gitignore':
+                continue
+            os.remove(f.path)
 
     def try_upload(self, file):
         self.login(self.user)

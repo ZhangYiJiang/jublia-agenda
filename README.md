@@ -4,7 +4,9 @@ API Document: http://docs.jubliaagenda.apiary.io/
 
 ## Backend Setup 
 
-The backend uses [Django 1.10][django] and [Django Rest Framework 3.4][rest-framework]. To setup: 
+The backend uses [Django 1.10][django] and [Django Rest Framework 3.4][rest-framework]. On development environment by default it will use a Sqlite database, and all mails are sent to log. To run the unit tests the database user will need permission to create databases (this is not necessary for the Sqlite database). 
+
+To setup: 
 
 1. Make sure you have prerequisites installed - Python 3.5 
 2. Clone the repository 
@@ -12,14 +14,15 @@ The backend uses [Django 1.10][django] and [Django Rest Framework 3.4][rest-fram
 4. Activate the virtualenv - `source venv/bin/activate` 
 5. Install dependencies - `pip install -r requirements.txt` 
 6. Edit environment settings - `cp jublia/env.py.example jublia/env.py` then `vim jublia/env.py` and update the `SECRET_KEY` (use http://www.miniwebtool.com/django-secret-key-generator/)
-7. Return to the project root and run `python manage.py migrate` to run the DB migrations
-8. Start the server with `python manage.py runserver`
-9. Make sure that there are no errors, then open `localhost:8000/admin` to check that Django is working properly
-10. Use `python manage.py createsuperuser` to create a new admin account
+7. Return to the project root and run `./manage.py migrate` to run the DB migrations
+8. Run the backend test suite using `./manage.py test backend`. Check that there are no errors.  
+9. Start the server with `./manage.py runserver`
+10. Make sure that there are no errors, then open `localhost:8000/admin` to check that Django is working properly
+11. Use `./manage.py createsuperuser` to create a new admin account
 
 ## Commands 
 
-Django comes with a number of useful [command line commands][commands] through `manage/py`. In addition, [Django Extensions][extensions] is also installed, which means there's a number of useful commands in addition to Django's defaults. Run `manage.py` without any commands to see a list. 
+Django comes with a number of useful [command line commands][commands] through `manage.py`. In addition, [Django Extensions][extensions] is also installed, which means there's a number of useful commands in addition to Django's defaults. Run `manage.py` without any commands to see a list. 
  
 In addition to this we also define the following commands: 
 
@@ -31,6 +34,7 @@ This command will create a new user and generate a new event agenda with tracks,
 - `--tracks=2` - number of session tracks 
 - `--speakers=5` - number of speakers 
 - `--sessions=20` - number of sessions. 
+- `--venues=3` - number of venues
 
 The sessions are randomly assigned fields, speakers and tracks. Their timing should be within office hours, but no checks for overlapping sessions is done 
 

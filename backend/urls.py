@@ -34,8 +34,7 @@ urlpatterns = [
     url(r'^users/reset/done$', password_reset_complete, name='password_reset_complete'),
 
     # File upload endpoints
-    url(r'^uploads/file$', views.UploadFile.as_view(), name='upload_file'),
-    url(r'^uploads/image$', views.UploadImage.as_view(), name='upload_file'),
+    url(r'^uploads/image$', views.UploadImage.as_view(), name='upload-image'),
 
     # Agenda listing, detail
     url(r'^agenda', views.AgendaList.as_view(), name='agenda_list'),

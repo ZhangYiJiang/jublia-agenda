@@ -65,4 +65,4 @@ class Profile(BaseModel):
 
 class Attachment(BaseModel):
     profile = models.ForeignKey(Profile)
-    file = models.FileField()
+    file = models.ImageField()

@@ -1,6 +1,6 @@
 from .agenda import AgendaList, AgendaDetail, AgendaDirtySession
 from .analytics import analytics
-from .attachment import UploadFile, UploadImage
+from .attachment import UploadImage
 from .session import SessionList, SessionDetail
 from .session_meta import TrackList, TrackDetail, SpeakerList, SpeakerDetail, CategoryViewSet, TagViewSet
 from .user import sign_up, UserDetail, ObtainJSONWebToken, verify_email, resend_verification, password_reset_confirm

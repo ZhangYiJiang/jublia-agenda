@@ -1,0 +1,1 @@
+alert('Not an image');

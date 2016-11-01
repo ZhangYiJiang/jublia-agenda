@@ -107,11 +107,11 @@ class ViewerRegisterTest(BaseAPITestCase):
         session.refresh_from_db()
         self.assertEqual(5, session.popularity)
 
-    def test_registerError(self):
+    def test_register_error(self):
         response = self.client.put(self.url(1))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_unregisterError(self):
+    def test_unregister_error(self):
         response = self.client.delete(self.url(1))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 

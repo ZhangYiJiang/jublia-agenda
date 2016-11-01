@@ -1,5 +1,6 @@
 import { Input, Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
@@ -7,7 +8,7 @@ import { AgendaService } from '../agenda/agenda.service';
 import { DashBoardService } from '../dash-board/dash-board.service';
 import { PublicAgendaService } from './public-agenda.service';
 import { GlobalVariable } from '../globals';
-import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 @Component({
   selector: 'public-agenda',
@@ -16,6 +17,7 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 })
 export class PublicAgendaComponent implements OnInit{
   constructor(
+    private location: Location,
     private route: ActivatedRoute,
     private router: Router,
     private agendaService: AgendaService,
@@ -40,11 +42,10 @@ export class PublicAgendaComponent implements OnInit{
       this.agendaId = params['id'];
       this.getAgendaById(this.agendaId);
 
-      this.token = params['token'];
-      if (this.token) {
-        this.getViewerByToken(this.token);
-      }
-      
+      let token = params['token'];
+      if (token) {
+        this.getViewerByToken(token);
+      }      
     });
   }
 
@@ -69,8 +70,11 @@ export class PublicAgendaComponent implements OnInit{
       (data: any) => {
         this.email = data.email;
         this.interestedSessionIds = data.sessions;
+        this.token = token;
       },
-      (error: any) => console.log(error)
+      (error: any) => {
+        this.location.go('/public/agenda/'+this.agendaId);
+      }
     );
   }
 

@@ -475,6 +475,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       
       // Clean up dropdown menus that were left behind by the widget
       dialog.onDestroy.subscribe(() => {
+        this.addingSessionWithStart = false;
         // querySelectorAll uses a frozen NodeList
         _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
           el.parentNode.removeChild(el);

@@ -1,4 +1,6 @@
-import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
+import { Input, Component, OnInit, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, EventEmitter, Output} from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
@@ -33,9 +35,11 @@ import {
   encapsulation: ViewEncapsulation.None
 })
 export class SessionComponent implements OnInit {
-  constructor(public modal: Modal,
-    private boardService: BoardService) {
-  }
+  constructor(
+    private location:Location,
+    private route: ActivatedRoute,
+    public modal: Modal,
+    private boardService: BoardService) {}
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @Input() session: Session;
   @Input() offsetDate: Date;
@@ -45,10 +49,8 @@ export class SessionComponent implements OnInit {
   @Input() token: string;
 
   @Input() interested: boolean;
-  @Input()
-  analyticsData: {};
-  @Input()
-  isAnalytics: boolean;
+  @Input() analyticsData: {};
+  @Input() isAnalytics: boolean;
 
   interestedButtonText: string;
   analyticsDataCombinedX: any[];
@@ -208,7 +210,8 @@ export class SessionComponent implements OnInit {
            !isNaN(parseInt(value, 10));
   }
 
-  clicked(event: DocumentEvent) {
+  clicked() {
+    this.location.replaceState('/public/agenda/'+this.agenda.id+'/session/'+this.session.id);
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
     this.sessionTagsName = _.values(_.values(this.session.categories)[0])
@@ -229,6 +232,7 @@ export class SessionComponent implements OnInit {
       
       // Clean up dropdown menus that were left behind by the widget
       dialog.onDestroy.subscribe(() => {
+        this.location.replaceState('/public/agenda/'+this.agenda.id);
         // querySelectorAll uses a frozen NodeList
         _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
           el.parentNode.removeChild(el);
@@ -319,5 +323,18 @@ export class SessionComponent implements OnInit {
     const l = primary.l + (100 - primary.l) * Math.sqrt(1 - popularityRatio);
     this.color = `hsl(${primary.h}, ${primary.s}%, ${l}%)`;
     this.useDarkTheme = l < 75;
+    setTimeout(()=>{
+      this.route.params.forEach((params: Params) => {
+        // (+) converts string 'id' to a number
+        if(params['sessionId']){
+          let id = +params['sessionId'];
+          if(this.session.id === id) {
+            this.clicked();
+          }      
+        }
+      });
+    },0);
+
   }
+
 }

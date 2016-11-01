@@ -1,11 +1,12 @@
 <div *ngIf="session.placeholder" class="placeholder-session"></div>
+
 <div *ngIf="!session.placeholder" class="session-tile" 
      [style.height]="session.start_at == null?'initial':height + 'px'" 
      [style.background-color]="color" 
      [class.pending]="session.start_at == null" 
      [class.static]="isPublic" 
      [class.dark]="useDarkTheme"
-     (click)="clicked($event)" 
+     (click)="clicked()" 
      [class.not-interested]="!interested">
   <div class="session-content">
     <div class="session-title">
@@ -19,7 +20,7 @@
   </div>
 </div>
 
-<template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+<template id="session.id" #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container session-modal">
     <div class="page-header">
       <button *ngIf="token" md-button disableRipple="true" class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">

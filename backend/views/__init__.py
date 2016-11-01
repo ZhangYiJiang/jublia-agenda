@@ -1,4 +1,4 @@
-from .agenda import AgendaList, AgendaDetail, dirty_sessions
+from .agenda import AgendaList, AgendaDetail, AgendaDirtySession
 from .analytics import analytics
 from .session import SessionList, SessionDetail
 from .session_meta import TrackList, TrackDetail, SpeakerList, SpeakerDetail, CategoryViewSet, TagViewSet

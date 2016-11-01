@@ -1,0 +1,6 @@
+The following sessions you have bookmarked have been updated -
+
+{% for session in sessions %}{% autoescape off %}
+{{ session.name }}
+{{ session.description }}
+{% endautoescape %}{% endfor %}

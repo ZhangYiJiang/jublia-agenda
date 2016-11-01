@@ -1,6 +1,8 @@
+from django.core import mail
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from backend.models import Registration
 from backend.models import Track
 from backend.tests import factory
 from backend.tests.helper import *
@@ -147,30 +149,65 @@ class GetDirtySessionTest(BaseAPITestCase):
         self.agenda_data = factory.agenda()
         self.agenda = create_agenda(self.user, self.agenda_data)
         self.sessions = [create_session(self.agenda, factory.agenda()) for i in range(self.count)]
-        self.get_url = reverse('dirty_sessions', [self.agenda.pk])
+        self.url = reverse('dirty_sessions', [self.agenda.pk])
+        self.email_count = len(mail.outbox)
 
-    def assert_is_dirty(self, index_set):
+    def assertIsDirty(self, index_set):
         for i in index_set:
             self.sessions[i].is_dirty = True
             self.sessions[i].save()
 
         self.login(self.user)
-        response = self.client.get(self.get_url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         for i in index_set:
             self.assertIn(self.sessions[i].pk, response.data)
 
+    def associate(self, sessions, viewers):
+        registrations = []
+        for session in sessions:
+            for viewer in viewers:
+                registrations.append(Registration(session=session, viewer=viewer))
+        Registration.objects.bulk_create(registrations)
+
+    def assertSessionChangedMailSent(self, sessions, viewers):
+        self.associate(sessions, viewers)
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEmailSent(len(viewers) * 2)  # x2 to account for the signing up email
+        emails = mail.outbox[-len(viewers):]
+        for email in emails:
+            self.assertIn(self.agenda.name, email.subject)
+            for session in sessions:
+                self.assertIn(session.name, email.body)
+
     def test_empty(self):
-        self.assert_is_dirty([])
+        self.assertIsDirty([])
+        self.client.post(self.url)
+        self.assertEmailSent(0)
 
     def test_some_dirty(self):
-        self.assert_is_dirty([2, 3, 4, 5])
+        self.assertIsDirty([2, 3, 4, 5])
 
-    def test_all_dirty(self):
-        self.assert_is_dirty(range(self.count))
+    def test_single_email(self):
+        viewer = create_viewer(self.agenda, factory.viewer())
+        self.assertIsDirty([0])
+        self.assertSessionChangedMailSent(self.sessions[:1], [viewer])
+
+    def test_multiple_email(self):
+        viewer = create_viewer(self.agenda, factory.viewer())
+        self.assertIsDirty(range(self.count))
+        self.assertSessionChangedMailSent(self.sessions, [viewer])
+
+    def test_multiple_sessions(self):
+        viewers = [create_viewer(self.agenda, factory.viewer()) for i in range(10)]
+        self.assertIsDirty([0])
+        self.assertSessionChangedMailSent(self.sessions[:1], viewers)
 
     def test_unauthenticated(self):
-        self.assert401WhenUnauthenticated(self.get_url, method='get')
+        self.assert401WhenUnauthenticated(self.url, method='get')
+        self.assert401WhenUnauthenticated(self.url, method='post')
 
     def test_unauthorized(self):
-        self.assert403WhenUnauthorized(self.get_url, method='get')
+        self.assert403WhenUnauthorized(self.url, method='get')
+        self.assert403WhenUnauthorized(self.url, method='post')

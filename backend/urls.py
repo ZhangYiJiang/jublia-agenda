@@ -61,7 +61,7 @@ urlpatterns = [
     
     # Session analytics
     url(agenda_id + 'data', views.analytics, name='analytics'),
-    url(agenda_id + 'dirty', views.dirty_sessions, name='dirty_sessions'),
+    url(agenda_id + 'dirty', views.AgendaDirtySession.as_view(), name='dirty_sessions'),
 
     # Agenda viewers
     url(agenda_id + r'viewers/(?P<token>\w+)/(?P<session_id>[1-9][0-9]*)',

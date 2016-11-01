@@ -69,7 +69,7 @@ class BaseAPITestCase(ErrorDetailMixin, APITestCase):
     def assert403WhenUnauthorized(self, url, method='post', data=None):
         another_user = create_user(factory.user())
         self.login(another_user)
-        message = "Request to {} should have resulted in 403 Forbidden".format(url)
+        message = "Request to {} from another user should have resulted in 403 Forbidden".format(url)
         response = getattr(self.client, method.lower())(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, message)
 

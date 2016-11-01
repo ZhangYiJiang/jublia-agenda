@@ -18,7 +18,7 @@ class ViewerCreateTest(BaseAPITestCase):
         self.url = reverse(self.view_name, [self.agenda.pk])
         self.email_count = len(mail.outbox)
 
-    def testCreate(self):
+    def test_create(self):
         viewer_data = factory.viewer()
         response = self.client.post(self.url, viewer_data)
         viewer = Viewer.objects.get(email=viewer_data['email'])
@@ -28,7 +28,7 @@ class ViewerCreateTest(BaseAPITestCase):
         email = mail.outbox[-1]
         self.assertIn(viewer.link(), email.body)
 
-    def testDoubleCreate(self):
+    def test_double_create(self):
         viewer_data = factory.viewer()
         first_response = self.client.post(self.url, viewer_data)
         self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
@@ -38,7 +38,7 @@ class ViewerCreateTest(BaseAPITestCase):
         self.assertIsErrorDetail(second_response.data)
         self.assertEmailSent(2)
 
-    def testMultipleAgenda(self):
+    def test_multiple_agenda(self):
         viewer = factory.viewer()
         tokens = set()
 
@@ -65,7 +65,7 @@ class ViewerRegisterTest(BaseAPITestCase):
             token = self.viewer.token
         return reverse('viewer_registration', [self.agenda.pk, token, session_id])
 
-    def testRegister(self):
+    def test_register(self):
         session = create_session(self.agenda, factory.session(full=True))
         response = self.client.put(self.url(session.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -76,7 +76,7 @@ class ViewerRegisterTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(1, self.viewer.sessions.count())
 
-    def testUnregister(self):
+    def test_unregister(self):
         sessions = [create_session(self.agenda, factory.session(full=True)) for i in range(10)]
         for i, session in enumerate(sessions):
             response = self.client.put(self.url(session.pk))
@@ -88,7 +88,7 @@ class ViewerRegisterTest(BaseAPITestCase):
         self.assertEqual(9, self.viewer.sessions.count())
         self.assertNotIn(sessions[3], self.viewer.sessions.all())
 
-    def testPopularity(self):
+    def test_popularity(self):
         session = create_session(self.agenda, factory.session())
         viewers = [create_viewer(self.agenda, factory.viewer()) for i in range(10)]
         for i in [2, 5, 6, 9]:
@@ -107,15 +107,11 @@ class ViewerRegisterTest(BaseAPITestCase):
         session.refresh_from_db()
         self.assertEqual(5, session.popularity)
 
-    def testDirtySessionEmailSent(self):
-        session = create_session(self.agenda, factory.session())
-        viewer = create_viewer(self.agenda, factory.viewer())
-
-    def testRegisterError(self):
+    def test_registerError(self):
         response = self.client.put(self.url(1))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def testUnregisterError(self):
+    def test_unregisterError(self):
         response = self.client.delete(self.url(1))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -128,12 +124,12 @@ class ViewerListTest(BaseAPITestCase):
         self.url = self.viewer.get_absolute_url()
         self.sessions = [create_session(self.agenda, factory.session(full=True)) for i in range(10)]
 
-    def testListEmpty(self):
+    def test_list_empty(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotIn('session', response.data)
 
-    def testListFull(self):
+    def test_list_full(self):
         indices = [3, 6, 9, 4]
 
         for i, n in enumerate(indices):

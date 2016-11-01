@@ -137,3 +137,40 @@ class AgendaDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.assertTrue(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['name'], 'New Conference Name')
         self.assertNoEmptyFields(response.data)
+
+
+class GetDirtySessionTest(BaseAPITestCase):
+    count = 10
+
+    def setUp(self):
+        self.user = create_user(factory.user())
+        self.agenda_data = factory.agenda()
+        self.agenda = create_agenda(self.user, self.agenda_data)
+        self.sessions = [create_session(self.agenda, factory.agenda()) for i in range(self.count)]
+        self.get_url = reverse('dirty_sessions', [self.agenda.pk])
+
+    def assert_is_dirty(self, index_set):
+        for i in index_set:
+            self.sessions[i].is_dirty = True
+            self.sessions[i].save()
+
+        self.login(self.user)
+        response = self.client.get(self.get_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for i in index_set:
+            self.assertIn(self.sessions[i].pk, response.data)
+
+    def test_empty(self):
+        self.assert_is_dirty([])
+
+    def test_some_dirty(self):
+        self.assert_is_dirty([2, 3, 4, 5])
+
+    def test_all_dirty(self):
+        self.assert_is_dirty(range(self.count))
+
+    def test_unauthenticated(self):
+        self.assert401WhenUnauthenticated(self.get_url, method='get')
+
+    def test_unauthorized(self):
+        self.assert403WhenUnauthorized(self.get_url, method='get')

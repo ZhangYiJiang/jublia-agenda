@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.conf.urls import url
+from django.conf.urls.static import static
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_complete
 from rest_framework.routers import SimpleRouter
 from rest_framework_jwt.views import refresh_jwt_token
@@ -72,3 +74,5 @@ urlpatterns = [
 ]
 
 urlpatterns += router.urls
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

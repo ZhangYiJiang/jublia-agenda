@@ -15,6 +15,7 @@ from datetime import timedelta
 
 from .env import *
 
+#
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -133,17 +134,15 @@ if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_REPLACE_HTTPS_REFERER = True
 
-
-# Testing uses the memory backend so that unit tests can check if emails were
-# sent out
-if TESTING:
-    EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1

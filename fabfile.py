@@ -1,6 +1,7 @@
 from contextlib import contextmanager as _contextmanager
 
 from fabric.api import *
+from fabric.decorators import runs_once
 
 env.hosts = ['52.220.148.170', ]
 env.user = 'yijiang'
@@ -15,6 +16,11 @@ def virtualenv():
             yield
 
 
+@runs_once
+def update():
+    run('git pull')
+
+
 def deploy():
     backend()
     frontend()
@@ -22,7 +28,7 @@ def deploy():
 
 def frontend():
     with cd(env.directory):
-        run('git pull')
+        update()
         # Build frontend
         with cd('frontend'):
             run('npm i --progress false')
@@ -33,7 +39,7 @@ def frontend():
 
 def backend():
     with virtualenv():
-        run('git pull')
+        update()
         # Build backend
         run('pip install -q -r requirements.txt')
         run('./manage.py migrate --noinput')

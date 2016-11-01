@@ -61,3 +61,8 @@ class Profile(BaseModel):
 
     def __str__(self):
         return str(self.user)
+
+
+class Attachment(BaseModel):
+    profile = models.ForeignKey(Profile)
+    file = models.FileField()

@@ -1,9 +1,9 @@
 from datetime import timedelta
 
 from django.db import models
-from icalendar import Calendar
 from rest_framework.reverse import reverse
 
+from backend.helper import calendar
 from .base import BaseModel
 from .profile import Profile, Attachment
 
@@ -21,8 +21,10 @@ class Agenda(BaseModel):
     icon = models.ForeignKey(Attachment, models.SET_NULL, null=True, blank=True)
 
     def to_ics(self):
-        cal = Calendar()
-        for session in self.session_set.all():
+        cal = calendar()
+        if self.start_at is None:
+            return cal
+        for session in self.session_set.exclude(start_at=None):
             cal.add_component(session.to_ical())
         return cal
 

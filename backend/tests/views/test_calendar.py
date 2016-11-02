@@ -23,6 +23,9 @@ class CalendarTest(BaseAPITestCase):
         self.assertIn('attachment', response['content-disposition'])
         self.assertIn('text/calendar', response['content-type'])
 
+    def assertCompleteAgenda(self, cal, queryset=None):
+        pass
+
     def to_ics(self, response):
         cal = Calendar()
         cal.from_ical(response.rendered_content.decode("utf-8"))
@@ -40,6 +43,11 @@ class CalendarTest(BaseAPITestCase):
         response = self.client.get(self.agenda_url)
         self.assertIsCalendar(response)
         cal = self.to_ics(response)
+
+    def test_agenda_incomplete_sessions(self):
+        create_session(self.agenda, factory.session())
+        response = self.client.get(self.agenda_url)
+        self.assertIsCalendar(response)
 
     def test_viewer_empty(self):
         response = self.client.get(self.viewer_url)

@@ -2,6 +2,8 @@ from icalendar import Calendar
 from rest_framework.exceptions import NotFound
 from rest_framework.renderers import BaseRenderer
 
+from backend.helper import calendar
+
 
 class CalendarRenderer(BaseRenderer):
     media_type = 'text/calendar'
@@ -11,9 +13,9 @@ class CalendarRenderer(BaseRenderer):
         try:
             rendered_data = data.to_ics()
             if not isinstance(rendered_data, Calendar):
-                calendar = Calendar()
-                calendar.add_component(rendered_data)
-                rendered_data = calendar
+                cal = calendar()
+                cal.add_component(rendered_data)
+                rendered_data = cal
             return rendered_data.to_ical()
         except ValueError:
             raise NotFound

@@ -1,5 +1,6 @@
 from django.apps import apps
 from django.utils.crypto import get_random_string
+from icalendar import Calendar
 from rest_framework_jwt.settings import api_settings
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -9,6 +10,15 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 def get_token(user):
     payload = jwt_payload_handler(user)
     return jwt_encode_handler(payload)
+
+
+def calendar():
+    cal = Calendar()
+    cal.add('method', 'publish')
+    cal.add('version', '2.0')
+    cal.add('prodid', r'//Jublia//Jublia Agenda//EN')
+
+    return cal
 
 
 class UniqueTokenGenerator:

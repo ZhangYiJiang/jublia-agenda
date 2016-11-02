@@ -6,6 +6,7 @@ import { Agenda } from '../agenda/agenda';
 import { AgendaService } from '../agenda/agenda.service';
 import { DashBoardService } from './dash-board.service';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
 

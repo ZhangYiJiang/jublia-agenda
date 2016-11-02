@@ -7,6 +7,7 @@ import { Agenda } from './agenda';
 import { Session } from '../session/session';
 import { Speaker } from '../speaker/speaker';
 import { Venue } from '../venue/venue';
+import * as _ from 'lodash';
 
 @Injectable()
 export class AgendaService {

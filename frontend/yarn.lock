@@ -8,6 +8,10 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.0.0.tgz#724e7c68ac177aa933aa75a6b4cb11e5aa795d2c"
 
+"@angular/core@^2.0.0":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.1.2.tgz#ce39521643f3d97bc5923d5a7aa76604e973dac8"
+
 "@angular/core@2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.0.0.tgz#87b5ea4a7ae063d27bcf2332a4aa932d887abe2b"
@@ -37,6 +41,10 @@
 "@angular/router@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-3.0.0.tgz#cdf91b3a5d85ad39aff4fd882455c9b8c3129cd9"
+
+"@types/clipboard@1.5.29":
+  version "1.5.29"
+  resolved "https://registry.yarnpkg.com/@types/clipboard/-/clipboard-1.5.29.tgz#a230090a2431e799e647279dc513cb0ab8640747"
 
 "@types/hammerjs@^2.0.30":
   version "2.0.33"
@@ -106,6 +114,17 @@ amdefine@>=0.0.4:
 angular-pipes@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/angular-pipes/-/angular-pipes-4.0.0.tgz#d49fda3c8581d5863a03a63c0cdedc5d0c08220a"
+
+angular2-clipboard@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/angular2-clipboard/-/angular2-clipboard-1.0.1.tgz#14ed2098ab8e89d3c107de898bd837bafd346b8c"
+  dependencies:
+    "@angular/core" "^2.0.0"
+    "@types/clipboard" "1.5.29"
+    clipboard "~1.5.12"
+    core-js "^2.4.1"
+    rxjs "~5.0.0-beta.12"
+    zone.js "~0.6.25"
 
 angular2-jwt@^0.1.24:
   version "0.1.25"
@@ -999,6 +1018,14 @@ cli-boxes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
 
+clipboard@~1.5.12:
+  version "1.5.15"
+  resolved "https://registry.yarnpkg.com/clipboard/-/clipboard-1.5.15.tgz#6f24bf58a89b5a3fc1070dabdeaeaebb68382cee"
+  dependencies:
+    good-listener "^1.2.0"
+    select "^1.0.6"
+    tiny-emitter "^1.0.0"
+
 cliui@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cliui/-/cliui-2.1.0.tgz#4b475760ff80264c762c3a1719032e91c7fea0d1"
@@ -1439,6 +1466,10 @@ defined@^1.0.0:
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
+
+delegate@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/delegate/-/delegate-3.1.0.tgz#30c5c9ddbab0547e527dbbbb89d1495ab4cddc93"
 
 delegates@^1.0.0:
   version "1.0.0"
@@ -1992,6 +2023,12 @@ glob@^7.0.0, glob@^7.0.3, glob@^7.0.5:
 globals@^8.3.0:
   version "8.18.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-8.18.0.tgz#93d4a62bdcac38cfafafc47d6b034768cb0ffcb4"
+
+good-listener@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/good-listener/-/good-listener-1.2.0.tgz#c473e31ba8c12cf82b6137cd867565beab5ba053"
+  dependencies:
+    delegate "^3.1.0"
 
 got@^5.0.0:
   version "5.6.0"
@@ -4275,6 +4312,12 @@ ripemd160@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-0.2.0.tgz#2bf198bde167cacfa51c0a928e84b68bbe171fce"
 
+rxjs@~5.0.0-beta.12:
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.0-rc.1.tgz#9e02b7044da81a2d5e138908d22af77e22d96973"
+  dependencies:
+    symbol-observable "^1.0.1"
+
 rxjs@5.0.0-beta.12:
   version "5.0.0-beta.12"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.0-beta.12.tgz#cdfde2d8c4639d20ae7794bff8fddf32da7ad337"
@@ -4284,6 +4327,10 @@ rxjs@5.0.0-beta.12:
 sax@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.1.tgz#7b8e656190b228e81a66aea748480d828cd2d37a"
+
+select@^1.0.6:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/select/-/select-1.1.0.tgz#a6c520cd9ab919ad81c7d1a273e0452f504dd7a2"
 
 semver-diff@^2.0.0:
   version "2.1.0"
@@ -4684,6 +4731,10 @@ timers-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-1.4.2.tgz#c9c58b575be8407375cb5e2462dacee74359f41d"
   dependencies:
     process "~0.11.0"
+
+tiny-emitter@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-1.1.0.tgz#ab405a21ffed814a76c19739648093d70654fecb"
 
 title-case@^2.1.0:
   version "2.1.0"
@@ -5180,7 +5231,7 @@ zip-object@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/zip-object/-/zip-object-0.1.0.tgz#c1a0da04c88c837756e248680a03ff902ec3f53a"
 
-zone.js@^0.6.23:
+zone.js@^0.6.23, zone.js@~0.6.25:
   version "0.6.26"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.6.26.tgz#067c13b8b80223a89b62e9dc82680f09762c4636"
 

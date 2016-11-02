@@ -13,7 +13,7 @@ class UserContextMixin:
 
 class AgendaContextMixin:
     def get_serializer_context(self):
-        agenda = get_object_or_404(Agenda.objects.all(), pk=self.kwargs['agenda_id'])
+        agenda = get_object_or_404(Agenda, pk=self.kwargs['agenda_id'])
         return {
             **super().get_serializer_context(),
             'agenda': agenda,

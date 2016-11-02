@@ -35,7 +35,6 @@ class Viewer(BaseModel):
         sent_recently = self.last_email_at is not None and timezone.now() - self.last_email_at < TIME_BETWEEN_EMAIL
         if not settings.TESTING and sent_recently:
             return
-        # TODO: Get this URL from the front end
         link = self.link()
         subject = _('Your personalized agenda to %s' % self.agenda.name)
         message = _("Welcome to %(title)s! Here's a link to your personalized "

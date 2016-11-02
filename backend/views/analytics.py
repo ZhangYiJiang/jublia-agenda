@@ -16,7 +16,7 @@ from backend.permissions import IsAgendaOwner
 @api_view(('GET',))
 @permission_classes((IsAgendaOwner,))
 def analytics(request, agenda_id):
-    agenda = get_object_or_404(Agenda.objects, pk=agenda_id)
+    agenda = get_object_or_404(Agenda, pk=agenda_id)
     date_query = agenda.viewer_set.annotate(
         session=F('registration__session'),
         date=TruncDate('registration__created_at'),

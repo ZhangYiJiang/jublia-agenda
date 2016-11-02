@@ -15,7 +15,7 @@ from .base import AgendaContextMixin
 @permission_classes((AllowAny,))
 def create_viewer(request, agenda_id):
     serializer = ViewerSerializer(data=request.data, context={
-        'agenda': get_object_or_404(Agenda.objects, pk=agenda_id),
+        'agenda': get_object_or_404(Agenda, pk=agenda_id),
     })
 
     serializer.is_valid(True)
@@ -24,7 +24,7 @@ def create_viewer(request, agenda_id):
 
 
 def get_viewer(agenda_id, token):
-    return get_object_or_404(Viewer.objects, agenda=agenda_id, token=token)
+    return get_object_or_404(Viewer, agenda=agenda_id, token=token)
 
 
 class ViewerSessionList(AgendaContextMixin, RetrieveAPIView):
@@ -41,7 +41,7 @@ class ViewerRegistrationView(APIView):
     def put(self, request, agenda_id, token, session_id):
         # This is probably a little more convoluted than it should be
         # should refactor when there's time
-        session = get_object_or_404(Session.objects, pk=session_id, agenda=agenda_id)
+        session = get_object_or_404(Session, pk=session_id, agenda=agenda_id)
         viewer = get_viewer(agenda_id, token)
 
         with atomic():
@@ -53,7 +53,7 @@ class ViewerRegistrationView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, agenda_id, token, session_id):
-        session = get_object_or_404(Session.objects, pk=session_id, agenda=agenda_id)
+        session = get_object_or_404(Session, pk=session_id, agenda=agenda_id)
         registration = get_object_or_404(session.registration_set, viewer__token=token)
         session.popularity -= 1
 

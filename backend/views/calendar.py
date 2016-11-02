@@ -29,20 +29,20 @@ class CalendarAPIView(APIView):
 
 class SessionCalendar(CalendarAPIView):
     def get_object(self, request, agenda_id, session_id):
-        session = get_object_or_404(Session.objects, pk=session_id, agenda_pk=agenda_id,)
+        session = get_object_or_404(Session, pk=session_id, agenda_pk=agenda_id,)
         self.filename = session.name
         return session
 
 
 class AgendaCalendar(CalendarAPIView):
     def get_object(self, request, agenda_id):
-        agenda = get_object_or_404(Agenda.objects, pk=agenda_id)
+        agenda = get_object_or_404(Agenda, pk=agenda_id)
         self.filename = agenda.name + ' schedule'
         return agenda
 
 
 class ViewerCalendar(CalendarAPIView):
     def get_object(self, request, agenda_id, token):
-        viewer = get_object_or_404(Viewer.objects, agenda_id=agenda_id, token=token)
+        viewer = get_object_or_404(Viewer, agenda_id=agenda_id, token=token)
         self.filename = viewer.agenda.name + ''
         return viewer

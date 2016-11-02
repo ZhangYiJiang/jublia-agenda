@@ -81,7 +81,7 @@ class TagViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {
-            'category': get_object_or_404(Category.objects,
+            'category': get_object_or_404(Category,
                                           agenda=self.kwargs['agenda_id'],
                                           pk=self.kwargs['category_id'])
         }

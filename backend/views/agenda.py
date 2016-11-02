@@ -27,7 +27,7 @@ class AgendaList(UserContextMixin, ListCreateAPIView):
 
 
 class AgendaDetail(UserContextMixin, RetrieveUpdateDestroyAPIView):
-    queryset = Agenda.objects.all()
+    queryset = Agenda.objects.prefetch_related('session_set', 'venue_set', 'speaker_set', 'track_set')
 
     permission_classes = (IsOwnerOrReadOnly,)
     serializer_class = AgendaSerializer

@@ -1,6 +1,10 @@
 from collections import defaultdict
+from datetime import timedelta
 
+from django.conf import settings
 from django.db import models
+from django.utils import timezone
+from icalendar import Event
 from rest_framework.reverse import reverse
 
 from .agenda import Agenda
@@ -43,6 +47,29 @@ class Session(BaseModel):
         for category, tag in self.tags.values_list('category__pk', 'pk'):
             categories[category].append(tag)
         return categories
+
+    def timestamps(self):
+        if not self.duration or not self.agenda.start_at:
+            return None
+        start = self.agenda.start_at + timedelta(minutes=self.start_at)
+        return start, start + timedelta(minutes=self.duration)
+
+    def to_ical(self):
+        start, end = self.timestamps()
+        if not end:
+            raise ValueError
+
+        cal = Event()
+        cal.add('uid', str(self.pk) + settings.ICAL_UID_SUFFIX)
+        cal.add('dtstart', start)
+        cal.add('dtend', end)
+        cal.add('dtstamp', timezone.now())
+        cal.add('summary', self.name)
+
+        if self.description:
+            cal.add('description', self.description)
+
+        return cal
 
     def get_absolute_url(self):
         return reverse('session_detail', (self.agenda.pk, self.pk,))

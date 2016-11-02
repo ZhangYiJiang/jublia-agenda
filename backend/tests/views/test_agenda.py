@@ -1,4 +1,5 @@
 from django.core import mail
+from django.db import connection
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -106,6 +107,7 @@ class AgendaDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.assertFalse('sessions' in response.data['tracks'][0])
         self.assertFalse('sessions' in response.data['speakers'][0])
         self.assertFalse('sessions' in response.data['session_venues'][0])
+        print('Database queries when retrieving agenda: %d' % len(connection.queries))
 
     def test_retrieve_end_at(self):
         self.agenda.start_at = factory.now

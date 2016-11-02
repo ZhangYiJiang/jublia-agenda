@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.db import models
+from icalendar import Calendar
 from rest_framework.reverse import reverse
 
 from .base import BaseModel
@@ -18,6 +19,12 @@ class Agenda(BaseModel):
 
     profile = models.ForeignKey(Profile, models.CASCADE)
     icon = models.ForeignKey(Attachment, models.SET_NULL, null=True, blank=True)
+
+    def to_ics(self):
+        cal = Calendar()
+        for session in self.session_set.all():
+            cal.add_component(session.to_ical())
+        return cal
 
     @property
     def owner(self):

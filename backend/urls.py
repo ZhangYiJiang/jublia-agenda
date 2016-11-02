@@ -38,9 +38,12 @@ urlpatterns = [
 
     # Agenda listing, detail
     url(r'^agenda', views.AgendaList.as_view(), name='agenda_list'),
+    url(agenda_id + r'calendar$', views.AgendaCalendar.as_view(), name='agenda-calendar'),
     url(r'^(?P<pk>[1-9][0-9]*)$', views.AgendaDetail.as_view(), name='agenda_detail'),
 
     # Session listing, detail
+    url(agenda_id + r'sessions/(?P<pk>[1-9][0-9]*)/calendar',
+        views.SessionCalendar.as_view(), name='session-calendar'),
     url(agenda_id + r'sessions/(?P<pk>[1-9][0-9]*)',
         views.SessionDetail.as_view(), name='session_detail'),
     url(agenda_id + r'sessions$',
@@ -69,6 +72,8 @@ urlpatterns = [
     url(agenda_id + 'dirty', views.AgendaDirtySession.as_view(), name='dirty_sessions'),
 
     # Agenda viewers
+    url(agenda_id + r'viewers/(?P<token>\w+)/calendar',
+        views.ViewerCalendar.as_view(), name='viewer-calendar'),
     url(agenda_id + r'viewers/(?P<token>\w+)/(?P<session_id>[1-9][0-9]*)',
         views.ViewerRegistrationView.as_view(), name='viewer_registration'),
     url(agenda_id + r'viewers/(?P<token>\w+)$',

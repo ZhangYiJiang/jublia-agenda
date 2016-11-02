@@ -6,6 +6,7 @@ django-filters==0.2.1
 djangorestframework==3.4.7
 djangorestframework-jwt==1.8.0
 Faker==0.7.3
+icalendar==3.10
 Pillow==3.4.2
 PyJWT==1.4.2
 python-dateutil==2.5.3

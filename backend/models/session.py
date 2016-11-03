@@ -37,8 +37,8 @@ class Session(BaseModel):
 
     agenda = models.ForeignKey(Agenda, models.CASCADE)
     tags = models.ManyToManyField(Tag)
+    tracks = models.ManyToManyField(Track)
     speakers = models.ManyToManyField(Speaker)
-    track = models.ForeignKey(Track, models.CASCADE)
     venue = models.ForeignKey(Venue, models.SET_NULL, blank=True, null=True)
 
     @property

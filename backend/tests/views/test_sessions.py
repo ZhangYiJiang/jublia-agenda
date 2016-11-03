@@ -21,7 +21,7 @@ class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
 
         # Check that relations are represented with IDs
         track = self.agenda.track_set.first()
-        self.assertEqual(response.data[0]['track'], track.pk)
+        self.assertEqual(response.data[0]['tracks'], [track.pk])
 
     def test_list_empty(self):
         response = self.client.get(self.url)
@@ -32,29 +32,39 @@ class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
         self.login(self.user)
         response = self.client.post(self.url, factory.session())
         self.assertCreatedOk(response)
+        # Should be automatically assigned to a track when created
+        self.assertEqual(self.agenda.track_set.first().pk, response.data['tracks'][0])
 
     def test_create_full(self):
         self.login(self.user)
-        track = create_track(self.agenda)
+
+        # Create multiple tracks, speakers and category tags to test against
+        tracks = [create_track(self.agenda) for i in range(3)]
         speakers = [
             create_speaker(self.agenda, factory.speaker()),
             create_speaker(self.agenda, factory.speaker(full=True)),
         ]
         category = create_category(self.agenda, factory.category(), ['A', 'B', 'C'])
+        venue = create_venue(self.agenda, factory.venue(full=True))
 
         session_data = factory.session(full=True, data={
             'speakers': [s.pk for s in speakers],
-            'track': track.pk,
+            'tracks': [t.pk for t in tracks],
             'tags': [t.pk for t in category.tag_set.all()],
+            'venue': venue.pk,
         })
 
         response = self.client.post(self.url, session_data)
 
         self.assertCreatedOk(response)
-
-        # Check that the speakers match, and that the session has been created
+        self.assertEqual(response.data['venue'], venue.pk)
+        # Check that the speakers and tracks match, and that the session's
+        # many-to-many relationships have been created
         pk = response.data['id']
-        self.assertTrue(track.session_set.filter(pk=pk).exists())
+        for track in tracks:
+            self.assertTrue(track.session_set.filter(pk=pk).exists())
+            self.assertIn(track.pk, response.data['tracks'])
+
         for speaker in speakers:
             self.assertTrue(speaker.session_set.filter(pk=pk).exists())
             self.assertIn(speaker.pk, response.data['speakers'])
@@ -68,13 +78,10 @@ class SessionListTest(ListAuthTestMixin, BaseAPITestCase):
         self.assertEqualExceptMeta(session_data, response.data,
                                    ignore=('popularity', 'categories', 'is_dirty'))
 
-    def test_create_on_track(self):
-        self.login(self.user)
-
 
 class SessionDetailTest(DetailAuthTestMixin, BaseAPITestCase):
     def assertSessionEqual(self, original, response, msg=None):
-        self.assertEqualExceptMeta(original, response, ignore=('track', 'popularity', 'is_dirty',))
+        self.assertEqualExceptMeta(original, response, ignore=('tracks', 'popularity', 'is_dirty',))
 
     def setUp(self):
         self.user = create_user(factory.user())
@@ -90,7 +97,7 @@ class SessionDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.assertNoEmptyFields(response.data)
 
         # Check relations
-        self.assertIsInstance(response.data['track'], int)
+        self.assertIsInstance(response.data['tracks'][0], int)
 
     def test_speaker(self):
         speaker_data = factory.speaker()

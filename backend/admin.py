@@ -24,7 +24,7 @@ class AgendaAdmin(admin.ModelAdmin):
 
 @admin.register(models.Session)
 class SessionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'agenda', 'track', 'venue',)
+    list_display = ('name', 'agenda', 'venue',)
     filter_horizontal = ('speakers',)
 
 

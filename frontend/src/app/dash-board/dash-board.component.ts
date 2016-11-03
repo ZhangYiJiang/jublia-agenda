@@ -43,9 +43,6 @@ export class DashBoardComponent implements OnInit {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChild('signUpSuccessRef') public signUpSuccessRef: TemplateRef<any>;
 
-
-  //successMsg: string;
-
   //feedback for input
   loginEmailError: string;
   loginPasswordError: string;
@@ -68,19 +65,16 @@ export class DashBoardComponent implements OnInit {
   organiser: string;
   event: string;
   signingUp = false;
+  
+  agendaLoading = false;
 
   agendaForm: FormGroup;
-  //formMsg: string;
-  options = {
-    placeholder: "+ track",
-    //secondaryPlaceholder: "Enter a track (optional)"
-    secondaryPlaceholder: "(Themes within event)"
-  };
 
   ngOnInit() {
-     if (this.user.authed) {
+    if (this.user.authed) {
       this.getAgendas();
     }
+    
     console.log(this.today);
     this.agendaForm = this._fb.group({
       //validators currently not in use
@@ -164,9 +158,11 @@ export class DashBoardComponent implements OnInit {
   }
 
   getAgendas() {
+    this.agendaLoading = true;
     this.dashBoardService.getAgendas().subscribe(
       (data: Agenda[]) => {
         console.log(data);
+        this.agendaLoading = false;
         this.agendas = _.sortBy(data, agenda => -agenda.id);
       },
       error => {

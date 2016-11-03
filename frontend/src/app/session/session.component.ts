@@ -215,7 +215,7 @@ export class SessionComponent implements OnInit {
   }
   
   calendarLink(): string {
-    return 'api/' + this.agenda.id + '/session/' + this.session.id + '/calendar';
+    return 'api/' + this.agenda.id + '/sessions/' + this.session.id + '/calendar';
   }
 
   clicked() {

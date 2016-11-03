@@ -1,9 +1,11 @@
+from django.conf import settings
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import *
-from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin
+from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin, clear_media
 
 
 class SpeakerListTest(ListAuthTestMixin, BaseAPITestCase):
@@ -27,6 +29,8 @@ class SpeakerListTest(ListAuthTestMixin, BaseAPITestCase):
         self.assertCreatedOk(response)
         self.assertEqualExceptMeta(speaker_data, response.data)
 
+    @override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
+    @clear_media
     def test_create_with_icon(self):
         self.login(self.user)
         attachment = create_attachment(self.user)

@@ -22,13 +22,13 @@ class CalendarTest(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('attachment', response['content-disposition'])
         self.assertIn('text/calendar', response['content-type'])
-
-    def assertCompleteAgenda(self, cal, queryset=None):
-        pass
+        cal = self.to_ics(response)
+        self.assertFalse(cal.is_broken)
+        return cal
 
     def to_ics(self, response):
         cal = Calendar()
-        cal.from_ical(response.rendered_content.decode("utf-8"))
+        cal.from_ical(response.rendered_content.decode("utf-8"), True)
         return cal
 
     def session_url(self, session_id):
@@ -36,22 +36,20 @@ class CalendarTest(BaseAPITestCase):
 
     def test_session(self):
         response = self.client.get(self.session_url(self.sessions[0].pk))
-        self.assertIsCalendar(response)
-        cal = self.to_ics(response)
+        cal = self.assertIsCalendar(response)
 
     def test_agenda(self):
         response = self.client.get(self.agenda_url)
-        self.assertIsCalendar(response)
-        cal = self.to_ics(response)
+        cal = self.assertIsCalendar(response)
 
     def test_agenda_incomplete_sessions(self):
         create_session(self.agenda, factory.session())
         response = self.client.get(self.agenda_url)
-        self.assertIsCalendar(response)
+        cal = self.assertIsCalendar(response)
 
     def test_viewer_empty(self):
         response = self.client.get(self.viewer_url)
-        self.assertIsCalendar(response)
+        cal = self.assertIsCalendar(response)
 
     def test_list_full(self):
         indices = [3, 6, 9, 4]
@@ -61,4 +59,4 @@ class CalendarTest(BaseAPITestCase):
             Registration.objects.create(session=session, viewer=self.viewer)
 
         response = self.client.get(self.viewer_url)
-        self.assertIsCalendar(response)
+        cal = self.assertIsCalendar(response)

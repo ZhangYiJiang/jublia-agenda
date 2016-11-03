@@ -23,6 +23,7 @@ export class AppComponent {
   appName: string = GlobalVariable.APP_NAME;
   user = this.dashBoardService.currentUser;
   isOnDashBoard = true;
+  isPublic = false;
 
   constructor ( 
     private router: Router,
@@ -33,11 +34,16 @@ export class AppComponent {
     public modal: Modal) {
     overlay.defaultViewContainer = vcRef;
     router.events.subscribe(event => {
-      if(event instanceof NavigationStart) {
+      if (event instanceof NavigationStart) {
         if (event.url === '/'){
           this.isOnDashBoard = true;
+          this.isPublic = false;
+        }else if (event.url.substring(0, 15) === '/public/agenda/'){
+          this.isPublic = true;
+          this.isOnDashBoard = false;
         } else {
           this.isOnDashBoard = false;
+          this.isPublic = false;
         }
       }
     })

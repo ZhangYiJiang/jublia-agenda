@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.core import mail
 from django.db import connection
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -7,7 +9,7 @@ from backend.models import Registration
 from backend.models import Track
 from backend.tests import factory
 from backend.tests.helper import *
-from .base import BaseAPITestCase, DetailAuthTestMixin
+from .base import BaseAPITestCase, DetailAuthTestMixin, clear_media
 
 
 class AgendaListTest(BaseAPITestCase):
@@ -57,6 +59,8 @@ class AgendaListTest(BaseAPITestCase):
         self.assertIn('Test Track', tracks)
         self.assertIn('Hello World', tracks)
 
+    @override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
+    @clear_media
     def test_create_with_icon(self):
         self.login(self.user)
         attachment = create_attachment(self.user)
@@ -102,7 +106,7 @@ class AgendaDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         # Check no deep nesting
         session = response.data['sessions'][0]
         self.assertEqual(self.speaker.pk, session['speakers'][0])
-        self.assertEqual(self.agenda.track_set.first().pk, session['track'])
+        self.assertEqual(list(self.agenda.track_set.values_list('pk', flat=True)), session['tracks'])
         self.assertEqual(self.venue.pk, session['venue'])
         self.assertFalse('sessions' in response.data['tracks'][0])
         self.assertFalse('sessions' in response.data['speakers'][0])

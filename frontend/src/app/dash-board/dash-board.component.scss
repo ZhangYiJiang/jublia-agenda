@@ -48,6 +48,8 @@ form md-input, form .field-with-label {
 }
 
 .agenda-list-card {
+    width: 300px;
+
     padding-right: 40px;
     margin-right: 40px;
     border-right: 2px solid $color-secondary;
@@ -74,13 +76,21 @@ form md-input, form .field-with-label {
     margin: 0 0 20px 0;
     padding: 0;
     list-style-type: none;
-    width: 250px;
-
+    
+    p {
+        margin: 0;
+        
+        &.event-time {
+            font-size: 12px;
+            opacity: .7;
+        }
+    }
+    
     li {
         cursor: pointer;
         position: relative;
         background-color: #EEE;
-        padding: 7px 16px 8px;
+        padding: 10px 16px 12px;
         margin-bottom: 5px;
         border-radius: 4px;
         
@@ -102,8 +112,8 @@ form md-input, form .field-with-label {
 
     md-icon.delete {
         position: absolute;
-        right: 4px;
-        top: 4px;
+        right: 8px;
+        top: calc(50% - 12px);
     }
 }
 

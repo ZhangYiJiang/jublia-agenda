@@ -56,9 +56,12 @@ export class AgendaService {
       agenda.sessions = [];
     }
     
-    const popularity = agenda.sessions.map((session: Session) => session.popularity);
-    agenda.maxPopularity = _.max(popularity) || 0;
-    agenda.minPopularity = _.min(popularity)|| 0;
+    // TODO: Remove this when multi-track session is ready
+    agenda.sessions.forEach((session: Session) => session.track = session.tracks[0]);
+    
+    const popularityCount = agenda.sessions.map((session: Session) => session.popularity);
+    agenda.maxPopularity = _.max(popularityCount) || 0;
+    agenda.minPopularity = _.min(popularityCount)|| 0;
     console.log(agenda);
     return agenda;
   }
@@ -70,11 +73,13 @@ export class AgendaService {
     return Observable.throw(errMsg);
   }
 
-  updateSession(agendaId: number, newSession: Session) {
-    console.log('updating agenda ' + agendaId + ' session ' + newSession.id);
-    console.log(JSON.stringify(newSession, null, 4));
+  updateSession(agendaId: number, session: Session) {
+    // TODO: Remove this when multi-track session is ready
+    session.tracks = [session.track];
+    console.log('updating agenda ' + agendaId + ' session ' + session.id);
+    console.log(JSON.stringify(session, null, 4));
     this.httpClient
-        .put(this.BASE_URL + '/' + agendaId + '/sessions/' + newSession.id, JSON.stringify(newSession))
+        .put(this.BASE_URL + '/' + agendaId + '/sessions/' + session.id, JSON.stringify(session))
         .catch(this.handleError)
         .subscribe(
           res => {

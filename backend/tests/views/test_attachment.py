@@ -1,16 +1,23 @@
+from django.conf import settings
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import create_user, get_resource_path
-from .base import BaseAPITestCase
+from .base import BaseAPITestCase, clear_media
 
 
+@override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
 class UploadFileTest(BaseAPITestCase):
     url = reverse('upload-image')
 
     def setUp(self):
         self.user = create_user(factory.user())
+
+    @clear_media
+    def tearDown(self):
+        pass
 
     def try_upload(self, file):
         self.login(self.user)

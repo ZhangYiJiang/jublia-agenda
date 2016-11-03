@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 
 from django.conf import settings
 from django.db import models
@@ -37,8 +37,8 @@ class Session(BaseModel):
 
     agenda = models.ForeignKey(Agenda, models.CASCADE)
     tags = models.ManyToManyField(Tag)
+    tracks = models.ManyToManyField(Track)
     speakers = models.ManyToManyField(Speaker)
-    track = models.ForeignKey(Track, models.CASCADE)
     venue = models.ForeignKey(Venue, models.SET_NULL, blank=True, null=True)
 
     @property
@@ -51,7 +51,7 @@ class Session(BaseModel):
     def timestamps(self):
         if not self.duration or not self.agenda.start_at:
             return None
-        start = self.agenda.start_at + timedelta(minutes=self.start_at)
+        start = datetime.combine(self.agenda.start_at, time.min) + timedelta(minutes=self.start_at)
         return start, start + timedelta(minutes=self.duration)
 
     def to_ical(self):
@@ -65,7 +65,6 @@ class Session(BaseModel):
         cal.add('dtend', end)
         cal.add('dtstamp', timezone.now())
         cal.add('summary', self.name)
-
         if self.description:
             cal.add('description', self.description)
 

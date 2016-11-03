@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.db.transaction import atomic
 from django.utils.translation import ugettext as _
 from rest_framework.exceptions import ValidationError
@@ -24,7 +25,9 @@ class Track(BaseModel):
 
         # Move all existing sessions on this track to another one to prevent the
         # delete from cascading to them
-        self.session_set.update(track=self.agenda.track_set.exclude(pk=self.pk).first())
+        new_track = self.agenda.track_set.exclude(pk=self.pk).first()
+        for session in self.session_set.annotate(count=Count('tracks')).filter(count__gt=1):
+            session.tracks.set([new_track])
 
         super().delete(using, keep_parents)
 

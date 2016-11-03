@@ -37,7 +37,9 @@ class TrackDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.user = create_user(factory.user())
         self.agenda = create_agenda(self.user, factory.agenda())
         self.track = self.agenda.track_set.first()
-        self.session = create_session(self.agenda, data=factory.session(data={'track': self.track.pk}))
+        self.session = create_session(self.agenda, data=factory.session(data={
+            'tracks': [self.track.pk],
+        }))
         self.url = self.track.get_absolute_url()
 
     def test_retrieve(self):
@@ -74,3 +76,14 @@ class TrackDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.session.refresh_from_db()  # Will raise exception if the session is deleted
+
+    def test_delete_transfer_session(self):
+        track_1 = create_track(self.agenda)
+        track_2 = create_track(self.agenda)
+        self.session.tracks.add(track_1, track_2)
+
+        self.login(self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.session.refresh_from_db()
+        self.assertEqual(2, self.session.tracks.count())

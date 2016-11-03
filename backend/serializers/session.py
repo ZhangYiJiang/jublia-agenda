@@ -14,7 +14,7 @@ class DefaultTrack:
         self.agenda = field.context['agenda']
 
     def __call__(self, *args, **kwargs):
-        return self.agenda.track_set.first()
+        return [self.agenda.track_set.first()]
 
 
 class TagPrimaryKeyRelatedField(PrimaryKeyRelatedField):
@@ -23,7 +23,7 @@ class TagPrimaryKeyRelatedField(PrimaryKeyRelatedField):
 
 
 class SessionSerializer(HideFieldsMixin, BaseSerializer):
-    track = AgendaPrimaryKeyRelatedField(klass='Track', default=DefaultTrack())
+    tracks = AgendaPrimaryKeyRelatedField(many=True, klass='Track', default=DefaultTrack())
     speakers = AgendaPrimaryKeyRelatedField(many=True, required=False, klass='Speaker')
     venue = AgendaPrimaryKeyRelatedField(required=False, klass='Venue')
     tags = TagPrimaryKeyRelatedField(many=True, required=False)
@@ -50,6 +50,6 @@ class SessionSerializer(HideFieldsMixin, BaseSerializer):
 
     class Meta:
         model = Session
-        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'track',
+        fields = ('id', 'name', 'description', 'start_at', 'duration', 'speakers', 'tracks',
                   'venue', 'categories', 'tags', 'popularity', 'is_dirty')
         hidden_fields = ('tags',)

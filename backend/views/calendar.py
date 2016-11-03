@@ -1,16 +1,16 @@
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from backend.models import Agenda
 from backend.models import Session
 from backend.models import Viewer
-from backend.permissions import IsAgendaOwnerOrReadOnly
 from backend.renderers import CalendarRenderer
 
 
 class CalendarAPIView(APIView):
-    permission_classes = (IsAgendaOwnerOrReadOnly,)
+    permission_classes = (AllowAny,)
     renderer_classes = (CalendarRenderer,)
 
     def get_object(self, *args, **kwargs):
@@ -28,21 +28,21 @@ class CalendarAPIView(APIView):
 
 
 class SessionCalendar(CalendarAPIView):
-    def get_object(self, request, agenda_id, session_id):
-        session = get_object_or_404(Session.objects, pk=session_id, agenda_pk=agenda_id,)
+    def get_object(self, request, agenda_id, pk):
+        session = get_object_or_404(Session, pk=pk, agenda=agenda_id)
         self.filename = session.name
         return session
 
 
 class AgendaCalendar(CalendarAPIView):
     def get_object(self, request, agenda_id):
-        agenda = get_object_or_404(Agenda.objects, pk=agenda_id)
+        agenda = get_object_or_404(Agenda, pk=agenda_id)
         self.filename = agenda.name + ' schedule'
         return agenda
 
 
 class ViewerCalendar(CalendarAPIView):
     def get_object(self, request, agenda_id, token):
-        viewer = get_object_or_404(Viewer.objects, agenda_id=agenda_id, token=token)
+        viewer = get_object_or_404(Viewer, agenda=agenda_id, token=token)
         self.filename = viewer.agenda.name + ''
         return viewer

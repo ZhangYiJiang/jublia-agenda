@@ -37,12 +37,12 @@ class AgendaDirtySession(APIView):
     permission_classes = (IsAgendaOwner,)
 
     def get(self, request, agenda_id):
-        agenda = get_object_or_404(Agenda.objects, pk=agenda_id)
+        agenda = get_object_or_404(Agenda, pk=agenda_id)
         sessions = agenda.session_set.filter(is_dirty=True).values_list('pk', flat=True)
         return Response(sessions, status.HTTP_200_OK)
 
     def post(self, request, agenda_id):
-        agenda = get_object_or_404(Agenda.objects, pk=agenda_id)
+        agenda = get_object_or_404(Agenda, pk=agenda_id)
         viewers = agenda.viewer_set.filter(sessions__is_dirty=True)\
             .distinct().prefetch_related('sessions')
         template = get_template('email/session_update.html')

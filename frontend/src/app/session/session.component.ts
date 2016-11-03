@@ -258,17 +258,17 @@ export class SessionComponent implements OnInit {
            parseInt(value, 10) == value && 
            !isNaN(parseInt(value, 10));
   }
+  
+  permalink(): string {
+    return '/public/agenda/' + this.agenda.id + '/session/' + this.session.id;
+  }
+  
+  calendarLink(): string {
+    return 'api/' + this.agenda.id + '/sessions/' + this.session.id + '/calendar';
+  }
 
   clicked() {
-    console.log(this.session);
-    let url: string = '';
-    if (this.isPublic) {
-      url = '/public';
-    }
-    if (this.isAnalytics) {
-      url = '/analytics';
-    }
-    this.location.replaceState(url + '/agenda/' + this.agenda.id + '/session/' + this.session.id);
+    this.location.replaceState(this.permalink());
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
     this.sessionTagsName = _.values(_.values(this.session.categories)[0])
@@ -296,7 +296,7 @@ export class SessionComponent implements OnInit {
       
       // Clean up dropdown menus that were left behind by the widget
       dialog.onDestroy.subscribe(() => {
-        this.location.replaceState(url + '/agenda/' + this.agenda.id);
+        this.location.replaceState('/public/agenda/' + this.agenda.id);
         // querySelectorAll uses a frozen NodeList
         _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
           el.parentNode.removeChild(el);

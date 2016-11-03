@@ -166,6 +166,25 @@
             border-width: 1px;
         }
     }
+    
+    @media (max-width: 800px) {
+        width: auto;
+
+        .session-body {
+            flex-direction: column;
+        }
+        
+        .session-main {
+            width: auto;
+        }
+        
+        .session-meta {
+            width: auto;
+            padding-left: 0;
+            border-left: 0;
+            margin-left: 0;
+        }
+    }
 
     .speaker-card {
         border-bottom: 1px solid #ccc;

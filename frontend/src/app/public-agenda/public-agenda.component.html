@@ -1,10 +1,11 @@
+<!--
 <div *ngIf="!agenda">
   Agenda is not public.
 </div>
-<div *ngIf="agenda">
-  <div class="clearfix fixed agenda-menu">
+-->
+<template #infoRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+  <div class="modal-container">
     <section class="agenda-info">
-      <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
       <p *ngIf="agenda.website" class="agenda-subtitle">
         <a href="{{agenda.website | encodeURI}}" target="_blank">
           <i class="fa fa-link fa-fw" title="Event Website"></i> {{agenda.website}}
@@ -18,13 +19,15 @@
       
       <p class="agenda-desc">{{agenda.description}}</p>
     </section>
-    
     <div *ngIf="agenda.location">
       <iframe frameborder="0" class="map" [src]="mapsEmbedUrl" allowfullscreen></iframe>
     </div>
-    
-    
-    <section class="viewer">
+  </div>
+</template>
+
+<template #bookmarkRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+  <div class="modal-container">
+   <section class="viewer">
       <div *ngIf="!token">
         <h2>Personalize this agenda</h2>
         <p>Bookmark sessions you want to attend, receive updates from the organizers and more! 
@@ -43,6 +46,28 @@
         </div>
       </div>
     </section>
+  </div>
+</template>
+
+<div *ngIf="agenda">
+  <div class="clearfix fixed agenda-menu">
+    <h1 class="agenda-title"><strong>{{agenda.name}}</strong></h1>
+    <div class="agenda-buttons">
+      <button class="primary" md-button disableRipple (click)="showInfo()">
+        <i class="fa fa-info-circle" aria-hidden="true"></i> Info
+      </button>
+      <button class="primary" md-button disableRipple (click)="showBookmark()">
+        <i class="fa fa-bookmark" aria-hidden="true"></i> Bookmark
+      </button>
+      <button class="primary" x-position="before" y-position="above" md-button disableRipple [md-menu-trigger-for]="filterMenu">
+        <i class="fa fa-filter" aria-hidden="true"></i> Filter
+      </button>
+      <md-menu class="public" #filterMenu="mdMenu">
+        <button md-menu-item>Filter 1</button>
+        <button md-menu-item>Filter 2</button>
+        <button md-menu-item>Filter 3</button>
+      </md-menu>
+    </div>      
   </div>
   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" 
          [interestedSessionIds]="interestedSessionIds" [class.hide-no-interest]="interestToggleModel">

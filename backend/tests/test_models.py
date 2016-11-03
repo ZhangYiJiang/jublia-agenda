@@ -18,7 +18,6 @@ class AgendaTest(TestCase):
         return Session.objects.create(agenda=self.agenda, **factory.session(data={
             'start_at': start,
             'duration': duration,
-            'track': self.track,
         }))
 
     def test_end_at_duration(self):
@@ -77,7 +76,6 @@ class SessionTest(TestCase):
         for i in range(5):
             Session.objects.create(**factory.session(full=True, data={
                 'agenda': self.agenda,
-                'track': self.track,
             }))
 
         last = Session.objects.first()

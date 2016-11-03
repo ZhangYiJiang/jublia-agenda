@@ -23,6 +23,7 @@ import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@ang
 import { Observable } from 'rxjs/Rx';
 import * as $ from 'jquery';
 import { AbsoluteColumnComponent } from '../absolute-column/absolute-column.component';
+
 import {
   VEXBuiltInThemes,
   Modal,
@@ -38,7 +39,7 @@ import {
   selector: 'board',
   templateUrl: './board.component.html',
   styleUrls: [
-    './board.component.css'
+    './board.component.css',
   ],
   encapsulation: ViewEncapsulation.None
 })
@@ -449,13 +450,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       description: [''],
       duration: [60],
       existingSpeakers: [[]],
-      newSpeakers: this._fb.array([]),
       tags: [[]],
-      existingVenue: [[]],
-      newVenue: this._fb.group({
-        name: [''],
-        unit: ['']
-      })
+      existingVenue: [[]]
     });
     this.formMsg = "";
     
@@ -483,37 +479,6 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     });
   }
-
-  initSpeaker() {
-    return this._fb.group({
-        name: ['', Validators.required],
-        company: ['', Validators.required],
-        position: '',
-        profile: '',
-        email: '',
-        phone_number: '',
-        company_description: '',
-        company_url: '',
-    });
-  }
-
-  addSpeaker() {
-    const control = <FormArray>this.sessionForm.controls['newSpeakers'];
-    control.push(this.initSpeaker());
-  }
-
-  removeSpeaker(i: number) {
-    const control = <FormArray>this.sessionForm.controls['newSpeakers'];
-    control.removeAt(i);
-  }
-
-  addVenue() {
-    this.showVenueForm = true;
-  }
-
-  removeVenue() {
-    this.showVenueForm = false;
-  }
   
   submitAndContinueSessionForm(evt: any) {
     this.showVenueForm = false;
@@ -535,35 +500,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       existingVenue: []
     });
 
-    // Construct new speakers and tags 
-    // TODO: Error handling - this is problematic right now because of transactions. 
     const requests: Promise<any>[] = [];
-    
-    requests.push(...this.sessionForm.value.newSpeakers.map((speaker:any) => { 
-        const request = this.boardService.createSpeaker(
-        this.agenda.id, 
-        speaker.name, 
-        speaker.company, 
-        speaker.profile,
-        speaker.position, 
-        speaker.email, 
-        speaker.phone_number, 
-        speaker.company_description, 
-        speaker.company_url,
-      ).toPromise();
-      
-      request.then(data => {
-        console.log('new speaker created: ' + data.name);
-        this.eventSpeakers.push(data);
-        this.eventSpeakersName.push(data.name);
-        this.sessionForm.value.existingSpeakers.push(data.name);
-        if (!this.agenda.speakers) {
-          this.agenda.speakers = [];
-        }
-        this.agenda.speakers.push(data);
-      });
-      requests.push(request);
-    }));
 
     requests.push(..._.difference(this.sessionForm.value.tags, this.eventTagsName).map((tag:string) => {
       const request = this.boardService.createTag(this.agenda.id, this.eventCategories[0].id, tag)
@@ -573,33 +510,15 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log('new tag created: ' + data.name);
         this.eventTags.push(data);
         this.eventTagsName.push(data.name);
+        if (!this.agenda.categories[0].tags) {
+          this.agenda.categories[0].tags = [];
+        }
+        this.agenda.categories[0].tags.push(data);
       });
       
       return request;
     }));
 
-    if (this.showVenueForm) {
-      const request = this.boardService.createVenue(
-        this.agenda.id, 
-        this.sessionForm.value.newVenue.name, 
-        this.sessionForm.value.newVenue.unit,
-      ).toPromise();
-      
-      request.then(data => {
-        console.log('new venue created: ' + data.name);
-        this.eventVenues.push(data);
-        this.eventVenuesName.push(data.name);
-        this.sessionForm.value.existingVenue.pop();
-        this.sessionForm.value.existingVenue.push(data.name);
-        if (!this.agenda.session_venues) {
-          this.agenda.session_venues = [];
-        }
-        this.agenda.session_venues.push(data);
-      });
-      requests.push(request);
-    }
-    
-    // After all speakers and tags have been created, create the session 
     Promise.all(requests)
       .then(() => this.createSession())
       .then(() => {
@@ -688,16 +607,42 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       data => { 
         this.formMsg = 'New session created!';
         this.allSessions.push(data);
-        if(!this.addingSessionWithStart){
-        this.pendingSessions.push(data);
-        }else{
+        if (!this.addingSessionWithStart) {
+          this.pendingSessions.push(data);
+        } else {
           this.absCol.toArray()[this.sessionColIndex].addInNewSession(data);
           this.addingSessionWithStart = false;
         }
       },
       error => this.formMsg = <any>error
     );
-    
+
     return request;
+  }
+
+  onVenueAdded(newVenue: Venue, isForm: boolean) {
+    this.eventVenues.push(newVenue);
+    this.eventVenuesName.push(newVenue.name);
+    if (!this.agenda.session_venues) {
+      this.agenda.session_venues = [];
+    }
+    this.agenda.session_venues.push(newVenue);
+    if (isForm) {
+      this.sessionForm.value.existingVenue.pop();
+      this.sessionForm.value.existingVenue.push(newVenue.name);
+    }
+  }
+
+  onSpeakerAdded(newSpeaker: Speaker, isForm: boolean) {
+    console.log(isForm);
+    this.eventSpeakers.push(newSpeaker);
+    this.eventSpeakersName.push(newSpeaker.name);
+    if (!this.agenda.speakers) {
+      this.agenda.speakers = [];
+    }
+    this.agenda.speakers.push(newSpeaker);
+    if (isForm) {
+      this.sessionForm.value.existingSpeakers.push(newSpeaker.name);
+    }
   }
 }

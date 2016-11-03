@@ -1,0 +1,59 @@
+<button md-button disableRipple type="button" class="secondary" (click)="createSpeakerModal()">
+  <md-icon>add</md-icon> New Speaker
+</button>
+
+<template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+  <div class="new-speaker modal-container">
+    <div class="page-header">
+      <h1>New Speaker</h1>
+    </div>
+    <div class="jumbotron">
+      <form [formGroup]="speakerForm" novalidate (ngSubmit)="submitSpeakerForm(dialogRef)">
+        <div>
+          <md-input type="text" formControlName="name" placeholder="Name" required>
+            <md-hint class="form-error-hint" align="start">{{formErrors.name}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="text" formControlName="company" placeholder="Company" required>
+            <md-hint class="form-error-hint" align="start">{{formErrors.company}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="text" formControlName="profile" placeholder="Profile">
+            <md-hint class="form-error-hint" align="start">{{formErrors.profile}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="text" formControlName="position" placeholder="Position">
+            <md-hint class="form-error-hint" align="start">{{formErrors.position}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="email" formControlName="email" placeholder="Email">
+            <md-hint class="form-error-hint" align="start">{{formErrors.email}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="text" formControlName="phone_number" placeholder="Phone number">
+            <md-hint class="form-error-hint" align="start">{{formErrors.phone_number}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="text" formControlName="company_description" placeholder="Company description">
+            <md-hint class="form-error-hint" align="start">{{formErrors.company_description}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="url" formControlName="company_url" placeholder="Company website">
+            <md-hint class="form-error-hint" align="start">{{formErrors.company_url}}</md-hint>
+          </md-input>
+        </div>
+        <div class="footer-buttons clearfix">
+          <button class="primary" md-button type="submit">Save</button>
+          <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

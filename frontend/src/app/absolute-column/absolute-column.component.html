@@ -24,10 +24,12 @@
           [attr.data-session-start]="session.start?session.start.toISOString():''"
           [attr.data-session-duration]="session.duration"
           [class.placeholder]="session.placeholder">
-          <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
+          <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"
             (onSessionEdited)="onSessionEdited($event)"
             (onSpeakerEdited)="onSpeakerEdited($event)"
+            (onSpeakerAdded2)="onSpeakerAdded($event)"
             (onVenueEdited)="onVenueEdited($event)"
+            (onVenueAdded2)="onVenueAdded($event)"
             (onSessionDeleted)="onSessionDeleted($event)"
             ></my-session>
         </li>
@@ -36,7 +38,7 @@
         <li class="session-wrapper"
           *ngFor="let session of container.sessions"
           [class.placeholder]="session.placeholder">
-          <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic"
+          <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"
             [token]="token"
             [interested]="isInterestedInSession(session)"
             (onSessionInterestEdited)="onSessionInterestEdited($event)"

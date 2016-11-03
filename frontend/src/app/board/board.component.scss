@@ -157,6 +157,12 @@
         button md-icon {
             vertical-align: middle;
         }
+
+        ng-select {
+            flex: 1 auto;
+            margin-top: 9px;
+            margin-right: 20px;
+        }
     }
 
     .subform {

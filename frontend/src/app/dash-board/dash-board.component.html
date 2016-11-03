@@ -42,21 +42,37 @@
     <div class="agenda-list-card clearfix">
       <h2>All Events</h2>
       
+      <p *ngIf="agendaLoading">
+        <i class="fa fa-2x fa-spinner fa-spin" aria-hidden="true"></i>
+        <span class="sr-only">Loading Events</span>
+      </p>
+      
+      <p *ngIf="!agendaLoading && !agendas.length">
+        Get started by creating your first event using the form on the right
+      </p>
+      
       <ul class="agenda-list" [class.deleting]="deleting">
         <li *ngFor="let agenda of agendas; trackBy:trackByAgendaId; let isFirst=first" 
-						[class.fly-in]="isFirst && addNewAgenda" (click)="onSelect(agenda)" 
+            [class.fly-in]="isFirst && addNewAgenda" 
+            (click)="onSelect(agenda)" 
             role="link" tabindex="0">
-          {{agenda.name}}
-
-					<md-icon [hidden]="!deleting" 
+          
+          <p>{{ agenda.name }}</p>
+          <p class="event-time">{{ agenda.start_at }}</p>
+          
+          <md-icon [hidden]="!deleting" 
                    (click)="callDeleteAgenda($event, agenda)" 
                    class="delete" 
-                   role="button" tabindex="0">clear</md-icon>
-          
+                   role="button" 
+                   tabindex="0">clear</md-icon>
         </li>
       </ul>
       
-      <a class="delete-toggle" (click)="deleting =! deleting" role="button" tabindex="0">
+      <a class="delete-toggle" 
+         *ngIf="agendas && agendas.length"
+         (click)="deleting = !deleting" 
+         role="button" 
+         tabindex="0">
         <md-icon class="delete-icon">delete</md-icon>Delete Events
       </a>
     </div>
@@ -72,7 +88,7 @@
         
         <div>
           <md-input type="text" (focus)="clearError()" formControlName="description" 
-                       placeholder="Abstract">
+                    placeholder="Abstract">
           </md-input>
         </div>
         
@@ -102,9 +118,12 @@
         </div>
         
         <div class="field-with-label">
-          <label class="field-label">Tracks (max 3)</label>
-          <tag-input [ngModel]="agendaForm.tracks" [maxItems]="3" [placeholder]="options.placeholder" 
-                     [secondaryPlaceholder]="options.secondaryPlaceholder" formControlName="tracks"></tag-input>
+          <label class="field-label">Event Tracks (max 3)</label>
+          <tag-input [ngModel]="agendaForm.tracks" 
+                     [maxItems]="3" 
+                     placeholder="+ track" 
+                     secondaryPlaceholder="(Themes within event)" 
+                     formControlName="tracks"></tag-input>
         </div>
         <div>
           <div class="other-error form-error-hint">{{formErrors.other}}</div>

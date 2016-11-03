@@ -71,6 +71,12 @@ body {
             color: #fff;
         }
     }
+    
+    // Override .md-hint to fix its positioning on forms 
+    .md-hint {
+        bottom: auto;
+        top: calc(100% - 10px);
+    }
 
     // Vex's default theme fixes the width of the modal. This doesn't work for us 
     // because we need the modal to be more flexible. We use flexbox and 

@@ -20,7 +20,7 @@ class Agenda(BaseModel):
     profile = models.ForeignKey(Profile, models.CASCADE)
     icon = models.ForeignKey(Attachment, models.SET_NULL, null=True, blank=True)
 
-    def to_ics(self):
+    def to_ical(self):
         cal = calendar()
         if self.start_at is None:
             return cal

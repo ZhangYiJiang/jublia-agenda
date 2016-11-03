@@ -59,4 +59,4 @@ class CalendarTest(BaseAPITestCase):
             Registration.objects.create(session=session, viewer=self.viewer)
 
         response = self.client.get(self.viewer_url)
-        self.assertIsCalendar(response)
+        cal = self.assertIsCalendar(response)

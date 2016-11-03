@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from rest_framework.reverse import reverse
 
-from backend.helper import UniqueTokenGenerator
+from backend.helper import UniqueTokenGenerator, calendar
 from .agenda import Agenda
 from .base import BaseModel
 from .session import Session
@@ -29,6 +29,12 @@ class Viewer(BaseModel):
 
     def link(self):
         return settings.BASE_URL + '/public/agenda/{}/{}'.format(self.agenda.pk, self.token)
+
+    def to_ical(self):
+        cal = calendar()
+        for session in self.sessions.prefetch_related('agenda').all():
+            cal.add_component(session.to_ical())
+        return cal
 
     def send_agenda_email(self):
         # Don't send out the mail if it has been less than the minimum time

@@ -340,6 +340,29 @@ mapping session ID to a mapping of daily cumulative number of registrations for 
         }
     }
 
+## GET /{agenda_id}/dirty
+
+**Authentication required.** After an agenda has been published, editing a session in it will cause it 
+to be marked as dirty. Calling this endpoint will retrieve a list of session IDs that have been marked. 
+This is useful for keeping track of which sessions are dirty, and thus will have emails sent out to their
+viewers. 
+
++ Response 200 (application/json)
+    
+    + Attributes (array[number])
+    
+
+## POST /{agenda_id}/dirty 
+
+**Authentication required.** After an agenda has been published, editing a session in it will cause it 
+to be marked as dirty. Calling this endpoint will send out an email to **every** agenda viewer user 
+who have bookmarked those sessions informing them that the session has changed. 
+
++ Response 200 (application/json)
+
+    + Attributes 
+        
+        + sent (number) - number of emails that have been successfully sent out
 
 # Group Event Session
 
@@ -929,6 +952,7 @@ Get information a single session a calendar file.
 + Include Item
 + popularity (number) - number of viewers who have registered for the session
 + categories (object) - a mapping of category ID to a list of tag IDs under the category
++ is_dirty (boolean) - whether the session has been edited after the agenda has been published
 
 ### Category Item (Category)
 + Include Item

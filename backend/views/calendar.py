@@ -1,16 +1,16 @@
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from backend.models import Agenda
 from backend.models import Session
 from backend.models import Viewer
-from backend.permissions import IsAgendaOwnerOrReadOnly
 from backend.renderers import CalendarRenderer
 
 
 class CalendarAPIView(APIView):
-    permission_classes = (IsAgendaOwnerOrReadOnly,)
+    permission_classes = (AllowAny,)
     renderer_classes = (CalendarRenderer,)
 
     def get_object(self, *args, **kwargs):

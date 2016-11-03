@@ -34,7 +34,11 @@
                   [permission]="!isPublic"></ndv-edit>
       </h1>
     </div>
-    <line-chart *ngIf="isAnalytics" class="chart" [dataY]="analyticsDataCombinedY" [dataX]="analyticsDataCombinedX" [dataType]="'session'"></line-chart>
+    <line-chart *ngIf="isAnalytics" 
+                class="chart" 
+                [dataY]="analyticsDataCombinedY" 
+                [dataX]="analyticsDataCombinedX" 
+                dataType="session"></line-chart>
     <div class="session-body">
       <div class="session-main">
         <p class="full-width" *ngIf="!isPublic || session.description">

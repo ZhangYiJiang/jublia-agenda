@@ -49,7 +49,17 @@ export class LineChartComponent implements OnInit {
           min: 0,
           suggestedMin: 0
         }
-      }]
+      }],
+      xAxes: [{
+        type: 'time',
+        unit: 'day',
+        unitStepSize: 1,
+        time: {
+          displayFormats: {
+            day: 'MMM DD',
+          },
+        },
+      }],
     }
   };
   public lineChartColors:Array<any> = [

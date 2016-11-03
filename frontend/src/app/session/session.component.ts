@@ -209,9 +209,17 @@ export class SessionComponent implements OnInit {
            parseInt(value, 10) == value && 
            !isNaN(parseInt(value, 10));
   }
+  
+  permalink(): string {
+    return '/public/agenda/' + this.agenda.id + '/session/' + this.session.id;
+  }
+  
+  calendarLink(): string {
+    return 'api/' + this.agenda.id + '/session/' + this.session.id + '/calendar';
+  }
 
   clicked() {
-    this.location.replaceState('/public/agenda/'+this.agenda.id+'/session/'+this.session.id);
+    this.location.replaceState(this.permalink());
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
     this.sessionTagsName = _.values(_.values(this.session.categories)[0])

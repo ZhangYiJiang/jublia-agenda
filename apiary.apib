@@ -278,8 +278,10 @@ pick sessions they want to go for and register interest in them.
 
 ## GET /{agenda_id}
 
-Returns a specific event's aganda. This can be used by both the agenda viewer 
-and agenda builder. Unpublished agendas, and all subresources under the agenda like 
+Returns a specific event's aganda, including sessions and all other information associated with the 
+agenda. This information can be used by both the agenda viewer and agenda builder. 
+
+Unpublished agendas, and all subresources under the agenda like 
 sessions and speakers require authentication to fetch. 
 
 + Response 200 (application/json)
@@ -289,6 +291,8 @@ sessions and speakers require authentication to fetch.
         + sessions (array[Session Item])
         + speakers (array[Speaker Item])
         + tracks (array[Track Item])
+        + session_venues (array[Venue Item])
+        + categories (array[Category Item])
         
 ## PATCH /{agenda_id}
 
@@ -363,8 +367,6 @@ Returns a paginated list of all sessions from a event.
 
     + Attributes
         + Include Session
-        + speakers (array[number]) - one or more speakers at the session, represented by their id.
-        + track (number) - the id representing the track this session is on. If not specified the first track of the event will be used.
         + tags (array[number]) - an array of tag IDs that are associated with the session 
 
 + Response 201 (application/json)
@@ -433,7 +435,7 @@ or guest of honor page.
 
 + Response 200 (application/json)
 
-    + Attributes (array[Speaker])
+    + Attributes (array[Speaker Item])
 
 ### POST /{agenda_id}/speakers
 
@@ -476,6 +478,10 @@ Retrieve information about a specific speaker.
 ### PATCH /{agenda_id}/speakers/{speaker_id} 
 
 **Authentication required.** Same as above, except this allows for partial update. 
+
++ Request (application/json)
+
+    + Attributes (Speaker)
 
 + Response 200 (application/json)
 
@@ -726,6 +732,35 @@ To add, edit or remove individual tags, use the `{agenda_id}/categories/{categor
 
 + Response 204
 
+# Group Image Uploads
+
+Speakers and agendas can have images attached to them. To upload an image, send a 
+multipart form request with the file attached. You will get back the URL to the uploaded file, 
+which can be used as a preview to the uploaded image, and an ID, which represents the 
+file and can be used in `POST`, `PUT` and `PATCH` requests in fields where an image is needed. 
+Image fields in responses will always be represented as a string, the URL to the image.
+
+## POST /uploads/image
+
+**Authentication required.** Uploads an image so that it can be attached to an 
+object later. Unattached images will be cleaned up periodically. Please note the request
+content-type, which is not `application/json` unlike most other endpoints, and 
+that the `file` field under request should not be sent as a string 
+(which is a limitation of this documentation tool) but rather as a file attached to the request. 
+
++ Request (multipart/form-data)
+
+    + Attributes
+    
+        + file - the image to be uploaded
+
++ Response 201 (application/json)
+
+    + Attributes
+        + id (number) - ID representing the image
+        + file (string) - URL to the image that was just uploaded 
+
+
 # Group Event Agenda Viewer 
 
 These routes are used for event agenda viewers to create personalized agendas. 
@@ -777,6 +812,48 @@ in a 404 response.
 
 + Response 204 
 
+# Group Calendar 
+
+It is possible to get the information for entire agendas, personally agendas and 
+single sessions as iCalendar (`.ics`) files. These files are widely accepted by 
+most calendar applications. 
+
+Note that all endpoints in this group returns responses with the `text/calendar` 
+content-type as well as the `content-disposition` header, which means consumers 
+can directly link users to this endpoint - users will automatically download 
+the files when they are clicked on. 
+
+## GET /{agenda_id}/calendar 
+
+Get information about the entire event and all sessions in it as a calendar file.
+
++ Response 200 (text/calendar)
+
+    + Header
+    
+            content-disposition: attachment
+
+## GET /{agenda_id}/viewers/{token}/calendar
+
+Get information about the event and all bookmarked sessions in it as a calendar file.
+
++ Response 200 (text/calendar)
+
+    + Header
+    
+            content-disposition: attachment
+
+## GET /{agenda_id}/viewers/{token}/calendar
+
+Get information a single session a calendar file.
+
++ Response 200 (text/calendar)
+
+    + Header
+    
+            content-disposition: attachment
+
+
 ## Data Structures 
 
 ### date (string)
@@ -789,30 +866,32 @@ in a 404 response.
 
 ### Item
 + id: 1 (number) - the ID of the object
-+ created_at (datetime) - when the object was created, represented as an ISO 8601 string
-+ updated_at (datetime) - when the object was last updated, represented as an ISO 8601 string
 + url (string) - the API URL representing the object 
 
 ### Error
-+ error: "Invalid data" (string, required) - Description of the problem for the developer. This is for debugging purpose only and may change at any time. It is not meant to be displayed to the user.
++ error: Invalid data (string, required) - Description of the problem for the developer. This is for debugging purpose only and may change at any time. It is not meant to be displayed to the user.
 
 ### User
 + username: john.doe@example.com (string, required) - User's email
-+ company: Happy Cogs (string) - Name of the event organizer's company
++ company: Unhappy Cogs (string) - Name of the event organizer's company
 
 ### Agenda
-+ name: JSConf Asia 2016 (string, required) - Name of the event
-+ description: The greatest JavaScript conference under the sun! (string) - Long description of the event 
++ name: SomethingConf Asia 2016 (string, required) - Name of the event
++ description: The greatest SomethingScript conference under the sun! (string) - Long description of the event 
 + location: Suntec City Hall 2A (string) - Where the event is happening
 + published: false (boolean, default) - Is the agenda publicly visible
++ icon (number) - ID of uploaded image from the upload API endpoint
 + duration: 3 (number) - Number of days the event will go on for 
-+ start_at (date) - When the event is starting
++ start_at: `2016-08-22` (date) - The date on which event is starting, representing as an ISO 8601 date string 
 
 ### Session
 + name: The real story behind JS performance in mobile web and hybrid apps (string, required) - Name of the session
 + description (string) - Long description of the session
-+ start_at (number) - Starting time of the session in integer minutes relative to 0000 hrs on first day of the event
-+ duration (number) - Durating of the session in integer minutes 
++ track: 2 (number) - The ID of the track the session is in
++ speakers: 3, 5 (array[number]) - The ID of the speakers for the session
++ venue: 3 (number) - The ID of the venue the session is held in 
++ start_at: 540 (number) - Starting time of the session in integer minutes relative to 0000 hrs on first day of the event. Cannot be below zero. 
++ duration: 60 (number) - Durating of the session in integer minutes. Should be above 0 and below 1440 (24 hours) 
 
 ### Category
 + name: Technology (string, required)
@@ -823,8 +902,9 @@ in a 404 response.
 ### Speaker
 + name (string, required)
 + company (string, required)
-+ position (string, required)
-+ email (string, required)
++ position (string)
++ image (number) - ID of uploaded image from the upload API endpoint
++ email (string)
 + phone_number (string)
 + company_description (string)
 + company_url (string)
@@ -842,12 +922,11 @@ in a 404 response.
 
 ### Agenda Item (Agenda)
 + Include Item
++ icon (string) - URL to an image of the icon 
 + end_at (date) - When the event is ending, computed from duration, or the session information if that is not available 
 
 ### Session Item (Session)
 + Include Item
-+ track (number) - The ID of the track the session is in
-+ speakers (array[number]) - The ID of the speakers for the session
 + popularity (number) - number of viewers who have registered for the session
 + categories (object) - a mapping of category ID to a list of tag IDs under the category
 
@@ -860,6 +939,7 @@ in a 404 response.
 
 ### Speaker Item (Speaker)
 + Include Item
++ image (string) - URL to an image of the speaker 
 
 ### Track Item (Track)
 + Include Item

@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import *
-from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin
+from .base import BaseAPITestCase, DetailAuthTestMixin, ListAuthTestMixin, clear_media
 
 
 class SpeakerListTest(ListAuthTestMixin, BaseAPITestCase):
@@ -27,6 +27,7 @@ class SpeakerListTest(ListAuthTestMixin, BaseAPITestCase):
         self.assertCreatedOk(response)
         self.assertEqualExceptMeta(speaker_data, response.data)
 
+    @clear_media
     def test_create_with_icon(self):
         self.login(self.user)
         attachment = create_attachment(self.user)

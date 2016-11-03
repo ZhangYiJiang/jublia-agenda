@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from backend.tests import factory
 from backend.tests.helper import create_user, get_resource_path
-from .base import BaseAPITestCase
+from .base import BaseAPITestCase, clear_media
 
 
 class UploadFileTest(BaseAPITestCase):
@@ -11,6 +11,10 @@ class UploadFileTest(BaseAPITestCase):
 
     def setUp(self):
         self.user = create_user(factory.user())
+
+    @clear_media
+    def tearDown(self):
+        pass
 
     def try_upload(self, file):
         self.login(self.user)

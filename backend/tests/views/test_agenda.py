@@ -7,7 +7,7 @@ from backend.models import Registration
 from backend.models import Track
 from backend.tests import factory
 from backend.tests.helper import *
-from .base import BaseAPITestCase, DetailAuthTestMixin
+from .base import BaseAPITestCase, DetailAuthTestMixin, clear_media
 
 
 class AgendaListTest(BaseAPITestCase):
@@ -57,6 +57,7 @@ class AgendaListTest(BaseAPITestCase):
         self.assertIn('Test Track', tracks)
         self.assertIn('Hello World', tracks)
 
+    @clear_media
     def test_create_with_icon(self):
         self.login(self.user)
         attachment = create_attachment(self.user)

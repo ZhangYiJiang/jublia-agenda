@@ -37,7 +37,6 @@ class CalendarTest(BaseAPITestCase):
     def test_session(self):
         response = self.client.get(self.session_url(self.sessions[0].pk))
         cal = self.assertIsCalendar(response)
-        self.assertTrue(cal.subcomponents)
 
     def test_agenda(self):
         response = self.client.get(self.agenda_url)

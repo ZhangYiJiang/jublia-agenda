@@ -1,4 +1,5 @@
 import os
+from functools import wraps
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -13,13 +14,18 @@ from backend.tests import factory
 from backend.tests.helper import create_user, ErrorDetailMixin
 
 
-@override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
-class BaseAPITestCase(ErrorDetailMixin, APITestCase):
-    def tearDown(self):
+def clear_media(func):
+    @wraps(func)
+    def clear_media_decorator(*args, **kwargs):
+        func(*args, **kwargs)
         for f in os.scandir(settings.MEDIA_ROOT):
             if f.name != '.gitignore':
                 os.remove(f.path)
+    return clear_media_decorator
 
+
+@override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
+class BaseAPITestCase(ErrorDetailMixin, APITestCase):
     def authenticate(self):
         url = reverse('sign_up')
         response = self.client.post(url, factory.user())

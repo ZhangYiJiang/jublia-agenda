@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.core import mail
 from django.db import connection
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -57,6 +59,7 @@ class AgendaListTest(BaseAPITestCase):
         self.assertIn('Test Track', tracks)
         self.assertIn('Hello World', tracks)
 
+    @override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
     @clear_media
     def test_create_with_icon(self):
         self.login(self.user)

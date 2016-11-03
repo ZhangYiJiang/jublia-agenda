@@ -8,12 +8,14 @@
     font-size: $size-normal-text;
     line-height: 1.5;
     
-    padding: 60px 5px 100px 0;
+    padding: 60px 5px 180px 0;
     position: absolute;
-    
-    -webkit-transition: left 0.1s; /* Safari */
-    transition: left 0.1s;
-    
+
+    @media (min-width: 960px) {
+        -webkit-transition: left 0.1s; /* Safari */
+        transition: left 0.1s; 
+    }
+       
     //margin-left: 245px;
     .hour {
         height: $height-per-15-min * 4;
@@ -38,8 +40,13 @@
 }
 
 .public .schedule {
-    top: $main-content-top-offset + $public-extra-offset;
-    height: calc(100% - #{$main-content-top-offset + $public-extra-offset});
+    //top: $main-content-top-offset + $public-extra-offset;
+    top: $top-bar-height;
+    //height: calc(100% - #{$main-content-top-offset + $public-extra-offset});
+    height: calc(100% - #{$top-bar-height});
+    @media (max-width: 960px) {
+        height: calc(100% - #{$bottom-bar-height+$top-bar-height});
+    }
     margin-left: 20px;
     width: 97%;
 }
@@ -102,8 +109,10 @@
     line-height: 30px;
     z-index: 15;
     top:0;
-    -webkit-transition: top 0.1s; 
-    transition: top 0.1s;
+    @media (min-width: 960px) {
+        -webkit-transition: top 0.1s; 
+        transition: top 0.1s;
+    }
 }
 
 .not-dragging .quarter {

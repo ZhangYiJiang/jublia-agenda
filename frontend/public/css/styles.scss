@@ -30,6 +30,22 @@ body {
     padding: 16px 0;
 }
 
+//for mdMenu
+.md-overlay-pane {
+    position: fixed;
+    margin-top: 30px;
+    .md-menu {
+        min-width: 94px;
+        @media (max-width: 960px) {
+            margin-top: -200px;
+        }
+    }
+    button {
+        background-color: white;
+    }
+
+}
+
 // Overrides - using the body tag to override the specificity of some of these 
 // themed widget's themes 
 body {

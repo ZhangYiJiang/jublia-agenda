@@ -5,6 +5,7 @@ import { Session } from '../session/session';
 import { Agenda } from './agenda';
 import { AgendaService } from '../agenda/agenda.service';
 import { BoardComponent } from '../board/board.component';
+import { GlobalVariable } from '../globals';
 
 import { overlayConfigFactory } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
@@ -50,7 +51,8 @@ export class AgendaComponent implements OnInit{
       this.agendaId = id;
       this.getAgendaById(id);
     });
-    this.publicUrl = 'https://agenda-demo.jublia.com/public/agenda/'+this.agendaId;
+    
+    this.publicUrl = GlobalVariable.BASE_URL + '/public/agenda/' + this.agendaId;
   }
 
   updateAgenda(event: any) {
@@ -103,15 +105,8 @@ export class AgendaComponent implements OnInit{
       .open(this.publishRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
   }
 
-  publishAgenda() {
-    this.agendaService.publishAgenda(this.agenda.id).subscribe(
-      agenda => this.agenda = agenda,
-      error =>  console.log(error)
-    );
-  }
-
-  unpublishAgenda() {
-    this.agendaService.unpublishAgenda(this.agenda.id).subscribe(
+  setPublishedStatus(status: boolean) {
+    this.agendaService.setPublished(this.agenda.id, status).subscribe(
       agenda => this.agenda = agenda,
       error =>  console.log(error)
     );

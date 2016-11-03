@@ -67,7 +67,7 @@
         Analytics page (only available after publishing).</p>
       
       <div class="bottom-buttons" *ngIf="!agenda.published">
-        <button md-button class="primary" (click)="publishAgenda()">Publish</button>
+        <button md-button class="primary" (click)="setPublishedStatus(true)">Publish</button>
         <button md-button class="secondary" (click)="dialogRef.close(true)">Cancel</button>
       </div>
       
@@ -86,7 +86,7 @@
         
         <div class="bottom-buttons">
           <button md-button class="primary" (click)="dialogRef.close(true)">Ok</button>
-          <button md-button class="secondary" (click)="unpublishAgenda()">Unpublish</button>
+          <button md-button class="secondary" (click)="setPublishedStatus(false)">Unpublish</button>
         </div>
       </template>
     </div>

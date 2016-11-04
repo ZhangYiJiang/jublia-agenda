@@ -4,6 +4,7 @@ export const GlobalVariable = Object.freeze({
   TOKEN_NAME: 'auth_token',
   BASE_URL: 'https://agenda-demo.jublia.com',
   API_BASE_URL: '/api/',
+  PUBLIC_BASE_URL: '/public/',
   GOOGLE_MAP_API_KEY: 'AIzaSyCqVB-KbI2IzISlF-ROOuI9AeZyBtx19f4',
   COLOR_PRIMARY: {
     r: 65, 

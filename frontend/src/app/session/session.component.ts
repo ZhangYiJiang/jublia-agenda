@@ -210,24 +210,37 @@ export class SessionComponent implements OnInit {
            !isNaN(parseInt(value, 10));
   }
   
+  agendaPath(): string {
+    return GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agenda.id;
+  }
+  
+  sessionPath(): string {
+    return this.agendaPath() + '/session/' + this.session.id;
+  }
+  
   permalink(): string {
-    return '/public/agenda/' + this.agenda.id + '/session/' + this.session.id;
+    return GlobalVariable.BASE_URL + this.sessionPath();
   }
   
   calendarLink(): string {
-    return 'api/' + this.agenda.id + '/sessions/' + this.session.id + '/calendar';
+    return GlobalVariable.API_BASE_URL + [this.agenda.id, 'sessions', this.session.id, 'calendar'].join('/');
   }
 
   clicked() {
-    this.location.replaceState(this.permalink());
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
     this.sessionTagsName = _.values(_.values(this.session.categories)[0])
         .map((id: number) => _.find(this.eventTags, {id}).name);
+    
     this.modal.open(
       this.templateRef, 
       overlayConfigFactory({ isBlocking: false }, VEXModalContext)
     ).then(dialog => {
+      // Set new permalink if this is public 
+      if (this.isPublic && !this.location.path().includes(this.sessionPath())) {
+        this.location.go(this.sessionPath());
+      }
+      
       // Stop click events from the dropdown menu created by the tag inputs from propagating 
       // to document body, which causes weird issues with the modal widget
       // We're using setImmediate here because we need to wait for the widgets in the modal to be 
@@ -238,9 +251,14 @@ export class SessionComponent implements OnInit {
         });
       });
       
-      // Clean up dropdown menus that were left behind by the widget
       dialog.onDestroy.subscribe(() => {
-        this.location.replaceState('/public/agenda/'+this.agenda.id);
+        // Return to previous when the modal is closed (if this is public)
+        if (this.isPublic) {
+          this.location.go(this.agendaPath());
+        }
+
+        // Clean up dropdown menus that were left behind by the widget 
+        // see https://github.com/Gbuomprisco/ng2-material-dropdown/issues/9
         // querySelectorAll uses a frozen NodeList
         _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
           el.parentNode.removeChild(el);
@@ -306,20 +324,23 @@ export class SessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.analyticsData);
+    // Update analytics data
     this.analyticsDataCombinedY = _.values(this.analyticsData);
     this.analyticsDataCombinedX = _.keys(this.analyticsData);
 
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
-
+    
+    // Update bookmark button status text
     this.updateInterestButtonText();
-
+    
+    // Update height 
     if (this.session.start_at != null) {
       this.updateHeight();
     }
-
+    
+    // Updates coloring
     let popularityRatio = 0;
     
     if (this.isPublic) {
@@ -331,6 +352,8 @@ export class SessionComponent implements OnInit {
     const l = primary.l + (100 - primary.l) * Math.sqrt(1 - popularityRatio);
     this.color = `hsl(${primary.h}, ${primary.s}%, ${l}%)`;
     this.useDarkTheme = l < 75;
+    
+    // Parse out 
     setTimeout(()=>{
       this.route.params.forEach((params: Params) => {
         // (+) converts string 'id' to a number

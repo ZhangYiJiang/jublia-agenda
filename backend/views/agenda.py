@@ -55,6 +55,7 @@ class AgendaDirtySession(APIView):
             })
 
             mail.append((title, body, settings.DEFAULT_FROM_EMAIL, [viewer.email]))
+        agenda.session_set.filter(is_dirty=True).update(is_dirty=False)
 
         data = {
             'sent': send_mass_mail(mail, fail_silently=False),

@@ -193,6 +193,9 @@ class GetDirtySessionTest(BaseAPITestCase):
             self.assertIn(self.agenda.name, email.subject)
             for session in sessions:
                 self.assertIn(session.name, email.body)
+        for session in sessions:
+            session.refresh_from_db()
+            self.assertFalse(session.is_dirty)
 
     def test_empty(self):
         self.assertIsDirty([])

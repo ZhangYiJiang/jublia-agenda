@@ -110,26 +110,8 @@ export class SpeakerComponent implements OnInit {
         this.onSpeakerAdded.emit(data);
         dialog.close(true);
       },
-      error => {
-        console.log(error);
-        // Map the fields returned by the server to the fields used 
-        // on the client side
-        const fields = {
-          name: 'name', 
-          company: 'company', 
-          position: 'position', 
-          profile: 'profile', 
-          email: 'email', 
-          phone_number: 'phone_number', 
-          company_description: 'company_description', 
-          company_url: 'company_url'
-        };
-        
-        _.forEach(fields, (formField, serverField) => {
-          if (error[serverField]) {
-            this.formErrors[formField] = error[serverField].join(' ');
-          }
-        });
+      errors => {
+        this.formErrors = errors;
       }
     );
   }

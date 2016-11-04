@@ -11,6 +11,7 @@ export class Session {
   venue: number;
   popularity: number;
   categories: any;
+  is_dirty: boolean; // Has event been updated after the event is published?
   //not from api
   tags: number[];
   placeholder: boolean;

@@ -15,6 +15,7 @@ import { RelativeColumnComponent } from './relative-column/relative-column.compo
 import { SessionComponent } from './session/session.component.ts';
 import { DashBoardComponent } from './dash-board/dash-board.component.ts';
 import { AgendaComponent } from './agenda/agenda.component.ts';
+import { DirtySessionComponent } from './agenda/dirty-session/dirty-session.component.ts';
 import { PublicAgendaComponent } from './public-agenda/public-agenda.component.ts';
 import { AnalyticsComponent } from './analytics/analytics.component.ts';
 import { AgendaService } from './agenda/agenda.service.ts';
@@ -82,6 +83,7 @@ import { ClipboardModule } from 'angular2-clipboard';
     SessionComponent,
     DashBoardComponent,
     AgendaComponent,
+    DirtySessionComponent,
     PublicAgendaComponent,
     AnalyticsComponent,
     VenueComponent,

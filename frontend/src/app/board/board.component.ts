@@ -48,18 +48,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChildren('absCol') absCol: QueryList<AbsoluteColumnComponent>;
    // absCol: QueryList<AbsoluteColumnComponent>;
 
-  @Input()
-  agenda: Agenda;
-  @Input()
-  isPublic: boolean;
-  @Input()
-  isAnalytics: boolean;
-  @Input()
-  token: string;
-  @Input()
-  interestedSessionIds: number[];
-  @Input()
-  analyticsData: {};
+  @Input() agenda: Agenda;
+  @Input() isPublic: boolean;
+  @Input() isAnalytics: boolean;
+  @Input() token: string;
+  @Input() interestedSessionIds: number[];
+  @Input() analyticsData: {};
 
   offsetDate: Date;
   eventDates: Date[];
@@ -83,7 +77,6 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   columnGap = 10;
 
   dragging: boolean = false;
-
 
   //for adding new session by clicking on abs-col
   addingSessionWithStart = false;
@@ -210,7 +203,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   onSessionChanged(changedSession: Session) {
     console.log('session changed in board');
     console.log(changedSession);
-    this.agendaService.updateSession(this.agenda.id, changedSession);
+    this.agendaService.updateSession(this.agenda.id, changedSession)
+      .subscribe(() => {
+        if (this.agenda.published) {
+          this.agenda.hasDirtySession = true;
+        }
+      }); 
   }
 
   onSessionDeletedColumn(deletedSession: Session) {

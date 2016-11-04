@@ -7,7 +7,7 @@ import { AgendaService } from '../agenda/agenda.service';
 import { BoardComponent } from '../board/board.component';
 import { GlobalVariable } from '../globals';
 
-import { overlayConfigFactory } from 'angular2-modal';
+import {overlayConfigFactory, DialogRef} from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
 
 import {
@@ -20,12 +20,13 @@ import {
   VexModalModule,
   providers
 } from 'angular2-modal/plugins/vex';
+import over = require("lodash/over");
 
 @Component({
   selector: 'agenda',
   templateUrl: './agenda.component.html',
   styleUrls: [
-    './agenda.component.css'
+    './agenda.component.css',
   ]
 })
 export class AgendaComponent implements OnInit{
@@ -41,18 +42,19 @@ export class AgendaComponent implements OnInit{
   clipboardStatus: string;
 
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
-  @ViewChild('publishRef') public publishRef: TemplateRef<any>;  
+  @ViewChild('publishRef') public publishRef: TemplateRef<any>;
+  @ViewChild('dirtyRef') public dirtyRef: TemplateRef<any>;
   @ViewChild(BoardComponent) public myBoard: BoardComponent;
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
-        // (+) converts string 'id' to a number
-      let id = +params['id'];
+      // (+) converts string 'id' to a number
+      const id = +params['id'];
       this.agendaId = id;
       this.getAgendaById(id);
     });
     
-    this.publicUrl = GlobalVariable.BASE_URL + '/public/agenda/' + this.agendaId;
+    this.publicUrl = GlobalVariable.BASE_URL + GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agendaId;
   }
 
   updateAgenda(event: any) {
@@ -110,5 +112,16 @@ export class AgendaComponent implements OnInit{
       agenda => this.agenda = agenda,
       error =>  console.log(error)
     );
+  }
+  
+  openDirtyModal() {
+    this.modal.open(this.dirtyRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+  }
+
+  sendViewerUpdate(dialog: DialogRef<any>) {
+    this.agendaService.sendViewerEmail(this.agenda.id).subscribe(() => {
+      dialog.close();
+      this.agenda.hasDirtySession = false;
+    });
   }
 }

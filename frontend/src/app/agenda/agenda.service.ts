@@ -16,7 +16,7 @@ export class AgendaService {
   constructor (private httpClient: HttpClient) {}
 
   static agendaEndpoint(id: number, path: string = ''): string {
-      return _.trim([GlobalVariable.API_BASE_URL, id, path].join('/'), '/');
+      return _.trimEnd([GlobalVariable.API_BASE_URL, id, path].join('/'), '/');
   }
   
   static sessionEndpoint(agendaId: number, sessionId: number) {
@@ -25,14 +25,26 @@ export class AgendaService {
 
   getAgendaAnalytics(id: number): Observable<any> {
     return this.httpClient.get(AgendaService.agendaEndpoint(id, 'data'))
-                    .map(this.extractData)
-                    .catch(this.handleError);
+                    .map(AgendaService.extractData)
+                    .catch(AgendaService.handleError);
   }
 
   getAgendaById(id: number): Observable<Agenda> {
     return this.httpClient.get(AgendaService.agendaEndpoint(id))
-                    .map(this.extractAgenda)
-                    .catch(this.handleError);
+                    .map(AgendaService.extractData)
+                    .map(AgendaService.extractAgenda)
+                    .catch(AgendaService.handleError);
+  }
+  
+  getDirtySessions(id: number): Observable<number[]> {
+    return this.httpClient.get(AgendaService.agendaEndpoint(id, 'dirty'))
+      .map(AgendaService.extractData)
+      .catch(AgendaService.handleError);
+  }
+  
+  sendViewerEmail(id: number): Observable<any> {
+    return this.httpClient.post(AgendaService.agendaEndpoint(id, 'dirty'), '')
+      .catch(AgendaService.handleError);
   }
 
   setPublished(id: number, status: boolean) {
@@ -41,25 +53,35 @@ export class AgendaService {
 
   updateAgenda(id: number, data: {}): Observable<Agenda> {
     return this.httpClient.patch(AgendaService.agendaEndpoint(id), JSON.stringify(data))
-                    .map(this.extractAgenda)
-                    .catch(this.handleError);
+                    .map(AgendaService.extractData)
+                    .map(AgendaService.extractAgenda)
+                    .catch(AgendaService.handleError);
   }
 
-  private extractData(res: Response) {
+  private static extractData(res: Response) {
     // console.log(res.json());
     return res.json();
   }
 
-  private extractAgenda(res: Response) {
-    const agenda = res.json();
+  private static extractSession(session: any) {
+    // TODO: Remove this when multi-track session is ready
+    session.track = session.tracks[0];
+    return session;
+  }
+
+  private static extractAgenda(agenda: any) {
     if (agenda.sessions == null) {
       console.log('added empty sessions array');
       agenda.sessions = [];
     }
     
-    // TODO: Remove this when multi-track session is ready
-    agenda.sessions.forEach((session: Session) => session.track = session.tracks[0]);
+    // Map extract session
+    agenda.sessions = agenda.sessions.map(AgendaService.extractSession);
     
+    // Check if there are any dirty sessions
+    agenda.hasDirtySession = agenda.sessions.some((session: Session) => session.is_dirty);
+    
+    // Calculate max and min popularity 
     const popularityCount = agenda.sessions.map((session: Session) => session.popularity);
     agenda.maxPopularity = _.max(popularityCount) || 0;
     agenda.minPopularity = _.min(popularityCount)|| 0;
@@ -67,30 +89,25 @@ export class AgendaService {
     return agenda;
   }
 
-  private handleError (error: any) {
+  private static handleError (error: any) {
     let errMsg = (error.message) ? error.message :
       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
     console.error(errMsg);
     return Observable.throw(errMsg);
   }
 
-  updateSession(agendaId: number, session: Session) {
+  updateSession(agendaId: number, session: Session): Observable<any> {
     // TODO: Remove this when multi-track session is ready
     session.tracks = [session.track];
   
     console.log('updating agenda ' + agendaId + ' session ' + session.id);
     console.log(JSON.stringify(session, null, 4));
 
-    this.httpClient
+    return this.httpClient
         .put(AgendaService.sessionEndpoint(agendaId, session.id), JSON.stringify(session))
-        .catch(this.handleError)
-        .subscribe(
-          res => {
-            console.log('update session successful');
-            // console.log(res)
-          },
-          err => console.error(err)
-        );
+        .map(AgendaService.extractData)
+        .map(AgendaService.extractSession)
+        .catch(AgendaService.handleError);
   }
 
   deleteSession(agendaId: number, session: Session) {
@@ -98,7 +115,7 @@ export class AgendaService {
     console.log(JSON.stringify(session, null, 4));
     this.httpClient
         .delete(AgendaService.sessionEndpoint(agendaId, session.id))
-        .catch(this.handleError)
+        .catch(AgendaService.handleError)
         .subscribe(
           res => {
             console.log('delete session successful');
@@ -115,8 +132,8 @@ export class AgendaService {
     const method = interested ? 'put' : 'delete';
     const url = AgendaService.agendaEndpoint(agendaId, ['viewers', token, sessionId].join('/'));
       
-    this.httpClient[method](url)
-        .catch(this.handleError)
+    this.httpClient[method](url, '')
+        .catch(AgendaService.handleError)
         .subscribe(
             (res : any) => {
               console.log('update session interest successful');
@@ -133,7 +150,7 @@ export class AgendaService {
     
     this.httpClient
         .put(url, JSON.stringify(speaker))
-        .catch(this.handleError)
+        .catch(AgendaService.handleError)
         .subscribe(
           res => {
             console.log('update speaker successful');
@@ -150,7 +167,7 @@ export class AgendaService {
     
     this.httpClient
         .put(url, JSON.stringify(venue))
-        .catch(this.handleError)
+        .catch(AgendaService.handleError)
         .subscribe(
           res => {
             console.log('update venue successful');

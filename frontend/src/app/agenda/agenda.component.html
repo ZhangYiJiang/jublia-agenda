@@ -5,6 +5,7 @@
   <div class="agenda-header">
     <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
     <div class="agenda-menu">
+      <button md-button class="secondary" *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">Update Attendees</button>
       <button md-button [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
       <button md-button class="secondary" *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
       <button md-button class="secondary" (click)="showAgendaSettings()">
@@ -90,4 +91,20 @@
         </div>
       </template>
     </div>
+</template>
+
+<template #dirtyRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+  <div class="dirty-sessions modal-container">
+    <div class="page-header">
+      <h1>Notify Viewers of Session Updates</h1>
+    </div>
+    <p>You have made some changes to the sessions. The attendees who have 
+      bookmarked the following events will get an email regarding the changes made. 
+    </p>
+    
+    <dirty-session #dirtySession [agenda]="agenda"></dirty-session>
+    
+    <button md-button disableRipple type="button" class="primary" (click)="sendViewerUpdate(dialogRef)">Send Emails</button>
+    <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+  </div>
 </template>

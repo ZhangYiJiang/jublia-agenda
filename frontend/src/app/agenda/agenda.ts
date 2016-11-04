@@ -22,4 +22,5 @@ export class Agenda {
   // Front-end only 
   maxPopularity: number;
   minPopularity: number;
+  hasDirtySession: boolean;
 }

@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Input, Component, OnInit, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -7,6 +7,7 @@ import { Agenda } from '../agenda/agenda';
 import { AgendaService } from '../agenda/agenda.service';
 import { DashBoardService } from '../dash-board/dash-board.service';
 import { PublicAgendaService } from './public-agenda.service';
+import { BoardService } from '../board/board.service';
 import { GlobalVariable } from '../globals';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { overlayConfigFactory } from 'angular2-modal';
@@ -21,6 +22,7 @@ import {
   VexModalModule,
   providers
 } from 'angular2-modal/plugins/vex';
+import { Subscription } from 'rxjs/Subscription';
 
 
 @Component({
@@ -30,7 +32,7 @@ import {
 })
 
 
-export class PublicAgendaComponent implements OnInit{
+export class PublicAgendaComponent implements OnInit, OnDestroy{
   constructor(
     private location: Location,
     private route: ActivatedRoute,
@@ -39,8 +41,17 @@ export class PublicAgendaComponent implements OnInit{
     private dashBoardService: DashBoardService,
     private publicAgendaService: PublicAgendaService,
     private sanitizer: DomSanitizer,
+    private boardService: BoardService,
     public modal: Modal,
-  ) { }
+  ) { 
+     this.subscription = boardService.openBookmarkModal$.subscribe(
+      open => {
+        if (open === true) {
+          this.showBookmark();
+        }
+      }
+    );
+  }
   
   user = this.dashBoardService.currentUser;
   agenda: Agenda;
@@ -51,6 +62,8 @@ export class PublicAgendaComponent implements OnInit{
   
   @ViewChild('infoRef') public infoRef: TemplateRef<any>;
   @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
+
+  subscription: Subscription;
 
   interestedSessionIds: number[];
   interestToggleModel = false;
@@ -118,5 +131,9 @@ export class PublicAgendaComponent implements OnInit{
         }
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

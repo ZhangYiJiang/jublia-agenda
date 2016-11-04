@@ -10,8 +10,7 @@ import { PublicAgendaService } from './public-agenda.service';
 import { BoardService } from '../board/board.service';
 import { GlobalVariable } from '../globals';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { overlayConfigFactory } from 'angular2-modal';
-import { Overlay } from 'angular2-modal';
+import { overlayConfigFactory, Overlay, DialogRef } from 'angular2-modal';
 import {
   VEXBuiltInThemes,
   Modal,
@@ -121,9 +120,12 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     );
   }
 
-  createToken() {
+  createToken(dialogRef: DialogRef<any>) {
     this.publicAgendaService.createToken(this.agendaId, this.email).subscribe(
-      (data: any) => this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token]),
+      (data: any) => {
+        this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token])
+        dialogRef.close();
+      },
       (error: any) => {
         console.log(error)
         if(error.status === 400) {

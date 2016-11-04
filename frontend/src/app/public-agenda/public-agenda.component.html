@@ -38,7 +38,7 @@
         <h2>Personalize this agenda</h2>
         <p>Bookmark sessions you want to attend, receive updates from the organizers and more! 
           Get started by entering email below.</p>
-        <form (ngSubmit)="createToken()" class="viewer-register">
+        <form (ngSubmit)="createToken(dialogRef)" class="viewer-register">
           <md-input required placeholder="Email" [(ngModel)]="email" name="email">
             <md-hint class="form-error-hint" align="start">{{bookmarkError}}</md-hint>
           </md-input>

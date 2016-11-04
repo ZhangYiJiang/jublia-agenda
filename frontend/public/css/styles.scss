@@ -116,8 +116,21 @@ body {
     }
 }
 
+.centered-header {
+    text-align: center;
+}
+
+iframe.map {
+    border: 0;
+    margin-top: 10px;
+    width: 100%;
+}
+
 .modal-container.narrow {
     width: 460px;
+    @media (max-width: 960px) {
+        width: 100%;
+    }
 }
 
 .form-error-hint {

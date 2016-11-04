@@ -81,7 +81,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   //for adding new session by clicking on abs-col
   addingSessionWithStart = false;
   sessionStartTime:number;
-  sessionColIndex:number;
+  sessionDateIndex:number;
+  sessionTrackIndex:number;
 
   dropSub: any;
   dragSub: any;
@@ -192,11 +193,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
 
-  onCreateSessionWithStart(event: [number,number]) {
+  onCreateSessionWithStart(event: [number,number,number]) {
     //console.log('in board '+startTime);
     this.addingSessionWithStart = true;
     this.sessionStartTime = event[0];
-    this.sessionColIndex = event[1];
+    this.sessionDateIndex = event[1];
+    this.sessionTrackIndex = event[2];
     this.createSessionModal();
   }
 
@@ -469,7 +471,6 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       
       // Clean up dropdown menus that were left behind by the widget
       dialog.onDestroy.subscribe(() => {
-        this.addingSessionWithStart = false;
         // querySelectorAll uses a frozen NodeList
         _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
           el.parentNode.removeChild(el);
@@ -587,7 +588,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         speakersId, 
         tagsId, 
         venueId[0],
-        this.sessionStartTime
+        this.sessionStartTime,
+        this.eventTracks[this.sessionTrackIndex].id
       );
     }else{ 
       request = this.boardService.createSession(
@@ -605,14 +607,17 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       data => { 
         this.formMsg = 'New session created!';
         this.allSessions.push(data);
-        if (!this.addingSessionWithStart) {
-          this.pendingSessions.push(data);
-        } else {
-          this.absCol.toArray()[this.sessionColIndex].addInNewSession(data);
+        if(!this.addingSessionWithStart){
+        this.pendingSessions.push(data);
+        }else{
+          this.absCol.toArray()[this.sessionDateIndex*this.eventTracks.length+this.sessionTrackIndex].addInNewSession(data);
           this.addingSessionWithStart = false;
         }
       },
-      error => this.formMsg = <any>error
+      error => {
+        this.formMsg = <any>error;
+        this.addingSessionWithStart = false;
+      }
     );
 
     return request;

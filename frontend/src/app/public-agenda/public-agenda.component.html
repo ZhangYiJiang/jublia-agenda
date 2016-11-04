@@ -4,7 +4,10 @@
 </div>
 -->
 <template #infoRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-  <div class="modal-container">
+  <div class="centered-header">
+    <h1>Event Information</h1>
+  </div>
+  <div class="modal-container narrow">
     <section class="agenda-info">
       <p *ngIf="agenda.website" class="agenda-subtitle">
         <a href="{{agenda.website | encodeURI}}" target="_blank">
@@ -22,6 +25,9 @@
     <div *ngIf="agenda.location">
       <iframe frameborder="0" class="map" [src]="mapsEmbedUrl" allowfullscreen></iframe>
     </div>
+    <div class="footer-buttons">
+      <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+    </div>
   </div>
 </template>
 
@@ -33,7 +39,9 @@
         <p>Bookmark sessions you want to attend, receive updates from the organizers and more! 
           Get started by entering email below.</p>
         <form (ngSubmit)="createToken()" class="viewer-register">
-          <md-input required placeholder="Email" [(ngModel)]="email" name="email"></md-input>
+          <md-input required placeholder="Email" [(ngModel)]="email" name="email">
+            <md-hint class="form-error-hint" align="start">{{bookmarkError}}</md-hint>
+          </md-input>
           <button md-button type="submit" class="primary">Go!</button>
         </form>
       </div>
@@ -46,6 +54,9 @@
         </div>
       </div>
     </section>
+    <div class="footer-buttons">
+      <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+    </div>
   </div>
 </template>
 

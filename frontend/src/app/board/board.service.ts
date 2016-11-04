@@ -10,11 +10,12 @@ export class BoardService {
   constructor (private httpClient: HttpClient) {
   }
 
-  createSession(agendaId: number, name: string, description: string, duration: number, speakers: number[], tags: number[], venue: number, start_at?:number): Observable<any> {
+  createSession(agendaId: number, name: string, description: string, duration: number, speakers: number[], tags: number[], venue: number, start_at?:number, track?:number): Observable<any> {
     const body: any = {name, description, duration, speakers, tags, venue};
     
-    if (start_at) {
+    if (start_at && track) {
       body.start_at = start_at;
+      body.track = track;
     }
     
     return this.httpClient.post('/api/' + agendaId + '/sessions', JSON.stringify(body))

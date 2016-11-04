@@ -47,6 +47,7 @@ export class PublicAgendaComponent implements OnInit{
   email: string;
   agendaId: number;
   token : string;
+  bookmarkError: string;
   
   @ViewChild('infoRef') public infoRef: TemplateRef<any>;
   @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
@@ -74,8 +75,8 @@ export class PublicAgendaComponent implements OnInit{
   }
 
   showBookmark() {
-          this.modal.open(this.bookmarkRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
-
+    delete this.bookmarkError;
+    this.modal.open(this.bookmarkRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
   }
 
   getAgendaById(id: number) {
@@ -110,7 +111,12 @@ export class PublicAgendaComponent implements OnInit{
   createToken() {
     this.publicAgendaService.createToken(this.agendaId, this.email).subscribe(
       (data: any) => this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token]),
-      (error: any) => console.log(error)
+      (error: any) => {
+        console.log(error)
+        if(error.status === 400) {
+          this.bookmarkError = 'You have already created a personalised agenda. Please check your email.';
+        }
+      }
     );
   }
 }

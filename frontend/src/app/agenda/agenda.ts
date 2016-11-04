@@ -12,7 +12,7 @@ export class Agenda {
   end_at: string;
   duration: number; // number of days
   website: string;
-  sessions: Session[];
+  sessions = <Session[]>[];
   tracks: Track[];
   speakers: Speaker[];
   categories: Category[];

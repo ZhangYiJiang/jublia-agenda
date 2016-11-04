@@ -5,6 +5,18 @@ import { GlobalVariable } from '../globals';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+export interface sessionRequest {
+  name: string, 
+  description: string, 
+  duration: number, 
+  speakers: number[], 
+  tags: number[],
+  venue: number,
+  start_at?: number, 
+  track?: number,
+  tracks?: number[],
+}
+
 @Injectable()
 export class BoardService {
 
@@ -20,15 +32,13 @@ export class BoardService {
   constructor (private httpClient: HttpClient) {
   }
 
-  createSession(agendaId: number, name: string, description: string, duration: number, speakers: number[], tags: number[], venue: number, start_at?:number, track?:number): Observable<any> {
-    const body: any = {name, description, duration, speakers, tags, venue};
-    
-    if (start_at && track) {
-      body.start_at = start_at;
-      body.track = track;
+  createSession(agendaId: number, session: sessionRequest): Observable<any> {
+    // TODO: Remove when multi-track sessions is implemented
+    if (session.track) {
+      session.tracks = [session.track];
     }
     
-    return this.httpClient.post('/api/' + agendaId + '/sessions', JSON.stringify(body))
+    return this.httpClient.post('/api/' + agendaId + '/sessions', JSON.stringify(session))
                     .map(this.extractData)
                     .catch(this.handleError);
   }

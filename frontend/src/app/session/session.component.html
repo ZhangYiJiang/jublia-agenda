@@ -79,10 +79,16 @@
       <div class="session-meta">
         <div class="session-sharing">
           <a href="{{ calendarLink() }}">
-            <i class="fa fa-calendar"></i>
+            <i class="fa fa-calendar" aria-hidden="true"></i> Export to iCal
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ permalink() | encodeURI }}">
+            <i class="fa fa-facebook" aria-hidden="true"></i> Tell a friend
+          </a>
+          <a href="https://twitter.com/intent/tweet?url={{ permalink() | encodeURI }}">
+            <i class="fa fa-twitter" aria-hidden="true"></i> Share
           </a>
           
-        </div>
+        </div><!-- /.session-sharing -->
         
         <div class="session-info">
           <div class="session-icon">

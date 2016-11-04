@@ -114,6 +114,22 @@
         padding-left: 20px;
         border-left: 1px solid #ccc;
     }
+    
+    .session-sharing {
+        margin-bottom: 12px;
+        
+        a {
+            text-decoration: none;
+            color: $color-primary;
+            font-size: 13px;
+            display: inline-block;
+            margin-right: 4px;
+            
+            &:hover, &:focus {
+                color: tint($color-primary, 30);
+            }
+        }
+    }
 
     .session-info {
         display: flex;

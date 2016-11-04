@@ -22,15 +22,16 @@
     }
     .agenda-buttons{
         position: fixed;
-        width: 100%;
+        right: 10px;
         top: 10px;
         @media (max-width: 960px) {
             top: calc(100% - #{$bottom-bar-height});
             margin-top: 10px;
+            width: 100%;
+            right: auto;
         }
     }
-    
-    
+       
     @media (max-width: 960px) {
         flex-direction: column;
     }

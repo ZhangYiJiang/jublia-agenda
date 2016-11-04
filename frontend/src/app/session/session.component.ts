@@ -80,7 +80,7 @@ export class SessionComponent implements OnInit {
   availableSpeakers: Speaker[] = [];
   selectedSpeaker: any = '';
   selectedVenue: any = '';
-  
+
   getVenue(): Venue {
     return _.find(this.agenda.session_venues, {id: this.session.venue});
   }
@@ -268,7 +268,7 @@ export class SessionComponent implements OnInit {
   }
   
   agendaPath(): string {
-    return GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agenda.id;
+    return GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agenda.id + (this.token?'/'+this.token:'');
   }
   
   sessionPath(): string {

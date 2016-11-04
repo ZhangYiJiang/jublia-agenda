@@ -36,11 +36,6 @@ urlpatterns = [
     # File upload endpoints
     url(r'^uploads/image$', views.UploadImage.as_view(), name='upload-image'),
 
-    # Agenda listing, detail
-    url(r'^agendas$', views.AgendaList.as_view(), name='agenda_list'),
-    url(agenda_id + r'calendar$', views.AgendaCalendar.as_view(), name='agenda-calendar'),
-    url(r'^(?P<pk>[1-9][0-9]*)$', views.AgendaDetail.as_view(), name='agenda_detail'),
-
     # Session listing, detail
     url(agenda_id + r'sessions/(?P<pk>[1-9][0-9]*)/calendar$',
         views.SessionCalendar.as_view(), name='session-calendar'),
@@ -79,6 +74,11 @@ urlpatterns = [
     url(agenda_id + r'viewers/(?P<token>\w+)$',
         views.ViewerSessionList.as_view(), name='viewer_sessions'),
     url(agenda_id + r'viewers$', views.create_viewer, name='viewer_create'),
+
+    # Agenda listing, detail
+    url(r'^agendas$', views.AgendaList.as_view(), name='agenda_list'),
+    url(agenda_id + r'calendar$', views.AgendaCalendar.as_view(), name='agenda-calendar'),
+    url(r'^(?P<pk>[1-9][0-9]*)$', views.AgendaDetail.as_view(), name='agenda_detail'),
 ]
 
 urlpatterns += router.urls

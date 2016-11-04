@@ -40,7 +40,9 @@ export class RelativeColumnComponent {
   @Output() onSessionMovedFromPending = new EventEmitter<Session>();
   @Output() onSessionInterestChanged = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerChanged = new EventEmitter<Speaker>();
+  @Output() onSpeakerAdded2 = new EventEmitter<Speaker>();
   @Output() onVenueChanged = new EventEmitter<Venue>();
+  @Output() onVenueAdded2 = new EventEmitter<Venue>();
 
   colState = 'open';
   isColShown = true;
@@ -60,9 +62,19 @@ export class RelativeColumnComponent {
     this.onSpeakerChanged.emit(editedSpeaker);
   }
 
+  onSpeakerAdded(newSpeaker: Speaker) {
+    // propagate to board
+    this.onSpeakerAdded2.emit(newSpeaker);
+  }
+
   onVenueEdited(editedVenue: Venue) {
     // propagate to board
     this.onVenueChanged.emit(editedVenue);
+  }
+
+  onVenueAdded(newVenue: Venue) {
+    // propagate to board
+    this.onVenueAdded2.emit(newVenue);
   }
 
   onSessionDeleted(deletedSession: Session) {

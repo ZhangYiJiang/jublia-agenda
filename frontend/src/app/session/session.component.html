@@ -46,12 +46,21 @@
         </p>
         
         <template [ngIf]="!isPublic || (session.speakers && session.speakers.length)">
-          <h2><i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers</h2>
+          <h2>
+            <i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers
+            <speaker-form *ngIf="!isPublic" [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event)"></speaker-form>
+          </h2>
+          <div *ngIf="!isPublic">
+            <select [ngModel]="selectedSpeaker" (ngModelChange)="addSessionSpeaker($event.id)">
+              <option value="" disabled selected hidden>Select Speakers</option>
+              <option [ngValue]="speaker" *ngFor="let speaker of availableSpeakers">{{ speaker.name }}</option>
+            </select>
+          </div>
           <div *ngIf="session.speakers">
             <div class="speaker-card" *ngFor="let speakerId of session.speakers">
               <h3>{{ speakersObj[speakerId].name }}
                 <md-icon class="delete" tabindex="0" role="button" 
-                         *ngIf="!isPublic" (click)="updateSessionSpeaker(speakerId)">clear</md-icon>
+                         *ngIf="!isPublic" (click)="removeSessionSpeaker(speakerId)">clear</md-icon>
                 <!-- name not editable for now to avoid uniqueness conflicts -->
                 <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
               </h3>
@@ -114,19 +123,25 @@
           </div>
         </div><!-- /.session-info -->
         
-        <div class="session-info" *ngIf="session.venue">
+        <div class="session-info" *ngIf="!isPublic || session.venue">
           <div class="session-icon">
             <i class="fa fa-map-marker fa-fw" aria-hidden="true"></i>
           </div>
           <div>
-            <p>{{ getVenue().name }}</p>
-            <p class="session-info-secondary">
+            <div *ngIf="!isPublic">
+              <select [ngModel]="selectedVenue" (ngModelChange)="addSessionVenue($event.id)">
+                <option value="" disabled selected hidden>Select Venue</option>
+                <option [ngValue]="venue" *ngFor="let venue of agenda.session_venues">{{ venue.name }}</option>
+              </select>
+            </div>
+            <p *ngIf="isPublic">{{ getVenue().name }}</p>
+            <p *ngIf="session.venue" class="session-info-secondary">
               <ndv-edit title="unit" 
-                        [placeholder]="getVenue().unit || 'Add venue unit number'" 
+                        [placeholder]="getVenue().unit || (!isPublic ? 'Add venue unit number' : '')" 
                         (onSave)="updateVenue($event)" 
                         [permission]="!isPublic"></ndv-edit></p>
-            <!-- <p class="session-info-secondary" *ngIf="getVenue().unit">{{ getVenue().unit }}</p> -->
           </div>
+          <venue-form *ngIf="!isPublic" [agenda]="agenda" (onVenueAdded)="onVenueAdded($event)"></venue-form>
         </div><!-- /.session-info -->
 
         <div *ngIf="session.track" class="session-info">

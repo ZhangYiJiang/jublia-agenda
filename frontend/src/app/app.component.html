@@ -1,5 +1,5 @@
 <main>
-    <div class="header fixed">
+    <div *ngIf="!isPublic" class="header fixed">
         <p class="title" routerLink="">
             <i *ngIf="!isOnDashBoard" class="fa fa-arrow-left" aria-hidden="true"></i>
             {{appName}}

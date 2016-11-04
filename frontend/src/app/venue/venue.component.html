@@ -1,0 +1,29 @@
+<button md-button disableRipple type="button" class="secondary" (click)="createVenueModal()">
+  <md-icon>add</md-icon> New Venue
+</button>
+
+<template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
+  <div class="new-venue modal-container">
+    <div class="page-header">
+      <h1>New Venue</h1>
+    </div>
+    <div class="jumbotron">
+      <form [formGroup]="venueForm" novalidate (ngSubmit)="submitVenueForm(dialogRef)">
+        <div>
+          <md-input type="text" formControlName="name" placeholder="Venue Name" required>
+            <md-hint class="form-error-hint" align="start">{{formErrors.name}}</md-hint>
+          </md-input>
+        </div>
+        <div>
+          <md-input type="text" formControlName="unit" placeholder="Unit Number">
+            <md-hint class="form-error-hint" align="start">{{formErrors.unit}}</md-hint>
+          </md-input>
+        </div>
+        <div class="footer-buttons clearfix">
+          <button class="primary" md-button type="submit">Save</button>
+          <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

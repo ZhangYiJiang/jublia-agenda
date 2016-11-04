@@ -66,7 +66,7 @@
 }
 
 .session-modal {
-    width: 720px;
+    width: 820px;
     padding: 10px;
     
     .page-header {
@@ -101,11 +101,23 @@
     
     .session-body {
         display: flex;
+
+        button {
+            flex: 0 0 auto;
+        }
+
+        button md-icon {
+            vertical-align: middle;
+        }
     }
     
     .session-main {
         width: 400px;
         line-height: 1.5;
+
+        speaker-form {
+            margin-left: 147px;
+        }
     }
     
     .session-meta {
@@ -140,6 +152,7 @@
             margin: 0;
             font-size: 16px;
             font-weight: bold;
+            padding-right: 20px;
         }
 
         .session-icon {
@@ -200,5 +213,14 @@
 
     .delete {
         float: right;
+    }
+
+    select {
+        font-size: 16px;
+        height: 40px;
+        margin-right: 10px;
+        margin-bottom: 5px;
+        background-color: transparent;
+        border-radius: 2px;
     }
 }

@@ -1,12 +1,34 @@
 @import '../../../public/css/variables';
 
+.agenda-title {
+    color: $color-primary;
+    margin-left:70px;
+    margin-top: 10px;
+    @media (max-width: 960px) {
+        font-size: 20px;
+        margin-left:0px;
+    }
+}
+
 .agenda-menu {
+    top: 0px;
     display: flex;
-    padding: 10px 30px 0 60px;
-    height: 155px;
+    height: $top-bar-height;
     overflow: auto;
     width: calc(100% - 90px);
-    text-align: left;
+    @media (max-width: 960px) {
+        text-align: center;
+        width: 100%;
+    }
+    .agenda-buttons{
+        position: fixed;
+        right: 20px;
+        top: 10px;
+        @media (max-width: 960px) {
+            top: calc(100% - #{$bottom-bar-height});
+            margin-top: 10px;
+        }
+    }
     
     .map {
         border: 0;
@@ -56,7 +78,7 @@
 .viewer {
     max-width: 420px;
     padding: 16px 24px;
-    border: 1px solid $color-primary;
+    //border: 1px solid $color-primary;
     
     @media (min-width: 1260px) {
         width: 33.333vw;

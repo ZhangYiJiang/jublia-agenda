@@ -1,4 +1,4 @@
-import { Input, Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -9,12 +9,27 @@ import { DashBoardService } from '../dash-board/dash-board.service';
 import { PublicAgendaService } from './public-agenda.service';
 import { GlobalVariable } from '../globals';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { overlayConfigFactory } from 'angular2-modal';
+import { Overlay } from 'angular2-modal';
+import {
+  VEXBuiltInThemes,
+  Modal,
+  DialogPreset,
+  DialogFormModal,
+  DialogPresetBuilder,
+  VEXModalContext,
+  VexModalModule,
+  providers
+} from 'angular2-modal/plugins/vex';
+
 
 @Component({
   selector: 'public-agenda',
   templateUrl: './public-agenda.component.html',
   styleUrls: ['./public-agenda.component.css']
 })
+
+
 export class PublicAgendaComponent implements OnInit{
   constructor(
     private location: Location,
@@ -24,6 +39,7 @@ export class PublicAgendaComponent implements OnInit{
     private dashBoardService: DashBoardService,
     private publicAgendaService: PublicAgendaService,
     private sanitizer: DomSanitizer,
+    public modal: Modal,
   ) { }
   
   user = this.dashBoardService.currentUser;
@@ -32,6 +48,9 @@ export class PublicAgendaComponent implements OnInit{
   agendaId: number;
   token : string;
   
+  @ViewChild('infoRef') public infoRef: TemplateRef<any>;
+  @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
+
   interestedSessionIds: number[];
   interestToggleModel = false;
 
@@ -47,6 +66,16 @@ export class PublicAgendaComponent implements OnInit{
         this.getViewerByToken(token);
       }      
     });
+  }
+
+  showInfo() {
+    this.modal.open(this.infoRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+
+  }
+
+  showBookmark() {
+          this.modal.open(this.bookmarkRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+
   }
 
   getAgendaById(id: number) {

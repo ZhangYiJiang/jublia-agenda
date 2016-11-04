@@ -13,7 +13,9 @@
       <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda"
         (onSessionEdited)="onSessionEdited($event)"
         (onSpeakerEdited)="onSpeakerEdited($event)"
+        (onSpeakerAdded2)="onSpeakerAdded($event)"
         (onVenueEdited)="onVenueEdited($event)"
+        (onVenueAdded2)="onVenueAdded($event)"
         (onSessionDeleted)="onSessionDeleted($event)">
       </my-session>
     </li>

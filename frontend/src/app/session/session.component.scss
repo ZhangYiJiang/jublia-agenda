@@ -114,10 +114,6 @@
     .session-main {
         width: 400px;
         line-height: 1.5;
-
-        speaker-form {
-            margin-left: 147px;
-        }
     }
     
     .session-meta {
@@ -208,7 +204,7 @@
     }
 
     .speaker-card:last-child {
-        border-bottom: 0px;
+        border-bottom: 0;
     }
 
     .delete {

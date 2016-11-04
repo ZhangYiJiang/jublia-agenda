@@ -1,7 +1,6 @@
 import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, ViewChildren,Query,QueryList,TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { setImmediate } from 'core-js';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 
@@ -13,7 +12,7 @@ import { Tag } from '../tag/tag';
 import { Speaker } from '../speaker/speaker';
 import { Venue } from '../venue/venue';
 import { AgendaService } from '../agenda/agenda.service';
-import { BoardService } from './board.service';
+import {BoardService, sessionRequest} from './board.service';
 import { GlobalVariable } from '../globals';
 
 import { DOMUtilService } from '../util/dom.util.service';
@@ -463,11 +462,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
       // to document body, which causes weird issues with the modal widget
       // We're using setImmediate here because we need to wait for the widgets in the modal to be 
       // rendered first
-      setImmediate(() => {
+      setTimeout(() => {
         _.each(document.getElementsByTagName("ng2-dropdown-menu"), el => {
           el.addEventListener('click', evt => evt.stopPropagation());
         });
-      });
+      }, 0);
       
       // Clean up dropdown menus that were left behind by the widget
       dialog.onDestroy.subscribe(() => {
@@ -576,34 +575,26 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log(tagsId);
     console.log(venueId);
     var request:Observable<any>;
-    if(this.addingSessionWithStart){
-      if(!this.sessionForm.value.duration){
-        this.sessionForm.value.duration = 60;
-      }
-      request = this.boardService.createSession(
-        this.agenda.id, 
-        this.sessionForm.value.name, 
-        this.sessionForm.value.description, 
-        this.sessionForm.value.duration, 
-        speakersId, 
-        tagsId, 
-        venueId[0],
-        this.sessionStartTime,
-        this.eventTracks[this.sessionTrackIndex].id
-      );
-    }else{ 
-      request = this.boardService.createSession(
-        this.agenda.id, 
-        this.sessionForm.value.name, 
-        this.sessionForm.value.description, 
-        this.sessionForm.value.duration, 
-        speakersId, 
-        tagsId, 
-        venueId[0]
-      );
-     }
+
+    if (!this.sessionForm.value.duration) {
+      this.sessionForm.value.duration = 60;
+    }
+    
+    const newSession = <sessionRequest> {
+      name: this.sessionForm.value.name, 
+      description: this.sessionForm.value.description, 
+      duration: this.sessionForm.value.duration,
+      speakers: speakersId, 
+      tags: tagsId, 
+      venue: venueId[0],
+    };
+    
+    if (this.addingSessionWithStart) {
+      newSession.start_at = this.sessionStartTime; 
+      newSession.track = this.eventTracks[this.sessionTrackIndex].id;
+    }
         
-    request.subscribe(
+    this.boardService.createSession(this.agenda.id, newSession).subscribe(
       data => { 
         this.formMsg = 'New session created!';
         this.allSessions.push(data);

@@ -6,7 +6,7 @@ import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
 import { Speaker } from '../speaker/speaker';
 import { Venue } from '../venue/venue';
-import { Tag} from '../tag/tag';
+import { Tag } from '../tag/tag';
 import { BoardService } from '../board/board.service';
 
 import { overlayConfigFactory } from 'angular2-modal';
@@ -300,11 +300,11 @@ export class SessionComponent implements OnInit {
       // to document body, which causes weird issues with the modal widget
       // We're using setImmediate here because we need to wait for the widgets in the modal to be 
       // rendered first
-      setImmediate(() => {
+      setTimeout(() => {
         _.each(document.getElementsByTagName("ng2-dropdown-menu"), el => {
           el.addEventListener('click', evt => evt.stopPropagation());
         });
-      });
+      }, 0);
       
       dialog.onDestroy.subscribe(() => {
         // Return to previous when the modal is closed (if this is public)
@@ -409,7 +409,7 @@ export class SessionComponent implements OnInit {
     this.useDarkTheme = l < 75;
     
     // If the current route is a session route, open the modal automatically 
-    setImmediate(()=>{
+    setTimeout(()=>{
       this.route.params.forEach((params: Params) => {
         // (+) converts string 'id' to a number
         if (params['sessionId']){
@@ -419,6 +419,6 @@ export class SessionComponent implements OnInit {
           }      
         }
       });
-    });
+    }, 0);
   }
 }

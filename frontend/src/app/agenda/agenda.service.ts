@@ -70,11 +70,6 @@ export class AgendaService {
   }
 
   private static extractAgenda(agenda: any) {
-    if (agenda.sessions == null) {
-      console.log('added empty sessions array');
-      agenda.sessions = [];
-    }
-    
     // Map extract session
     agenda.sessions = agenda.sessions.map(AgendaService.extractSession);
     

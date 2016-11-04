@@ -1,45 +1,46 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
+
 import { HttpClient } from '../util/http.util.service';
-import { Observable }     from 'rxjs/Observable';
-import { DashBoardService } from '../dash-board/dash-board.service';
-import { Agenda } from './agenda';
 import { Session } from '../session/session';
 import { Speaker } from '../speaker/speaker';
 import { Venue } from '../venue/venue';
-import * as _ from 'lodash';
+import { Agenda } from './agenda';
+import { GlobalVariable } from '../globals';
 
 @Injectable()
 export class AgendaService {
 
   constructor (private httpClient: HttpClient) {}
 
-  private BASE_URL = '/api'
+  static agendaEndpoint(id: number, path: string = ''): string {
+      return _.trim([GlobalVariable.API_BASE_URL, id, path].join('/'), '/');
+  }
+  
+  static sessionEndpoint(agendaId: number, sessionId: number) {
+      return AgendaService.agendaEndpoint(agendaId, 'sessions/' + sessionId);
+  }
 
   getAgendaAnalytics(id: number): Observable<any> {
-    return this.httpClient.get(this.BASE_URL + '/'+ id + '/data')
+    return this.httpClient.get(AgendaService.agendaEndpoint(id, 'data'))
                     .map(this.extractData)
                     .catch(this.handleError);
   }
 
   getAgendaById(id: number): Observable<Agenda> {
-    return this.httpClient.get(this.BASE_URL + '/'+ id)
+    return this.httpClient.get(AgendaService.agendaEndpoint(id))
                     .map(this.extractAgenda)
                     .catch(this.handleError);
   }
 
-  publishAgenda(id: number) {
-    let data = {published: true};
-    return this.updateAgenda(id, data);
-  }
-
-  unpublishAgenda(id: number) {
-    let data = {published: false};
-    return this.updateAgenda(id, data);
+  setPublished(id: number, status: boolean) {
+    return this.updateAgenda(id, {published: status});
   }
 
   updateAgenda(id: number, data: {}): Observable<Agenda> {
-    return this.httpClient.patch(this.BASE_URL + '/'+ id, JSON.stringify(data))
+    return this.httpClient.patch(AgendaService.agendaEndpoint(id), JSON.stringify(data))
                     .map(this.extractAgenda)
                     .catch(this.handleError);
   }
@@ -76,10 +77,12 @@ export class AgendaService {
   updateSession(agendaId: number, session: Session) {
     // TODO: Remove this when multi-track session is ready
     session.tracks = [session.track];
+  
     console.log('updating agenda ' + agendaId + ' session ' + session.id);
     console.log(JSON.stringify(session, null, 4));
+
     this.httpClient
-        .put(this.BASE_URL + '/' + agendaId + '/sessions/' + session.id, JSON.stringify(session))
+        .put(AgendaService.sessionEndpoint(agendaId, session.id), JSON.stringify(session))
         .catch(this.handleError)
         .subscribe(
           res => {
@@ -90,11 +93,11 @@ export class AgendaService {
         );
   }
 
-  deleteSession(agendaId: number, deletedSession: Session) {
-    console.log('deleting agenda ' + agendaId + ' session ' + deletedSession.id);
-    console.log(JSON.stringify(deletedSession, null, 4));
+  deleteSession(agendaId: number, session: Session) {
+    console.log('deleting agenda ' + agendaId + ' session ' + session.id);
+    console.log(JSON.stringify(session, null, 4));
     this.httpClient
-        .delete(this.BASE_URL + '/' + agendaId + '/sessions/' + deletedSession.id)
+        .delete(AgendaService.sessionEndpoint(agendaId, session.id))
         .catch(this.handleError)
         .subscribe(
           res => {
@@ -110,7 +113,9 @@ export class AgendaService {
     console.log('interest changed to ' + interested);
     
     const method = interested ? 'put' : 'delete';
-    this.httpClient[method](this.BASE_URL + '/' + agendaId + '/viewers/' + token + '/' + sessionId, '')
+    const url = AgendaService.agendaEndpoint(agendaId, ['viewers', token, sessionId].join('/'));
+      
+    this.httpClient[method](url)
         .catch(this.handleError)
         .subscribe(
             (res : any) => {
@@ -121,11 +126,13 @@ export class AgendaService {
         );
   }
 
-  updateSpeaker(agendaId: number, newSpeaker: Speaker) {
-    console.log('updating speaker ' + agendaId + ' speaker ' + newSpeaker.id);
-    console.log(JSON.stringify(newSpeaker, null, 4));
+  updateSpeaker(agendaId: number, speaker: Speaker) {
+    console.log('updating speaker ' + agendaId + ' speaker ' + speaker.id);
+    console.log(JSON.stringify(speaker, null, 4));
+    const url = AgendaService.agendaEndpoint(agendaId, 'speakers/' + speaker.id);
+    
     this.httpClient
-        .put(this.BASE_URL + '/' + agendaId + '/speakers/' + newSpeaker.id, JSON.stringify(newSpeaker))
+        .put(url, JSON.stringify(speaker))
         .catch(this.handleError)
         .subscribe(
           res => {
@@ -136,11 +143,13 @@ export class AgendaService {
         );
   }
 
-  updateVenue(agendaId: number, newVenue: Venue) {
-    console.log('updating venue ' + agendaId + ' venue ' + newVenue.id);
-    console.log(JSON.stringify(newVenue, null, 4));
+  updateVenue(agendaId: number, venue: Venue) {
+    console.log('updating venue ' + agendaId + ' venue ' + venue.id);
+    console.log(JSON.stringify(venue, null, 4));
+    const url = AgendaService.agendaEndpoint(agendaId, 'venues/' + venue.id);
+    
     this.httpClient
-        .put(this.BASE_URL + '/' + agendaId + '/venues/' + newVenue.id, JSON.stringify(newVenue))
+        .put(url, JSON.stringify(venue))
         .catch(this.handleError)
         .subscribe(
           res => {

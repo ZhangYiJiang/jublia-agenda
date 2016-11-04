@@ -22,6 +22,10 @@ import { DashBoardService } from './dash-board/dash-board.service.ts';
 import { BoardService } from './board/board.service.ts';
 import { PublicAgendaService } from './public-agenda/public-agenda.service.ts';
 import { LineChartComponent } from './chart/chart.component.ts';
+import { VenueComponent } from './venue/venue.component.ts';
+import { VenueService } from './venue/venue.service.ts';
+import { SpeakerComponent } from './speaker/speaker.component.ts';
+import { SpeakerService } from './speaker/speaker.service.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
@@ -68,7 +72,7 @@ import { ClipboardModule } from 'angular2-clipboard';
     ModalModule.forRoot(),
     VexModalModule,
     ChartsModule,
-    ClipboardModule,
+    ClipboardModule
   ],
   declarations: [
     AppComponent,
@@ -80,6 +84,8 @@ import { ClipboardModule } from 'angular2-clipboard';
     AgendaComponent,
     PublicAgendaComponent,
     AnalyticsComponent,
+    VenueComponent,
+    SpeakerComponent,
     
     OrderBy,
     Where,
@@ -95,6 +101,8 @@ import { ClipboardModule } from 'angular2-clipboard';
     DashBoardService,
     BoardService,
     PublicAgendaService,
+    VenueService,
+    SpeakerService,
     LoggedInGuard,
     DOMUtilService,
     HttpClient,

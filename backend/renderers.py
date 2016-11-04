@@ -11,6 +11,7 @@ class CalendarRenderer(BaseRenderer):
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         try:
+            print(renderer_context['request'].resolver_match)
             rendered_data = data.to_ical()
             if not isinstance(rendered_data, Calendar):
                 cal = calendar()

@@ -60,7 +60,9 @@ export class SessionComponent implements OnInit {
   @Output() onSessionDeleted = new EventEmitter<Session>();
   @Output() onSessionInterestEdited = new EventEmitter<[number, boolean]>();
   @Output() onSpeakerEdited = new EventEmitter<Speaker>();
+  @Output() onSpeakerAdded2 = new EventEmitter<Speaker>();
   @Output() onVenueEdited = new EventEmitter<Venue>();
+  @Output() onVenueAdded2 = new EventEmitter<Venue>();
 
   speakersObj = {};
   trackObj = {};
@@ -74,6 +76,10 @@ export class SessionComponent implements OnInit {
   height: number;
   color: string;
   useDarkTheme: boolean; // Dark if lightness < 50%, Light otherwise 
+
+  availableSpeakers: Speaker[] = [];
+  selectedSpeaker: any = '';
+  selectedVenue: any = '';
   
   getVenue(): Venue {
     return _.find(this.agenda.session_venues, {id: this.session.venue});
@@ -133,9 +139,19 @@ export class SessionComponent implements OnInit {
     }
   }
 
-  updateSessionSpeaker(speakerId: number) {
+  removeSessionSpeaker(speakerId: number) {
     this.session.speakers = _.without(this.session.speakers, speakerId);
     this.onSessionEdited.emit(this.session);
+    this.availableSpeakers.push(this.speakersObj[speakerId]);
+  }
+
+  addSessionSpeaker(speakerId: number) {
+    if (!this.session.speakers) {
+      this.session.speakers = [];
+    }
+    this.session.speakers.push(speakerId);
+    this.onSessionEdited.emit(this.session);
+    _.remove(this.availableSpeakers, o => o.id === speakerId);
   }
 
   updateSpeaker(event: any, speakerId: number) {
@@ -147,6 +163,9 @@ export class SessionComponent implements OnInit {
     } else if(typeof event.position === 'string') {
       newSpeaker.position = event.position;
       this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.profile === 'string') {
+      newSpeaker.profile = event.profile;
+      this.onSpeakerEdited.emit(newSpeaker);
     } else if(typeof event.email === 'string') {
       newSpeaker.email = event.email;
       this.onSpeakerEdited.emit(newSpeaker);
@@ -156,6 +175,16 @@ export class SessionComponent implements OnInit {
     }
   }
 
+  onSpeakerAdded(newSpeaker: Speaker) {
+    this.onSpeakerAdded2.emit(newSpeaker);
+    if (!this.session.speakers) {
+      this.session.speakers = [];
+    }
+    this.session.speakers.push(newSpeaker.id);
+    this.onSessionEdited.emit(this.session);
+    this.speakersObj[newSpeaker.id] = newSpeaker;
+  }
+
   updateVenue(event: any) {
     console.log(event);
     let newVenue = this.getVenue();
@@ -163,6 +192,22 @@ export class SessionComponent implements OnInit {
       newVenue.unit = event.unit;
       this.onVenueEdited.emit(newVenue);
     }
+  }
+
+  onVenueAdded(newVenue: Venue) {
+    this.onVenueAdded2.emit(newVenue);
+    this.session.venue = newVenue.id;
+    this.onSessionEdited.emit(this.session);
+    if (!this.agenda.session_venues) {
+      this.agenda.session_venues = [];
+    }
+    this.agenda.session_venues.push(newVenue);
+    this.selectedVenue = newVenue;
+  }
+
+  addSessionVenue(venueId: number) {
+    this.session.venue = venueId;
+    this.onSessionEdited.emit(this.session);
   }
 
   removeTag(name: string) {
@@ -196,6 +241,10 @@ export class SessionComponent implements OnInit {
           this.onSessionEdited.emit(this.session);
           this.eventTags.push(data);
           this.eventTagsName.push(data.name);
+          if (!this.agenda.categories[0].tags) {
+            this.agenda.categories[0].tags = [];
+          }
+          this.agenda.categories[0].tags.push(data);
         },
         error => {
           console.log(error);
@@ -210,24 +259,43 @@ export class SessionComponent implements OnInit {
            !isNaN(parseInt(value, 10));
   }
   
+  agendaPath(): string {
+    return GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agenda.id;
+  }
+  
+  sessionPath(): string {
+    return this.agendaPath() + '/session/' + this.session.id;
+  }
+  
   permalink(): string {
-    return '/public/agenda/' + this.agenda.id + '/session/' + this.session.id;
+    return GlobalVariable.BASE_URL + this.sessionPath();
   }
   
   calendarLink(): string {
-    return 'api/' + this.agenda.id + '/sessions/' + this.session.id + '/calendar';
+    return GlobalVariable.API_BASE_URL + [this.agenda.id, 'sessions', this.session.id, 'calendar'].join('/');
   }
 
   clicked() {
-    this.location.replaceState(this.permalink());
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
     this.sessionTagsName = _.values(_.values(this.session.categories)[0])
         .map((id: number) => _.find(this.eventTags, {id}).name);
+    if (this.session.venue) {
+      this.selectedVenue = this.getVenue();
+    }
+    if (this.agenda.speakers) {
+      this.availableSpeakers = this.agenda.speakers.slice();
+    }
+    _.forEach(this.session.speakers, id => _.remove(this.availableSpeakers, o => o.id === id));
     this.modal.open(
       this.templateRef, 
       overlayConfigFactory({ isBlocking: false }, VEXModalContext)
     ).then(dialog => {
+      // Set new permalink if this is public 
+      if (this.isPublic && !this.location.path().includes(this.sessionPath())) {
+        this.location.go(this.sessionPath());
+      }
+      
       // Stop click events from the dropdown menu created by the tag inputs from propagating 
       // to document body, which causes weird issues with the modal widget
       // We're using setImmediate here because we need to wait for the widgets in the modal to be 
@@ -238,9 +306,14 @@ export class SessionComponent implements OnInit {
         });
       });
       
-      // Clean up dropdown menus that were left behind by the widget
       dialog.onDestroy.subscribe(() => {
-        this.location.replaceState('/public/agenda/'+this.agenda.id);
+        // Return to previous when the modal is closed (if this is public)
+        if (this.isPublic) {
+          this.location.go(this.agendaPath());
+        }
+
+        // Clean up dropdown menus that were left behind by the widget 
+        // see https://github.com/Gbuomprisco/ng2-material-dropdown/issues/9
         // querySelectorAll uses a frozen NodeList
         _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
           el.parentNode.removeChild(el);
@@ -306,23 +379,26 @@ export class SessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.analyticsData);
+    // Update analytics data
     this.analyticsDataCombinedY = _.values(this.analyticsData);
     this.analyticsDataCombinedX = _.keys(this.analyticsData);
 
     // TODO: move this logic up to agenda/board component to avoid repeated operations
     this.speakersObj = _.keyBy(this.agenda.speakers, 'id');
     this.trackObj = _.keyBy(this.agenda.tracks, 'id');
-
+    
+    // Update bookmark button status text
     this.updateInterestButtonText();
-
+    
+    // Update height 
     if (this.session.start_at != null) {
       this.updateHeight();
     }
-
+    
+    // Updates coloring
     let popularityRatio = 0;
     
-    if (this.isPublic) {
+    if (this.isAnalytics) {
       popularityRatio = (this.session.popularity - this.agenda.minPopularity) / 
           (this.agenda.maxPopularity - this.agenda.minPopularity);
     }
@@ -331,18 +407,18 @@ export class SessionComponent implements OnInit {
     const l = primary.l + (100 - primary.l) * Math.sqrt(1 - popularityRatio);
     this.color = `hsl(${primary.h}, ${primary.s}%, ${l}%)`;
     this.useDarkTheme = l < 75;
-    setTimeout(()=>{
+    
+    // If the current route is a session route, open the modal automatically 
+    setImmediate(()=>{
       this.route.params.forEach((params: Params) => {
         // (+) converts string 'id' to a number
-        if(params['sessionId']){
-          let id = +params['sessionId'];
-          if(this.session.id === id) {
+        if (params['sessionId']){
+          const id = +params['sessionId'];
+          if (this.session.id === id) {
             this.clicked();
           }      
         }
       });
-    },0);
-
+    });
   }
-
 }

@@ -4,7 +4,10 @@
 </div>
 -->
 <template #infoRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-  <div class="modal-container">
+  <div class="centered-header">
+    <h1>Event Information</h1>
+  </div>
+  <div class="modal-container narrow">
     <section class="agenda-info">
       <p *ngIf="agenda.website" class="agenda-subtitle">
         <a href="{{agenda.website | encodeURI}}" target="_blank">
@@ -21,6 +24,9 @@
     </section>
     <div *ngIf="agenda.location">
       <iframe frameborder="0" class="map" [src]="mapsEmbedUrl" allowfullscreen></iframe>
+    </div>
+    <div class="footer-buttons">
+      <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>
@@ -46,6 +52,9 @@
         </div>
       </div>
     </section>
+    <div class="footer-buttons">
+      <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+    </div>
   </div>
 </template>
 

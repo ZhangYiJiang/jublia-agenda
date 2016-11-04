@@ -16,7 +16,7 @@ export class AgendaService {
   constructor (private httpClient: HttpClient) {}
 
   static agendaEndpoint(id: number, path: string = ''): string {
-      return _.trimEnd([GlobalVariable.API_BASE_URL, id, path].join('/'), '/');
+      return _.trimEnd(GlobalVariable.API_BASE_URL + id + '/' + path, '/');
   }
   
   static sessionEndpoint(agendaId: number, sessionId: number) {

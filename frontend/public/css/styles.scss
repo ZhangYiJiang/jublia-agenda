@@ -62,6 +62,10 @@ body {
         border-bottom: 1px solid #444;
         padding: 0;
     }
+
+    .default.ng2-tag-input--focused {
+        border-bottom: 2px solid #efefef;
+    }
     
     .public .tag-input.default {
         border-bottom: 0;
@@ -127,6 +131,12 @@ body {
     // need to be higher than the modal overlay's
     .ng2-dropdown-menu-container {
         z-index: $dropdown-menu-z-index;
+        // limit height of the dropdown so that it do not flicker when near the bottom of the screen
+        max-height: 100px;
+        .ng2-menu-item {
+            height: 40px;
+            line-height: 40px;
+        }
     }
 }
 
@@ -182,6 +192,11 @@ button[md-button],
     &.secondary {
         background-color: transparent;
         color: $color-primary;
+        &[disabled] {
+            cursor: disabled;
+            border: 2px solid gray;
+            color: gray;
+        }
     }
 }
 

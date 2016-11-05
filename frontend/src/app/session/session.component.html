@@ -6,7 +6,7 @@
      [class.pending]="session.start_at == null" 
      [class.static]="isPublic" 
      [class.dark]="useDarkTheme"
-     (click)="clicked()" 
+     (click)="clicked(false)" 
      [class.not-interested]="!interested">
   <div class="session-content">
     <div class="session-title">
@@ -176,14 +176,17 @@
           </div>
           <div>
             <tag-input [(ngModel)]="sessionTagsName"
-                       placeholder=" + Tags" 
-                       secondaryPlaceholder="Add Tags"
+                       placeholder="Select or enter new tag" 
+                       secondaryPlaceholder="Enter new tag"
                        [class.public]="isPublic"
                        [autocompleteItems]="eventTagsName" 
                        [autocomplete]="true"
+                       [showDropdownIfEmpty]="true"
                        [readonly]="isPublic"
                        (onRemove)="removeTag($event)"
-                       (onAdd)="addTag($event)"></tag-input>
+                       (onAdd)="addTag($event)"
+                       (onTextChange)="onTagTextChange($event)"></tag-input>
+            <button class="secondary" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
           </div>
         </div><!-- /.session-info -->        
       </div><!-- /.session-meta -->

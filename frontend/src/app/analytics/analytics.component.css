@@ -1,2 +1,1 @@
-.agenda-title{color:#41B6AB;font-size:24px;margin:20px}button{margin:10px;border:2px solid #41B6AB}.schedule{margin-left:20px;width:100%}.chart{top:116px;height:200px;width:97%;margin:0 20px;position:fixed;display:flex}
-/*# sourceMappingURL=analytics.component.css.map */
+.agenda-title,.chart{position:fixed;left:0;right:0;display:flex;justify-content:center}.agenda-title{position:fixed;top:56px;height:60px}.agenda-title h1{color:#41B6AB;font-size:24px;margin:20px}.agenda-title button{margin:10px;border:2px solid #41B6AB}.chart{top:116px;height:200px}

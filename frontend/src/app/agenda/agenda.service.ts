@@ -70,7 +70,7 @@ export class AgendaService {
   }
 
   private static extractAgenda(agenda: any): Agenda {
-    agenda = _.defaults(new Agenda(), agenda);
+    agenda = _.defaults(agenda, new Agenda());
     
     // Map extract session
     agenda.sessions = agenda.sessions.map(AgendaService.extractSession);

@@ -35,4 +35,4 @@ class ViewerSerializer(BaseSerializer):
 
     class Meta:
         model = Viewer
-        fields = ('email', 'sessions',)
+        fields = ('email', 'mobile', 'sessions',)

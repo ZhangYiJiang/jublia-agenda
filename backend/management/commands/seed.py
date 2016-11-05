@@ -1,6 +1,5 @@
 import random
 
-from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 
 from backend.tests import factory

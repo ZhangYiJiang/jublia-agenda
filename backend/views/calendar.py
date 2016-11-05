@@ -44,5 +44,5 @@ class AgendaCalendar(CalendarAPIView):
 class ViewerCalendar(CalendarAPIView):
     def get_object(self, request, agenda_id, token):
         viewer = get_object_or_404(Viewer, agenda=agenda_id, token=token)
-        self.filename = viewer.agenda.name + ''
+        self.filename = viewer.agenda.name + ' personalized schedule'
         return viewer

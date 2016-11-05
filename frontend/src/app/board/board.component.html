@@ -75,7 +75,8 @@
                        formControlName="existingVenue" 
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventVenuesName" 
-                       [autocomplete]="true"></tag-input>
+                       [autocomplete]="true"
+                       [showDropdownIfEmpty]="true"></tag-input>
             <venue-form [agenda]="agenda" (onVenueAdded)="onVenueAdded($event, true)"></venue-form>
           </div>
         </div>
@@ -89,7 +90,8 @@
                        formControlName="existingSpeakers" 
                        [onlyFromAutocomplete]="true" 
                        [autocompleteItems]="eventSpeakersName" 
-                       [autocomplete]="true"></tag-input>
+                       [autocomplete]="true"
+                       [showDropdownIfEmpty]="true"></tag-input>
             <speaker-form [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event, true)"></speaker-form>
           </div>
         </div>
@@ -101,7 +103,10 @@
                      secondaryPlaceholder="Add Tags" 
                      formControlName="tags" 
                      [autocompleteItems]="eventTagsName" 
-                     [autocomplete]="true"></tag-input>
+                     [autocomplete]="true"
+                     [showDropdownIfEmpty]="true"
+                     (onTextChange)="onTagTextChange($event)"></tag-input>
+          <button class="secondary" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
         </div>
         
         <div class="footer-buttons clearfix">

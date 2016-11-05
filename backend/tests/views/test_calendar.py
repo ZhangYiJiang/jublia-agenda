@@ -16,7 +16,7 @@ class CalendarTest(BaseAPITestCase):
         self.url = self.viewer.get_absolute_url()
         self.sessions = [create_session(self.agenda, factory.session(full=True)) for i in range(10)]
         self.agenda_url = reverse('agenda-calendar', [self.agenda.pk])
-        self.viewer_url = reverse('viewer-calendar', [self.agenda.pk, self.viewer.pk])
+        self.viewer_url = reverse('viewer-calendar', [self.agenda.pk, self.viewer.token])
 
     def assertIsCalendar(self, response):
         self.assertEqual(response.status_code, status.HTTP_200_OK)

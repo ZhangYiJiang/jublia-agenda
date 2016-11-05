@@ -95,8 +95,10 @@ export class AgendaService {
   }
 
   updateSession(agendaId: number, session: Session): Observable<any> {
-    // TODO: Remove this when multi-track session is ready
-    session.tracks = [session.track];
+    // TODO: Remove when multi-track sessions is implemented
+    if (session.track) {
+      session.tracks = [session.track];
+    }
   
     console.log('updating agenda ' + agendaId + ' session ' + session.id);
     console.log(JSON.stringify(session, null, 4));

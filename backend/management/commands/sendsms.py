@@ -17,7 +17,7 @@ class Timestamp(Func):
             template='%(function)s(strftime("%%%%s", %(expressions)s) AS NUMERIC)',
         )
 
-    def as_postgres(self, compiler, connection):
+    def as_postgresql(self, compiler, connection):
         return super().as_sql(
             compiler, connection,
             function='EXTRACT',

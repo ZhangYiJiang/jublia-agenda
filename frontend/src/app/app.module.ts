@@ -60,6 +60,7 @@ import {LoadingIndicatorComponent} from "./loading-indicator/loading-indicator.c
     RouterModule.forRoot([
       //order matters, goes to first match
       { path: 'agenda/:id', component: AgendaComponent, canActivate: [LoggedInGuard] },
+      { path: 'public/agenda/:id/:token/session/:sessionId', component: PublicAgendaComponent },
       { path: 'public/agenda/:id/session/:sessionId', component: PublicAgendaComponent },
       { path: 'public/agenda/:id/:token', component: PublicAgendaComponent },
       { path: 'public/agenda/:id', component: PublicAgendaComponent },

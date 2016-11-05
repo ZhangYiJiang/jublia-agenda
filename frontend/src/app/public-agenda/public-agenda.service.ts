@@ -29,9 +29,9 @@ export class PublicAgendaService {
                     .catch(this.handleError);
   }
 
-  createToken(agendaId: number, email: string) {
+  createToken(agendaId: number, email: string, mobile:string) {
     console.log(email);
-    let body = JSON.stringify({email: email});
+    let body = JSON.stringify({email: email, mobile: mobile});
     return this.httpClient.post(this.BASE_URL + '/' + agendaId + '/viewers', body)
                     .map(this.extractData)
                     .catch(this.handleError);

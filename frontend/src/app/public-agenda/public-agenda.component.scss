@@ -38,6 +38,16 @@
     }
 }
 
+.bookmarkForm {
+    flex-direction: column;
+}
+
+.bookmarkInput {
+    md-input {
+        width:100%;
+    }
+}
+
 .agenda-info {
     h1 {
         color: $color-primary;

@@ -10,8 +10,7 @@ import { PublicAgendaService } from './public-agenda.service';
 import { BoardService } from '../board/board.service';
 import { GlobalVariable } from '../globals';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { overlayConfigFactory } from 'angular2-modal';
-import { Overlay } from 'angular2-modal';
+import { overlayConfigFactory, Overlay, DialogRef } from 'angular2-modal';
 import {
   VEXBuiltInThemes,
   Modal,
@@ -56,6 +55,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   user = this.dashBoardService.currentUser;
   agenda: Agenda;
   email: string;
+  mobile: string;
   agendaId: number;
   token : string;
   bookmarkError: string;
@@ -121,13 +121,16 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     );
   }
 
-  createToken() {
-    this.publicAgendaService.createToken(this.agendaId, this.email).subscribe(
-      (data: any) => this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token]),
+  createToken(dialogRef: DialogRef<any>) {
+    this.publicAgendaService.createToken(this.agendaId, this.email, this.mobile).subscribe(
+      (data: any) => {
+        this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token])
+        dialogRef.close();
+      },
       (error: any) => {
         console.log(error)
-        if(error.status === 400) {
-          this.bookmarkError = 'You have already created a personalised agenda. Please check your email.';
+        if(error.email) {
+          this.bookmarkError = error.email;
         }
       }
     );

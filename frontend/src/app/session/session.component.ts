@@ -14,6 +14,7 @@ import { GlobalVariable } from '../globals';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import * as $ from 'jquery';
 
 import {
   VEXBuiltInThemes,
@@ -80,7 +81,38 @@ export class SessionComponent implements OnInit {
   availableSpeakers: Speaker[] = [];
   selectedSpeaker: any = '';
   selectedVenue: any = '';
+
+  // tag input logic
+  tagInputString = '';
+  isNewTagBtnDisabled = true;
+  tagBtnText = GlobalVariable.TAG_INPUT_BTN_NO_TEXT;
   
+  onTagTextChange(input: string) {
+    this.tagInputString = input.trim();
+    if(this.tagInputString == '') {
+      this.isNewTagBtnDisabled = true;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_NO_TEXT;
+    } else if(_.includes(this.sessionTagsName, this.tagInputString)) {
+      this.isNewTagBtnDisabled = true;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_EXIST_TAG;
+    } else {
+      this.isNewTagBtnDisabled = false;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_WITH_TEXT;
+    }
+  }
+
+  addTagFromInput() {
+    let text = this.tagInputString.trim();
+    if(text != '') {
+      this.sessionTagsName.push(text);
+      this.addTag(text);
+      $('input.ng2-tag-input__text-input').val('');
+      this.tagInputString = '';
+      this.isNewTagBtnDisabled = true;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_NO_TEXT;
+    }
+  }
+
   getVenue(): Venue {
     return _.find(this.agenda.session_venues, {id: this.session.venue});
   }
@@ -100,7 +132,6 @@ export class SessionComponent implements OnInit {
   }
 
   adjustSessionDuration(mins: number) {
-    console.log(mins);
     let newDuration = this.session.duration + mins;
     if(newDuration > 0) {
       this.updateSession({
@@ -110,7 +141,6 @@ export class SessionComponent implements OnInit {
   }
 
   confirmDelete(dialogRef: any) {
-    console.log('confirm delete');
     let dialog = this.modal.confirm()
       .message('Confirm delete?')
       .okBtn('Delete')
@@ -129,9 +159,7 @@ export class SessionComponent implements OnInit {
   }
 
   updateSession(event: any) {
-    console.log(event);
     if(typeof event.description === 'string') {
-      console.log(this.session);
       this.session.description = event.description;
       this.onSessionEdited.emit(this.session);
     } else if(typeof event.name === 'string') {
@@ -247,12 +275,15 @@ export class SessionComponent implements OnInit {
           this.session.categories[defaultCategoryId].push(tagId);
           this.session.tags = this.session.categories[defaultCategoryId]; // api takes in an array of tag ids
           this.onSessionEdited.emit(this.session);
-          this.eventTags.push(data);
-          this.eventTagsName.push(data.name);
           if (!this.agenda.categories[0].tags) {
             this.agenda.categories[0].tags = [];
           }
           this.agenda.categories[0].tags.push(data);
+          // this.eventTags.push(data);
+          // this.eventTagsName.push(data.name);
+          // properly update event tags
+          this.eventTags = this.getEventTags();
+          this.eventTagsName = this.getEventTagsName();
         },
         error => {
           console.log(error);
@@ -268,7 +299,7 @@ export class SessionComponent implements OnInit {
   }
   
   agendaPath(): string {
-    return GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agenda.id;
+    return GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agenda.id + (this.token?'/'+this.token:'');
   }
   
   sessionPath(): string {
@@ -283,7 +314,7 @@ export class SessionComponent implements OnInit {
     return GlobalVariable.API_BASE_URL + [this.agenda.id, 'sessions', this.session.id, 'calendar'].join('/');
   }
 
-  clicked() {
+  updateSessionFields() {
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
     this.sessionTagsName = _.values(_.values(this.session.categories)[0])
@@ -295,6 +326,12 @@ export class SessionComponent implements OnInit {
       this.availableSpeakers = this.agenda.speakers.slice();
     }
     _.forEach(this.session.speakers, id => _.remove(this.availableSpeakers, o => o.id === id));
+  }
+
+  clicked(firstOpen: boolean) {
+    if(!firstOpen) {
+      this.updateSessionFields();
+    }
     this.modal.open(
       this.templateRef, 
       overlayConfigFactory({ isBlocking: false }, VEXModalContext)
@@ -309,7 +346,7 @@ export class SessionComponent implements OnInit {
       // setTimeout here because we need to wait for the widgets in the modal to be 
       // rendered first
       setTimeout(() => {
-        _.each(document.getElementsByTagName("ng2-dropdown-menu"), el => {
+        _.each(document.getElementsByTagName("ng2-dropdown-menu"), (el: HTMLElement) => {
           el.addEventListener('click', evt => evt.stopPropagation());
         });
       }, 0);
@@ -324,7 +361,7 @@ export class SessionComponent implements OnInit {
         // see https://github.com/Gbuomprisco/ng2-material-dropdown/issues/9
         // TODO: Remove this once the patch from the above issue has been merged into the ng2-tag-input package 
         // querySelectorAll uses a frozen NodeList
-        _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
+        _.each(document.querySelectorAll("ng2-dropdown-menu"), (el: HTMLElement) => {
           el.parentNode.removeChild(el);
         });
       });
@@ -404,6 +441,8 @@ export class SessionComponent implements OnInit {
       this.updateHeight();
     }
     
+    this.updateSessionFields();
+
     // Updates coloring
     let popularityRatio = 0;
     
@@ -424,7 +463,7 @@ export class SessionComponent implements OnInit {
         if (params['sessionId']){
           const id = +params['sessionId'];
           if (this.session.id === id) {
-            this.clicked();
+            this.clicked(true);
           }      
         }
       });

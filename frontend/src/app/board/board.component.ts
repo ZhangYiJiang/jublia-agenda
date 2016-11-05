@@ -126,6 +126,39 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  // tag input logic
+  tagInputString = '';
+  isNewTagBtnDisabled = true;
+  tagBtnText = GlobalVariable.TAG_INPUT_BTN_NO_TEXT;
+  
+  onTagTextChange(input: string) {
+    this.tagInputString = input.trim();
+    if(this.tagInputString == '') {
+      this.isNewTagBtnDisabled = true;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_NO_TEXT;
+    } else if(_.includes(this.sessionForm.value.tags, this.tagInputString)) {
+      this.isNewTagBtnDisabled = true;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_EXIST_TAG;
+    } else {
+      this.isNewTagBtnDisabled = false;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_WITH_TEXT;
+    }
+  }
+
+  addTagFromInput() {
+    let text = this.tagInputString.trim();
+    if(text != '') {
+      // need any additional logic?
+      // this.addTag(text);
+      this.sessionForm.value.tags.push(text);
+      $('input.ng2-tag-input__text-input').val('');
+      this.tagInputString = '';
+      this.isNewTagBtnDisabled = true;
+      this.tagBtnText = GlobalVariable.TAG_INPUT_BTN_NO_TEXT;
+    }
+  }
+
+
   ngAfterViewInit() {
     $('.schedule').on('scroll', this.keepfix);
   }

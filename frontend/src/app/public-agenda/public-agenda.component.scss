@@ -2,24 +2,27 @@
 
 .agenda-title {
     color: $color-primary;
-    margin-left:70px;
+    margin-left: 70px;
     margin-top: 10px;
+    
     @media (max-width: 960px) {
         font-size: 20px;
-        margin-left:0px;
+        margin-left:0;
     }
 }
 
 .agenda-menu {
-    top: 0px;
+    top: 0;
     display: flex;
     height: $top-bar-height;
     overflow: auto;
     width: calc(100% - 90px);
+    
     @media (max-width: 960px) {
         text-align: center;
         width: 100%;
     }
+    
     .agenda-buttons{
         position: fixed;
         right: 10px;

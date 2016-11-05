@@ -75,7 +75,7 @@ export class SessionComponent implements OnInit {
 
   height: number;
   color: string;
-  useDarkTheme: boolean; // Dark if lightness < 50%, Light otherwise 
+  useDarkTheme: boolean; // Dark if lightness < 75%, Light otherwise 
 
   availableSpeakers: Speaker[] = [];
   selectedSpeaker: any = '';

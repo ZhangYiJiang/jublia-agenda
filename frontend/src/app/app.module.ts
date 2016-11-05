@@ -31,6 +31,7 @@ import { SpeakerService } from './speaker/speaker.service.ts';
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
 import { User } from './util/user.util.service';
+import { PlatformUtilService } from "./util/platform.util.service";
 
 import { OrderBy } from './pipes/orderby.pipe';
 import { Where } from './pipes/where.pipe';
@@ -109,6 +110,7 @@ import { ClipboardModule } from 'angular2-clipboard';
     DOMUtilService,
     HttpClient,
     JwtHelper,
+    PlatformUtilService,
     User
   ],
   bootstrap: [ AppComponent ]

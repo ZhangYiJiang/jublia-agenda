@@ -69,7 +69,9 @@ export class AgendaService {
     return session;
   }
 
-  private static extractAgenda(agenda: any) {
+  private static extractAgenda(agenda: any): Agenda {
+    agenda = _.defaults(new Agenda(), agenda);
+    
     // Map extract session
     agenda.sessions = agenda.sessions.map(AgendaService.extractSession);
     
@@ -81,6 +83,7 @@ export class AgendaService {
     agenda.maxPopularity = _.max(popularityCount) || 0;
     agenda.minPopularity = _.min(popularityCount)|| 0;
     console.log(agenda);
+    
     return agenda;
   }
 

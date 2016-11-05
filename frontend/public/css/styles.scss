@@ -122,6 +122,12 @@ body {
             display: inline-block;
         }
     }
+
+    // We need to use dropdown menus inside modals, so their z-index
+    // need to be higher than the modal overlay's
+    .ng2-dropdown-menu-container {
+        z-index: $dropdown-menu-z-index;
+    }
 }
 
 .modal-container.narrow {

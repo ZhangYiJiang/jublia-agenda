@@ -12,7 +12,6 @@
     position: absolute;
 
     @media (min-width: 960px) {
-        -webkit-transition: left 0.1s; /* Safari */
         transition: left 0.1s; 
     }
        
@@ -32,6 +31,7 @@
         border-top: 2px solid lighten($color-accent, 15%);
         height: $height-per-15-min*4-2;
         width: 200px;
+        
         .quarter {
             border-bottom: 1px dashed lighten($color-accent,15%);
             height: $height-per-15-min - 1;
@@ -39,33 +39,28 @@
     }
 }
 
-.public .schedule {
-    //top: $main-content-top-offset + $public-extra-offset;
-    top: $top-bar-height;
-    //height: calc(100% - #{$main-content-top-offset + $public-extra-offset});
-    height: calc(100% - #{$top-bar-height});
-    @media (max-width: 960px) {
-        height: calc(100% - #{$bottom-bar-height+$top-bar-height});
-    }
-    margin-left: 20px;
-    width: 97%;
-}
-
-.analytics {
-    .schedule {
-        top: $main-content-top-offset + $analytics-extra-offset;
-        height: calc(100% - #{$main-content-top-offset + $analytics-extra-offset});
-        margin-left: 20px;
-        width: 97%;
-    }
-}
-
 .schedule {
-    margin-left: 250px;
-    position: fixed;
-    height: calc(100% - #{$main-content-top-offset});
-    width: calc(100% - 250px);
     top: $main-content-top-offset;
+    left: 250px;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+}
+
+.public .schedule, .analytics .schedule {
+    left: 0;
+}
+
+.public .schedule {
+    top: $top-bar-height;
+    
+    @media (max-width: 960px) {
+        bottom: $bottom-bar-height;
+    }
+}
+
+.analytics .schedule {
+    top: $main-content-top-offset + $analytics-extra-offset;
 }
 
 .board {
@@ -131,10 +126,6 @@
     left: 80px;
     color: white;
     background-color: $color-accent;
-}
-
-.ng2-dropdown-menu-container {
-    z-index: 10000;
 }
 
 .new-session.modal-container {

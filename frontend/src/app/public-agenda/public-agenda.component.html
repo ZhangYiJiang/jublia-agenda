@@ -1,13 +1,9 @@
-<!--
-<div *ngIf="!agenda">
-  Agenda is not public.
-</div>
--->
 <template #infoRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-  <div class="centered-header">
-    <h1>Event Information</h1>
-  </div>
   <div class="modal-container narrow">
+    <div class="page-header centered-header">
+      <h1>{{ agenda.name }}</h1>
+    </div>
+    
     <section class="agenda-info">
       <p *ngIf="agenda.website" class="agenda-subtitle">
         <a href="{{agenda.website | encodeURI}}" target="_blank">

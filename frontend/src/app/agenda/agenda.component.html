@@ -1,11 +1,11 @@
 <div *ngIf="!agenda">
-  Loading...
+  <loading-indicator></loading-indicator>
 </div>
 <div *ngIf="agenda">
   <div class="agenda-header">
     <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
     <div class="agenda-menu">
-      <button md-button class="secondary" *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">Update Attendees</button>
+      <button md-button class="secondary" *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">Notify Attendees</button>
       <button md-button [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
       <button md-button class="secondary" *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
       <button md-button class="secondary" (click)="showAgendaSettings()">
@@ -77,9 +77,10 @@
           <span class="share-link-url">{{publicUrl}}</span>
           <button type="button" ngIIclipboard 
                   [cbContent]="publicUrl" 
-                  (cbOnSuccess)="clipboardStatus = 'Link successfully copied'" 
-                  (cbOnError)="clipboardStatus = 'Press Ctrl+C to copy'">
-            <i class="fa fa-clipboard" title="Copy Link"></i>
+                  (cbOnSuccess)="clipboardStatus = 'Link copied'" 
+                  (cbOnError)="clipboardStatus = 'Press ' + platform.copyShortcut() + ' to copy'">
+            <i class="fa fa-clipboard"></i> 
+            <span class="sr-only">Copy link to clipboard</span>
           </button>
         </div>
         
@@ -102,9 +103,10 @@
       bookmarked the following events will get an email regarding the changes made. 
     </p>
     
-    <dirty-session #dirtySession [agenda]="agenda"></dirty-session>
+    <dirty-session [agenda]="agenda"></dirty-session>
     
-    <button md-button disableRipple type="button" class="primary" (click)="sendViewerUpdate(dialogRef)">Send Emails</button>
+    <button md-button disableRipple type="button" class="primary" 
+            (click)="sendViewerUpdate(dialogRef)">Send Emails</button>
     <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
   </div>
 </template>

@@ -1,24 +1,31 @@
 @import '../../../public/css/variables';
 
+.agenda-title, .chart {
+    position: fixed;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
+
 .agenda-title {
-	color: $color-primary;
-	font-size: $size-large-text;
-	margin: 20px;
-}
-button {
-	margin: 10px;
-    border: 2px solid $color-primary;	
-}
-.schedule {
-	margin-left: 20px;
-	width: 100%;
+    position: fixed;
+    top: $top-bar-height;
+    height: $middle-bar-height;
+    
+    h1 {
+        color: $color-primary;
+        font-size: $size-large-text;
+        margin: 20px;
+    }
+
+    button {
+        margin: 10px;
+        border: 2px solid $color-primary;
+    }
 }
 
 .chart {
     top: $main-content-top-offset;
     height: $analytics-extra-offset;
-    width: 97%;
-    margin: 0 20px;
-    position: fixed;
-    display: flex;
 }

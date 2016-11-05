@@ -1,5 +1,9 @@
 @import 'variables';
 
+html, body {
+    height: 100%;
+}
+
 h1, h2, h3, h4, h5, h6 {
     line-height: 1.15;
 }
@@ -14,6 +18,10 @@ body {
     color: #4A4A4A;
     font: 100% $body-font-family;
     margin: 0;
+}
+
+a, button {
+    transition: all .2s;
 }
 
 // Mimic md-input's label
@@ -114,22 +122,29 @@ body {
             display: inline-block;
         }
     }
-}
 
-.centered-header {
-    text-align: center;
-}
-
-iframe.map {
-    border: 0;
-    margin-top: 10px;
-    width: 100%;
+    // We need to use dropdown menus inside modals, so their z-index
+    // need to be higher than the modal overlay's
+    .ng2-dropdown-menu-container {
+        z-index: $dropdown-menu-z-index;
+    }
 }
 
 .modal-container.narrow {
     width: 460px;
+    
     @media (max-width: 960px) {
         width: 100%;
+    }
+}
+
+.modal-container .page-header {
+    h1, h2, h3 {
+        margin-top: 0;
+    }
+
+    .centered-header {
+        text-align: center;
     }
 }
 
@@ -138,19 +153,9 @@ iframe.map {
     padding: 2px;
 }
 
-.agenda-menu {
-    top: $top-bar-height;
-}
-
 .fixed {
     position: fixed;
     width: 100%;
-}
-.page-center {
-    position: absolute;
-    left: 50%;
-    top: 45%;
-    transform: translate(-50%, -50%);
 }
 
 .fa-spinner {
@@ -178,10 +183,6 @@ button[md-button],
         background-color: transparent;
         color: $color-primary;
     }
-}
-
-a, button {
-    transition: all .2s;
 }
 
 md-icon.delete {
@@ -271,12 +272,6 @@ input:-webkit-autofill {
     //pointer-events: none;
 }
 
-.center {
-    display: inline-block;
-    position: absolute;
-    transform: translateX(-50%) translateX(0px);
-}
-
 // slider toggle
 .md-slide-toggle-bar {
     background: #d3d3d3;
@@ -297,6 +292,21 @@ input:-webkit-autofill {
 
 .hide-no-interest .session-tile.not-interested {
     display: none;
+}
+
+.loading-overlay {
+    z-index: $loading-overlay-z-index;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding-bottom: 10vh;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
 
 .clearfix:after {

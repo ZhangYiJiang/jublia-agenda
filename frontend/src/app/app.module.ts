@@ -31,6 +31,7 @@ import { SpeakerService } from './speaker/speaker.service.ts';
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
 import { User } from './util/user.util.service';
+import { PlatformUtilService } from "./util/platform.util.service";
 
 import { OrderBy } from './pipes/orderby.pipe';
 import { Where } from './pipes/where.pipe';
@@ -49,6 +50,7 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ClipboardModule } from 'angular2-clipboard';
+import {LoadingIndicatorComponent} from "./loading-indicator/loading-indicator.component";
 
 @NgModule({
   imports: [
@@ -97,7 +99,8 @@ import { ClipboardModule } from 'angular2-clipboard';
     
     NdvEditComponent,
     NdvEditAreaComponent,
-    LineChartComponent
+    LineChartComponent,
+    LoadingIndicatorComponent,
   ],
   providers: [
     AgendaService,
@@ -110,6 +113,7 @@ import { ClipboardModule } from 'angular2-clipboard';
     DOMUtilService,
     HttpClient,
     JwtHelper,
+    PlatformUtilService,
     User
   ],
   bootstrap: [ AppComponent ]

@@ -7,7 +7,7 @@ import { AgendaService } from '../agenda/agenda.service';
 import { BoardComponent } from '../board/board.component';
 import { GlobalVariable } from '../globals';
 
-import {overlayConfigFactory, DialogRef} from 'angular2-modal';
+import { overlayConfigFactory, DialogRef } from 'angular2-modal';
 import { Overlay } from 'angular2-modal';
 
 import {
@@ -21,6 +21,7 @@ import {
   providers
 } from 'angular2-modal/plugins/vex';
 import over = require("lodash/over");
+import {PlatformUtilService} from "../util/platform.util.service";
 
 @Component({
   selector: 'agenda',
@@ -30,11 +31,13 @@ import over = require("lodash/over");
   ]
 })
 export class AgendaComponent implements OnInit{
-  constructor(
+  constructor (
     private route: ActivatedRoute,
     private router: Router,
     private agendaService: AgendaService,
-    public modal: Modal) { }
+    public platform: PlatformUtilService,
+    public modal: Modal,
+  ) { }
   
   agenda: Agenda;
   agendaId: number;

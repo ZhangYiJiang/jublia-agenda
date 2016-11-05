@@ -7,7 +7,7 @@
     
     @media (max-width: 960px) {
         font-size: 20px;
-        margin-left:0;
+        margin-left: 0;
     }
 }
 
@@ -18,31 +18,27 @@
     overflow: auto;
     width: calc(100% - 90px);
     
-    @media (max-width: 960px) {
-        text-align: center;
-        width: 100%;
-    }
-    
     .agenda-buttons{
         position: fixed;
         right: 10px;
         top: 10px;
-        @media (max-width: 960px) {
+    }
+       
+    @media (max-width: 960px) {
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+        
+        .agenda-buttons {
             top: calc(100% - #{$bottom-bar-height});
             margin-top: 10px;
             width: 100%;
             right: auto;
         }
     }
-       
-    @media (max-width: 960px) {
-        flex-direction: column;
-    }
 }
 
 .agenda-info {
-    flex: 1 auto;
-
     h1 {
         color: $color-primary;
         font-size: $size-large-text;
@@ -74,17 +70,18 @@
     }
 }
 
+iframe.map {
+    border: 0;
+    margin-top: 10px;
+    width: 100%;
+}
+
 .footer-buttons {
     margin-top: 20px;
 }
+
 .viewer {
     max-width: 420px;
-    //padding: 16px 24px;
-    //border: 1px solid $color-primary;
-    
-    @media (min-width: 1260px) {
-        width: 33.333vw;
-    }
     
     h2 {
         font-size: 18px;
@@ -101,6 +98,7 @@
 
 .viewer-register {
     display: flex;
+    align-items: flex-end;
     
     md-input {
         flex: 1 auto;

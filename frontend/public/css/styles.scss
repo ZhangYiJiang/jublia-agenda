@@ -20,6 +20,10 @@ body {
     margin: 0;
 }
 
+a, button {
+    transition: all .2s;
+}
+
 // Mimic md-input's label
 .field-label {
     display: block;
@@ -120,18 +124,9 @@ body {
     }
 }
 
-.centered-header {
-    text-align: center;
-}
-
-iframe.map {
-    border: 0;
-    margin-top: 10px;
-    width: 100%;
-}
-
 .modal-container.narrow {
     width: 460px;
+    
     @media (max-width: 960px) {
         width: 100%;
     }
@@ -140,6 +135,10 @@ iframe.map {
 .modal-container .page-header {
     h1, h2, h3 {
         margin-top: 0;
+    }
+
+    .centered-header {
+        text-align: center;
     }
 }
 
@@ -151,12 +150,6 @@ iframe.map {
 .fixed {
     position: fixed;
     width: 100%;
-}
-.page-center {
-    position: absolute;
-    left: 50%;
-    top: 45%;
-    transform: translate(-50%, -50%);
 }
 
 .fa-spinner {
@@ -184,10 +177,6 @@ button[md-button],
         background-color: transparent;
         color: $color-primary;
     }
-}
-
-a, button {
-    transition: all .2s;
 }
 
 md-icon.delete {
@@ -303,6 +292,7 @@ input:-webkit-autofill {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-bottom: 10vh;
     height: 100%;
 }
 

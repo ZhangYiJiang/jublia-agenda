@@ -55,6 +55,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   user = this.dashBoardService.currentUser;
   agenda: Agenda;
   email: string;
+  mobile: string;
   agendaId: number;
   token : string;
   bookmarkError: string;
@@ -121,15 +122,15 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   }
 
   createToken(dialogRef: DialogRef<any>) {
-    this.publicAgendaService.createToken(this.agendaId, this.email).subscribe(
+    this.publicAgendaService.createToken(this.agendaId, this.email, this.mobile).subscribe(
       (data: any) => {
         this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token])
         dialogRef.close();
       },
       (error: any) => {
         console.log(error)
-        if(error.status === 400) {
-          this.bookmarkError = 'You have already created a personalised agenda. Please check your email.';
+        if(error.email) {
+          this.bookmarkError = error.email;
         }
       }
     );

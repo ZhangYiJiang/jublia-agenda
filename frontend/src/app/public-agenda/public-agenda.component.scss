@@ -40,10 +40,16 @@
 
 .bookmarkForm {
     flex-direction: column;
+    .form-error-hint {
+        line-height: 1;
+        padding: 0px;
+    }
+
 }
 
 .bookmarkInput {
     md-input {
+        margin: 20px 20px 0 0 !important;
         width:100%;
     }
 }

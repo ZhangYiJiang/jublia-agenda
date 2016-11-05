@@ -59,6 +59,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   agendaId: number;
   token : string;
   bookmarkError: string;
+  mobileError: string;
   
   @ViewChild('infoRef') public infoRef: TemplateRef<any>;
   @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
@@ -114,6 +115,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
         this.email = data.email;
         this.interestedSessionIds = data.sessions;
         this.token = token;
+        this.mobile = data.mobile;
       },
       (error: any) => {
         this.location.go('/public/agenda/'+this.agendaId);
@@ -131,6 +133,9 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
         console.log(error)
         if(error.email) {
           this.bookmarkError = error.email;
+        }
+        if(error.mobile) {
+          this.mobileError = error.mobile;
         }
       }
     );

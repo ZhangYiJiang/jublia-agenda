@@ -29,7 +29,7 @@ export class HttpClient {
   private shouldRefreshToken(): boolean {
     let token = localStorage.getItem(this.TOKEN_NAME);
     let expireOn = this.jwtHelper.getTokenExpirationDate(token);
-    console.log('token expire in ' + moment(expireOn).diff(moment(),'hours',true) +' hrs');
+    // console.log('token expire in ' + moment(expireOn).diff(moment(),'hours',true) +' hrs');
     if (!moment().isBefore(expireOn)){
       //expired token
       //can't refresh, send user to login

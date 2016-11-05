@@ -632,7 +632,6 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.boardService.createSession(this.agenda.id, newSession).subscribe(
       data => { 
         this.formMsg = 'New session created!';
-        console.log(data);
         this.allSessions.push(data);
         if(!this.addingSessionWithStart){
         this.pendingSessions.push(data);

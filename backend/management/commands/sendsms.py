@@ -21,7 +21,7 @@ class Timestamp(Func):
         return super().as_sql(
             compiler, connection,
             function='EXTRACT',
-            template='%(function)s(EXTRACT FROM %(expressions)s)',
+            template='%(function)s(EPOCH FROM %(expressions)s)',
         )
 
     def as_mysql(self, compiler, connection):

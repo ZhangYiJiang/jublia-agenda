@@ -1,13 +1,13 @@
 import random
 from datetime import timedelta
 
-from django.utils.datetime_safe import date, datetime
+from django.utils import timezone
 from faker import Faker
 
 fake = Faker()
 
-today = date.today()
-now = datetime.now()
+today = timezone.now().date()
+now = timezone.now()
 later = now + timedelta(hours=2)
 next_month = now + timedelta(days=30)
 
@@ -117,13 +117,16 @@ def venue(data=None, full=False):
     return {**venue, **data}
 
 
-def viewer(data=None):
+def viewer(data=None, full=False):
     if data is None:
         data = {}
 
     viewer = {
         'email': fake.email(),
     }
+
+    if full:
+        viewer['mobile'] = fake.phone_number()
 
     return {**viewer, **data}
 

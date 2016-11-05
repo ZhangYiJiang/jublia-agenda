@@ -28,6 +28,13 @@ class ViewerCreateTest(BaseAPITestCase):
         email = mail.outbox[-1]
         self.assertIn(viewer.link(), email.body)
 
+    def test_create_full(self):
+        viewer_data = factory.viewer(full=True)
+        response = self.client.post(self.url, viewer_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        viewer = Viewer.objects.get(email=viewer_data['email'])
+        self.assertEqual(viewer_data['mobile'], viewer.mobile)
+
     def test_double_create(self):
         viewer_data = factory.viewer()
         first_response = self.client.post(self.url, viewer_data)

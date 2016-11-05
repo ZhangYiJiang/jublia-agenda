@@ -305,8 +305,8 @@ export class SessionComponent implements OnInit {
       }
       
       // Stop click events from the dropdown menu created by the tag inputs from propagating 
-      // to document body, which causes weird issues with the modal widget
-      // We're using setImmediate here because we need to wait for the widgets in the modal to be 
+      // to document body, which causes weird issues with the modal widget. We're using 
+      // setTimeout here because we need to wait for the widgets in the modal to be 
       // rendered first
       setTimeout(() => {
         _.each(document.getElementsByTagName("ng2-dropdown-menu"), el => {
@@ -322,6 +322,7 @@ export class SessionComponent implements OnInit {
 
         // Clean up dropdown menus that were left behind by the widget 
         // see https://github.com/Gbuomprisco/ng2-material-dropdown/issues/9
+        // TODO: Remove this once the patch from the above issue has been merged into the ng2-tag-input package 
         // querySelectorAll uses a frozen NodeList
         _.each(document.querySelectorAll("ng2-dropdown-menu"), el => {
           el.parentNode.removeChild(el);

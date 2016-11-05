@@ -23,7 +23,12 @@
 <template id="session.id" #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container session-modal">
     <div class="page-header">
-      <button  md-button disableRipple="true" class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
+      <button md-button disableRipple 
+              *ngIf="isPublic"
+              class="interestBtn" 
+              [class.primary]="interested" 
+              [class.secondary]="!interested" 
+              (click)="updateInterest()">
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
@@ -158,7 +163,7 @@
             <i class="fa fa-fire fa-fw" aria-hidden="true"></i>
           </div>
           <div>
-            <p *ngIf="!agenda.published">Once this event has been published, you can see how many people have 
+            <p *ngIf="!agenda.published" class="session-info-secondary">Once this event has been published, you can see how many people have 
               bookmarked this session here</p>
             <p *ngIf="agenda.published">
               {{ session.popularity }} {{ session.popularity === 1 ? 'Bookmark' : 'Bookmarks' }}</p>
@@ -185,7 +190,11 @@
     </div><!-- /.session-body -->
     
     <div class="session-footer">
-      <button md-button disableRipple class="interestBtn" [class.primary]="interested" [class.secondary]="!interested"
+      <button md-button disableRipple
+              *ngIf="isPublic"
+              class="interestBtn"
+              [class.primary]="interested"
+              [class.secondary]="!interested"
               (click)="updateInterest()">
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>

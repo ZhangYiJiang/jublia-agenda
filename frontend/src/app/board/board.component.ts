@@ -1,4 +1,5 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, ViewChildren,Query,QueryList,TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
+import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild,
+ ViewChildren,Query,QueryList,TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
@@ -53,6 +54,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() token: string;
   @Input() interestedSessionIds: number[];
   @Input() analyticsData: {};
+
 
   offsetDate: Date;
   eventDates: Date[];

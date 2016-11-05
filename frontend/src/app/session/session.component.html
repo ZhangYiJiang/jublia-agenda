@@ -23,7 +23,7 @@
 <template id="session.id" #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container session-modal">
     <div class="page-header">
-      <button *ngIf="token" md-button disableRipple="true" class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
+      <button  md-button disableRipple="true" class="interestBtn" [class.primary]="interested" [class.secondary]="!interested" (click)="updateInterest()">
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
@@ -186,7 +186,7 @@
     
     <div class="session-footer">
       <button md-button disableRipple class="interestBtn" [class.primary]="interested" [class.secondary]="!interested"
-              (click)="updateInterest()" *ngIf="token">
+              (click)="updateInterest()">
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 

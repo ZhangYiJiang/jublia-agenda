@@ -3,6 +3,7 @@ import { Response } from '@angular/http';
 import { HttpClient } from '../util/http.util.service';
 import { GlobalVariable } from '../globals';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 export interface sessionRequest {
   name: string, 
@@ -18,6 +19,15 @@ export interface sessionRequest {
 
 @Injectable()
 export class BoardService {
+
+  isBookmarkOpen = false;
+
+  private openBookmarkModalSource = new Subject<boolean>();
+  openBookmarkModal$ = this.openBookmarkModalSource.asObservable();
+
+  sendOpenBookmark(){
+    this.openBookmarkModalSource.next(true);
+  }
 
   constructor (private httpClient: HttpClient) {
   }

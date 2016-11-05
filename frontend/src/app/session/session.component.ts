@@ -86,9 +86,17 @@ export class SessionComponent implements OnInit {
   }
 
   updateInterest() {
-    this.interested = !this.interested;
-    this.updateInterestButtonText();
-    this.onSessionInterestEdited.emit([this.session.id, this.interested]);
+    if (this.token){
+      this.interested = !this.interested;
+      this.updateInterestButtonText();
+      this.onSessionInterestEdited.emit([this.session.id, this.interested]);
+    } else {
+      this.sendOpenBookmarkModalRqt();
+    }
+  }
+
+  sendOpenBookmarkModalRqt(){
+    this.boardService.sendOpenBookmark();
   }
 
   adjustSessionDuration(mins: number) {
@@ -195,9 +203,9 @@ export class SessionComponent implements OnInit {
   }
 
   onVenueAdded(newVenue: Venue) {
-    this.onVenueAdded2.emit(newVenue);
+    //this.onVenueAdded2.emit(newVenue);
     this.session.venue = newVenue.id;
-    this.onSessionEdited.emit(this.session);
+   // this.onSessionEdited.emit(this.session);
     if (!this.agenda.session_venues) {
       this.agenda.session_venues = [];
     }

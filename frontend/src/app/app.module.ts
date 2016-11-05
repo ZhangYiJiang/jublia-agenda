@@ -50,6 +50,7 @@ import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ClipboardModule } from 'angular2-clipboard';
+import {LoadingIndicatorComponent} from "./loading-indicator/loading-indicator.component";
 
 @NgModule({
   imports: [
@@ -97,7 +98,8 @@ import { ClipboardModule } from 'angular2-clipboard';
     
     NdvEditComponent,
     NdvEditAreaComponent,
-    LineChartComponent
+    LineChartComponent,
+    LoadingIndicatorComponent,
   ],
   providers: [
     AgendaService,

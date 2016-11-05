@@ -14,20 +14,20 @@ class Timestamp(Func):
         return super().as_sql(
             compiler, connection,
             function='CAST',
-            template='%(function)s(strftime("%%%%s", %(expressions)s) AS INT)',
+            template='%(function)s(strftime("%%%%s", %(expressions)s) AS NUMERIC)',
         )
 
     def as_postgres(self, compiler, connection):
         return super().as_sql(
             compiler, connection,
             function='EXTRACT',
-            template='%(function)s(epoch from %(expressions)s)',
+            template='%(function)s(EXTRACT FROM %(expressions)s)',
         )
 
     def as_mysql(self, compiler, connection):
         return super().as_sql(
             compiler, connection,
-            function='',
+            function='CAST',
             template='%(function)s(STR_TO_DATE(%(expressions)s, "%%%%sM %%%%sd %%%%sY %%%%sh:%%%%si%%%%sp"))',
         )
 

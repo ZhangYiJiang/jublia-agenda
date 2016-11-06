@@ -72,12 +72,30 @@
     }
     
     .bottom-buttons {
-        margin-top: 20px;
         display: flex;
         justify-content: center;
         
         button {
             margin: 0 5px;
+        }
+    }
+}
+
+.edit-agenda {
+    h2 {
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+    
+    p {
+        margin: 0;
+    }
+    
+    .two-col {
+        display: flex;
+        
+        > div {
+            flex: 1 50%;
         }
     }
 }

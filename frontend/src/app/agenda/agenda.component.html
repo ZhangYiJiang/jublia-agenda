@@ -5,10 +5,14 @@
   <div class="agenda-header">
     <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
     <div class="agenda-menu">
-      <button md-button class="secondary" *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">Notify Attendees</button>
-      <button md-button [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
-      <button md-button class="secondary" *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
-      <button md-button class="secondary" (click)="showAgendaSettings()">
+      <button md-button disableRipple class="secondary" 
+              *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">Notify Attendees</button>
+      <button md-button disableRipple 
+              [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
+      <button md-button disableRipple class="secondary" 
+              *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
+      <button md-button disableRipple class="secondary" 
+              (click)="showAgendaSettings()">
         <i class="fa fa-cog" aria-hidden="true"></i> Event Settings
       </button>
     </div>
@@ -19,28 +23,39 @@
 
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container edit-agenda">
-    <div class="page-header">
+    <div class="modal-header">
       <h1>Event Settings</h1>
     </div>
     <div class="jumbotron">
-      <h2>Event Name:</h2>
+      <h2>Event Name</h2>
       <p class="full-width">
         <ndv-edit [title]="'name'" [placeholder]="agenda.name" (onSave)="updateAgenda($event)" 
                   [permission]="true"></ndv-edit>
       </p>
       
-      <h2>Description:</h2>
+      <h2>Description</h2>
       <p class="full-width">
         <ndv-area [title]="'description'" [placeholder]="agenda.description" (onSave)="updateAgenda($event)" 
                   [permission]="true"></ndv-area>
       </p>
       
-      <h2>Duration</h2>
-      <p>
-        <ndv-edit [title]="'duration'" [placeholder]="agenda.duration" (onSave)="updateAgenda($event)" 
-                  [permission]="true" [regex]="'^[1-9]$'" 
-                  [error]="'Please enter a number between 1 to 9.'" class="small-input"></ndv-edit> days
-      </p>
+      <div class="two-col">
+        <div>
+          <h2>Duration</h2>
+          <p>
+            <ndv-edit [title]="'duration'" [placeholder]="agenda.duration" (onSave)="updateAgenda($event)" 
+                      [permission]="true" [regex]="'^[1-9]$'" 
+                      [error]="'Please enter a number between 1 to 9.'" class="small-input"></ndv-edit> days
+          </p>
+        </div>
+        <div>
+          <h2>Date</h2>
+          <p>
+            <ndv-date [title]="'start_at'" [placeholder]="agenda.start_at" (onSave)="updateAgenda($event)"
+                      [permission]="true"></ndv-date>
+          </p>
+        </div>
+      </div>
       
       <h2>Location</h2>
       <p class="full-width">
@@ -56,7 +71,9 @@
 
     </div>
     
-    <button md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
+    <div class="modal-footer">
+      <button md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
+    </div>
   </div>
 </template>
 
@@ -86,7 +103,7 @@
         
         <p class="clipboard-status" *ngIf="clipboardStatus">{{ clipboardStatus }}</p>
         
-        <div class="bottom-buttons">
+        <div class="modal-footer bottom-buttons">
           <button md-button class="primary" (click)="dialogRef.close(true)">Ok</button>
           <button md-button class="secondary" (click)="setPublishedStatus(false)">Unpublish</button>
         </div>
@@ -96,7 +113,7 @@
 
 <template #dirtyRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="dirty-sessions modal-container">
-    <div class="page-header">
+    <div class="modal-header">
       <h1>Notify Viewers of Session Updates</h1>
     </div>
     <p>You have made some changes to the sessions. The attendees who have 

@@ -48,7 +48,7 @@
 
 <template #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="new-session modal-container">
-    <div class="page-header">
+    <div class="modal-header">
       <h1>Add New Session</h1>
     </div>
     <h3 *ngIf="addingSessionWithStart">{{getDisplayedTime(sessionStartTime,sessionForm.value.duration)}} </h3>

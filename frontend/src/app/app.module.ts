@@ -47,10 +47,11 @@ import { JwtHelper } from 'angular2-jwt';
 
 import { NdvEditComponent } from './ndv/ndv.edit.component.ts';
 import { NdvEditAreaComponent } from './ndv/ndv.edit.area.component.ts';
+import { NdvEditDateComponent } from "./ndv/ndv.edit.date.component";
+import { LoadingIndicatorComponent } from "./loading-indicator/loading-indicator.component";
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ClipboardModule } from 'angular2-clipboard';
-import {LoadingIndicatorComponent} from "./loading-indicator/loading-indicator.component";
 
 @NgModule({
   imports: [
@@ -99,6 +100,7 @@ import {LoadingIndicatorComponent} from "./loading-indicator/loading-indicator.c
     
     NdvEditComponent,
     NdvEditAreaComponent,
+    NdvEditDateComponent,
     LineChartComponent,
     LoadingIndicatorComponent,
   ],

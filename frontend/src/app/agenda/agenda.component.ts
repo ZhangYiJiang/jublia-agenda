@@ -72,18 +72,21 @@ export class AgendaComponent implements OnInit{
           agenda => this.agenda = agenda,
           error => console.log(error)
         );
-    } else if (typeof event.duration === 'string') {
-      event.duration = +event.duration;
-      if(this.isInt(event.duration)) {
-        this.agendaService.updateAgenda(this.agenda.id, event)
-          .subscribe(
-            agenda => {
-              this.agenda = agenda;
-              this.myBoard.refreshAgenda(agenda);
-            },
-            error => console.log(error)
-          );
+    } else if (typeof event.duration === 'string' || 
+               typeof event.start_at === 'string'
+    ) {
+      if (event.duration) {
+        event.duration = +event.duration;
       }
+      
+      this.agendaService.updateAgenda(this.agenda.id, event)
+        .subscribe(
+          agenda => {
+            this.agenda = agenda;
+            this.myBoard.refreshAgenda(agenda);
+          },
+          error => console.log(error)
+        );
     }
   }
 

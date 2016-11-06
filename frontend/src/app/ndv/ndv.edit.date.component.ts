@@ -1,27 +1,64 @@
-﻿import { Component, Input, EventEmitter, ElementRef } from '@angular/core';
+﻿import {Component, Input, EventEmitter, ElementRef, HostListener} from '@angular/core';
+import * as moment from "moment";
 
 
 @Component({
     selector: 'ndv-date',
     styles: [`
-       #ndv-ic {
-        margin-left: 10px;
-        color: #d9d9d9;
+        :host {
+            position: relative;
         }
+        
+        .ndv-ic {
+            position: absolute;
+            top: 0;
+            left: -1px;
+            transform: translateY(-100%);
+            padding: 3px 6px 3px 4px;
+            
+            background: #888;
+            color: #fff;
+            font-size: 13px;
+            line-height: 1;
+            font-weight: normal;
+            white-space: nowrap;
+            
+            display: none;
+        }
+        
+        .ndv-comp:hover .ndv-ic {
+            display: block;
+        }
+
         .ndv-comp {
-            padding:6px;
+            padding: 6px;
             border-radius: 3px;
+            border: 1px solid #ccc;
+            min-width: 50px;
+            display: inline-block;
+            position: relative;
         }
+        
+        .ndv-comp:hover {
+            border-radius: 0 3px 3px 3px;
+        }
+        
         .active-ndv {
             background-color: #f0f0f0;
             border: 1px solid #d9d9d9;
         }
+        
+        form {
+            display: inline;
+        }
+        
         input {
             border-radius: 5px;
             box-shadow: none;
             border: 1px solid #dedede;
             min-width: 5px;
         }
+        
         .ndv-buttons {
             background-color: #f0f0f0;
             border: 1px solid #ccc;
@@ -31,36 +68,33 @@
             outline: none;
             padding: 3px;
             position: absolute;
-            margin-left: 6px;
+            width: 80px;
+            left: 6px;
+            top: 100%;
             z-index: 1;
+            font-size: 1.1rem;
+            line-height: 1.5rem;
         }
+        
         .ndv-comp:hover {
-            border: 1px solid grey;
-        }
-        .ndv-comp:hover > ndv-ic {
-            display:block;
-        }
-
-        .ndv-save {
-            margin-right:3px;
-        }
-        .ndv-active {
-            background-color: #f0f0f0;
-            border: 1px solid #d9d9d9;
+            border-color: #999;
         }
     `],
-    template: `<span *ngIf="!permission">{{ddate}}</span><span *ngIf="permission" class='ndv-comp' [ngClass]="{'ndv-active':show}">
-                    <input *ngIf='show' type='date' [(ngModel)]='ddate' />
-                    <i id='ndv-ic' *ngIf='!show'>✎</i>
-                    <span *ngIf='!show' (click)='makeEditable()'>{{ddate || '-Empty Field-'}}</span>
-                </span>
-                <div class='ndv-buttons' *ngIf='show'>
-                    <button class='btn-x-sm' (click)='callSave()'><i>✔</i></button>
-                    <button class='btn-x-sm' (click)='cancelEditable()'><i>✖</i></button>
-                </div>`,
+    template: `<span *ngIf="!permission">{{date}}</span>
+               <span *ngIf="permission" class='ndv-comp' (click)='makeEditable()' [ngClass]="{'ndv-active':show}">
+                   <form (submit)="callSave($event)">
+                       <input *ngIf='show' type='date' [(ngModel)]='date' [ngModelOptions]="{standalone: true}" />
+                       <span class='ndv-ic' *ngIf='!show'>✎ Edit</span>
+                       <span *ngIf='!show'>{{date || 'Empty'}}</span>
+                   
+                       <span class='ndv-buttons' *ngIf='show'>
+                           <a class='button primary button-symbol' (click)='callSave($event)'><i class="fa fa-check fa-fw" aria-hidden="true"></i></a>
+                           <a class='button secondary button-symbol' (click)='callCancel($event)'><i class="fa fa-times fa-fw" aria-hidden="true"></i></a>
+                       </span>
+                   </form>
+               </span>`,
     host: {
         "(document: click)": "compareEvent($event)",
-        "(click)": "trackEvent($event)"
     },
     outputs: ['save : onSave']
 })
@@ -69,8 +103,9 @@ export class NdvEditDateComponent {
     @Input('placeholder') holder: any;
     @Input('title') fieldName: any;
     @Input() permission = true;
-    ddate: any;
-    originalddate: any;
+    date: any;
+    originalDate: any;
+    editedDate: any;
     tracker: any;
     el: ElementRef;
     show = false;
@@ -81,16 +116,17 @@ export class NdvEditDateComponent {
     }
     
     ngOnInit() {
-        this.holder = new Date(this.holder);
-        var dy = ("0" + this.holder.getDate()).slice(-2);
-        var month = ("0" + this.holder.getMonth() + 1).slice(-2);
-        var year = this.holder.getFullYear();
-        this.ddate = '' + year + '-' + month + '-' + dy;
-        this.originalddate = this.ddate;    //Saves a copy of the original field info.
+        this.date = moment(this.holder).format('YYYY-MM-DD');
+        this.originalDate = this.date;    //Saves a copy of the original field info.
     }
 
     makeEditable() {
         if (this.show == false) {
+            // Restore the user's last saved text, if possible
+            if (this.editedDate) {
+                this.date = this.editedDate;
+            }
+
             this.show = true;
         }
     }
@@ -101,22 +137,42 @@ export class NdvEditDateComponent {
         }
     }
 
-    trackEvent(newHostEvent: any) {
+    @HostListener('click', ['$event']) trackEvent(newHostEvent: any) {
         this.tracker = newHostEvent;
     }
 
-    cancelEditable() {
+    cancelEditable(resetInput: boolean = false) {
+        // Save a copy of the text the user was editing
+        if (!resetInput) {
+            this.editedDate = this.date;
+        } else {
+            this.editedDate = null;
+        }
+
         this.show = false;
-        this.ddate = this.originalddate;
+        this.date = this.originalDate;
     }
 
-    callSave() {
-        var data = {};  //BUILD OBJ FOR EXPORT.
-        data["" + this.fieldName] = this.ddate;
-        var oldddate = this.ddate;
-        setTimeout(() => { this.originalddate = oldddate; this.ddate = oldddate }, 0);  //Sets the field with the new ddate;
+    callCancel(evt: any) {
+        this.cancelEditable(true);
+        evt.stopPropagation();
+    }
+
+    callSave(evt: any) {
+        const date = this.date;
+        const data = {};  //BUILD OBJ FOR EXPORT.
+        data["" + this.fieldName] = date;
+
+        setTimeout(() => {
+            this.editedDate = null;
+            this.originalDate = date;
+            this.date = date;
+        }, 0);  //Sets the field with the new text;
+
         this.save.emit(data);
         this.show = false;
-        
+
+        evt.stopPropagation();
+        evt.preventDefault();
     }
 }

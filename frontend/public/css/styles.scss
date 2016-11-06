@@ -156,21 +156,28 @@ body {
     }
 }
 
-.modal-container.narrow {
-    width: 460px;
+.modal-container {
+    &.narrow {
+        width: 460px;
+
+        @media (max-width: 960px) {
+            width: 100%;
+        }
+    }
+
+    .modal-header {
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .centered-header {
+            text-align: center;
+        }
+    }
     
-    @media (max-width: 960px) {
-        width: 100%;
-    }
-}
-
-.modal-container .page-header {
-    h1, h2, h3 {
-        margin-top: 0;
-    }
-
-    .centered-header {
-        text-align: center;
+    .modal-footer {
+        margin-top: 20px;
     }
 }
 

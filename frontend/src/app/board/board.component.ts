@@ -463,15 +463,17 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eventVenuesName = this.getEventVenuesName();
     
     this.allSessions = this.agenda.sessions;
-    
-    const partitioned = _.partition(this.allSessions, (o:Session) => o.hasOwnProperty('start_at'));
-    this.pendingSessions = partitioned[1];
-    this.nonPendingSessions = partitioned[0];
+    [this.nonPendingSessions, this.pendingSessions] = _.partition(this.allSessions, 
+      (o:Session) => o.hasOwnProperty('start_at'));
   }
 
   refreshAgenda(newAgenda: Agenda) {
     this.agenda = newAgenda;
     this.eventDates = this.getEventDates();
+
+    this.allSessions = this.agenda.sessions;
+    [this.nonPendingSessions, this.pendingSessions] = _.partition(this.allSessions,
+      (o:Session) => o.hasOwnProperty('start_at'));
   }
 
   createSessionModal() {

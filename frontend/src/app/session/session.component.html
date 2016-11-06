@@ -53,13 +53,13 @@
         <template [ngIf]="!isPublic || (session.speakers && session.speakers.length)">
           <h2>
             <i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers
-            <speaker-form *ngIf="!isPublic" [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event)"></speaker-form>
           </h2>
           <div *ngIf="!isPublic">
             <select [ngModel]="selectedSpeaker" (ngModelChange)="addSessionSpeaker($event.id)">
               <option value="" disabled selected hidden>Select Speakers</option>
               <option [ngValue]="speaker" *ngFor="let speaker of availableSpeakers">{{ speaker.name }}</option>
             </select>
+            <speaker-form [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event)"></speaker-form>
           </div>
           <div *ngIf="session.speakers">
             <div class="speaker-card" *ngFor="let speakerId of session.speakers">

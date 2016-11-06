@@ -12,7 +12,7 @@
     position: absolute;
 
     @media (min-width: 960px) {
-        transition: left 0.1s; 
+        // transition: left 0.1s; 
     }
        
     //margin-left: 245px;
@@ -103,11 +103,7 @@
     height: 30px;
     line-height: 30px;
     z-index: 15;
-    top:0;
-    @media (min-width: 960px) {
-        -webkit-transition: top 0.1s; 
-        transition: top 0.1s;
-    }
+    top: 0;
 }
 
 .not-dragging .quarter {

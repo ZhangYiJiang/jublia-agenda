@@ -1,5 +1,5 @@
 import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild,
- ViewChildren,Query,QueryList,TemplateRef, Renderer, ElementRef, AfterViewInit } from '@angular/core';
+ ViewChildren, QueryList,TemplateRef, Renderer, ElementRef } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
@@ -43,10 +43,14 @@ import {
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BoardComponent implements OnInit, OnDestroy {
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChildren('absCol') absCol: QueryList<AbsoluteColumnComponent>;
    // absCol: QueryList<AbsoluteColumnComponent>;
+  
+  @ViewChild('scheduleRef') scheduleRef: ElementRef;
+  scheduleLeft: string;
+  scheduleTop: string;
 
   @Input() agenda: Agenda;
   @Input() isPublic: boolean;
@@ -158,16 +162,9 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-
-  ngAfterViewInit() {
-    $('.schedule').on('scroll', this.keepfix);
-  }
-
   keepfix() {
-    var $w = $('.schedule');
-    var nowTop = $w.scrollTop();
-    $('.position-fixed-x').css('left', $w.scrollLeft());
-    $('.position-fixed-y').css('top', $w.scrollTop());   
+    this.scheduleTop = this.scheduleRef.nativeElement.scrollTop + 'px';
+    this.scheduleLeft = this.scheduleRef.nativeElement.scrollLeft + 'px';
   }
 
   ngOnDestroy() {

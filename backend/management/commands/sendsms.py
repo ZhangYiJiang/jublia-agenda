@@ -9,6 +9,11 @@ from backend.helper import get_twilio_client
 from backend.models import Session
 
 
+# Check for sessions 15-20 minutes before their starting time
+NOTIFY_START = 15
+NOTIFY_END = 20
+
+
 class Timestamp(Func):
     def as_sqlite(self, compiler, connection):
         return super().as_sql(
@@ -34,12 +39,14 @@ class Timestamp(Func):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        notify_period = timezone.now() - timedelta(minutes=5)
+        notify_start = timezone.now() + timedelta(minutes=NOTIFY_START)
+        notify_end = timezone.now() + timedelta(minutes=NOTIFY_END)
         start_time = Timestamp('agenda__start_at', output_field=models.IntegerField()) + (F('start_at') * 60)
         sessions = Session.objects.annotate(start_time=start_time).filter(
             is_sms_sent=False,
             agenda__published=True,
-            start_time__gte=notify_period.timestamp(),
+            start_time__gte=notify_start.timestamp(),
+            start_time__lte=notify_end.timestamp(),
         ).prefetch_related('viewer_set').all()
 
         client = get_twilio_client()

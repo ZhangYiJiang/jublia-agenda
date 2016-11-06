@@ -1,7 +1,7 @@
 from django.db.transaction import atomic
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
-from rest_framework.generics import RetrieveAPIView, get_object_or_404
+from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -27,7 +27,7 @@ def get_viewer(agenda_id, token):
     return get_object_or_404(Viewer, agenda=agenda_id, token=token)
 
 
-class ViewerSessionList(AgendaContextMixin, RetrieveAPIView):
+class ViewerSessionList(AgendaContextMixin, RetrieveUpdateAPIView):
     serializer_class = ViewerSerializer
     permission_classes = (AllowAny,)
 

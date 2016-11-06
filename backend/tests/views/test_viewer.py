@@ -145,3 +145,20 @@ class ViewerListTest(BaseAPITestCase):
             response = self.client.get(self.url)
             self.assertEqual(i+1, len(response.data['sessions']))
             self.assertIn(session.pk, response.data['sessions'])
+
+    def test_patch(self):
+        viewer_data = factory.viewer(full=True)
+        response = self.client.patch(self.url, viewer_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(viewer_data['mobile'], response.data['mobile'])
+        self.assertEqual(viewer_data['email'], response.data['email'])
+
+    def test_put(self):
+        viewer_data = factory.viewer(full=True)
+        Registration.objects.create(session=self.sessions[0], viewer=self.viewer)
+        response = self.client.put(self.url, viewer_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.viewer.refresh_from_db()
+        self.assertEqual(viewer_data['mobile'], self.viewer.mobile)
+        self.assertEqual(viewer_data['email'], self.viewer.email)
+        self.assertTrue(self.viewer.sessions.count())

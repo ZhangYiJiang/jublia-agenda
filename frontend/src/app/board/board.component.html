@@ -106,7 +106,9 @@
                      [autocomplete]="true"
                      [showDropdownIfEmpty]="true"
                      (onTextChange)="onTagTextChange($event)"></tag-input>
-          <button class="secondary" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
+          <button class="secondary" md-button disableRipple
+                  [disabled]="isNewTagBtnDisabled" 
+                  (click)="addTagFromInput()">{{tagBtnText}}</button>
         </div>
         
         <div class="footer-buttons clearfix">

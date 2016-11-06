@@ -58,25 +58,18 @@ a, button {
 // themed widget's themes 
 body {
     // Reset some of tag-input's styles to match ours
-    .tag-input.default {
+    .ng2-tag-input.default {
         border-bottom: 1px solid #444;
         padding: 0;
     }
-
-    .default.ng2-tag-input--focused {
-        border-bottom: 2px solid #efefef;
-    }
     
-    .public .tag-input.default {
+    .public .ng2-tag-input.default {
         border-bottom: 0;
     }
 
-    .default.tag:not(.tag--readonly):focus {
-        background: $color-secondary;
-    }
-
-    .tag-input__text-input {
+    .ng2-tag-input__text-input {
         padding: 0;
+        margin-bottom: 2px;
         background: none;
     }
 
@@ -88,16 +81,39 @@ body {
     .md-input-placeholder.md-float.md-focused {
         color: $color-secondary;
     }
+
+    .ng2-tag-input.default .ng2-tags-container {
+        align-items: center;
+        margin-bottom: -2px;
+    }
     
-    .tag-input.default .tags-container .tag {
+    .ng2-tag-input.default .ng2-tags-container .ng2-tag {
         background: $color-secondary;
-        line-height: 30px;
+        height: auto;
+        line-height: 1;
+        font-size: 14px;
+        align-items: center;
+        padding: 6px 8px 6px 12px;
+        margin: 0 4px 2px 0;
         
         &:hover:not(.tag--readonly),
         &:focus:not(.tag--readonly) {
             background: $color-primary;
             color: #fff;
         }
+        
+        delete-icon {
+            height: 16px;
+            
+            path {
+                transition: fill .15s;
+            }
+        }
+
+        &:hover path {
+            fill: #fff;
+        }
+        
     }
     
     // Override .md-hint to fix its positioning on forms 
@@ -193,7 +209,7 @@ button[md-button],
         background-color: transparent;
         color: $color-primary;
         &[disabled] {
-            cursor: disabled;
+            cursor: not-allowed;
             border: 2px solid gray;
             color: gray;
         }

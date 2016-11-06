@@ -1,18 +1,13 @@
 @import '../../../public/css/variables';
+
+.open-modal {
+}
+
 .new-speaker.modal-container {
     width: 500px;
-    padding: 20px;
     
-    h1 {
-        margin: 0;
-    }
-
     md-input {
         width: 100%;
-    }
-
-    md-hint {
-        bottom: -1em;
     }
     
     .footer-buttons {

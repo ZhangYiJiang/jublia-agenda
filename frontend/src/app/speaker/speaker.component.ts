@@ -1,27 +1,15 @@
-import { Input, Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
-import * as _ from 'lodash';
+import { Input, Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
 
 import { Agenda } from '../agenda/agenda';
 import { Speaker } from './speaker';
 import { SpeakerService } from './speaker.service';
-import { GlobalVariable } from '../globals';
 
-import { DOMUtilService } from '../util/dom.util.service';
-import { overlayConfigFactory } from 'angular2-modal';
-import { Overlay } from 'angular2-modal';
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
-import * as $ from 'jquery';
+import {overlayConfigFactory, DialogRef} from 'angular2-modal';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 import {
-  VEXBuiltInThemes,
   Modal,
-  DialogPreset,
-  DialogFormModal,
-  DialogPresetBuilder,
   VEXModalContext,
-  VexModalModule,
-  providers
 } from 'angular2-modal/plugins/vex';
 
 @Component({
@@ -49,8 +37,7 @@ export class SpeakerComponent implements OnInit {
   speakerForm: FormGroup;
   formErrors: any;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   createSpeakerModal() {
     this.formErrors = { name: "", company: "", position: "", profile: "", email: "", phone_number: "", company_description: "", company_url: "" };
@@ -77,20 +64,23 @@ export class SpeakerComponent implements OnInit {
     }
   }
 
-  checkSpeakerForm():boolean{
+  checkSpeakerForm(): boolean {
     let isValid = true;
-    if (!this.speakerForm.value.name || this.speakerForm.value.name.trim() === '' ) {
+    
+    if (!this.speakerForm.value.name || this.speakerForm.value.name.trim() === '') {
       this.formErrors.name = 'Required';
       isValid = false;
     }
-    if (!this.speakerForm.value.company || this.speakerForm.value.company.trim() === '' ) {
+    
+    if (!this.speakerForm.value.company || this.speakerForm.value.company.trim() === '') {
       this.formErrors.company = 'Required';
       isValid = false;
     }
+    
     return isValid;
   }
 
-  createSpeaker(dialog: any) {
+  createSpeaker(dialog: DialogRef<any>) {
     let company_url = this.speakerForm.value.company_url;
     if (company_url && !company_url.match(/^https?:\/\//i)) {
       company_url = 'http://' + company_url;

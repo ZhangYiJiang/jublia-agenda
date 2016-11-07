@@ -69,10 +69,10 @@ export class AgendaService {
     return res.json();
   }
 
-  private static extractSession(session: any) {
+  private static extractSession(session: any): Session {
     // TODO: Remove this when multi-track session is ready
     session.track = session.tracks[0];
-    return session;
+    return _.defaults(session, new Session());
   }
 
   private static extractAgenda(agenda: any): Agenda {
@@ -100,7 +100,7 @@ export class AgendaService {
     return Observable.throw(errMsg);
   }
 
-  updateSession(agendaId: number, session: Session): Observable<any> {
+  updateSession(agendaId: number, session: Session): Observable<Session> {
     // TODO: Remove when multi-track sessions is implemented
     if (session.track) {
       session.tracks = [session.track];
@@ -111,7 +111,7 @@ export class AgendaService {
 
     return this.httpClient
         .put(AgendaService.sessionEndpoint(agendaId, session.id), JSON.stringify(session))
-        .map(AgendaService.extractData)
+        .map(AgendaService.extractData) 
         .map(AgendaService.extractSession)
         .catch(AgendaService.handleError);
   }

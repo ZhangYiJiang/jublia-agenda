@@ -237,8 +237,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     console.log('session changed in board');
     console.log(changedSession);
     this.agendaService.updateSession(this.agenda.id, changedSession)
-      .subscribe(() => {
-        if (this.agenda.published) {
+      .subscribe(session => {
+        if (session.is_dirty) {
           this.agenda.hasDirtySession = true;
         }
       }); 

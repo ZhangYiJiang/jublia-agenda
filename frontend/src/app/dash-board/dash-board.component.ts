@@ -67,6 +67,7 @@ export class DashBoardComponent implements OnInit {
   signingUp = false;
   
   agendaLoading = false;
+  newAgendaSubmitting = false;
 
   agendaForm: FormGroup;
 
@@ -172,6 +173,7 @@ export class DashBoardComponent implements OnInit {
   }
 
   submitAgendaForm() {
+    this.newAgendaSubmitting = true;
     console.log(this.agendaForm.value);
     if(this.checkAgendaForm()){
       this.createAgenda();

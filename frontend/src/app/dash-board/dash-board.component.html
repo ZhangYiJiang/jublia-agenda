@@ -128,7 +128,10 @@
         </div>
         <div>
           <div class="other-error form-error-hint">{{formErrors.other}}</div>
-          <button class="primary" md-button type="submit">Submit</button>
+          <button class="primary" md-button type="submit">
+          <i *ngIf="newAgendaSubmitting" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+          Submit
+          </button>
         </div>
       </form>
     </div>

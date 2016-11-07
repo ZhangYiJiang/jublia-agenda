@@ -163,12 +163,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  keepfix() {
+  keepfix = _.throttle(() => {
     this.scheduleTop = this.scheduleRef.nativeElement.scrollTop + 'px';
     this.scheduleLeft = this.scheduleRef.nativeElement.scrollLeft + 'px';
-    this.isScrolling = true;
-    this.resetIsScrolling();
-  }
+  }, 10);
 
   ngOnDestroy() {
     console.log('ondestroy board');

@@ -47,7 +47,7 @@ class ViewerRegistrationView(APIView):
         with atomic():
             reg, created = viewer.registration_set.get_or_create(session=session)
             if created:
-                session.popularity += 1
+                session.popularity = session.viewer_set.count()
                 session.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -55,10 +55,10 @@ class ViewerRegistrationView(APIView):
     def delete(self, request, agenda_id, token, session_id):
         session = get_object_or_404(Session, pk=session_id, agenda=agenda_id)
         registration = get_object_or_404(session.registration_set, viewer__token=token)
-        session.popularity -= 1
 
         with atomic():
-            session.save()
             registration.delete()
+            session.popularity = session.viewer_set.count()
+            session.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

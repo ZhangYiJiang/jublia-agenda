@@ -98,17 +98,20 @@ class ViewerRegisterTest(BaseAPITestCase):
     def test_popularity(self):
         session = create_session(self.agenda, factory.session())
         viewers = [create_viewer(self.agenda, factory.viewer()) for i in range(10)]
+        # Viewers in the set = 2, 5, 6, 9
         for i in [2, 5, 6, 9]:
             self.client.put(self.url(session.pk, viewers[i].token))
         session.refresh_from_db()
         self.assertEqual(4, session.popularity)
 
         # Calls put 5 times, but with one repeat
+        # Viewers in the set = 0, 1, 2, 3, 4, 5, 6, 9
         for i in [0, 1, 2, 3, 4]:
             self.client.put(self.url(session.pk, viewers[i].token))
         session.refresh_from_db()
         self.assertEqual(8, session.popularity)
 
+        # Viewers in the set = 1, 2, 4, 5, 9
         for i in [0, 3, 6, 7]:
             self.client.delete(self.url(session.pk, viewers[i].token))
         session.refresh_from_db()

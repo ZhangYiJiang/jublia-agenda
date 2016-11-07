@@ -51,6 +51,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   @ViewChild('scheduleRef') scheduleRef: ElementRef;
   scheduleLeft: string;
   scheduleTop: string;
+  isScrolling: boolean;
+  resetIsScrolling = _.debounce(() => {this.isScrolling = false}, 100);
 
   @Input() agenda: Agenda;
   @Input() isPublic: boolean;
@@ -58,7 +60,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   @Input() token: string;
   @Input() interestedSessionIds: number[];
   @Input() analyticsData: {};
-
 
   offsetDate: Date;
   eventDates: Date[];
@@ -165,6 +166,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   keepfix() {
     this.scheduleTop = this.scheduleRef.nativeElement.scrollTop + 'px';
     this.scheduleLeft = this.scheduleRef.nativeElement.scrollLeft + 'px';
+    this.isScrolling = true;
+    this.resetIsScrolling();
   }
 
   ngOnDestroy() {

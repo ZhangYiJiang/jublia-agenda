@@ -72,6 +72,8 @@ export class AgendaService {
   private static extractSession(session: any): Session {
     // TODO: Remove this when multi-track session is ready
     session.track = session.tracks[0];
+    // display session by default
+    session.toggle = true;
     return _.defaults(session, new Session());
   }
 

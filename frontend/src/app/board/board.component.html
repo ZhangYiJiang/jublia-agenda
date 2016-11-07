@@ -13,17 +13,17 @@
   </button>
   <div #scheduleRef class="schedule" (scroll)="keepfix()">
     <div class="scroll-container">
-      <div class="timescale" [style.left]="scheduleLeft" [class.scrolling]="isScrolling">
+      <div class="timescale" [style.left]="scheduleLeft">
         <div class="hour" *ngFor="let hour of hours">
         {{hour}}
         </div>
       </div>
       <div class="scroll">
         <div class="day" *ngFor="let date of eventDates; let dateIndex=index">
-          <div class="day-title" [class.scrolling]="isScrolling" [style.top]="scheduleTop" [style.width]="dayTitleWidth">{{date | date}}</div>
+          <div class="day-title" [style.top]="scheduleTop" [style.width]="dayTitleWidth">{{date | date}}</div>
           <div class="row">
             <div class="track" *ngFor="let track of eventTracks; let trackIndex=index">
-              <div class="track-title" [style.top]="scheduleTop" [class.scrolling]="isScrolling">{{track.name}}</div>
+              <div class="track-title" [style.top]="scheduleTop">{{track.name}}</div>
               <absolute-column #absCol [sessions]="getSessionsForColumn(date, track.id)" 
                 [day]="date" [track]="track" [dateIndex]="dateIndex" [trackIndex]="trackIndex" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"
                 (onSessionChanged)="onSessionChanged($event)"

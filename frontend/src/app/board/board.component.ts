@@ -53,6 +53,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   scheduleTop: string;
   isScrolling: boolean;
   resetIsScrolling = _.debounce(() => {this.isScrolling = false}, 100);
+  scrollingFrameId: number; 
 
   @Input() agenda: Agenda;
   @Input() isPublic: boolean;
@@ -164,10 +165,11 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   keepfix() {
-    this.scheduleTop = this.scheduleRef.nativeElement.scrollTop + 'px';
-    this.scheduleLeft = this.scheduleRef.nativeElement.scrollLeft + 'px';
-    this.isScrolling = true;
-    this.resetIsScrolling();
+    window.cancelAnimationFrame(this.scrollingFrameId);
+    this.scrollingFrameId = window.requestAnimationFrame(() => {
+      this.scheduleTop = this.scheduleRef.nativeElement.scrollTop + 'px';
+      this.scheduleLeft = this.scheduleRef.nativeElement.scrollLeft + 'px';
+    });
   }
 
   ngOnDestroy() {

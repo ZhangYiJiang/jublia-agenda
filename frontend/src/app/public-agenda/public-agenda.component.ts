@@ -9,6 +9,8 @@ import { DashBoardService } from '../dash-board/dash-board.service';
 import { PublicAgendaService } from './public-agenda.service';
 import { BoardService } from '../board/board.service';
 import { GlobalVariable } from '../globals';
+import { Tag } from '../tag/tag';
+
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { overlayConfigFactory, Overlay, DialogRef } from 'angular2-modal';
 import {
@@ -23,6 +25,7 @@ import {
 } from 'angular2-modal/plugins/vex';
 import { Subscription } from 'rxjs/Subscription';
 
+import * as _ from 'lodash';
 
 @Component({
   selector: 'public-agenda',
@@ -61,15 +64,19 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   bookmarkError: string;
   mobileError: string;
 
+  eventTags: Tag[] = [];
+
   bookmarkSubmitting = false;
   
   @ViewChild('infoRef') public infoRef: TemplateRef<any>;
   @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
+  @ViewChild('toggleRef') public toggleRef: TemplateRef<any>;
 
   subscription: Subscription;
 
   interestedSessionIds: number[];
   interestToggleModel = false;
+  defaultCategory: number;
 
   mapsEmbedUrl: SafeResourceUrl;
   
@@ -77,13 +84,66 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     this.route.params.forEach((params: Params) => {
       this.agendaId = params['id'];
       this.getAgendaById(this.agendaId);
-
       let token = params['token'];
       if (token) {
         this.getViewerByToken(token);
       }      
     });
    
+  }
+
+  getEventTags(): Tag[] { // only from first (default) category for now
+    if (!this.agenda.categories[0].tags || this.agenda.categories[0].tags.length === 0) {
+      return [];
+    } else {
+      return this.agenda.categories[0].tags;
+    }
+  }
+
+  initTags() {
+    this.defaultCategory = this.agenda.categories[0].id;
+    this.eventTags = this.getEventTags();
+    this.toggleAllTags(true);
+  }
+
+  showAll() {
+    this.toggleAllTags(true);
+    this.onTagFilterChange();
+  }
+
+  hideAll() {
+    this.toggleAllTags(false);
+    this.onTagFilterChange()
+  }
+
+  onTagFilterChange() {
+    let activeTags = _.filter(this.eventTags, {toggle: true});
+    for (var i = 0; i < this.agenda.sessions.length; i++) {
+      let session = this.agenda.sessions[i];
+      session.toggle = this.isSessionToggledByTags(session, activeTags);
+    }
+  }
+
+  isSessionToggledByTags(session: Session, activeTags: Tag[]): boolean {
+    if(session.categories == null) {
+      // always show sessions with no tags for consistency
+      return true;
+    } else {
+      let found = false;
+      let tagsIds = session.categories[this.defaultCategory];
+      tagsIds.forEach(function(tagId: number) {
+        if(_.find(activeTags, {'id': tagId}) != null) {
+          found = true;
+        }
+      })
+      return found;
+    }
+  }
+
+  toggleAllTags(toggle: boolean) {
+    this.eventTags.forEach(function(tag) {
+      tag.toggle = toggle;
+    })
   }
 
   showInfo() {
@@ -95,12 +155,16 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     this.modal.open(this.bookmarkRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
   }
 
+  showFilters() {
+    this.modal.open(this.toggleRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
+  }
+
   getAgendaById(id: number) {
     this.agendaService.getAgendaById(id).subscribe(
         agenda => {
           if (!agenda.published) return;
           this.agenda = agenda;
-          
+          this.initTags();
           // Construct the iframe URL for the embedded Google Map
           if (agenda.location) {
             const url = `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(GlobalVariable.GOOGLE_MAP_API_KEY)}&q=${encodeURIComponent(this.agenda.location)}`;

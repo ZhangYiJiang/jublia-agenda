@@ -149,16 +149,17 @@
           <venue-form *ngIf="!isPublic" [agenda]="agenda" (onVenueAdded)="onVenueAdded($event)"></venue-form>
         </div><!-- /.session-info -->
 
-        <div *ngIf="session.track" class="session-info">
+<!--         <div *ngIf="session.track" class="session-info">
           <div class="session-icon">
             <i class="fa fa-list-ol fa-fw" aria-hidden="true"></i>
           </div>
           <div>
             <p>{{trackObj[session.track].name}}</p>
           </div>
-        </div><!-- /.session-info -->
+        </div> -->
+        <!-- /.session-info -->
 
-        <div class="session-info">
+        <div *ngIf="isAnalytics" class="session-info">
           <div class="session-icon">
             <i class="fa fa-fire fa-fw" aria-hidden="true"></i>
           </div>
@@ -186,7 +187,7 @@
                        (onRemove)="removeTag($event)"
                        (onAdd)="addTag($event)"
                        (onTextChange)="onTagTextChange($event)"></tag-input>
-            <button class="secondary" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
+            <button  *ngIf="!isPublic" class="secondary" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
           </div>
         </div><!-- /.session-info -->        
       </div><!-- /.session-meta -->

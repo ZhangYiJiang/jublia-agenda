@@ -24,6 +24,10 @@ a, button {
     transition: all .2s;
 }
 
+i.submitting-spinner {
+    font-size: 18px;
+}
+
 // Mimic md-input's label
 .field-label {
     display: block;

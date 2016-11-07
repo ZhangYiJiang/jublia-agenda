@@ -65,6 +65,8 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   mobileError: string;
 
   eventTags: Tag[] = [];
+
+  bookmarkSubmitting = false;
   
   @ViewChild('infoRef') public infoRef: TemplateRef<any>;
   @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
@@ -87,6 +89,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
         this.getViewerByToken(token);
       }      
     });
+   
   }
 
   getEventTags(): Tag[] { // only from first (default) category for now
@@ -118,7 +121,6 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     for (var i = 0; i < this.agenda.sessions.length; i++) {
       let session = this.agenda.sessions[i];
       session.toggle = this.isSessionToggledByTags(session, activeTags);
-      console.log(session);
     }
   }
 
@@ -130,7 +132,6 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
       let found = false;
       let tagsIds = session.categories[this.defaultCategory];
       tagsIds.forEach(function(tagId: number) {
-        console.log(_.find(activeTags, {'id': tagId}) != null);
         if(_.find(activeTags, {'id': tagId}) != null) {
           found = true;
         }
@@ -189,12 +190,15 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   }
 
   createToken(dialogRef: DialogRef<any>) {
+    this.bookmarkSubmitting = true;
     this.publicAgendaService.createToken(this.agendaId, this.email, this.mobile).subscribe(
       (data: any) => {
+        this.bookmarkSubmitting = false;
         this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token])
         dialogRef.close();
       },
       (error: any) => {
+        this.bookmarkSubmitting = false;
         console.log(error)
         if(error.email) {
           this.bookmarkError = error.email;

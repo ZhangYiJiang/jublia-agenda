@@ -67,6 +67,9 @@ export class DashBoardComponent implements OnInit {
   signingUp = false;
   
   agendaLoading = false;
+  newAgendaSubmitting = false;
+  loginSubmitting = false;
+  registerSubmitting = false;
 
   agendaForm: FormGroup;
 
@@ -108,14 +111,17 @@ export class DashBoardComponent implements OnInit {
       }
       return;
     }
+    this.registerSubmitting = true;
     this.dashBoardService.signUp(this.registerEmail, this.registerPassword,this.organiser,this.event).subscribe(
       status => { 
+        this.registerSubmitting = false;
         if (status === 201){ 
           this.modal.open(this.signUpSuccessRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
           this.toggleSigningUp();
         }
       },
       error =>  {
+        this.registerSubmitting = false;
         if(error.username){
           this.registerEmailError = error.username[0];
         }
@@ -139,11 +145,14 @@ export class DashBoardComponent implements OnInit {
       }
       return;
     }
+    this.loginSubmitting = true;
     this.dashBoardService.logIn(this.loginEmail, this.loginPassword).subscribe(
       success => { 
+        this.loginSubmitting = false;
         this.getAgendas();
       },
       error => {
+        this.loginSubmitting = false;
         if(error.username){
           this.loginEmailError = error.username[0];
         }
@@ -200,6 +209,7 @@ export class DashBoardComponent implements OnInit {
   }
 
   createAgenda() {
+    this.newAgendaSubmitting = true;
     // Add URL schema if not included
     let website = this.agendaForm.value.website;
     if (website && !website.match(/^https?:\/\//i)) {
@@ -218,8 +228,10 @@ export class DashBoardComponent implements OnInit {
       data => { 
         this.addNewAgenda = true;
         this.agendas.unshift(data);
+        this.newAgendaSubmitting = false;
       },
       error => {
+        this.newAgendaSubmitting = false;
         console.log(error);
         
         // Map the fields returned by the server to the fields used 

@@ -186,7 +186,7 @@
                        (onRemove)="removeTag($event)"
                        (onAdd)="addTag($event)"
                        (onTextChange)="onTagTextChange($event)"></tag-input>
-            <button class="secondary" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
+            <button  *ngIf="!isPublic" class="secondary" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
           </div>
         </div><!-- /.session-info -->        
       </div><!-- /.session-meta -->

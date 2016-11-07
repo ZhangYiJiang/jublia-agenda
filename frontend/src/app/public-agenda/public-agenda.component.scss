@@ -16,7 +16,7 @@
     display: flex;
     height: $top-bar-height;
     overflow: auto;
-    width: calc(100% - 90px);
+    //width: calc(100% - 90px);
     
     .agenda-buttons{
         position: fixed;
@@ -90,6 +90,7 @@ iframe.map {
     border: 0;
     margin-top: 10px;
     width: 100%;
+    position: relative;
 }
 
 .footer-buttons {

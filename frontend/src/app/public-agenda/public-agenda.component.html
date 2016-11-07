@@ -37,15 +37,18 @@
         <p>Enter mobile number to receive SMS notifications before your bookmarked sessions start.</p>
         <form class="viewer-register bookmarkForm" (ngSubmit)="createToken(dialogRef)">
           <div class="bookmarkInput">
-          <md-input required placeholder="Email" [(ngModel)]="email" name="email">
+          <md-input required placeholder="Email" (focus)="bookmarkError=undefined" [(ngModel)]="email" name="email">
             <md-hint class="form-error-hint" align="start">{{bookmarkError}}</md-hint>
           </md-input>
-          <md-input placeholder="Mobile number" [(ngModel)]="mobile" name="mobile">
+          <md-input placeholder="Mobile number" (focus)="mobileError=undefined" [(ngModel)]="mobile" name="mobile">
             <md-hint class="form-error-hint" align="start">{{mobileError}}</md-hint>
           </md-input>
           </div>
           <div class="footer-buttons">
-            <button md-button disableRipple="true" type="submit" class="primary">Go!</button>
+            <button [disabled]="bookmarkSubmitting" md-button disableRipple="true" type="submit" class="primary">
+            <i *ngIf="bookmarkSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+            Go!
+            </button>
             <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
           </div>
         </form>
@@ -79,6 +82,10 @@
     </section>
   </div>
 </template>
+
+<div *ngIf="!agenda">
+<loading-indicator></loading-indicator>
+</div>
 
 <div *ngIf="agenda">
   <div class="clearfix fixed agenda-menu">

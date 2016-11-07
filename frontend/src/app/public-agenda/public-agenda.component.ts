@@ -60,6 +60,8 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   token : string;
   bookmarkError: string;
   mobileError: string;
+
+  bookmarkSubmitting = false;
   
   @ViewChild('infoRef') public infoRef: TemplateRef<any>;
   @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
@@ -81,11 +83,11 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
         this.getViewerByToken(token);
       }      
     });
+   
   }
 
   showInfo() {
     this.modal.open(this.infoRef, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
-
   }
 
   showBookmark() {
@@ -124,12 +126,15 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   }
 
   createToken(dialogRef: DialogRef<any>) {
+    this.bookmarkSubmitting = true;
     this.publicAgendaService.createToken(this.agendaId, this.email, this.mobile).subscribe(
       (data: any) => {
+        this.bookmarkSubmitting = false;
         this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token])
         dialogRef.close();
       },
       (error: any) => {
+        this.bookmarkSubmitting = false;
         console.log(error)
         if(error.email) {
           this.bookmarkError = error.email;

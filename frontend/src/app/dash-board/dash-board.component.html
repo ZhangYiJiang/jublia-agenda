@@ -12,7 +12,10 @@
       <tr><md-input placeholder="Event Organiser" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
       <tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
       </table>
-      <button class="primary" md-button type="submit" disableRipple="true">Register</button>
+      <button [disabled]="registerSubmitting" class="primary" md-button type="submit" disableRipple="true">
+      <i *ngIf="registerSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+      Register
+      </button>
       <a class="secondary" md-button type="cancel" (click)="toggleSigningUp()">Cancel</a>      
     </form>
   </div>
@@ -29,7 +32,10 @@
           <md-hint class="form-error-hint" align="start">{{loginPasswordError}}</md-hint>
         </md-input></tr>
         </table>
-        <button class="primary" md-button type="submit" disableRipple="true">Login</button>  
+        <button [disabled]="loginSubmitting" class="primary" md-button type="submit" disableRipple="true">
+        <i *ngIf="loginSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+        Login
+        </button>  
       </form>
     </div>
     <div class="sign-up-card">
@@ -128,8 +134,8 @@
         </div>
         <div>
           <div class="other-error form-error-hint">{{formErrors.other}}</div>
-          <button class="primary" md-button type="submit">
-          <i *ngIf="newAgendaSubmitting" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+          <button [disabled]="newAgendaSubmitting" class="primary" md-button type="submit">
+          <i *ngIf="newAgendaSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
           Submit
           </button>
         </div>

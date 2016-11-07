@@ -337,7 +337,7 @@ export class SessionComponent implements OnInit {
       overlayConfigFactory({ isBlocking: false }, VEXModalContext)
     ).then(dialog => {
       // Set new permalink if this is public 
-      if (this.isPublic && !this.location.path().includes(this.sessionPath())) {
+      if (this.isPublic && !this.isAnalytics && !this.location.path().includes(this.sessionPath())) {
         this.location.go(this.sessionPath());
       }
       

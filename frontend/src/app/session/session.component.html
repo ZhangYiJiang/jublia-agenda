@@ -24,7 +24,7 @@
   <div class="modal-container session-modal">
     <div class="modal-header">
       <button md-button disableRipple 
-              *ngIf="isPublic"
+              *ngIf="isPublic&&!isAnalytics"
               class="interestBtn" 
               [class.primary]="interested" 
               [class.secondary]="!interested" 
@@ -91,7 +91,7 @@
       </div><!-- /.session-main -->
       
       <div class="session-meta">
-        <div class="session-sharing">
+        <div *ngIf="isPublic&&!isAnalytics" class="session-sharing">
           <a href="{{ calendarLink() }}">
             <i class="fa fa-calendar" aria-hidden="true"></i> Export to iCal
           </a>
@@ -121,8 +121,8 @@
                         error="Please enter a number.">
               </ndv-edit>mins
               <span *ngIf="!isPublic" class="duration-buttons">
-                <button class="primary" md-button (click)="adjustSessionDuration(15)">+</button>
-                <button class="primary" md-button (click)="adjustSessionDuration(-15)">-</button>
+                <button class="primary" md-button disableRipple (click)="adjustSessionDuration(15)">+</button>
+                <button class="primary" md-button disableRipple (click)="adjustSessionDuration(-15)">-</button>
               </span>
             </p>
           </div>
@@ -187,7 +187,7 @@
                        (onRemove)="removeTag($event)"
                        (onAdd)="addTag($event)"
                        (onTextChange)="onTagTextChange($event)"></tag-input>
-            <button  *ngIf="!isPublic" class="secondary tag-button" md-button disableRipple="true" [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
+            <button  *ngIf="!isPublic" class="secondary tag-button" md-button disableRipple [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
           </div>
         </div><!-- /.session-info -->        
       </div><!-- /.session-meta -->
@@ -195,7 +195,7 @@
     
     <div class="session-footer">
       <button md-button disableRipple
-              *ngIf="isPublic"
+              *ngIf="isPublic&&!isAnalytics"
               class="interestBtn"
               [class.primary]="interested"
               [class.secondary]="!interested"
@@ -203,8 +203,8 @@
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
-      <button type="button" md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
-      <button type="button" md-button class="warn" *ngIf="!isPublic" (click)="confirmDelete(dialogRef)">Delete</button>
+      <button type="button" md-button disableRipple class="secondary" (click)="dialogRef.close(true)">Close</button>
+      <button type="button" md-button disableRipple class="warn" *ngIf="!isPublic" (click)="confirmDelete(dialogRef)">Delete</button>
     </div>
   </div>
 </template>

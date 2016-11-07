@@ -71,8 +71,17 @@
     margin-left: 50px;
     padding-top: 60px;
 }
+
 .board, .schedule,.row, .scroll{
     display: flex;
+}
+
+.scrolling {
+    opacity: 0;
+}
+
+.track-title, .timescale, .day-title {
+    transition: .1s all;
 }
 
 .day {

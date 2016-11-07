@@ -1,3 +1,19 @@
-<div *ngFor="let session of dirtySessions">
-    <h3>{{ session.name }}</h3>
-</div>
+<table class="table">
+    <colgroup>
+        <col class="dirty-session">
+        <col class="dirty-count">
+    </colgroup>
+    
+    <tr>
+        <th>Session</th>
+        <th>Emails</th>
+    </tr>
+    <tr class="dirty-session-item" *ngFor="let session of dirtySessions">
+        <td>{{ session.name }}</td>
+        <td>{{ session.popularity }}</td>
+    </tr>
+    <tr class="total">
+        <th>Total</th>
+        <th>{{ total }}</th>
+    </tr>
+</table>

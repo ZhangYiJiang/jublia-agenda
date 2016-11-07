@@ -10,6 +10,12 @@ import { Venue } from '../venue/venue';
 import { Agenda } from './agenda';
 import { GlobalVariable } from '../globals';
 
+export interface DirtySession {
+  id: number, 
+  popularity: number,
+  name: string,
+}
+
 @Injectable()
 export class AgendaService {
 
@@ -36,7 +42,7 @@ export class AgendaService {
                     .catch(AgendaService.handleError);
   }
   
-  getDirtySessions(id: number): Observable<number[]> {
+  getDirtySessions(id: number): Observable<DirtySession[]> {
     return this.httpClient.get(AgendaService.agendaEndpoint(id, 'dirty'))
       .map(AgendaService.extractData)
       .catch(AgendaService.handleError);

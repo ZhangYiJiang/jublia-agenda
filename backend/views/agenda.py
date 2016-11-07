@@ -38,7 +38,8 @@ class AgendaDirtySession(APIView):
 
     def get(self, request, agenda_id):
         agenda = get_object_or_404(Agenda, pk=agenda_id)
-        sessions = agenda.session_set.filter(is_dirty=True).values_list('pk', flat=True)
+        sessions = agenda.session_set.filter(is_dirty=True).exclude(popularity=0)\
+            .values('id', 'popularity')
         return Response(sessions, status.HTTP_200_OK)
 
     def post(self, request, agenda_id):

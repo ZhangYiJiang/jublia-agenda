@@ -44,7 +44,7 @@ class SessionSerializer(HideFieldsMixin, BaseSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        if self.context['agenda'].published:
+        if self.context['agenda'].published and instance.popularity > 0:
             instance.is_dirty = True
         return super().update(instance, validated_data)
 

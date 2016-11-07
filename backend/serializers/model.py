@@ -11,7 +11,8 @@ class MarkSessionDirtyMixin:
     @atomic
     def update(self, instance, validated_data):
         updated = super().update(instance, validated_data)
-        updated.session_set.filter(agenda__published=True).update(is_dirty=True)
+        if instance.agenda.published:
+            updated.session_set.exclude(popularity=0).update(is_dirty=True)
         return updated
 
 

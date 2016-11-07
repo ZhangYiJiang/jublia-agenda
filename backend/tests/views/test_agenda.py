@@ -161,20 +161,25 @@ class GetDirtySessionTest(BaseAPITestCase):
         self.user = create_user(factory.user())
         self.agenda_data = factory.agenda()
         self.agenda = create_agenda(self.user, self.agenda_data)
-        self.sessions = [create_session(self.agenda, factory.agenda()) for i in range(self.count)]
         self.url = reverse('dirty_sessions', [self.agenda.pk])
         self.email_count = len(mail.outbox)
+
+        # Create sessions to test with and set their popularity to a non-zero number
+        self.sessions = [create_session(self.agenda, factory.session(full=True)) for i in range(self.count)]
 
     def assertIsDirty(self, index_set):
         for i in index_set:
             self.sessions[i].is_dirty = True
+            self.sessions[i].popularity = 10
             self.sessions[i].save()
 
         self.login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(index_set), len(response.data))
+        pk = [i['id'] for i in response.data]
         for i in index_set:
-            self.assertIn(self.sessions[i].pk, response.data)
+            self.assertIn(self.sessions[i].pk, pk)
 
     def associate(self, sessions, viewers):
         registrations = []
@@ -209,6 +214,16 @@ class GetDirtySessionTest(BaseAPITestCase):
         viewer = create_viewer(self.agenda, factory.viewer())
         self.assertIsDirty([0])
         self.assertSessionChangedMailSent(self.sessions[:1], [viewer])
+
+    def test_zero_popularity(self):
+        self.sessions[0].popularity = 0
+        self.sessions[0].is_dirty = True
+        self.sessions[0].save()
+
+        self.login(self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data)
 
     def test_multiple_email(self):
         viewer = create_viewer(self.agenda, factory.viewer())

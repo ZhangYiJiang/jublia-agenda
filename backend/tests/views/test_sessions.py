@@ -1,3 +1,5 @@
+from random import randint
+
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -172,22 +174,30 @@ class SessionDirtyTest(BaseAPITestCase):
         self.agenda = create_agenda(self.user, factory.agenda())
         self.sessions = [create_session(self.agenda, factory.session()) for i in range(5)]
 
+    def assertSessionDirtyStatus(self, sessions, status):
+        for session in self.sessions:
+            session.refresh_from_db()
+            self.assertEqual(session.is_dirty, status)
+
     def assertDirtiness(self, action):
+        # Unpublished - will not set to dirty
         self.agenda.published = False
         self.agenda.save()
         action()
+        self.assertSessionDirtyStatus(self.sessions, False)
 
-        for session in self.sessions:
-            session.refresh_from_db()
-            self.assertFalse(session.is_dirty)
-
+        # Published but with zero popularity - will not set to dirty
         self.agenda.published = True
         self.agenda.save()
         action()
+        self.assertSessionDirtyStatus(self.sessions, False)
 
+        # Published and with > 0 popularity - will set to dirty
         for session in self.sessions:
-            session.refresh_from_db()
-            self.assertTrue(session.is_dirty)
+            session.popularity = randint(1, 100)
+            session.save()
+        action()
+        self.assertSessionDirtyStatus(self.sessions, True)
 
     def test_is_dirty_default(self):
         self.assertFalse(self.sessions[0].is_dirty)

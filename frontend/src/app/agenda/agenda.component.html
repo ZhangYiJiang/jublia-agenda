@@ -7,8 +7,10 @@
     <div class="agenda-menu">
       <button md-button disableRipple class="secondary" 
               *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">Notify Attendees</button>
-      <button md-button disableRipple 
+      <button *ngIf="!agenda.published" md-button disableRipple 
               [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
+      <button *ngIf="agenda.published" md-button disableRipple 
+              [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()"><i class="fa fa-check" aria-hidden="true"></i> Published</button>
       <button md-button disableRipple class="secondary" 
               *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
       <button md-button disableRipple class="secondary" 
@@ -104,8 +106,8 @@
         <p class="clipboard-status" *ngIf="clipboardStatus">{{ clipboardStatus }}</p>
         
         <div class="modal-footer bottom-buttons">
-          <button md-button class="primary" (click)="dialogRef.close(true)">Ok</button>
-          <button md-button class="secondary" (click)="setPublishedStatus(false)">Unpublish</button>
+          <button md-button disableRipple class="primary" (click)="dialogRef.close(true)">Ok</button>
+          <button md-button disableRipple class="secondary" (click)="setPublishedStatus(false)">Unpublish</button>
         </div>
       </template>
     </div>

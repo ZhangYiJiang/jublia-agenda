@@ -7,7 +7,8 @@
      [class.static]="isPublic" 
      [class.dark]="useDarkTheme"
      (click)="clicked(false)" 
-     [class.not-interested]="!interested">
+     [class.not-interested]="!interested"
+     [attr.title]="session.name">
   <div class="session-content">
     <div class="session-title">
       <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
@@ -32,7 +33,7 @@
 
       <button md-button disableRipple
               *ngIf="isPublic&&!isAnalytics"
-              class="interestBtn"
+              class="interest-btn"
               [class.primary]="interested"
               [class.secondary]="!interested"
               (click)="updateInterest()">
@@ -75,7 +76,16 @@
               <p *ngIf="displayField(speakersObj[speakerId].company) || 
                         displayField(speakersObj[speakerId].position) || 
                         displayField(speakersObj[speakerId].email)">
-                
+                <strong *ngIf="displayField(speakersObj[speakerId].position)" class="session-speaker-position">
+                  <ndv-edit title="position"
+                            [placeholder]="speakersObj[speakerId].position || 'Add position'"
+                            (onSave)="updateSpeaker($event, speakerId)"
+                            [permission]="!isPublic"></ndv-edit>
+                </strong>
+
+                <span *ngIf="displayField(speakersObj[speakerId].company) && 
+                             displayField(speakersObj[speakerId].position)">from</span>
+
                 <span *ngIf="displayField(speakersObj[speakerId].company)">
                   <ndv-edit title="company"
                             [placeholder]="speakersObj[speakerId].company || 'Add company'"
@@ -83,14 +93,7 @@
                             [permission]="!isPublic"></ndv-edit>
                 </span>
                 
-                <span *ngIf="displayField(speakersObj[speakerId].position)">
-                  <ndv-edit title="position" 
-                            [placeholder]="speakersObj[speakerId].position || 'Add position'" 
-                            (onSave)="updateSpeaker($event, speakerId)" 
-                            [permission]="!isPublic"></ndv-edit>
-                </span>
-
-                <span *ngIf="displayField(speakersObj[speakerId].email)">
+                <span *ngIf="displayField(speakersObj[speakerId].email)"> | 
                   <ndv-edit title="email"
                             [placeholder]="speakersObj[speakerId].email || 'Add email'"
                             (onSave)="updateSpeaker($event, speakerId)"
@@ -218,18 +221,18 @@
       </div><!-- /.session-meta -->
     </div><!-- /.session-body -->
     
-    <div class="session-footer">
+    <div class="modal-footer">
       <button md-button disableRipple
-              *ngIf="isPublic&&!isAnalytics"
-              class="interestBtn"
+              *ngIf="isPublic && !isAnalytics"
+              class="interest-btn"
               [class.primary]="interested"
               [class.secondary]="!interested"
               (click)="updateInterest()">
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
-      <button type="button" md-button disableRipple class="secondary" (click)="dialogRef.close(true)">Close</button>
       <button type="button" md-button disableRipple class="warn" *ngIf="!isPublic" (click)="confirmDelete(dialogRef)">Delete</button>
+      <button type="button" md-button disableRipple class="secondary close-btn" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>

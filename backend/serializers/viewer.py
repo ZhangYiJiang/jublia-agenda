@@ -1,4 +1,5 @@
 from django.utils.translation import ugettext as _
+from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from backend.models import Registration
@@ -16,6 +17,7 @@ class RegistrationSerializer(BaseSerializer):
 
 
 class ViewerSerializer(BaseSerializer):
+    email = serializers.EmailField(required=True)
     sessions = AgendaPrimaryKeyRelatedField(klass='session', many=True, required=False)
 
     def validate_email(self, email):

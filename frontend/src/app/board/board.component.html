@@ -89,7 +89,7 @@
                        secondaryPlaceholder="Select Speakers" 
                        formControlName="existingSpeakers" 
                        [onlyFromAutocomplete]="true" 
-                       [autocompleteItems]="eventSpeakersName" 
+                       [autocompleteItems]="getEventSpeakersName()" 
                        [autocomplete]="true"
                        [showDropdownIfEmpty]="true"></tag-input>
             <speaker-form [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event, true)"></speaker-form>

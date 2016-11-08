@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core import mail
-from django.db import connection
 from django.test import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -59,6 +58,16 @@ class AgendaListTest(BaseAPITestCase):
         self.assertIn('Test Track', tracks)
         self.assertIn('Hello World', tracks)
 
+    def test_create_duplicate_title(self):
+        self.login(self.user)
+        agenda_data = factory.agenda()
+        first_response = self.client.post(self.url, agenda_data)
+        # Make sure the titles will collide when they are slugified
+        agenda_data['name'] += '!'
+        second_response = self.client.post(self.url, agenda_data)
+
+        self.assertNotEqual(first_response.data['slug'], second_response.data['slug'])
+
     @override_settings(MEDIA_ROOT=settings.BASE_DIR + '/backend/tests/media/')
     @clear_media
     def test_create_with_icon(self):
@@ -90,8 +99,7 @@ class AgendaDetailTest(DetailAuthTestMixin, BaseAPITestCase):
 
         self.url = self.agenda.get_absolute_url()
 
-    def test_retrieve(self):
-        response = self.client.get(self.url)
+    def assertAgendaCorrect(self, response):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.agenda_data['name'])
         self.assertNoEmptyFields(response.data)
@@ -111,7 +119,15 @@ class AgendaDetailTest(DetailAuthTestMixin, BaseAPITestCase):
         self.assertFalse('sessions' in response.data['tracks'][0])
         self.assertFalse('sessions' in response.data['speakers'][0])
         self.assertFalse('sessions' in response.data['session_venues'][0])
-        print('Database queries when retrieving agenda: %d' % len(connection.queries))
+
+    def test_retrieve(self):
+        response = self.client.get(self.url)
+        self.assertAgendaCorrect(response)
+
+    def test_retrieve_by_slug(self):
+        url = reverse('slug-agenda-detail', [self.agenda.slug])
+        response = self.client.get(url)
+        self.assertAgendaCorrect(response)
 
     def test_retrieve_end_at(self):
         self.agenda.start_at = factory.now

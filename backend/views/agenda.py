@@ -33,6 +33,10 @@ class AgendaDetail(UserContextMixin, RetrieveUpdateDestroyAPIView):
     serializer_class = AgendaSerializer
 
 
+class SlugAgendaDetail(AgendaDetail):
+    lookup_field = 'slug'
+
+
 class AgendaDirtySession(APIView):
     permission_classes = (IsAgendaOwner,)
 
@@ -47,7 +51,7 @@ class AgendaDirtySession(APIView):
         viewers = agenda.viewer_set.filter(sessions__is_dirty=True)\
             .distinct().prefetch_related('sessions')
         template = get_template('email/session_update.html')
-        title = _('%s - The sessions you have bookmarked have changed' % agenda.name)
+        title = _('%s - Some sessions you have bookmarked have changed' % agenda.name)
 
         mail = []
         for viewer in viewers:

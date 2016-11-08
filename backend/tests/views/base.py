@@ -64,6 +64,7 @@ class BaseAPITestCase(ErrorDetailMixin, APITestCase):
         response.pop('url', None)
         response.pop('created_at', None)
         response.pop('updated_at', None)
+        response.pop('slug', None)
         for field in ignore:
             response.pop(field, None)
         self.assertEqual(original, dict(response), msg)

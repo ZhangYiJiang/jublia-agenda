@@ -88,12 +88,14 @@ body {
     }
     
     .ng2-tag-input.default .ng2-tags-container .ng2-tag {
-        background: $color-secondary;
+        background: transparent;
+        border: 2px solid $color-primary;
+        color: $color-primary;
         height: auto;
         line-height: 1;
         font-size: 14px;
         align-items: center;
-        padding: 6px 8px 6px 12px;
+        padding: 6px 12px;
         margin: 0 4px 2px 0;
         
         &:hover:not(.tag--readonly),
@@ -104,13 +106,15 @@ body {
         
         delete-icon {
             height: 16px;
-            
-            path {
-                transition: fill .15s;
-            }
+            margin-right: -6px;
+        }
+        
+        delete-icon path {
+            fill: $color-primary;
+            transition: fill .15s;
         }
 
-        &:hover path {
+        &:hover delete-icon path {
             fill: #fff;
         }
     }
@@ -187,6 +191,10 @@ body {
     
     .modal-footer {
         margin-top: 20px;
+    }
+
+    .footer-buttons .secondary {
+        float: right;
     }
 }
 

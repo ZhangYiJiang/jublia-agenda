@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+import autoslug.fields
 from django.db import models
 from rest_framework.reverse import reverse
 
@@ -10,6 +11,7 @@ from .profile import Profile, Attachment
 
 class Agenda(BaseModel):
     name = models.CharField("event name", max_length=255)
+    slug = autoslug.fields.AutoSlugField(populate_from='name', unique=True)
     location = models.CharField(blank=True, max_length=255)
     description = models.TextField(blank=True)
     published = models.BooleanField(default=False)

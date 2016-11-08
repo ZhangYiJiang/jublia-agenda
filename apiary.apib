@@ -281,8 +281,22 @@ pick sessions they want to go for and register interest in them.
 Returns a specific event's aganda, including sessions and all other information associated with the 
 agenda. This information can be used by both the agenda viewer and agenda builder. 
 
-Unpublished agendas, and all subresources under the agenda like 
-sessions and speakers require authentication to fetch. 
+Unpublished agendas, and all subresources under the agenda like sessions and speakers 
+require authentication to fetch. They will return 404 if no token is provided. 
+
++ Response 200 (application/json)
+
+    + Attributes (Agenda Item)
+    
+        + sessions (array[Session Item])
+        + speakers (array[Speaker Item])
+        + tracks (array[Track Item])
+        + session_venues (array[Venue Item])
+        + categories (array[Category Item])
+
+## GET /agendas/{slug}
+
+This is an alias of the `/{agenda_id}` route, using slugs instead of ID. 
 
 + Response 200 (application/json)
 
@@ -349,7 +363,7 @@ viewers.
 
 + Response 200 (application/json)
     
-    + Attributes (array[number])
+    + Attributes (array[Dirty Session])
     
 
 ## POST /{agenda_id}/dirty 
@@ -511,7 +525,6 @@ Retrieve information about a specific speaker.
     + Attribute (Speaker Item)
 
 ### DELETE /{agenda_id}/speakers/{speaker_id} 
-
 
 **Authentication required.** Deletes the speaker. 
 
@@ -916,6 +929,10 @@ Get information a single session a calendar file.
 + start_at: 540 (number) - Starting time of the session in integer minutes relative to 0000 hrs on first day of the event. Cannot be below zero. 
 + duration: 60 (number) - Durating of the session in integer minutes. Should be above 0 and below 1440 (24 hours) 
 
+### Dirty Session
++ id (number) - Session ID of the dirty session 
++ popularity (number) - Number of emails that will be sent out 
+
 ### Category
 + name: Technology (string, required)
 
@@ -945,6 +962,7 @@ Get information a single session a calendar file.
 
 ### Agenda Item (Agenda)
 + Include Item
++ slug (string) - a slug of the agenda name, guaranteed to be unique
 + icon (string) - URL to an image of the icon 
 + end_at (date) - When the event is ending, computed from duration, or the session information if that is not available 
 

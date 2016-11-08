@@ -366,7 +366,7 @@ input:-webkit-autofill {
 
 .tooltip {
     position: absolute;
-    z-index: $tooltip-z-index;
+    z-index: $tooltip-z-index + 1;
     display: block;
     // font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-style: normal;

@@ -670,10 +670,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     console.log(isForm);
     this.eventSpeakers.push(newSpeaker);
     this.eventSpeakersName.push(newSpeaker.name);
-    if (!this.agenda.speakers) {
+   /* if (!this.agenda.speakers) {
       this.agenda.speakers = [];
     }
-    this.agenda.speakers.push(newSpeaker);
+    this.agenda.speakers.push(newSpeaker);*/
     if (isForm) {
       this.sessionForm.value.existingSpeakers.push(newSpeaker.name);
     }

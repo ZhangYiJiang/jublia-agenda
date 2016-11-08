@@ -85,6 +85,7 @@ export class SessionComponent implements OnInit {
   // tag input logic
   tagInputString = '';
   isNewTagBtnDisabled = true;
+
   tagBtnText = GlobalVariable.TAG_INPUT_BTN_NO_TEXT;
   
   onTagTextChange(input: string) {
@@ -215,13 +216,13 @@ export class SessionComponent implements OnInit {
   }
 
   onSpeakerAdded(newSpeaker: Speaker) {
-    //this.onSpeakerAdded2.emit(newSpeaker);
+    this.onSpeakerAdded2.emit(newSpeaker);
     if (!this.session.speakers) {
       this.session.speakers = [];
     }
     this.session.speakers.push(newSpeaker.id);
-    this.agenda.speakers.push(newSpeaker);
-    //this.onSessionEdited.emit(this.session);
+    //this.agenda.speakers.push(newSpeaker);
+    this.onSessionEdited.emit(this.session);
     this.speakersObj[newSpeaker.id] = newSpeaker;
   }
 

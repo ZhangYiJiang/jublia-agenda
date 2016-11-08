@@ -16,8 +16,6 @@ form md-input, form .field-with-label {
 }
 
 .sign-up-form {
-    margin-top: 100px;
-    
     table {
         margin-bottom: 20px;
     }
@@ -30,8 +28,8 @@ form md-input, form .field-with-label {
 }
 
 .sign-up-card {
+    margin: 10px 0 20px;
     max-width: 300px;
-    margin: 40px 0;
 }
 
 .agenda-list-card {
@@ -161,7 +159,10 @@ form md-input, form .field-with-label {
 .dashboard-agendas, .user-form {
     flex-direction: column;
     display: flex;
-    align-items: center;
+    margin-top: 20px;
+}
+
+.sign-up-form {
     margin-top: 20px;
 }
 
@@ -170,12 +171,17 @@ form md-input, form .field-with-label {
         flex-direction: row;
     }
     
-    .user-form {
+    .user-form, .sign-up-form {
         margin-top: 150px;
+        align-items: center;
     }
     
     .dashboard-agendas {
         margin-top: 50px;
+    }
+    
+    .new-agenda-card {
+        margin-top: 0;
     }
 
     .log-in-card, .agenda-list-card {

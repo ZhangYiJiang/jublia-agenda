@@ -79,7 +79,7 @@
 
     </div>
     
-    <div class="modal-footer">
+    <div class="modal-footer footer-buttons">
       <button md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
@@ -124,14 +124,17 @@
     <div class="modal-header">
       <h1>Notify Viewers of Session Updates</h1>
     </div>
+    
     <p>You have made some changes to the sessions. The attendees who have 
       bookmarked the following events will get an email regarding the changes made. 
     </p>
     
     <dirty-session [agenda]="agenda"></dirty-session>
     
-    <button md-button disableRipple type="button" class="primary" 
-            (click)="sendViewerUpdate(dialogRef)">Send Emails</button>
-    <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+    <div class="footer-buttons footer-buttons">
+      <button md-button disableRipple type="button" class="primary" 
+              (click)="sendViewerUpdate(dialogRef)">Send Emails</button>
+      <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+    </div>
   </div>
 </template>

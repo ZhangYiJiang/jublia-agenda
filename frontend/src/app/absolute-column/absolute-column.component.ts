@@ -60,7 +60,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
 
   containers: Container[] = [];
 
-  hours = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+  hours = GlobalVariable.HOURS;
 
   private PLACEHOLDER_DURATION: number = 15;
   private DEFAULT_DAY_START_OFFSET_MIN: number = 8 * 60; // default start time for column is 8AM
@@ -268,7 +268,8 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   private generateContainers() {
     // mins are relative to start of the day i.e. 8AM
     this.containers = [];
-    for (var mins = 0; mins < 12 * 60; mins += this.PLACEHOLDER_DURATION) {
+    // last container is 9PM
+    for (var mins = 0; mins <= 13 * 60; mins += this.PLACEHOLDER_DURATION) {
       this.containers.push({
         start_at: mins,
         sessions: this.getSessionByStartTime(mins)

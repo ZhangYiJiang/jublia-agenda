@@ -88,7 +88,9 @@ body {
     }
     
     .ng2-tag-input.default .ng2-tags-container .ng2-tag {
-        background: $color-secondary;
+        background: transparent;
+        border: 2px solid $color-primary;
+        color: $color-primary;
         height: auto;
         line-height: 1;
         font-size: 14px;
@@ -104,13 +106,14 @@ body {
         
         delete-icon {
             height: 16px;
-            
-            path {
-                transition: fill .15s;
-            }
+        }
+        
+        delete-icon path {
+            fill: $color-primary;
+            transition: fill .15s;
         }
 
-        &:hover path {
+        &:hover delete-icon path {
             fill: #fff;
         }
     }
@@ -187,6 +190,10 @@ body {
     
     .modal-footer {
         margin-top: 20px;
+    }
+
+    .footer-buttons .secondary {
+        float: right;
     }
 }
 

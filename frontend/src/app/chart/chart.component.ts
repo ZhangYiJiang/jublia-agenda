@@ -54,9 +54,16 @@ export class LineChartComponent implements OnInit {
         type: 'time',
         unit: 'day',
         unitStepSize: 1,
+        ticks: {
+          callback: function(dataLabel: any, index: number) {
+            return index % 2 === 0 ? dataLabel : null;
+          }
+        },
         time: {
+          // tooltipFormat: 'MMM DD',
           displayFormats: {
             day: 'MMM DD',
+            hour: 'MMM DD'
           },
         },
       }],

@@ -7,7 +7,8 @@
      [class.static]="isPublic" 
      [class.dark]="useDarkTheme"
      (click)="clicked(false)" 
-     [class.not-interested]="!interested">
+     [class.not-interested]="!interested"
+     [attr.title]="session.name">
   <div class="session-content">
     <div class="session-title">
       <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>

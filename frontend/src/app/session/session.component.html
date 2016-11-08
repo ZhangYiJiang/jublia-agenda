@@ -32,7 +32,7 @@
 
       <button md-button disableRipple
               *ngIf="isPublic&&!isAnalytics"
-              class="interestBtn"
+              class="interest-btn"
               [class.primary]="interested"
               [class.secondary]="!interested"
               (click)="updateInterest()">
@@ -220,10 +220,10 @@
       </div><!-- /.session-meta -->
     </div><!-- /.session-body -->
     
-    <div class="session-footer">
+    <div class="modal-footer footer-buttons">
       <button md-button disableRipple
               *ngIf="isPublic&&!isAnalytics"
-              class="interestBtn"
+              class="interest-btn"
               [class.primary]="interested"
               [class.secondary]="!interested"
               (click)="updateInterest()">

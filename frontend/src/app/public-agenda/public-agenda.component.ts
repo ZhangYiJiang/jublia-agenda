@@ -113,12 +113,10 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
       tagsIds.forEach(function(tagId: number) {
         let tag = _.find(tags, {'id': tagId});
         if(tag != null) {
-          console.log('used');
           tag.used = true;
         }
       })
     }
-    console.log(tags);
     return _.filter(tags, {'used': true });
   }
 

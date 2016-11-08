@@ -74,7 +74,7 @@ export class AgendaService {
     session.track = session.tracks[0];
     // display session by default
     session.toggle = true;
-    return _.defaults(session, new Session());
+    return <Session>_.defaults(session, new Session());
   }
 
   private static extractAgenda(agenda: any): Agenda {

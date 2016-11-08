@@ -75,7 +75,13 @@
               <p *ngIf="displayField(speakersObj[speakerId].company) || 
                         displayField(speakersObj[speakerId].position) || 
                         displayField(speakersObj[speakerId].email)">
-                
+
+                <span *ngIf="displayField(speakersObj[speakerId].position)">
+                  <ndv-edit title="position" 
+                            [placeholder]="speakersObj[speakerId].position || 'Add position'" 
+                            (onSave)="updateSpeaker($event, speakerId)" 
+                            [permission]="!isPublic"></ndv-edit>,
+                </span>
                 <span *ngIf="displayField(speakersObj[speakerId].company)">
                   <ndv-edit title="company"
                             [placeholder]="speakersObj[speakerId].company || 'Add company'"
@@ -83,13 +89,6 @@
                             [permission]="!isPublic"></ndv-edit>
                 </span>
                 
-                <span *ngIf="displayField(speakersObj[speakerId].position)">
-                  <ndv-edit title="position" 
-                            [placeholder]="speakersObj[speakerId].position || 'Add position'" 
-                            (onSave)="updateSpeaker($event, speakerId)" 
-                            [permission]="!isPublic"></ndv-edit>
-                </span>
-
                 <span *ngIf="displayField(speakersObj[speakerId].email)">
                   <ndv-edit title="email"
                             [placeholder]="speakersObj[speakerId].email || 'Add email'"

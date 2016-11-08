@@ -220,9 +220,9 @@
       </div><!-- /.session-meta -->
     </div><!-- /.session-body -->
     
-    <div class="modal-footer footer-buttons">
+    <div class="modal-footer">
       <button md-button disableRipple
-              *ngIf="isPublic&&!isAnalytics"
+              *ngIf="isPublic && !isAnalytics"
               class="interest-btn"
               [class.primary]="interested"
               [class.secondary]="!interested"
@@ -230,8 +230,8 @@
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
-      <button type="button" md-button disableRipple class="secondary" (click)="dialogRef.close(true)">Close</button>
       <button type="button" md-button disableRipple class="warn" *ngIf="!isPublic" (click)="confirmDelete(dialogRef)">Delete</button>
+      <button type="button" md-button disableRipple class="secondary close-btn" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>

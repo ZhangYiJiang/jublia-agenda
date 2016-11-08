@@ -45,6 +45,10 @@ class ViewerCreateTest(BaseAPITestCase):
         self.assertIsErrorDetail(second_response.data)
         self.assertEmailSent(2)
 
+    def test_email_required(self):
+        response = self.client.post(self.url, {})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_multiple_agenda(self):
         viewer = factory.viewer()
         tokens = set()

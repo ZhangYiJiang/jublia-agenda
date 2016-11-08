@@ -70,17 +70,18 @@
     padding: 10px;
     
     .modal-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        
         h1 {
-            margin-top: 0;
+            margin: 0;
             font-size: 28px;
+            flex: 1 auto;
         }
         
         ndv-edit .ndv-comp {
             display: block;
-        }
-        
-        button {
-            float: right;
         }
     }
     

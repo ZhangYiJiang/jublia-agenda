@@ -6,13 +6,19 @@
     <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
     <div class="agenda-menu">
       <button md-button disableRipple class="secondary" 
-              *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">Notify Attendees</button>
-      <button *ngIf="!agenda.published" md-button disableRipple 
-              [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()">Publish</button>
-      <button *ngIf="agenda.published" md-button disableRipple 
-              [class.warn]="!agenda.published" [class.secondary]="agenda.published" (click)="openPublishModal()"><i class="fa fa-check" aria-hidden="true"></i> Published</button>
+              *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">
+        Notify Attendees
+      </button>
+      <button *ngIf="!agenda.published" md-button disableRipple class="primary" (click)="openPublishModal()">
+        Publish
+      </button>
+      <button *ngIf="agenda.published" md-button disableRipple class="secondary" (click)="openPublishModal()">
+        <i class="fa fa-check" aria-hidden="true"></i> Published
+      </button>
       <button md-button disableRipple class="secondary" 
-              *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">Analytics</button>
+              *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">
+        Analytics
+      </button>
       <button md-button disableRipple class="secondary" 
               (click)="showAgendaSettings()">
         <i class="fa fa-cog" aria-hidden="true"></i> Event Settings

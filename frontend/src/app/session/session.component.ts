@@ -397,11 +397,7 @@ export class SessionComponent implements OnInit {
   }
 
   updateInterestButtonText() {
-    if(this.interested) {
-      this.interestedButtonText = 'Bookmarked. Click to remove';
-    } else {
-      this.interestedButtonText = 'Bookmark This Session';
-    }
+    this.interestedButtonText = this.interested ? 'Bookmarked' : 'Bookmark';
   }
 
   updateHeight() {

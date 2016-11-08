@@ -4,4 +4,6 @@ export class Tag {
   url: string;
   // only on front-end
   toggle: boolean;
+  // if tag is used by any session
+  used: boolean;
 }

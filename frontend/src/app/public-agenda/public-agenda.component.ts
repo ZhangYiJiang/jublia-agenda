@@ -100,9 +100,31 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     }
   }
 
+  // filter tags that are not used on any sessions
+  // TODO: Move this to backend
+  getFilteredTags(): Tag[] {
+    let tags = this.getEventTags();
+    for (var i = 0; i < this.agenda.sessions.length; i++) {
+      let session = this.agenda.sessions[i];
+      if(session.categories == null) {
+        continue;
+      }
+      let tagsIds = session.categories[this.defaultCategory];
+      tagsIds.forEach(function(tagId: number) {
+        let tag = _.find(tags, {'id': tagId});
+        if(tag != null) {
+          console.log('used');
+          tag.used = true;
+        }
+      })
+    }
+    console.log(tags);
+    return _.filter(tags, {'used': true });
+  }
+
   initTags() {
     this.defaultCategory = this.agenda.categories[0].id;
-    this.eventTags = this.getEventTags();
+    this.eventTags = this.getFilteredTags();
     this.toggleAllTags(true);
   }
 

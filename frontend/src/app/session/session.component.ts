@@ -199,6 +199,9 @@ export class SessionComponent implements OnInit {
     } else if(typeof event.position === 'string') {
       newSpeaker.position = event.position;
       this.onSpeakerEdited.emit(newSpeaker);
+    } else if(typeof event.company === 'string') {
+      newSpeaker.company = event.company;
+      this.onSpeakerEdited.emit(newSpeaker);
     } else if(typeof event.profile === 'string') {
       newSpeaker.profile = event.profile;
       this.onSpeakerEdited.emit(newSpeaker);

@@ -16,7 +16,6 @@
     display: flex;
     height: $top-bar-height;
     overflow: auto;
-    //width: calc(100% - 90px);
     
     .agenda-buttons{
         position: fixed;
@@ -38,32 +37,66 @@
     }
 }
 
-.bookmarkForm {
+.bookmark-form {
     flex-direction: column;
-    .form-error-hint {
-        line-height: 1;
-        padding: 0px;
-    }
 
-}
-
-.bookmarkInput {
     md-input {
-        margin: 20px 20px 0 0 !important;
         width:100%;
     }
 }
 
 .agenda-info {
+    line-height: 1.3;
+    
     h1 {
         color: $color-primary;
         font-size: $size-large-text;
-        font-weight: normal;
         margin: 0 0 6px;
     }
     
     p {
         margin: 0 0 4px;
+    }
+    
+    .modal-body {
+        display: flex;
+    }
+    
+    .agenda-body {
+        flex: 1 0 360px;
+        margin-right: 20px;
+    }
+    
+    .agenda-map {
+        flex: 1 1 100%;
+        height: 400px;
+        position: relative;
+        
+        .fa {
+            position: absolute;
+            left: calc(50% - 30px);
+            top: calc(50% - 30px);
+        }
+
+        iframe {
+            display: block;
+            border: 0;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+    }
+
+    @media (max-width: 960px) {
+        .modal-body {
+            display: block;
+            max-width: 500px;
+        }
+        
+        .agenda-body {
+            margin: 0;
+        }
     }
 
     .agenda-subtitle {
@@ -86,17 +119,6 @@
     }
 }
 
-iframe.map {
-    border: 0;
-    margin-top: 10px;
-    width: 100%;
-    position: relative;
-}
-
-.footer-buttons {
-    margin-top: 20px;
-}
-
 .viewer {
     max-width: 420px;
     
@@ -110,21 +132,6 @@ iframe.map {
         line-height: 1.4;
         font-size: $size-normal-text;
         margin: 0 0 10px;
-    }
-}
-
-.viewer-register {
-    display: flex;
-    align-items: flex-end;
-    
-    md-input {
-        flex: 1 auto;
-        margin: 0 10px -10px 0;
-    }
-
-    button {
-        line-height: 30px;
-        font-size: 14px;
     }
 }
 

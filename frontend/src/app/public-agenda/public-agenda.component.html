@@ -1,58 +1,66 @@
 <template #infoRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
-  <div class="modal-container narrow">
+  <div class="modal-container agenda-info">
     <div class="modal-header centered-header">
       <h1>{{ agenda.name }}</h1>
     </div>
     
-    <section class="agenda-info">
-      <p *ngIf="agenda.website" class="agenda-subtitle">
-        <a href="{{agenda.website | encodeURI}}" target="_blank">
-          <i class="fa fa-link fa-fw" title="Event Website"></i> {{agenda.website}}
-        </a>
-      </p>
-      <p *ngIf="agenda.location" class="agenda-subtitle">
-        <a href="http://maps.google.com/?q={{agenda.location | encodeURIComponent}}" target="_blank">
-          <i class="fa fa-map-o fa-fw" title="Location"></i> {{agenda.location}}
-        </a>
-      </p>
+    <div class="modal-body">
+      <div class="agenda-body">
+        <p *ngIf="agenda.website" class="agenda-subtitle">
+          <a href="{{agenda.website | encodeURI}}" target="_blank">
+            <i class="fa fa-link fa-fw" title="Event Website"></i> {{agenda.website}}
+          </a>
+        </p>
+        <p *ngIf="agenda.location" class="agenda-subtitle">
+          <a href="http://maps.google.com/?q={{agenda.location | encodeURIComponent}}" target="_blank">
+            <i class="fa fa-map-o fa-fw" title="Location"></i> {{agenda.location}}
+          </a>
+        </p>
+        
+        <p class="agenda-desc">{{agenda.description}}</p>
+      </div>
       
-      <p class="agenda-desc">{{agenda.description}}</p>
-    </section>
-    <div *ngIf="agenda.location">
-      <iframe frameborder="0" class="map" [src]="mapsEmbedUrl" allowfullscreen></iframe>
+      <div class="agenda-map">
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+        <iframe frameborder="0" *ngIf="agenda.location" [src]="mapsEmbedUrl" allowfullscreen></iframe>
+      </div>
     </div>
-    <div class="footer-buttons">
+    
+    <div class="modal-footer">
       <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
     </div>
-  </div>
+  </div><!-- /.agenda-info -->
 </template>
 
 <template #bookmarkRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container">
    <section class="viewer">
       <div *ngIf="!token">
-        <h2>Personalize this agenda</h2>
+        <div class="modal-header">
+          <h1>Personalize this agenda</h1>
+        </div>
+        
         <p>Bookmark sessions you want to attend, receive updates from the organizers and more! 
           Get started by entering email below.</p>
         <p>Enter mobile number to receive SMS notifications before your bookmarked sessions start.</p>
-        <form class="viewer-register bookmarkForm" (ngSubmit)="createToken(dialogRef)">
-          <div class="bookmarkInput">
+        
+        <form class="bookmark-form" (ngSubmit)="createToken(dialogRef)">
           <md-input required placeholder="Email" (focus)="bookmarkError=undefined" [(ngModel)]="email" name="email">
             <md-hint class="form-error-hint" align="start">{{bookmarkError}}</md-hint>
           </md-input>
           <md-input placeholder="Mobile number" (focus)="mobileError=undefined" [(ngModel)]="mobile" name="mobile">
             <md-hint class="form-error-hint" align="start">{{mobileError}}</md-hint>
           </md-input>
-          </div>
-          <div class="footer-buttons">
+          <div class="footer-buttons modal-footer">
             <button [disabled]="bookmarkSubmitting" md-button disableRipple="true" type="submit" class="primary">
-            <i *ngIf="bookmarkSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
-            Go!
+              <i *ngIf="bookmarkSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+              Go!
             </button>
             <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
           </div>
         </form>
       </div>
+     
       <div class="clearfix" *ngIf="token">
         <h2>Personal schedule for {{email}}</h2>
         <div class="interested-toggle">
@@ -65,7 +73,7 @@
         </div>
       </div>
     </section>
-  </div>
+  </div><!-- /.viewer -->
 </template>
 
 <template #toggleRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
@@ -89,7 +97,7 @@
 
 <div *ngIf="agenda">
   <div class="clearfix agenda-menu">
-    <h1 class="agenda-title"><strong>{{agenda.name}}</strong></h1>
+    <h1 class="agenda-title">{{agenda.name}}</h1>
     <div class="agenda-buttons">
       <button class="primary" md-button disableRipple (click)="showInfo()">
         <i class="fa fa-info-circle" aria-hidden="true"></i> Info
@@ -103,6 +111,7 @@
     </div>      
   </div>
   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" 
-         [interestedSessionIds]="interestedSessionIds" [class.hide-no-interest]="interestToggleModel">
+         [interestedSessionIds]="interestedSessionIds" 
+         [class.hide-no-interest]="interestToggleModel">
   </board>
 </div>

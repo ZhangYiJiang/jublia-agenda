@@ -72,10 +72,10 @@ export class SpeakerComponent implements OnInit {
       isValid = false;
     }
     
-    if (!this.speakerForm.value.company || this.speakerForm.value.company.trim() === '') {
-      this.formErrors.company = 'Required';
-      isValid = false;
-    }
+    // if (!this.speakerForm.value.company || this.speakerForm.value.company.trim() === '') {
+    //   this.formErrors.company = 'Required';
+    //   isValid = false;
+    // }
     
     return isValid;
   }

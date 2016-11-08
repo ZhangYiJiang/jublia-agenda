@@ -99,6 +99,14 @@
   <div class="clearfix agenda-menu">
     <h1 class="agenda-title">{{agenda.name}}</h1>
     <div class="agenda-buttons">
+      <button *ngIf="!isListView" md-button disableRipple class="primary"
+              (click)="toggleView()">
+        <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> / <i class="fa fa-list fa-fw toggled-off" aria-hidden="true"></i>
+      </button>
+      <button *ngIf="isListView" md-button disableRipple class="primary"
+              (click)="toggleView()">
+        <i class="fa fa-calendar fa-fw toggled-off" aria-hidden="true"></i> / <i class="fa fa-list fa-fw" aria-hidden="true"></i>
+      </button>
       <button class="primary" md-button disableRipple (click)="showInfo()">
         <i class="fa fa-info-circle" aria-hidden="true"></i> Info
       </button>

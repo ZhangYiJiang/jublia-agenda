@@ -10,6 +10,17 @@
     }
 }
 
+// fix list icon height to be consistent with calendar icon
+.fa-list {
+    font-size: 15px;
+    top: 1px;
+    position: relative;
+}
+
+.toggled-off {
+    opacity: 0.55;
+}
+
 .agenda-menu {
     top: 0;
     display: flex;

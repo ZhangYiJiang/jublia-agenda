@@ -5,32 +5,32 @@
   <div class="agenda-header">
     <h1 class="agenda-title">Planning for <strong>{{agenda.name}}</strong></h1>
     <div class="agenda-menu">
-      <button *ngIf="!isTableView" md-button disableRipple class="secondary" tooltip="Switch Calendar/Table View"
+      <button *ngIf="!isListView" md-button disableRipple class="secondary" tooltip="Switch Calendar/Table View"
               (click)="toggleView()">
-        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>
       </button>
-      <button *ngIf="isTableView" md-button disableRipple class="secondary" tooltip="Switch Calendar/Table View"
+      <button *ngIf="isListView" md-button disableRipple class="secondary" tooltip="Switch Calendar/List View"
               (click)="toggleView()">
-        <i class="fa fa-table" aria-hidden="true"></i>
+        <i class="fa fa-list fa-fw" aria-hidden="true"></i>
       </button>
       <button *ngIf="!agenda.published" md-button disableRipple class="primary" (click)="openPublishModal()">
         Publish
       </button>
       <button *ngIf="agenda.published" md-button disableRipple class="secondary" tooltip="Public Link"
               (click)="openPublishModal()">
-        <i class="fa fa-link" aria-hidden="true"></i>
+        <i class="fa fa-link fa-fw" aria-hidden="true"></i>
       </button>
       <button md-button disableRipple class="secondary" tooltip="Analytics"
               *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">
-        <i class="fa fa-line-chart" aria-hidden="true"></i>
+        <i class="fa fa-line-chart fa-fw" aria-hidden="true"></i>
       </button>
       <button md-button disableRipple class="secondary" tooltip="Agenda Settings"
               (click)="showAgendaSettings()">
-        <i class="fa fa-cog" aria-hidden="true"></i>
+        <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
       </button>
       <button md-button disableRipple class="secondary" 
               *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">
-        <i class="fa fa-bell" aria-hidden="true"></i> Notify Attendees
+        <i class="fa fa-bell fa-fw" aria-hidden="true"></i> Notify Attendees
       </button>
     </div>
   </div>

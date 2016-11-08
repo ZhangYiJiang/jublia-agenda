@@ -44,7 +44,7 @@ export class AgendaComponent implements OnInit{
   publicUrl: string;
   clipboardStatus: string;
 
-  isTableView: false;
+  isListView = false;
 
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChild('publishRef') public publishRef: TemplateRef<any>;
@@ -63,8 +63,8 @@ export class AgendaComponent implements OnInit{
   }
 
   toggleView() {
-    this.isTableView = !this.isTableView;
-    console.log('table view: ' + this.isTableView);
+    this.isListView = !this.isListView;
+    console.log('list view: ' + this.isListView);
   }
 
   updateAgenda(event: any) {

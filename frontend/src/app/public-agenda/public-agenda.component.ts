@@ -79,6 +79,8 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   defaultCategory: number;
 
   mapsEmbedUrl: SafeResourceUrl;
+
+  isListView = false;
   
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
@@ -98,6 +100,11 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     } else {
       return this.agenda.categories[0].tags;
     }
+  }
+
+  toggleView() {
+    this.isListView = !this.isListView;
+    console.log('list view: ' + this.isListView);
   }
 
   // filter tags that are not used on any sessions

@@ -27,9 +27,16 @@ export class DashBoardService {
     this.currentUser.authed = tokenNotExpired(this.TOKEN_NAME);
   }
   
-  signUp(email: string, password: string, organiser: string, event: string): Observable<number> {
-    console.log(email+'\n'+password+'\n'+organiser+'\n'+event);
-    let body = JSON.stringify({ username: email, password: password, company: organiser, event_name: event});
+  signUp(email: string, password: string, company: string, event: string): Observable<number> {
+    console.log(email+'\n'+password+'\n'+company+'\n'+event);
+    
+    const body = JSON.stringify({ 
+      username: email, 
+      password, 
+      company, 
+      event_name: event,
+    });
+    
     return this.httpClient.post('/api/users/sign_up', body)
                     .map(this.extractStatus)
                     .catch(this.handleError);
@@ -55,16 +62,15 @@ export class DashBoardService {
                     .catch(this.handleError);
   }
 
-  createAgenda(name: string, description: string, location: string, start: string, duration: number, website: string, tracks: string[]): Observable<any> {
+  createAgenda(name: string, description: string, location: string, start_at: string, duration: number, website: string, tracks: string[]): Observable<any> {
     const body = JSON.stringify({
-      name: name, 
-      description: description, 
-      location: location, 
-      published: false, 
-      start_at: start, 
-      duration: duration,
-      tracks: tracks,
-      website: website,
+      name, 
+      description, 
+      location, 
+      start_at, 
+      duration,
+      tracks,
+      website,
     });
     
     return this.httpClient.post('/api/agendas', body)
@@ -91,7 +97,8 @@ export class DashBoardService {
       this.currentUser.authed = false;
       return false;
     }
-  }
+  };
+  
   private extractStatus(res: Response) {
     console.log(res.status);
     return res.status;

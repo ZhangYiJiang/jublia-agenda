@@ -9,7 +9,7 @@
       <tr><md-input placeholder="Password" required (focus)="clearSignUpErrors()" type="password" [(ngModel)]="registerPassword" name="password" autocomplete="new-password">
         <md-hint class="form-error-hint" align="start">{{registerPasswordError}}</md-hint>
       </md-input></tr>
-      <tr><md-input placeholder="Event Organiser" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
+      <tr><md-input placeholder="Company Name" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
       <tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
       </table>
       <button [disabled]="registerSubmitting" class="primary" md-button type="submit" disableRipple="true">
@@ -111,7 +111,8 @@
           </div>
           
           <div>
-            <md-input type="number" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)">
+            <md-input type="number" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)" 
+                      (focus)="clearError('duration ')">
               <md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
             </md-input>
           </div>

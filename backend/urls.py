@@ -36,6 +36,9 @@ urlpatterns = [
     # File upload endpoints
     url(r'^uploads/image$', views.UploadImage.as_view(), name='upload-image'),
 
+    # Demo route
+    url(r'demo', views.create_demo_viewer, name='demo'),
+
     # Session listing, detail
     url(agenda_id + r'sessions/(?P<pk>[1-9][0-9]*)/calendar$',
         views.SessionCalendar.as_view(), name='session-calendar'),

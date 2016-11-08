@@ -1,4 +1,6 @@
 from django.db.transaction import atomic
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
@@ -21,6 +23,11 @@ def create_viewer(request, agenda_id):
     serializer.is_valid(True)
     viewer = serializer.save()
     return Response({'token': viewer.token}, status=status.HTTP_201_CREATED)
+
+
+@require_GET
+def create_demo_viewer(request):
+    return HttpResponse()
 
 
 def get_viewer(agenda_id, token):

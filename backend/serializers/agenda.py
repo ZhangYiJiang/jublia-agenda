@@ -67,8 +67,8 @@ class BaseAgendaSerializer(BaseSerializer):
 
     class Meta:
         model = Agenda
-        fields = ('id', 'name', 'location', 'description', 'published', 'icon',
-                  'start_at', 'end_at', 'duration', 'website',)
+        fields = ('id', 'name', 'location', 'start_at', 'description', 'published', 'end_at',
+                  'website', 'duration', 'icon', 'slug',)
 
 
 class AgendaSerializer(BaseAgendaSerializer):
@@ -82,5 +82,6 @@ class AgendaSerializer(BaseAgendaSerializer):
     class Meta:
         model = Agenda
         fields = ('id', 'name', 'location', 'start_at', 'description', 'published', 'end_at',
-                  'website', 'duration', 'icon',
+                  'website', 'duration', 'icon', 'slug',
+                  # Relationships
                   'categories', 'sessions', 'tracks', 'speakers', 'session_venues',)

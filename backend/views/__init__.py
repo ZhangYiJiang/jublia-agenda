@@ -1,4 +1,4 @@
-from .agenda import AgendaList, AgendaDetail, AgendaDirtySession
+from .agenda import AgendaList, AgendaDetail, SlugAgendaDetail, AgendaDirtySession
 from .analytics import analytics
 from .attachment import UploadImage
 from .calendar import AgendaCalendar, SessionCalendar, ViewerCalendar

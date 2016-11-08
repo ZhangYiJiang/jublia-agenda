@@ -182,6 +182,9 @@ export class SessionComponent implements OnInit {
   }
 
   addSessionSpeaker(speakerId: number) {
+    if (!this.speakersObj[speakerId]){
+      this.speakersObj[speakerId] = _.find(this.agenda.speakers, ['id',speakerId]);
+    }
     if (!this.session.speakers) {
       this.session.speakers = [];
     }
@@ -212,12 +215,13 @@ export class SessionComponent implements OnInit {
   }
 
   onSpeakerAdded(newSpeaker: Speaker) {
-    this.onSpeakerAdded2.emit(newSpeaker);
+    //this.onSpeakerAdded2.emit(newSpeaker);
     if (!this.session.speakers) {
       this.session.speakers = [];
     }
     this.session.speakers.push(newSpeaker.id);
-    this.onSessionEdited.emit(this.session);
+    this.agenda.speakers.push(newSpeaker);
+    //this.onSessionEdited.emit(this.session);
     this.speakersObj[newSpeaker.id] = newSpeaker;
   }
 

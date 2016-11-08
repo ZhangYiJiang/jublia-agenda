@@ -1,6 +1,6 @@
 export const GlobalVariable = Object.freeze({
   DEFAULT_NEW_DURATION: 60,
-  APP_NAME: 'Agenda Builder',
+  APP_NAME: 'A*genda',
   
   TOKEN_NAME: 'auth_token',
   

@@ -44,6 +44,8 @@ export class AgendaComponent implements OnInit{
   publicUrl: string;
   clipboardStatus: string;
 
+  isTableView: false;
+
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChild('publishRef') public publishRef: TemplateRef<any>;
   @ViewChild('dirtyRef') public dirtyRef: TemplateRef<any>;
@@ -58,6 +60,11 @@ export class AgendaComponent implements OnInit{
     });
     
     this.publicUrl = GlobalVariable.BASE_URL + GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agendaId;
+  }
+
+  toggleView() {
+    this.isTableView = !this.isTableView;
+    console.log('table view: ' + this.isTableView);
   }
 
   updateAgenda(event: any) {

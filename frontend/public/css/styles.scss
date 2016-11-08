@@ -95,7 +95,7 @@ body {
         line-height: 1;
         font-size: 14px;
         align-items: center;
-        padding: 6px 8px 6px 12px;
+        padding: 6px 12px;
         margin: 0 4px 2px 0;
         
         &:hover:not(.tag--readonly),
@@ -106,6 +106,7 @@ body {
         
         delete-icon {
             height: 16px;
+            margin-right: -6px;
         }
         
         delete-icon path {

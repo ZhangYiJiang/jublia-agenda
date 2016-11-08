@@ -17,42 +17,25 @@ form md-input, form .field-with-label {
 
 .sign-up-form {
     margin-top: 100px;
+    
     table {
         margin-bottom: 20px;
     }
 }
 
-.user-form {
-    display: flex;
-    align-items: center;
-    margin-top: 150px;
-}
-
 .log-in-card {
-    border-right: 2px solid $color-secondary;
-    padding: 0 40px 20px 0;
-    
     table md-input {
         margin-bottom: 20px;
     }
 }
 
 .sign-up-card {
-    width: 300px;
-    margin-left: 20px;
-}
-
-.dashboard-agendas {
-    display: flex;
-    margin-top: 50px;
+    max-width: 300px;
+    margin: 40px 0;
 }
 
 .agenda-list-card {
     width: 300px;
-
-    padding-right: 40px;
-    margin-right: 40px;
-    border-right: 2px solid $color-secondary;
     
     .delete-toggle {
         color: $color-primary;
@@ -118,6 +101,8 @@ form md-input, form .field-with-label {
 }
 
 .new-agenda-card {
+    margin: 40px 0;
+    
     md-input {
         margin-bottom: 10px;
     }
@@ -171,4 +156,31 @@ form md-input, form .field-with-label {
 .vex-1-button-group {
     margin: auto;
     width: 13%;
+}
+
+.dashboard-agendas, .user-form {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+@media (min-width: 800px) {
+    .dashboard-agendas, .user-form {
+        flex-direction: row;
+    }
+    
+    .user-form {
+        margin-top: 150px;
+    }
+    
+    .dashboard-agendas {
+        margin-top: 50px;
+    }
+
+    .log-in-card, .agenda-list-card {
+        padding: 0 40px 20px 0;
+        margin-right: 40px;
+        border-right: 2px solid $color-secondary;
+    }
 }

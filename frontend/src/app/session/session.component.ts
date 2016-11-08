@@ -298,6 +298,11 @@ export class SessionComponent implements OnInit {
            !isNaN(parseInt(value, 10));
   }
   
+  displayField(field: any): boolean {
+    // Only display a field if its value is non-empty and this is editor view
+    return (!this.isPublic && !this.isAnalytics) || field;
+  }
+  
   agendaPath(): string {
     return GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agenda.id + (this.token?'/'+this.token:'');
   }

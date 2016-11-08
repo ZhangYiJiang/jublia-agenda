@@ -50,10 +50,11 @@
           <ndv-area title="description" [placeholder]="session.description || 'Enter description here'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
         </p>
         
-        <template [ngIf]="!isPublic || (session.speakers && session.speakers.length)">
+        <template [ngIf]="displayField(session.speakers)">
           <h2>
             <i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers
           </h2>
+          
           <div *ngIf="!isPublic">
             <select [ngModel]="selectedSpeaker" (ngModelChange)="addSessionSpeaker($event.id)">
               <option value="" disabled selected hidden>Select Speakers</option>
@@ -61,6 +62,7 @@
             </select>
             <speaker-form [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event)"></speaker-form>
           </div>
+          
           <div *ngIf="session.speakers">
             <div class="speaker-card" *ngFor="let speakerId of session.speakers">
               <h3>{{ speakersObj[speakerId].name }}
@@ -69,21 +71,44 @@
                 <!-- name not editable for now to avoid uniqueness conflicts -->
                 <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
               </h3>
-              <p><ndv-edit title="position" 
-                           [placeholder]="speakersObj[speakerId].position || 'Add company position'" 
-                           (onSave)="updateSpeaker($event, speakerId)" 
-                           [permission]="!isPublic"></ndv-edit>
+              
+              <p *ngIf="displayField(speakersObj[speakerId].company) || 
+                        displayField(speakersObj[speakerId].position) || 
+                        displayField(speakersObj[speakerId].email)">
+                
+                <span *ngIf="displayField(speakersObj[speakerId].company)">
+                  <ndv-edit title="company"
+                            [placeholder]="speakersObj[speakerId].company || 'Add company'"
+                            (onSave)="updateSpeaker($event, speakerId)"
+                            [permission]="!isPublic"></ndv-edit>
+                </span>
+                
+                <span *ngIf="displayField(speakersObj[speakerId].position)">
+                  <ndv-edit title="position" 
+                            [placeholder]="speakersObj[speakerId].position || 'Add position'" 
+                            (onSave)="updateSpeaker($event, speakerId)" 
+                            [permission]="!isPublic"></ndv-edit>
+                </span>
+
+                <span *ngIf="displayField(speakersObj[speakerId].email)">
+                  <ndv-edit title="email"
+                            [placeholder]="speakersObj[speakerId].email || 'Add email'"
+                            (onSave)="updateSpeaker($event, speakerId)"
+                            [permission]="!isPublic"></ndv-edit>
+                </span>
+                
               </p>
-              <p>
+              
+              <p *ngIf="displayField(speakersObj[speakerId].profile)">
                 <ndv-area title="profile" 
                           [placeholder]="speakersObj[speakerId].profile || 'Add speaker profile'"
                           (onSave)="updateSpeaker($event, speakerId)" 
                           [permission]="!isPublic"></ndv-area>
               </p>
-              <p>Email: <ndv-edit title="email" [placeholder]="speakersObj[speakerId].email || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
-              <p>Phone: <ndv-edit title="phone_number" [placeholder]="speakersObj[speakerId].phone_number || '-'" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit></p>
+              
             </div>
           </div>
+          
           <div *ngIf="!session.speakers">
             <p>No speakers have been assigned to this session</p>
           </div>
@@ -91,7 +116,7 @@
       </div><!-- /.session-main -->
       
       <div class="session-meta">
-        <div *ngIf="isPublic&&!isAnalytics" class="session-sharing">
+        <div *ngIf="isPublic && !isAnalytics" class="session-sharing">
           <a href="{{ calendarLink() }}">
             <i class="fa fa-calendar" aria-hidden="true"></i> Export to iCal
           </a>

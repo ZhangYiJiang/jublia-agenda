@@ -353,6 +353,17 @@ input:-webkit-autofill {
     z-index: $tooltip-z-index;
 }
 
+.session-tooltip {
+    .tooltip-inner {
+        text-align: left;
+        div {
+            padding: 3px 0;
+            font-size: 13px;
+            line-height: 15px;
+        }
+    }
+}
+
 .tooltip {
     position: absolute;
     z-index: $tooltip-z-index;
@@ -404,6 +415,8 @@ input:-webkit-autofill {
 
 .tooltip-inner {
     max-width: 200px;
+    // force full width
+    width: 200px;
     padding: 3px 8px;
     color: $color-primary;
     text-align: center;

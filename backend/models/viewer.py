@@ -16,7 +16,7 @@ TIME_BETWEEN_EMAIL = timedelta(minutes=20)
 
 
 class Viewer(BaseModel):
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
     mobile = models.CharField(max_length=20, blank=True)
     token = models.CharField(
         max_length=30,

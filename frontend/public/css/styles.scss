@@ -140,7 +140,7 @@ body {
         padding: 10vh 15px;
 
         .vex-content {
-            padding: 30px;
+            padding: 25px;
             
             // Reset the font to our global font
             font-family: inherit;
@@ -200,7 +200,7 @@ body {
     width: 100%;
 }
 
-.fa-spinner {
+.fa-spinner, .fa-circle-o-notch {
     color: $color-primary;
 }
 

@@ -8,7 +8,7 @@ from .profile import Attachment
 
 class Speaker(BaseModel):
     name = models.CharField(max_length=255)
-    company = models.CharField(max_length=255)
+    company = models.CharField(max_length=255, blank=True)
     profile = models.TextField(blank=True)
     position = models.CharField(max_length=255, blank=True)
     email = models.EmailField(max_length=255, blank=True)

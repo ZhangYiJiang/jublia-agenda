@@ -19,8 +19,6 @@ export const GlobalVariable = Object.freeze({
     l: 48.4,
   },
   
-  DEFAULT_PROFILE: '',
-  
   TAG_INPUT_BTN_NO_TEXT : 'Enter tag name above',
   TAG_INPUT_BTN_WITH_TEXT : 'Create new tag',
   TAG_INPUT_BTN_EXIST_TAG : 'Tag already added',

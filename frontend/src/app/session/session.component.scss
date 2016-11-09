@@ -55,15 +55,19 @@
     }
 }
 
-// .placeholder-session {
-//     box-sizing: border-box;
-//     margin: 4px 10px;
-//     height: $height-per-15-min;
-// }
-
-
 .interest-btn {
     font-size: 14px;
+}
+
+.session-tooltip {
+    .tooltip-inner {
+        text-align: left;
+        div {
+            padding: 3px 0;
+            font-size: 13px;
+            line-height: 15px;
+        }
+    }
 }
 
 .session-modal {
@@ -73,7 +77,6 @@
     .modal-header {
         display: flex;
         align-items: center;
-        margin-bottom: 12px;
         
         h1 {
             margin: 0;
@@ -87,6 +90,7 @@
         
         .interest-btn {
             flex: 0 0 auto;
+            margin-left: 10px;
         }
     }
     
@@ -259,7 +263,7 @@
     }
     
     // Collapse down to single column when the screen is small
-    @media (max-width: 800px) {
+    @media (max-width: 840px) {
         width: auto;
 
         .session-body {

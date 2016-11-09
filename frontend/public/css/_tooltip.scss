@@ -1,17 +1,5 @@
 // tooltips
 // from bootstrap 3
-
-.session-tooltip {
-    .tooltip-inner {
-        text-align: left;
-        div {
-            padding: 3px 0;
-            font-size: 13px;
-            line-height: 15px;
-        }
-    }
-}
-
 .tooltip {
     position: absolute;
     z-index: $tooltip-z-index + 1;

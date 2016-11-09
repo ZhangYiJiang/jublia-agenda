@@ -51,8 +51,9 @@
             border-radius: 5px;
             box-shadow: none;
             border: 1px solid #dedede;
-            min-width: 5px;
+            width: 100%;
             line-height: inherit;
+            resize: vertical;
         }
         
         .ndv-buttons {
@@ -73,10 +74,6 @@
         
         .ndv-comp:hover {
             border: 1px solid grey;
-        }
-        
-        .ndv-comp textarea {
-            resize: vertical;
         }
     `],
     template: `<div *ngIf="!permission">{{text}}</div>

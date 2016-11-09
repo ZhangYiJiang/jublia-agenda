@@ -1,0 +1,26 @@
+
+html,
+body {
+    height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.15;
+}
+
+h2 {
+    font-size: 24px;
+    margin: 15px 0;
+}
+
+body {
+    background: #fff;
+    color: #4A4A4A;
+    font: 100% $body-font-family;
+    margin: 0;
+}

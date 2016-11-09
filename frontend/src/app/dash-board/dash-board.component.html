@@ -12,11 +12,12 @@
       <tr><md-input placeholder="Company Name" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
       <tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
       </table>
-      <button [disabled]="registerSubmitting" class="primary" md-button type="submit" disableRipple="true">
+      <button [disabled]="registerSubmitting" class="primary" md-button type="submit" disableRipple>
       <i *ngIf="registerSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
       Register
       </button>
-      <a class="secondary" md-button type="cancel" (click)="toggleSigningUp()">Cancel</a>      
+      <a class="secondary" md-button disableRipple 
+         (click)="toggleSigningUp()">Cancel</a>      
     </form>
   </div>
   
@@ -32,7 +33,7 @@
           <md-hint class="form-error-hint" align="start">{{loginPasswordError}}</md-hint>
         </md-input></tr>
         </table>
-        <button [disabled]="loginSubmitting" class="primary" md-button type="submit" disableRipple="true">
+        <button [disabled]="loginSubmitting" class="primary" md-button type="submit" disableRipple>
         <i *ngIf="loginSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
         Login
         </button>  
@@ -135,9 +136,9 @@
         </div>
         <div>
           <div class="other-error form-error-hint">{{formErrors.other}}</div>
-          <button [disabled]="newAgendaSubmitting" class="primary" md-button type="submit">
-          <i *ngIf="newAgendaSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
-          Submit
+          <button [disabled]="newAgendaSubmitting" class="primary" md-button disableRipple type="submit">
+            <i *ngIf="newAgendaSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+            Submit
           </button>
         </div>
       </form>
@@ -150,8 +151,10 @@
 		<p><span class="vex-deleted-agenda-title">{{deletedAgenda.name}}</span> has been published. Public will have 
 			no access to the schedule after you delete it. Are you sure?</p>
 		<div class="vex-2-button-group">
-			<button class="warn" md-button type="button" (click)="deleteAgenda(deletedAgenda,dialogRef)">Yes</button>
-			<button class="secondary" md-button type="button" (click)="dialogRef.close(true)">No</button>
+			<button class="warn" md-button disableRipple type="button"  
+              (click)="deleteAgenda(deletedAgenda,dialogRef)">Yes</button>
+			<button class="secondary" md-button disableRipple type="button" 
+              (click)="dialogRef.close(true)">No</button>
 		</div>
 	</div>
 </template>
@@ -160,7 +163,7 @@
 	<div class="modal-container">
 		<p>Sign Up success! Please check your email and click on the verification link.</p>
 		<div class="vex-1-button-group">
-			<button class="primary" md-button type="button" (click)="dialogRef.close(true)">OK</button>
+			<button class="primary" md-button disableRipple type="button" (click)="dialogRef.close(true)">OK</button>
 		</div>
 	</div>
 </template>

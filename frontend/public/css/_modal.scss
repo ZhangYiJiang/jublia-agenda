@@ -1,0 +1,72 @@
+.vex-content {
+    .full-width .ndv-comp,
+    .full-width input,
+    .full-width textarea {
+        width: 100%;
+    }
+    .small-input input {
+        width: 50px;
+    }
+    input,
+    textarea {
+        font-size: inherit;
+        line-height: inherit;
+    }
+}
+
+// Overrides - using the body tag to override the specificity of some of these 
+// themed widget's themes 
+body {
+    // Vex's default theme fixes the width of the modal. This doesn't work for us 
+    // because we need the modal to be more flexible. We use flexbox and 
+    // inline-block instead for centering    
+    .vex.vex-theme-default {
+        display: flex;
+        align-items: flex-start;
+        padding: 10vh 15px;
+        .vex-content {
+            padding: 25px;
+            // Reset the font to our global font
+            font-family: inherit;
+            // Remove the default width 
+            width: auto;
+            max-width: 960px;
+            display: inline-block;
+        }
+    }
+    // We need to use dropdown menus inside modals, so their z-index
+    // need to be higher than the modal overlay's
+    .ng2-dropdown-menu-container {
+        z-index: $dropdown-menu-z-index;
+        // limit height of the dropdown so that it do not flicker when near the bottom of the screen
+        max-height: 100px;
+        .ng2-menu-item {
+            height: 40px;
+            line-height: 40px;
+        }
+    }
+}
+
+.modal-container {
+    &.narrow {
+        width: 460px;
+        @media (max-width: 960px) {
+            width: 100%;
+        }
+    }
+    .modal-header {
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .centered-header {
+            text-align: center;
+        }
+    }
+    .modal-footer {
+        margin-top: 20px;
+    }
+    .footer-buttons .secondary {
+        float: right;
+    }
+}

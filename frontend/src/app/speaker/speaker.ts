@@ -9,4 +9,5 @@ export class Speaker {
 	position: string;
 	profile: string;
 	url: string;
+	image: string;
 }

@@ -1,8 +1,3 @@
-a,
-button {
-    transition: all .2s;
-}
-
 i.submitting-spinner {
     font-size: 18px;
 }
@@ -52,7 +47,7 @@ button[md-button],
     }
     
     .fa {
-        color: #fff;
+        color: inherit;
     }
     
     md-icon {

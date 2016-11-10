@@ -13,7 +13,12 @@
 
 .gu-mirror {
     opacity: 0.3;
+    
     .session-time {
+        display: none;
+    }
+
+    .session-tooltip {
         display: none;
     }
 }

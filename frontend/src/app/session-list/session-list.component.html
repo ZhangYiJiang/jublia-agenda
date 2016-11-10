@@ -1,0 +1,24 @@
+<ul class="session-list">
+  <li class="session-wrapper"
+    *ngFor="let session of allSessions">
+    <my-session [session]="session" 
+                [offsetDate]="offsetDate" 
+                [agenda]="agenda" 
+                [isPublic]="isPublic" 
+                [isAnalytics]="isAnalytics" 
+                *ngIf="!session.hasOwnProperty('toggle') || session.toggle === true"
+                [token]="token"
+                [interested]="isInterestedInSession(session)"
+                [analyticsData]="getAnalyticsDataForSession(session)"
+                [isSessionInList]="true"
+                (onSessionInterestEdited)="onSessionInterestEdited($event)"
+                (onSessionEdited)="onSessionEdited($event)"
+                (onSpeakerEdited)="onSpeakerEdited($event)"
+                (onSpeakerAdded2)="onSpeakerAdded($event)"
+                (onVenueEdited)="onVenueEdited($event)"
+                (onVenueAdded2)="onVenueAdded($event)"
+                (onSessionDeleted)="onSessionDeleted($event)"
+    >
+    </my-session>
+  </li>
+</ul>

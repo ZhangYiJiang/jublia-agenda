@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,gBAAiB,CAChB,MAAM,CAAE,MAAM",
+"sources": ["session-list.component.scss"],
+"names": [],
+"file": "session-list.component.css"
+}

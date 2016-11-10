@@ -37,6 +37,7 @@ import { OrderBy } from './pipes/orderby.pipe';
 import { Where } from './pipes/where.pipe';
 import { EncodeURIComponentPipe } from 'angular-pipes/src/string/encode-uri-component.pipe';
 import { EncodeURIPipe } from 'angular-pipes/src/string/encode-uri.pipe';
+import { TruncatePipe } from 'angular-pipes/src/string/truncate.pipe';
 
 import { LoggedInGuard } from './auth.guard.ts';
 
@@ -100,6 +101,7 @@ import {TooltipModule} from "ng2-tooltip";
     Where,
     EncodeURIComponentPipe,
     EncodeURIPipe,
+    TruncatePipe,
     
     NdvEditComponent,
     NdvEditAreaComponent,

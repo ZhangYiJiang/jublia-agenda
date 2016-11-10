@@ -22,9 +22,19 @@
 </div>
 
 <tooltip-content #myTooltip [animation]="true" placement="right" class="session-tooltip">
-  <div>{{session.name}}</div>
-  <div>{{getDisplayedTime()}}</div>
-  <div *ngIf="session.venue">{{getVenue().name}}</div>
+  <p class="session-tooltip-title">{{ session.name }}</p>
+  <p class="session-tooltip-subtitle">
+    {{ getDisplayedTime() }} 
+    <span *ngIf="session.venue">| {{ getVenue().name }}</span>
+  </p>
+  <p *ngIf="session.speakers">
+    <span class="session-tooltip-speaker" *ngFor="let speakerId of session.speakers">
+      {{ speakersObj[speakerId].name }}
+    </span>
+  </p>
+  <p *ngIf="session.description">
+    {{ session.description | truncate: 140: '...': true }}
+  </p>
 </tooltip-content>
 
 <template id="session.id" #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
@@ -79,8 +89,8 @@
                   </h3>
 
                   <p *ngIf="displayField(speakersObj[speakerId].company) || 
-                        displayField(speakersObj[speakerId].position) || 
-                        displayField(speakersObj[speakerId].email)">
+                            displayField(speakersObj[speakerId].position) || 
+                            displayField(speakersObj[speakerId].email)">
                     <strong *ngIf="displayField(speakersObj[speakerId].position)" class="session-speaker-position">
                       <ndv-edit title="position"
                                 [placeholder]="speakersObj[speakerId].position || 'Add position'"

@@ -88,9 +88,10 @@ export class AgendaComponent implements OnInit{
       
       this.agendaService.updateAgenda(this.agenda.id, event)
         .subscribe(
-          agenda => {
-            this.agenda = agenda;
-            this.myBoard.refreshAgenda(agenda);
+          () => {
+            // Changes to starting date requires the entire board component to be 
+            // reloaded, and it's easier to just refresh the page
+            window.location.reload();
           },
           error => console.log(error)
         );

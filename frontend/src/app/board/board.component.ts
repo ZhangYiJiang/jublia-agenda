@@ -51,8 +51,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   @ViewChild('scheduleRef') scheduleRef: ElementRef;
   scheduleLeft: string;
   scheduleTop: string;
-  isScrolling: boolean;
-  resetIsScrolling = _.debounce(() => {this.isScrolling = false}, 100);
   scrollingFrameId: number; 
 
   @Input() agenda: Agenda;
@@ -97,18 +95,16 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   hours = GlobalVariable.HOURS;
 
-  private PLACEHOLDER_DURATION: number = 15;
-
-  globalListenFunc: Function;
-
-  constructor(private dragulaService: DragulaService,
+  constructor(
+    private dragulaService: DragulaService,
     private agendaService: AgendaService,
     private boardService: BoardService,
     private domUtilService: DOMUtilService,
     public modal: Modal,
     private _fb: FormBuilder,
     private elementRef: ElementRef, 
-    private renderer: Renderer) {
+    private renderer: Renderer
+  ) {
     console.log('board constructor');
     this.dropSub = dragulaService.dropModel.subscribe((value: any) => {
       console.log('drop event in board');
@@ -466,15 +462,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     
     this.allSessions = this.agenda.sessions;
     [this.nonPendingSessions, this.pendingSessions] = _.partition(this.allSessions, 
-      (o:Session) => o.hasOwnProperty('start_at'));
-  }
-
-  refreshAgenda(newAgenda: Agenda) {
-    this.agenda = newAgenda;
-    this.eventDates = this.getEventDates();
-
-    this.allSessions = this.agenda.sessions;
-    [this.nonPendingSessions, this.pendingSessions] = _.partition(this.allSessions,
       (o:Session) => o.hasOwnProperty('start_at'));
   }
 

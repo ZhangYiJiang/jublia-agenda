@@ -40,6 +40,11 @@
     right: 0;
     bottom: 0;
     position: fixed;
+
+    .session-listview-container {
+        margin: 0 20%;
+        width: 80%;
+    }
 }
 
 .public .schedule, .analytics .schedule {

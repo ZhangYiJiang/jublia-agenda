@@ -6,13 +6,30 @@
     (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
     (onSessionInterestChanged)="onSessionInterestChanged($event)"
     (onSpeakerChanged)="onSpeakerChanged($event)"
-    (onVenueChanged)="onVenueChanged($event)" *ngIf="!isPublic">
+    (onVenueChanged)="onVenueChanged($event)" *ngIf="!isPublic && !isListView">
   </relative-column>
   <button md-mini-fab class="fab-add" disableRipple (click)="addingSessionWithStart=false;createSessionModal()" *ngIf="!isPublic">
     <md-icon>add</md-icon>
   </button>
   <div #scheduleRef class="schedule" (scroll)="keepfix()">
-    <div class="scroll-container">
+    <div *ngIf="isListView" class="session-listview-container">
+      <session-list
+                [sessions]="agenda.sessions"
+                [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"
+                (onSessionChanged)="onSessionChanged($event)"
+                (onSessionDeletedColumn)="onSessionDeletedColumn($event)"
+                (onSessionMovedFromPending)="onSessionMovedFromPending($event)"
+                (onSessionInterestChanged)="onSessionInterestChanged($event)"
+                (onSpeakerChanged)="onSpeakerChanged($event)"
+                (onSpeakerAdded2)="onSpeakerAdded($event, false)"
+                (onVenueChanged)="onVenueChanged($event)"
+                (onVenueAdded2)="onVenueAdded($event, false)"
+                (onCreateSessionWithStart)="onCreateSessionWithStart($event)"
+                [token]="token" [interestedSessionIds]="interestedSessionIds"
+                [analyticsData]="analyticsData">
+      </session-list>
+    </div>
+    <div *ngIf="!isListView" class="scroll-container">
       <div class="timescale" [style.left]="scheduleLeft">
         <div class="hour" *ngFor="let hour of hours">
         {{hour}}
@@ -42,7 +59,7 @@
           </div>
         </div>
       </div>
-    </div>     
+    </div>
   </div>
 </div>
 

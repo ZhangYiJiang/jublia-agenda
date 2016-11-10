@@ -121,6 +121,8 @@
   </div>
   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" 
          [interestedSessionIds]="interestedSessionIds" 
-         [class.hide-no-interest]="interestToggleModel">
+         [class.hide-no-interest]="interestToggleModel"
+         [isListView]="isListView"
+  >
   </board>
 </div>

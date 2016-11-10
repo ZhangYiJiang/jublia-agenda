@@ -59,6 +59,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   @Input() token: string;
   @Input() interestedSessionIds: number[];
   @Input() analyticsData: {};
+  @Input() isListView: boolean;
 
   offsetDate: Date;
   eventDates: Date[];

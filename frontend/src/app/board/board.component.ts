@@ -66,7 +66,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   eventCategories: Category[];
   eventTags: Tag[];
   eventTagsName: string[];
-  eventSpeakers: Speaker[];
   eventSpeakersName: string[];
   eventVenues: Venue[];
   eventVenuesName: string[];
@@ -272,7 +271,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     console.log('speaker changed in board');
     console.log(changedSpeaker);
     this.agendaService.updateSpeaker(this.agenda.id, changedSpeaker);
-    this.eventSpeakers = this.getEventSpeakers();
     this.eventSpeakersName = this.getEventSpeakersName();
   }
 
@@ -412,20 +410,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  getEventSpeakers(): Speaker[] {
-    if (!this.agenda.speakers || this.agenda.speakers.length === 0) {
-      return [];
-    } else {
-      return this.agenda.speakers;
-    }
-  }
-
   getEventSpeakersName(): string[] {
-    if (!this.eventSpeakers || this.eventSpeakers.length === 0) {
-      return [];
-    } else {
-      return this.eventSpeakers.map(speaker => speaker.name);
-    }
+    return this.agenda.speakers.map(speaker => speaker.name);
   }
 
   getEventVenues(): Venue[] {
@@ -455,7 +441,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.eventCategories = this.getEventCategories();
     this.eventTags = this.getEventTags();
     this.eventTagsName = this.getEventTagsName();
-    this.eventSpeakers = this.getEventSpeakers();
     this.eventSpeakersName = this.getEventSpeakersName();
     this.eventVenues = this.getEventVenues();
     this.eventVenuesName = this.getEventVenuesName();
@@ -589,7 +574,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   createSession(): Observable<any> {
     const speakersId: number[] = this.sessionForm.value.existingSpeakers
-        .map((name: string) => _.find(this.eventSpeakers, {name}).id);
+        .map((name: string) => _.find(this.agenda.speakers, {name}).id);
     
     const tagsId: number[] = this.sessionForm.value.tags
         .map((name: string) => _.find(this.eventTags, {name}).id);
@@ -656,16 +641,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   onSpeakerAdded(newSpeaker: Speaker, isForm: boolean) {
     console.log(isForm);
     this.agenda.speakers.push(newSpeaker);
-    console.log('speakers');
-    console.log(this.agenda.speakers);
-    //this.eventSpeakers.push(newSpeaker);
     this.eventSpeakersName.push(newSpeaker.name);
-    console.log('speakers');
-    console.log(this.agenda.speakers);
-   /* if (!this.agenda.speakers) {
-      this.agenda.speakers = [];
-    }
-    this.agenda.speakers.push(newSpeaker);*/
     if (isForm) {
       this.sessionForm.value.existingSpeakers.push(newSpeaker.name);
     }

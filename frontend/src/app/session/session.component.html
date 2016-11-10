@@ -142,7 +142,7 @@
                                 [placeholder]="speakersObj[speakerId].email || 'Add email'"
                                 (onSave)="updateSpeaker($event, speakerId)" 
                                 [permission]="!isPublic"></ndv-edit>
-                      <a *ngIf="isPublic" href="mailto:{{ speakersObj[speakerId].email | encodeURIComponent }}">
+                      <a *ngIf="isPublic" href="mailto:{{ speakersObj[speakerId].email }}">
                         {{ speakersObj[speakerId].email }}
                       </a>
                     </span>

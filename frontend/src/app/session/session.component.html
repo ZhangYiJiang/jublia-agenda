@@ -11,41 +11,49 @@
      [class.not-interested]="!interested"
      [tooltip]="myTooltip" tooltipPlacement="right" 
      [tooltipDisabled]="session.start_at == null || isSessionInList">
-  <div class="session-content">
-    <div class="session-title">
-      <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{session.name}}
-      <span *ngIf="session.track && isSessionInList">
-        - {{trackObj[session.track].name}}
-      </span>
-    </div>
     <!-- session time format is 'HH:mm - HH:mm' -->
-    <div *ngIf="!isSessionInList">
-      <div *ngIf="session.start_at && session.duration > 30" class="session-time">
-      {{getDisplayedTime()}}</div>
-      <div *ngIf="!session.start_at && session.duration" class="session-time">
-      {{session.duration}} min</div>
-       <div class="session-venue" *ngIf="session.venue && session.duration >= 60">{{ getVenue().name }}</div>
+  <template [ngIf]="!isSessionInList">
+    <div class="session-title">
+      <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i>
+      {{ session.name }}
     </div>
-    <div *ngIf="isSessionInList">
-      <div>
-        <span *ngIf="session.start_at" class="session-time">
-        {{getDisplayedDate()}} {{getDisplayedTime()}}</span>
-        <!-- should not happen since we show only sessions with start date -->
-        <span *ngIf="!session.start_at && session.duration" class="session-time">
-        {{session.duration}} min</span>
-        <span class="session-venue" *ngIf="session.venue">{{ getVenue().name }}</span>
-      </div>
-      <div *ngIf="session.speakers && isSessionInList">
-        By 
-        <span class="session-listview-speaker" *ngFor="let speakerId of session.speakers">
-          {{ speakersObj[speakerId].name }}
-        </span>
-      </div>
-      <div *ngIf="session.description && isSessionInList" class="session-listview-description">
-        {{ session.description | truncate: 140: '...': true }}
-      </div>
-    </div>
-  </div>
+    
+    <div *ngIf="session.start_at && session.duration > 30" class="session-time">
+    {{getDisplayedTime()}}</div>
+    <div *ngIf="!session.start_at && session.duration" class="session-time">
+    {{session.duration}} min</div>
+     <div class="session-venue" *ngIf="session.venue && session.duration >= 60">{{ getVenue().name }}</div>
+  </template>
+  
+  <template [ngIf]="isSessionInList">
+    <h2>{{ session.name }}</h2>
+    
+    <p class="session-listview-subtitle">
+      <span *ngIf="session.start_at">
+        {{getDisplayedDate()}} {{getDisplayedTime()}}
+      </span>
+      <!-- should not happen since we show only sessions with start date -->
+      <span *ngIf="!session.start_at && session.duration">
+        {{session.duration}} min
+      </span>
+      <span *ngIf="session.venue">
+        | {{ getVenue().name }}
+      </span>
+      <span *ngIf="session.track">
+        - {{ trackObj[session.track].name }}
+      </span>
+    </p>
+    
+    <p *ngIf="session.speakers" class="session-listview-speaker-list">
+      <span class="session-listview-speaker" *ngFor="let speakerId of session.speakers">
+        {{ speakersObj[speakerId].name }}
+      </span>
+    </p>
+    
+    <p *ngIf="session.description && isSessionInList" class="session-listview-description">
+      {{ session.description | truncate: 300: '...': true }}
+    </p>
+  </template>
 </div>
 
 <tooltip-content #myTooltip [animation]="true" placement="right" class="session-tooltip">

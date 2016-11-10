@@ -37,6 +37,7 @@
     "moment": "^2.15.1",
     "ng2-charts": "^1.4.1",
     "ng2-dragula": "^1.2.1",
+    "ng2-dropdown": "0.0.15",
     "ng2-tag-input": "0.4.0",
     "ng2-tooltip": "0.0.5",
     "normalize.css": "^5.0.0",

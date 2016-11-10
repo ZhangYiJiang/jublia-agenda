@@ -45,10 +45,14 @@
     padding: 0 5px;
 }
 
+.session-tooltip {
+    .tooltip-inner {
+         width: 200px;       
+    }
+}
 .tooltip-inner {
     max-width: 200px;
     // force full width
-    width: 200px;
     padding: 3px 8px;
     color: $color-primary;
     text-align: center;

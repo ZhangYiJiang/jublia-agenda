@@ -1,15 +1,5 @@
 @import '../../../public/css/variables';
 
-.agenda-title {
-    color: $color-primary;
-    margin-left: 50px;
-    margin-top: 10px;
-    
-    @media (max-width: 960px) {
-        margin-left: 0;
-    }
-}
-
 .toggled-off {
     opacity: 0.55;
 }
@@ -19,6 +9,15 @@
     display: flex;
     height: $top-bar-height;
     overflow: auto;
+    
+    h1 {
+        color: $color-primary;
+        margin: 10px 0 0 50px;
+
+        @media (max-width: 960px) {
+            margin-left: 0;
+        }
+    }
     
     .agenda-buttons{
         position: fixed;
@@ -173,6 +172,16 @@
         line-height: 1.4;
         font-size: $size-normal-text;
         margin: 0 0 10px;
+    }
+}
+
+.tag-filters {
+    -moz-columns: 3;
+    -webkit-columns: 3;
+    columns: 3;
+    
+    md-slide-toggle {
+        margin-top: 0;
     }
 }
 

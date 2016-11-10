@@ -78,16 +78,18 @@
 
 <template #toggleRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container">
-   <section class="viewer">
-        <p>Choose the tags to display</p>
-        <md-slide-toggle md-menu-item *ngFor="let tag of eventTags" [color]="'black'" 
-          [(ngModel)]="tag.toggle" (change)="onTagFilterChange($event)">
-            {{tag.name}}
-        </md-slide-toggle>
-        <button md-button disableRipple class="primary" (click)="showAll()">Show All</button>
-        <button md-button disableRipple class="warn" (click)="hideAll()">Hide All</button>
-        <button md-button disableRipple class="secondary" type="button" (click)="dialogRef.close(true)">Done</button>
-    </section>
+    <p>Choose the tags to display</p>
+    <div class="tag-filters">
+      <md-slide-toggle md-menu-item *ngFor="let tag of eventTags" [color]="'black'" 
+        [(ngModel)]="tag.toggle" (change)="onTagFilterChange($event)">
+          {{tag.name}}
+      </md-slide-toggle>
+    </div>
+    <div class="modal-footer">
+      <button md-button disableRipple class="primary" (click)="showAll()">Show All</button>
+      <button md-button disableRipple class="warn" (click)="hideAll()">Hide All</button>
+      <button md-button disableRipple class="secondary" type="button" (click)="dialogRef.close(true)">Done</button>
+    </div>
   </div>
 </template>
 

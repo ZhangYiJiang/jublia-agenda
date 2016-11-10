@@ -55,7 +55,7 @@ import { LoadingIndicatorComponent } from "./loading-indicator/loading-indicator
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ClipboardModule } from 'angular2-clipboard';
 
-import {TooltipModule} from "ng2-tooltip";
+import { TooltipModule } from 'ng2-tooltip';
 
 @NgModule({
   imports: [
@@ -82,7 +82,7 @@ import {TooltipModule} from "ng2-tooltip";
     VexModalModule,
     ChartsModule,
     ClipboardModule,
-    TooltipModule
+    TooltipModule,
   ],
   declarations: [
     AppComponent,

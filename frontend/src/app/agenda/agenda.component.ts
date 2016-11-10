@@ -45,6 +45,7 @@ export class AgendaComponent implements OnInit{
   clipboardStatus: string;
 
   isListView = false;
+  isMenuOpen = false;
 
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChild('publishRef') public publishRef: TemplateRef<any>;
@@ -60,6 +61,10 @@ export class AgendaComponent implements OnInit{
     });
     
     this.publicUrl = GlobalVariable.BASE_URL + GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agendaId;
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   toggleView() {

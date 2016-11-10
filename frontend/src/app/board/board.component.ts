@@ -655,8 +655,13 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   onSpeakerAdded(newSpeaker: Speaker, isForm: boolean) {
     console.log(isForm);
-    this.eventSpeakers.push(newSpeaker);
+    this.agenda.speakers.push(newSpeaker);
+    console.log('speakers');
+    console.log(this.agenda.speakers);
+    //this.eventSpeakers.push(newSpeaker);
     this.eventSpeakersName.push(newSpeaker.name);
+    console.log('speakers');
+    console.log(this.agenda.speakers);
    /* if (!this.agenda.speakers) {
       this.agenda.speakers = [];
     }
@@ -664,5 +669,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     if (isForm) {
       this.sessionForm.value.existingSpeakers.push(newSpeaker.name);
     }
+    console.log('speakers');
+    console.log(this.agenda.speakers);
   }
 }

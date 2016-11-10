@@ -13,10 +13,10 @@ export class Agenda {
   duration: number; // number of days
   website: string;
   sessions = <Session[]>[];
-  tracks: Track[];
-  speakers: Speaker[];
-  categories: Category[];
-  session_venues: Venue[];
+  tracks = <Track[]>[];
+  speakers = <Speaker[]>[];
+  categories = <Category[]>[];
+  session_venues = <Venue[]>[];
   published: boolean;
   
   // Front-end only 

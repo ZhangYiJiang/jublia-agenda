@@ -1,6 +1,6 @@
 export const GlobalVariable = Object.freeze({
   DEFAULT_NEW_DURATION: 60,
-  APP_NAME: 'Agenda Builder',
+  APP_NAME: 'A*genda',
   
   TOKEN_NAME: 'auth_token',
   
@@ -18,8 +18,6 @@ export const GlobalVariable = Object.freeze({
     s: 47.4,
     l: 48.4,
   },
-  
-  DEFAULT_PROFILE: '',
   
   TAG_INPUT_BTN_NO_TEXT : 'Enter tag name above',
   TAG_INPUT_BTN_WITH_TEXT : 'Create new tag',

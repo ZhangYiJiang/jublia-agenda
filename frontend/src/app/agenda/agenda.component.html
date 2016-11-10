@@ -3,25 +3,34 @@
 </div>
 <div *ngIf="agenda">
   <div class="agenda-header">
-    <h1 class="agenda-title">Agenda for <strong>{{agenda.name}}</strong></h1>
+    <h1 class="agenda-title">Planning for <strong>{{agenda.name}}</strong></h1>
     <div class="agenda-menu">
-      <button md-button disableRipple class="secondary" 
-              *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">
-        Notify Attendees
+      <button *ngIf="!isListView" md-button disableRipple class="secondary" tooltip="Switch Calendar/Table View"
+              (click)="toggleView()">
+        <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>
+      </button>
+      <button *ngIf="isListView" md-button disableRipple class="secondary" tooltip="Switch Calendar/List View"
+              (click)="toggleView()">
+        <i class="fa fa-list fa-fw" aria-hidden="true"></i>
       </button>
       <button *ngIf="!agenda.published" md-button disableRipple class="primary" (click)="openPublishModal()">
         Publish
       </button>
-      <button *ngIf="agenda.published" md-button disableRipple class="secondary" (click)="openPublishModal()">
-        <i class="fa fa-check" aria-hidden="true"></i> Published
+      <button *ngIf="agenda.published" md-button disableRipple class="secondary" tooltip="Public Link"
+              (click)="openPublishModal()">
+        <i class="fa fa-link fa-fw" aria-hidden="true"></i>
       </button>
-      <button md-button disableRipple class="secondary" 
+      <button md-button disableRipple class="secondary" tooltip="Analytics"
               *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">
-        Analytics
+        <i class="fa fa-line-chart fa-fw" aria-hidden="true"></i>
+      </button>
+      <button md-button disableRipple class="secondary" tooltip="Agenda Settings"
+              (click)="showAgendaSettings()">
+        <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
       </button>
       <button md-button disableRipple class="secondary" 
-              (click)="showAgendaSettings()">
-        <i class="fa fa-cog" aria-hidden="true"></i> Event Settings
+              *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()">
+        <i class="fa fa-bell fa-fw" aria-hidden="true"></i> Notify Attendees
       </button>
     </div>
   </div>

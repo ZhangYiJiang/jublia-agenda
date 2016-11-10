@@ -1,0 +1,70 @@
+i.submitting-spinner {
+    font-size: 18px;
+}
+
+.tag-button,
+[md-button].tag-button {
+    margin-top: 5px;
+}
+
+.button-symbol {
+    margin: 0;
+    padding: 3px;
+    display: inline-block;
+}
+
+button[md-button],
+.button[md-button],
+.button {
+    border: 2px solid $color-primary;
+    cursor: pointer;
+    min-width: 0;
+    
+    &.primary {
+        background-color: $color-primary;
+        color: white;
+    }
+    
+    &.warn {
+        border: 2px solid $color-accent;
+        background-color: $color-accent;
+        color: white;
+    }
+    
+    &.secondary {
+        background-color: transparent;
+        color: $color-primary;
+        &[disabled] {
+            cursor: not-allowed;
+            border: 2px solid gray;
+            color: gray;
+        }
+    }
+    
+    &[disabled] {
+        cursor: not-allowed;
+        opacity: .6;
+    }
+    
+    .fa {
+        color: inherit;
+    }
+    
+    md-icon {
+        vertical-align: middle;
+        margin-top: -1px;
+    }
+}
+
+md-icon.delete {
+    border: 1px solid $color-accent;
+    color: $color-accent;
+    font-size: 23px;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        background: $color-accent;
+        color: #fff;
+        outline: 0;
+    }
+}

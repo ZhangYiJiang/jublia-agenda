@@ -78,16 +78,18 @@
 
 <template #toggleRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container">
-   <section class="viewer">
-        <p>Choose the tags to display</p>
-        <md-slide-toggle md-menu-item *ngFor="let tag of eventTags" [color]="'black'" 
-          [(ngModel)]="tag.toggle" (change)="onTagFilterChange($event)">
-            {{tag.name}}
-        </md-slide-toggle>
-        <button md-button disableRipple class="primary" (click)="showAll()">Show All</button>
-        <button md-button disableRipple class="warn" (click)="hideAll()">Hide All</button>
-        <button md-button disableRipple class="secondary" type="button" (click)="dialogRef.close(true)">Done</button>
-    </section>
+    <p>Choose the tags to display</p>
+    <div class="tag-filters">
+      <md-slide-toggle md-menu-item *ngFor="let tag of eventTags" [color]="'black'" 
+        [(ngModel)]="tag.toggle" (change)="onTagFilterChange($event)">
+          {{tag.name}}
+      </md-slide-toggle>
+    </div>
+    <div class="modal-footer">
+      <button md-button disableRipple class="primary" (click)="showAll()">Show All</button>
+      <button md-button disableRipple class="warn" (click)="hideAll()">Hide All</button>
+      <button md-button disableRipple class="secondary" type="button" (click)="dialogRef.close(true)">Done</button>
+    </div>
   </div>
 </template>
 
@@ -99,14 +101,21 @@
   <div class="clearfix agenda-menu">
     <h1 class="agenda-title">{{agenda.name}}</h1>
     <div class="agenda-buttons">
+      <button md-button disableRipple class="primary" (click)="toggleView()">
+        <i class="fa fa-calendar fa-fw" [class.toggled-off]="isListView" aria-hidden="true"></i> / 
+        <i class="fa fa-list fa-fw" [class.toggled-off]="!isListView" aria-hidden="true"></i>
+      </button>
       <button class="primary" md-button disableRipple (click)="showInfo()">
-        <i class="fa fa-info-circle" aria-hidden="true"></i> Info
+        <i class="fa fa-info-circle fa-fw" aria-hidden="true"></i> 
+        <span>Info</span>
       </button>
       <button class="primary" md-button disableRipple (click)="showBookmark()">
-        <i class="fa fa-bookmark" aria-hidden="true"></i> Bookmark
+        <i class="fa fa-bookmark fa-fw" aria-hidden="true"></i> 
+        <span>Bookmark</span>
       </button>
       <button class="primary" x-position="before" y-position="above" md-button disableRipple (click)="showFilters()">
-        <i class="fa fa-filter" aria-hidden="true"></i> Filter
+        <i class="fa fa-filter fa-fw" aria-hidden="true"></i> 
+        <span>Filter</span>
       </button>
     </div>      
   </div>

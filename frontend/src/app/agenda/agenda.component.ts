@@ -44,6 +44,8 @@ export class AgendaComponent implements OnInit{
   publicUrl: string;
   clipboardStatus: string;
 
+  isListView = false;
+
   @ViewChild('templateRef') public templateRef: TemplateRef<any>;
   @ViewChild('publishRef') public publishRef: TemplateRef<any>;
   @ViewChild('dirtyRef') public dirtyRef: TemplateRef<any>;
@@ -58,6 +60,11 @@ export class AgendaComponent implements OnInit{
     });
     
     this.publicUrl = GlobalVariable.BASE_URL + GlobalVariable.PUBLIC_BASE_URL + 'agenda/' + this.agendaId;
+  }
+
+  toggleView() {
+    this.isListView = !this.isListView;
+    console.log('list view: ' + this.isListView);
   }
 
   updateAgenda(event: any) {
@@ -81,9 +88,10 @@ export class AgendaComponent implements OnInit{
       
       this.agendaService.updateAgenda(this.agenda.id, event)
         .subscribe(
-          agenda => {
-            this.agenda = agenda;
-            this.myBoard.refreshAgenda(agenda);
+          () => {
+            // Changes to starting date requires the entire board component to be 
+            // reloaded, and it's easier to just refresh the page
+            window.location.reload();
           },
           error => console.log(error)
         );

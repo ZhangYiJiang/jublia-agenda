@@ -1,0 +1,130 @@
+// tooltips
+// from bootstrap 3
+.tooltip {
+    position: absolute;
+    z-index: $tooltip-z-index + 1;
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-break: auto;
+    line-height: 1.42857143;
+    text-align: left;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    white-space: normal;
+    word-break: normal;
+    word-spacing: normal;
+    word-wrap: normal;
+    opacity: 0;
+}
+
+.tooltip.in {
+    opacity: 1;
+}
+
+.tooltip.top {
+    margin-top: -3px;
+    padding: 5px 0;
+}
+
+.tooltip.right {
+    margin-left: 3px;
+    padding: 0 5px;
+}
+
+.tooltip.bottom {
+    margin-top: 3px;
+    padding: 5px 0;
+}
+
+.tooltip.left {
+    margin-left: -3px;
+    padding: 0 5px;
+}
+
+.tooltip-inner {
+    max-width: 200px;
+    // force full width
+    width: 200px;
+    padding: 3px 8px;
+    color: $color-primary;
+    text-align: center;
+    background-color: white;
+    border: 2px solid $color-primary;
+    border-radius: 4px;
+}
+
+.tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.tooltip.top .tooltip-arrow {
+    bottom: 0;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px 5px 0;
+    border-top-color: $color-primary;
+}
+
+.tooltip.top-left .tooltip-arrow {
+    bottom: 0;
+    right: 5px;
+    margin-bottom: -5px;
+    border-width: 5px 5px 0;
+    border-top-color: $color-primary;
+}
+
+.tooltip.top-right .tooltip-arrow {
+    bottom: 0;
+    left: 5px;
+    margin-bottom: -5px;
+    border-width: 5px 5px 0;
+    border-top-color: $color-primary;
+}
+
+.tooltip.right .tooltip-arrow {
+    top: 50%;
+    left: 0;
+    margin-top: -5px;
+    border-width: 5px 5px 5px 0;
+    border-right-color: $color-primary;
+}
+
+.tooltip.left .tooltip-arrow {
+    top: 50%;
+    right: 0;
+    margin-top: -5px;
+    border-width: 5px 0 5px 5px;
+    border-left-color: $color-primary;
+}
+
+.tooltip.bottom .tooltip-arrow {
+    top: 0;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 0 5px 5px;
+    border-bottom-color: $color-primary;
+}
+
+.tooltip.bottom-left .tooltip-arrow {
+    top: 0;
+    right: 5px;
+    margin-top: -5px;
+    border-width: 0 5px 5px;
+    border-bottom-color: $color-primary;
+}
+
+.tooltip.bottom-right .tooltip-arrow {
+    top: 0;
+    left: 5px;
+    margin-top: -5px;
+    border-width: 0 5px 5px;
+    border-bottom-color: $color-primary;
+}

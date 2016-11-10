@@ -1,0 +1,28 @@
+
+// drag-and-drop
+.session-wrapper.gu-transit {
+    z-index: $session-z-index;
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.not-dragging .gu-transit {
+    pointer-events: initial;
+}
+
+.gu-mirror {
+    opacity: 0.3;
+    
+    .session-time {
+        display: none;
+    }
+
+    .session-tooltip {
+        display: none;
+    }
+}
+
+.not-dragging .empty-container {
+    //pointer-events: none;
+}

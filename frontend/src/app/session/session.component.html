@@ -8,7 +8,7 @@
      [class.dark]="useDarkTheme"
      (click)="clicked(false)" 
      [class.not-interested]="!interested"
-     [attr.title]="session.name">
+     [tooltip]="myTooltip" tooltipPlacement="right" [tooltipDisabled]="session.start_at == null">
   <div class="session-content">
     <div class="session-title">
       <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{session.name}}</div>
@@ -20,6 +20,22 @@
     <div class="session-venue" *ngIf="session.venue&& session.duration >= 60">{{ getVenue().name }}</div>
   </div>
 </div>
+
+<tooltip-content #myTooltip [animation]="true" placement="right" class="session-tooltip">
+  <p class="session-tooltip-title">{{ session.name }}</p>
+  <p class="session-tooltip-subtitle">
+    {{ getDisplayedTime() }} 
+    <span *ngIf="session.venue">| {{ getVenue().name }}</span>
+  </p>
+  <p *ngIf="session.speakers">
+    <span class="session-tooltip-speaker" *ngFor="let speakerId of session.speakers">
+      {{ speakersObj[speakerId].name }}
+    </span>
+  </p>
+  <p *ngIf="session.description">
+    {{ session.description | truncate: 140: '...': true }}
+  </p>
+</tooltip-content>
 
 <template id="session.id" #templateRef let-dialogRef="dialogRef" let-ctx="dialogRef.context">
   <div class="modal-container session-modal">
@@ -40,67 +56,72 @@
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
     </div>
+    
     <line-chart *ngIf="isAnalytics" 
                 class="chart" 
                 [dataY]="analyticsDataCombinedY" 
                 [dataX]="analyticsDataCombinedX" 
                 dataType="session"></line-chart>
+    
     <div class="session-body">
       <div class="session-main">
-        <p class="full-width" *ngIf="!isPublic || session.description">
+        <div class="full-width session-desc" *ngIf="!isPublic || session.description">
           <ndv-area title="description" [placeholder]="session.description || 'Enter description here'" (onSave)="updateSession($event)" [permission]="!isPublic"></ndv-area>
-        </p>
+        </div>
         
         <template [ngIf]="displayField(session.speakers)">
-          <h2>
-            <i class="fa fa-user fa-fw" aria-hidden="true"></i> Speakers
-          </h2>
-          
-          <div *ngIf="!isPublic">
-            <select [ngModel]="selectedSpeaker" (ngModelChange)="addSessionSpeaker($event.id)">
-              <option value="" disabled selected hidden>Select Speakers</option>
-              <option [ngValue]="speaker" *ngFor="let speaker of availableSpeakers">{{ speaker.name }}</option>
-            </select>
-            <speaker-form [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event)"></speaker-form>
-          </div>
-          
-          <div *ngIf="session.speakers">
+          <div class="session-speakers" *ngIf="session.speakers">
             <div class="speaker-card" *ngFor="let speakerId of session.speakers">
-              <h3>{{ speakersObj[speakerId].name }}
-                <md-icon class="delete" tabindex="0" role="button" 
-                         *ngIf="!isPublic" (click)="removeSessionSpeaker(speakerId)">clear</md-icon>
-                <!-- name not editable for now to avoid uniqueness conflicts -->
-                <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
-              </h3>
-              
-              <p *ngIf="displayField(speakersObj[speakerId].company) || 
-                        displayField(speakersObj[speakerId].position) || 
-                        displayField(speakersObj[speakerId].email)">
-                <strong *ngIf="displayField(speakersObj[speakerId].position)" class="session-speaker-position">
-                  <ndv-edit title="position"
-                            [placeholder]="speakersObj[speakerId].position || 'Add position'"
-                            (onSave)="updateSpeaker($event, speakerId)"
-                            [permission]="!isPublic"></ndv-edit>
-                </strong>
+              <div class="speaker-header">
+                <div class="speaker-image">
+                  <img class="speaker-image" *ngIf="speakersObj[speakerId].image" 
+                       src="{{ speakersObj[speakerId].image }}" alt="" />
+                  <i class="fa fa-user" *ngIf="!speakersObj[speakerId].image" aria-hidden="true"></i>
+                </div>
+                <div class="speaker-header-info">
+                  <h3>
+                    {{ speakersObj[speakerId].name }}
+                    
+                    <md-icon class="delete" tabindex="0" role="button"
+                             *ngIf="!isPublic" (click)="removeSessionSpeaker(speakerId)">clear</md-icon>
+                    <!-- name not editable for now to avoid uniqueness conflicts -->
+                    <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
+                  </h3>
 
-                <span *ngIf="displayField(speakersObj[speakerId].company) && 
+                  <p *ngIf="displayField(speakersObj[speakerId].company) || 
+                            displayField(speakersObj[speakerId].position) || 
+                            displayField(speakersObj[speakerId].email)">
+                    <strong *ngIf="displayField(speakersObj[speakerId].position)" class="session-speaker-position">
+                      <ndv-edit title="position"
+                                [placeholder]="speakersObj[speakerId].position || 'Add position'"
+                                (onSave)="updateSpeaker($event, speakerId)"
+                                [permission]="!isPublic"></ndv-edit>
+                    </strong>
+
+                    <span *ngIf="displayField(speakersObj[speakerId].company) && 
                              displayField(speakersObj[speakerId].position)">from</span>
 
-                <span *ngIf="displayField(speakersObj[speakerId].company)">
-                  <ndv-edit title="company"
-                            [placeholder]="speakersObj[speakerId].company || 'Add company'"
-                            (onSave)="updateSpeaker($event, speakerId)"
-                            [permission]="!isPublic"></ndv-edit>
-                </span>
-                
-                <span *ngIf="displayField(speakersObj[speakerId].email)"> | 
-                  <ndv-edit title="email"
-                            [placeholder]="speakersObj[speakerId].email || 'Add email'"
-                            (onSave)="updateSpeaker($event, speakerId)"
-                            [permission]="!isPublic"></ndv-edit>
-                </span>
-                
-              </p>
+                    <span *ngIf="displayField(speakersObj[speakerId].company)">
+                      <ndv-edit title="company"
+                                [placeholder]="speakersObj[speakerId].company || 'Add company'"
+                                (onSave)="updateSpeaker($event, speakerId)"
+                                [permission]="!isPublic"></ndv-edit>
+                    </span>
+
+                    <span *ngIf="displayField(speakersObj[speakerId].email)">
+                      <!-- Using ngIf here because we need to display email as a link, 
+                           which the inline editor cannot do -->
+                      <ndv-edit title="email" *ngIf="!isPublic"
+                                [placeholder]="speakersObj[speakerId].email || 'Add email'"
+                                (onSave)="updateSpeaker($event, speakerId)" 
+                                [permission]="!isPublic"></ndv-edit>
+                      <a *ngIf="isPublic" href="mailto:{{ speakersObj[speakerId].email | encodeURIComponent }}">
+                        {{ speakersObj[speakerId].email }}
+                      </a>
+                    </span>
+                  </p>
+                </div><!-- /.speaker-header-info -->
+              </div><!-- /.speaker-header -->
               
               <p *ngIf="displayField(speakersObj[speakerId].profile)">
                 <ndv-area title="profile" 
@@ -111,9 +132,18 @@
               
             </div>
           </div>
-          
-          <div *ngIf="!session.speakers">
-            <p>No speakers have been assigned to this session</p>
+
+          <div class="session-add-speakers" *ngIf="!isPublic">
+            <div *ngIf="!session.speakers">
+              <p>No speakers have been assigned to this session</p>
+            </div>
+            
+            <label for="session-add-speaker">Add Speakers</label>
+            <select id="session-add-speaker" [ngModel]="selectedSpeaker" (ngModelChange)="addSessionSpeaker($event.id)">
+              <option value="" disabled selected hidden>Select Speakers</option>
+              <option [ngValue]="speaker" *ngFor="let speaker of availableSpeakers">{{ speaker.name }}</option>
+            </select>
+            <speaker-form [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event)"></speaker-form>
           </div>
         </template>
       </div><!-- /.session-main -->
@@ -166,15 +196,16 @@
                 <option value="" disabled selected hidden>Select Venue</option>
                 <option [ngValue]="venue" *ngFor="let venue of agenda.session_venues">{{ venue.name }}</option>
               </select>
+              <venue-form *ngIf="!isPublic" [agenda]="agenda" (onVenueAdded)="onVenueAdded($event)"></venue-form>
             </div>
             <p *ngIf="isPublic">{{ getVenue().name }}</p>
             <p *ngIf="session.venue" class="session-info-secondary">
               <ndv-edit title="unit" 
                         [placeholder]="getVenue().unit || (!isPublic ? 'Add venue unit number' : '')" 
                         (onSave)="updateVenue($event)" 
-                        [permission]="!isPublic"></ndv-edit></p>
+                        [permission]="!isPublic"></ndv-edit>
+            </p>
           </div>
-          <venue-form *ngIf="!isPublic" [agenda]="agenda" (onVenueAdded)="onVenueAdded($event)"></venue-form>
         </div><!-- /.session-info -->
 
 <!--         <div *ngIf="session.track" class="session-info">
@@ -215,9 +246,12 @@
                        (onRemove)="removeTag($event)"
                        (onAdd)="addTag($event)"
                        (onTextChange)="onTagTextChange($event)"></tag-input>
-            <button  *ngIf="!isPublic" class="secondary tag-button" md-button disableRipple [disabled]="isNewTagBtnDisabled" (click)="addTagFromInput()">{{tagBtnText}}</button>
+            <button class="secondary tag-button" md-button disableRipple
+                    *ngIf="!isPublic"
+                    [disabled]="isNewTagBtnDisabled" 
+                    (click)="addTagFromInput()">{{tagBtnText}}</button>
           </div>
-        </div><!-- /.session-info -->        
+        </div><!-- /.session-info -->
       </div><!-- /.session-meta -->
     </div><!-- /.session-body -->
     

@@ -1,289 +1,14 @@
 @import 'variables';
+@import "base";
+@import "buttons";
+@import "forms";
+@import "drag";
+@import "tooltip";
+@import "modal";
 
-html, body {
-    height: 100%;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    line-height: 1.15;
-}
-
-h2 {
-    font-size: 24px;
-    margin: 15px 0;
-}
-
-body {
-    background: #fff;
-    color: #4A4A4A;
-    font: 100% $body-font-family;
-    margin: 0;
-}
-
-a, button {
-    transition: all .2s;
-}
-
-i.submitting-spinner {
-    font-size: 18px;
-}
-
-.tag-button, [md-button].tag-button {
-    margin-top: 5px;
-}
-
-
-// Mimic md-input's label
-.field-label {
-    display: block;
-    font-size: 12px;
-    margin: -12px 0 3px 1px;
-    color: $color-secondary;
-    text-align: left;
-    line-height: 1;
-}
-
-.field-with-label {
-    padding: 16px 0;
-}
-
-//for mdMenu
-.md-overlay-pane {
-    position: fixed;
-    margin-top: 30px;
-    .md-menu {
-        min-width: 94px;
-        @media (max-width: 960px) {
-            margin-top: -200px;
-        }
-    }
-    button {
-        background-color: white;
-    }
-
-}
-
-// Overrides - using the body tag to override the specificity of some of these 
-// themed widget's themes 
-body {
-    // Reset some of tag-input's styles to match ours
-    .ng2-tag-input.default {
-        border-bottom: 1px solid #444;
-        padding: 0;
-    }
-    
-    .public .ng2-tag-input.default {
-        border-bottom: 0;
-    }
-
-    .ng2-tag-input__text-input {
-        padding: 0;
-        margin-bottom: 2px;
-        background: none;
-    }
-
-    .ng2-tag-input.default .ng2-tags-container {
-        align-items: center;
-        margin-bottom: -2px;
-    }
-    
-    .ng2-tag-input.default .ng2-tags-container .ng2-tag {
-        background: transparent;
-        border: 2px solid $color-primary;
-        color: $color-primary;
-        height: auto;
-        line-height: 1;
-        font-size: 14px;
-        align-items: center;
-        padding: 6px 12px;
-        margin: 0 4px 2px 0;
-        
-        &:hover:not(.tag--readonly),
-        &:focus:not(.tag--readonly) {
-            background: $color-primary;
-            color: #fff;
-        }
-        
-        delete-icon {
-            height: 16px;
-            margin-right: -6px;
-        }
-        
-        delete-icon path {
-            fill: $color-primary;
-            transition: fill .15s;
-        }
-
-        &:hover delete-icon path {
-            fill: #fff;
-        }
-    }
-    
-    .md-input-placeholder.md-empty {
-        color: $color-primary;
-    }
-
-    .md-input-placeholder.md-float:not(.md-empty),
-    .md-input-placeholder.md-float.md-focused {
-        color: $color-secondary;
-    }
-    
-    // Override .md-hint to fix its positioning on forms 
-    .md-hint {
-        bottom: auto;
-        top: calc(100% - 10px);
-        line-height: 1;
-    }
-
-    // Vex's default theme fixes the width of the modal. This doesn't work for us 
-    // because we need the modal to be more flexible. We use flexbox and 
-    // inline-block instead for centering    
-    .vex.vex-theme-default {
-        display: flex;
-        align-items: flex-start;
-        padding: 10vh 15px;
-
-        .vex-content {
-            padding: 25px;
-            
-            // Reset the font to our global font
-            font-family: inherit;
-
-            // Remove the default width 
-            width: auto;
-            max-width: 960px;
-            display: inline-block;
-        }
-    }
-
-    // We need to use dropdown menus inside modals, so their z-index
-    // need to be higher than the modal overlay's
-    .ng2-dropdown-menu-container {
-        z-index: $dropdown-menu-z-index;
-        // limit height of the dropdown so that it do not flicker when near the bottom of the screen
-        max-height: 100px;
-        .ng2-menu-item {
-            height: 40px;
-            line-height: 40px;
-        }
-    }
-}
-
-.modal-container {
-    &.narrow {
-        width: 460px;
-
-        @media (max-width: 960px) {
-            width: 100%;
-        }
-    }
-
-    .modal-header {
-        h1 {
-            margin-top: 0;
-            font-size: 24px;
-        }
-
-        .centered-header {
-            text-align: center;
-        }
-    }
-    
-    .modal-footer {
-        margin-top: 20px;
-    }
-
-    .footer-buttons .secondary {
-        float: right;
-    }
-}
-
-.form-error-hint {
-    color: $color-warn;
-    padding: 2px;
-}
-
-.fixed {
-    position: fixed;
-    width: 100%;
-}
-
-.fa-spinner, .fa-circle-o-notch {
-    color: $color-primary;
-}
-
-button[md-button], 
-.button[md-button],
-.button {
-    border: 2px solid $color-primary;
-    cursor: pointer;
-    min-width: 0;
-
-    &.primary {
-        background-color: $color-primary;
-        color: white;
-    }
-
-    &.warn {
-        border: 2px solid $color-accent;
-        background-color: $color-accent;
-        color: white;
-    }
-    
-    &.secondary {
-        background-color: transparent;
-        color: $color-primary;
-        &[disabled] {
-            cursor: not-allowed;
-            border: 2px solid gray;
-            color: gray;
-        }
-    }
-
-    md-icon {
-        vertical-align: middle;
-        margin-top: -1px;
-    }
-}
-
-md-icon.delete {
-    border: 1px solid $color-accent;
-    color: $color-accent;
-    font-size: 23px;
-    cursor: pointer;
-
-    &:hover, &:focus {
-        background: $color-accent;
-        color: #fff;
-        outline: 0;
-    }
-}
-
-.vex-content {
-    .full-width .ndv-comp,
-    .full-width input, 
-    .full-width textarea {
-        width: 100%;
-    }
-    
-    .small-input input {
-        width: 50px;
-    }
-    
-    input, textarea {
-        font-size: inherit;
-        line-height: inherit;
-    }
-}
-
-.button-symbol {
-    margin: 0;
-    padding: 3px;
-    display: inline-block;
-}
-
-.session-container-list, 
-.session-list, .session-wrapper {
+.session-container-list,
+.session-list,
+.session-wrapper {
     padding-left: 0;
     list-style: none;
     text-align: center;
@@ -293,68 +18,25 @@ md-icon.delete {
     padding-left: 0;
 }
 
-.md-visually-hidden {
-    display: none;
-}
-
-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px white inset; 
-    -webkit-text-fill-color: $color-secondary !important;
-}
-
-// drag-and-drop
-.session-wrapper.gu-transit  {
-    z-index: $session-z-index;
-    position: relative;
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-.not-dragging .gu-transit {
-    pointer-events: initial;
-}
-
-.gu-mirror {
-    opacity: 0.3;
-    
-    .session-time {
-        display: none;
-    }
-}
-
-.not-dragging .empty-container {
-    //pointer-events: none;
-}
-
-// slider toggle
-.md-slide-toggle-bar {
-    background: #d3d3d3;
-}
-
-.md-slide-toggle-thumb {
-    background: white;
-}
-
-.md-checked {
-    .md-slide-toggle-bar {
-        background: lighten($color-primary, 30%);
-    }
-    .md-slide-toggle-thumb {
-        background: $color-primary;
-    }
-}
-
 .hide-no-interest .session-tile.not-interested {
     display: none;
 }
 
+.fixed {
+    position: fixed;
+    width: 100%;
+}
+
+.fa-spinner,
+.fa-circle-o-notch {
+    color: $color-primary;
+}
+
 .loading-overlay {
     z-index: $loading-overlay-z-index;
-    
     display: flex;
     align-items: center;
     justify-content: center;
-    
     padding-bottom: 10vh;
     position: fixed;
     left: 0;
@@ -367,4 +49,8 @@ input:-webkit-autofill {
     content: "";
     display: table;
     clear: both;
+}
+
+.agenda-header {
+    z-index: $tooltip-z-index;
 }

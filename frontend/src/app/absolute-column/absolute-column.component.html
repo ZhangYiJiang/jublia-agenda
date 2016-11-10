@@ -1,7 +1,7 @@
 <div class="abs-col">
   <div class='timeline'>
     <div class='hour' *ngFor="let hour of hours">
-      <div class='quarter'> </div>
+      <div class='quarter'></div>
       <div class='quarter'></div>
       <div class='quarter'></div>
     </div>
@@ -38,12 +38,17 @@
         <li class="session-wrapper"
           *ngFor="let session of container.sessions"
           [class.placeholder]="session.placeholder">
-          <my-session [session]="session" [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics" *ngIf="session.toggle"
-            [token]="token"
-            [interested]="isInterestedInSession(session)"
-            (onSessionInterestEdited)="onSessionInterestEdited($event)"
-            [analyticsData]="getAnalyticsDataForSession(session)"
-            [isAnalytics]="isAnalytics"></my-session>
+          <my-session [session]="session" 
+                      [offsetDate]="offsetDate" 
+                      [agenda]="agenda" 
+                      [isPublic]="isPublic" 
+                      [isAnalytics]="isAnalytics" 
+                      *ngIf="session.toggle"
+                      [token]="token"
+                      [interested]="isInterestedInSession(session)"
+                      (onSessionInterestEdited)="onSessionInterestEdited($event)"
+                      [analyticsData]="getAnalyticsDataForSession(session)">
+          </my-session>
         </li>
       </ul>
     </li>

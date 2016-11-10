@@ -107,12 +107,13 @@
                 </div>
                 <div class="speaker-header-info">
                   <h3>
-                    {{ speakersObj[speakerId].name }}
-                    
+                    <ndv-edit title="name" 
+                              [placeholder]="speakersObj[speakerId].name" 
+                              (onSave)="updateSpeaker($event, speakerId)" 
+                              [permission]="!isPublic"></ndv-edit>
+
                     <md-icon class="delete" tabindex="0" role="button"
                              *ngIf="!isPublic" (click)="removeSessionSpeaker(speakerId)">clear</md-icon>
-                    <!-- name not editable for now to avoid uniqueness conflicts -->
-                    <!-- <ndv-edit [title]="'name'" [placeholder]="speakersObj[speakerId].name" (onSave)="updateSpeaker($event, speakerId)" [permission]="!isPublic"></ndv-edit> -->
                   </h3>
 
                   <p *ngIf="displayField(speakersObj[speakerId].company) || 

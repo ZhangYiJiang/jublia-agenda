@@ -131,9 +131,7 @@
 
 .fab-add {
     position: fixed;
-    -webkit-box-shadow: 0px 7px 16px 1px rgba(0,0,0,0.47);
-    -moz-box-shadow: 0px 7px 16px 1px rgba(0,0,0,0.47);
-    box-shadow: 0px 7px 16px 1px rgba(0,0,0,0.47); 
+    box-shadow: 0 3px 5px 1px rgba(#000, 0.2); 
     border: none;   
     border-radius: 50%;
     height: 56px;
@@ -142,6 +140,7 @@
     left: 80px;
     color: white;
     background-color: $color-accent;
+    
     md-icon {
         color: white;
     }

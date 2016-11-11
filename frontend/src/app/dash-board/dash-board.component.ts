@@ -229,6 +229,15 @@ export class DashBoardComponent implements OnInit {
         this.addNewAgenda = true;
         this.agendas.unshift(data);
         this.newAgendaSubmitting = false;
+        this.agendaForm.reset({
+            name: '',
+            description: '',
+            location: '',
+            start: '',
+            duration: 3,
+            website:'',
+            tracks: [],
+        });
       },
       error => {
         this.newAgendaSubmitting = false;

@@ -82,7 +82,7 @@
                   [permission]="!isPublic"></ndv-edit>
       </h1>
 
-      <button md-button disableRipple
+      <button  
               *ngIf="isPublic&&!isAnalytics"
               class="interest-btn"
               [class.primary]="interested"
@@ -219,8 +219,8 @@
                         error="Please enter a number.">
               </ndv-edit>mins
               <span *ngIf="!isPublic" class="duration-buttons">
-                <button class="primary" md-button disableRipple (click)="adjustSessionDuration(15)">+</button>
-                <button class="primary" md-button disableRipple (click)="adjustSessionDuration(-15)">-</button>
+                <button class="primary"   (click)="adjustSessionDuration(15)">+</button>
+                <button class="primary"   (click)="adjustSessionDuration(-15)">-</button>
               </span>
             </p>
           </div>
@@ -286,7 +286,7 @@
                        (onRemove)="removeTag($event)"
                        (onAdd)="addTag($event)"
                        (onTextChange)="onTagTextChange($event)"></tag-input>
-            <button class="secondary tag-button" md-button disableRipple
+            <button class="secondary tag-button"  
                     *ngIf="!isPublic"
                     [disabled]="isNewTagBtnDisabled" 
                     (click)="addTagFromInput()">{{tagBtnText}}</button>
@@ -296,7 +296,7 @@
     </div><!-- /.session-body -->
     
     <div class="modal-footer">
-      <button md-button disableRipple
+      <button  
               *ngIf="isPublic && !isAnalytics"
               class="interest-btn"
               [class.primary]="interested"
@@ -305,8 +305,8 @@
         <i class="fa fa-star fa-fw" aria-hidden="true" *ngIf="interested"></i> {{interestedButtonText}}
       </button>
 
-      <button type="button" md-button disableRipple class="warn" *ngIf="!isPublic" (click)="confirmDelete(dialogRef)">Delete</button>
-      <button type="button" md-button disableRipple class="secondary close-btn" (click)="dialogRef.close(true)">Close</button>
+      <button type="button"   class="warn" *ngIf="!isPublic" (click)="confirmDelete(dialogRef)">Delete</button>
+      <button type="button"   class="secondary close-btn" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>

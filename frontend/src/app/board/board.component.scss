@@ -16,6 +16,10 @@
     }
 }
 
+.form-msg {
+    color: $color-warn;
+}
+
 .timeline {
     margin-top: 8px;
     position: absolute;
@@ -124,12 +128,20 @@
 
 .fab-add {
     position: fixed;
+    -webkit-box-shadow: 0px 7px 16px 1px rgba(0,0,0,0.47);
+    -moz-box-shadow: 0px 7px 16px 1px rgba(0,0,0,0.47);
+    box-shadow: 0px 7px 16px 1px rgba(0,0,0,0.47); 
+    border: none;   
+    border-radius: 50%;
     height: 56px;
     width: 56px;
     top: $main-content-top-offset - 40px;
     left: 80px;
     color: white;
     background-color: $color-accent;
+    md-icon {
+        color: white;
+    }
 }
 
 .new-session.modal-container {

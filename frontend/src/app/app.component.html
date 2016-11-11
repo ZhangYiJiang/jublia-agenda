@@ -4,7 +4,7 @@
             <i *ngIf="!isOnDashBoard" class="fa fa-arrow-left" aria-hidden="true"></i>
             {{appName}}
         </p>
-        <button md-button *ngIf="user.authed" (click)="logOut()">Log Out</button>
+        <button *ngIf="user.authed" (click)="logOut()">Log Out</button>
     </div>
     <!-- Routed views go here -->
      <router-outlet></router-outlet>

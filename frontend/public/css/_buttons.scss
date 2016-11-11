@@ -13,31 +13,67 @@ i.submitting-spinner {
     display: inline-block;
 }
 
-button[md-button],
-.button[md-button],
+button,
 .button {
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    border: none;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    font-size: 14px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 500;
+    color: currentColor;
+    text-align: center;
+    margin: 0;
+    min-width: 88px;
+    line-height: 36px;
+    padding: 0 16px;
+    border-radius: 3px;
     border: 2px solid $color-primary;
+    &:hover {
+        border-color: shade( $color-primary, 20%); 
+    }
     cursor: pointer;
     min-width: 0;
     
     &.primary {
         background-color: $color-primary;
+        &:hover {
+          background-color: shade( $color-primary, 20%);  
+        }
         color: white;
     }
     
     &.warn {
         border: 2px solid $color-accent;
         background-color: $color-accent;
+        &:hover {
+            background-color: shade( $color-accent, 20%);  
+            border-color: shade( $color-accent, 20%); 
+        }
         color: white;
     }
     
     &.secondary {
         background-color: transparent;
         color: $color-primary;
+        &:hover {
+            background-color: rgba(0,0,0,0.1); 
+        }
         &[disabled] {
             cursor: not-allowed;
             border: 2px solid gray;
             color: gray;
+            &:hover {
+                background-color: transparent;  
+                border: 2px solid gray;
+            }
         }
     }
     

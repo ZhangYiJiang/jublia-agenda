@@ -27,7 +27,7 @@
     </div>
     
     <div class="modal-footer">
-      <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+      <button class="secondary"  type="button" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div><!-- /.agenda-info -->
 </template>
@@ -52,11 +52,11 @@
             <md-hint class="form-error-hint" align="start">{{mobileError}}</md-hint>
           </md-input>
           <div class="footer-buttons modal-footer">
-            <button [disabled]="bookmarkSubmitting" md-button disableRipple="true" type="submit" class="primary">
+            <button [disabled]="bookmarkSubmitting" type="submit" class="primary">
               <i *ngIf="bookmarkSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
               Go!
             </button>
-            <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+            <button class="secondary"  type="button" (click)="dialogRef.close(true)">Close</button>
           </div>
         </form>
       </div>
@@ -69,7 +69,7 @@
           </md-slide-toggle>
         </div>
         <div class="footer-buttons">
-          <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+          <button class="secondary"  type="button" (click)="dialogRef.close(true)">Close</button>
         </div>
       </div>
     </section>
@@ -86,9 +86,9 @@
       </md-slide-toggle>
     </div>
     <div class="modal-footer">
-      <button md-button disableRipple class="primary" (click)="showAll()">Show All</button>
-      <button md-button disableRipple class="warn" (click)="hideAll()">Hide All</button>
-      <button md-button disableRipple class="secondary" type="button" (click)="dialogRef.close(true)">Done</button>
+      <button   class="primary" (click)="showAll()">Show All</button>
+      <button   class="warn" (click)="hideAll()">Hide All</button>
+      <button   class="secondary" type="button" (click)="dialogRef.close(true)">Done</button>
     </div>
   </div>
 </template>
@@ -101,19 +101,19 @@
   <div class="clearfix agenda-menu" [class.list-view]="isListView">
     <h1 class="agenda-title">{{agenda.name}}</h1>
     <div class="agenda-buttons">
-      <button md-button disableRipple class="primary" (click)="toggleView()">
+      <button   class="primary" (click)="toggleView()">
         <i class="fa fa-calendar fa-fw" [class.toggled-off]="isListView" aria-hidden="true"></i> / 
         <i class="fa fa-list fa-fw" [class.toggled-off]="!isListView" aria-hidden="true"></i>
       </button>
-      <button class="primary" md-button disableRipple (click)="showInfo()">
+      <button class="primary"   (click)="showInfo()">
         <i class="fa fa-info-circle fa-fw" aria-hidden="true"></i> 
         <span>Info</span>
       </button>
-      <button class="primary" md-button disableRipple (click)="showBookmark()">
+      <button class="primary"   (click)="showBookmark()">
         <i class="fa fa-bookmark fa-fw" aria-hidden="true"></i> 
         <span>Bookmark</span>
       </button>
-      <button class="primary" x-position="before" y-position="above" md-button disableRipple (click)="showFilters()">
+      <button class="primary" x-position="before" y-position="above"   (click)="showFilters()">
         <i class="fa fa-filter fa-fw" aria-hidden="true"></i> 
         <span>Filter</span>
       </button>

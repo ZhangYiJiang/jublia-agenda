@@ -8,7 +8,7 @@
     (onSpeakerChanged)="onSpeakerChanged($event)"
     (onVenueChanged)="onVenueChanged($event)" *ngIf="!isPublic && !isListView">
   </relative-column>
-  <button md-mini-fab class="fab-add" disableRipple (click)="addingSessionWithStart=false;createSessionModal()" *ngIf="!isPublic">
+  <button class="fab-add"  (click)="addingSessionWithStart=false;createSessionModal()" *ngIf="!isPublic">
     <md-icon>add</md-icon>
   </button>
   <div #scheduleRef class="schedule" (scroll)="keepfix()">
@@ -121,15 +121,15 @@
                      [autocomplete]="true"
                      [showDropdownIfEmpty]="true"
                      (onTextChange)="onTagTextChange($event)"></tag-input>
-          <button class="secondary tag-button" md-button disableRipple
+          <button class="secondary tag-button"  
                   [disabled]="isNewTagBtnDisabled" 
                   (click)="addTagFromInput()">{{tagBtnText}}</button>
         </div>
         
         <div class="modal-footer clearfix footer-buttons">
-          <button class="primary" md-button type="submit">Save</button>
-          <button class="primary" md-button type="submit" (click)="submitAndContinueSessionForm($event)">Save and Add Another</button>
-          <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+          <button class="primary"  type="submit">Save</button>
+          <button class="primary"  type="submit" (click)="submitAndContinueSessionForm($event)">Save and Add Another</button>
+          <button class="secondary"  type="button" (click)="dialogRef.close(true)">Close</button>
         </div>
       </form>
     </div>

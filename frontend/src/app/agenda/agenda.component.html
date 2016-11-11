@@ -6,7 +6,7 @@
     <h1 class="agenda-title">Planning for <strong>{{agenda.name}}</strong></h1>
     <div class="agenda-menu">
       <div class="dropdown">
-        <button md-button disableRipple class="primary" (click)="toggleMenu()"><md-icon>menu</md-icon></button>
+        <button   class="primary" (click)="toggleMenu()"><md-icon>menu</md-icon></button>
         <ul *ngIf="isMenuOpen" class="dropdown-menu">
           <li (click)="isMenuOpen=false;toggleView()"><a> 
             <i *ngIf="!isListView" class="fa fa-calendar fa-fw" aria-hidden="true"></i>
@@ -34,30 +34,30 @@
         </ul>
       </div>
       <div class="wide-menu">
-        <button *ngIf="!isListView" md-button disableRipple class="secondary" tooltip="Switch Calendar/Table View"
+        <button *ngIf="!isListView"   class="secondary" tooltip="Switch Calendar/Table View"
                 (click)="toggleView()">
           <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>
         </button>
-        <button *ngIf="isListView" md-button disableRipple class="secondary" tooltip="Switch Calendar/List View"
+        <button *ngIf="isListView"   class="secondary" tooltip="Switch Calendar/List View"
                 (click)="toggleView()">
           <i class="fa fa-list fa-fw" aria-hidden="true"></i>
         </button>
-        <button *ngIf="!agenda.published" md-button disableRipple class="primary" (click)="openPublishModal()">
+        <button *ngIf="!agenda.published"   class="primary" (click)="openPublishModal()">
           Publish
         </button>
-        <button *ngIf="agenda.published" md-button disableRipple class="secondary" tooltip="Public Link"
+        <button *ngIf="agenda.published"   class="secondary" tooltip="Public Link"
                 (click)="openPublishModal()">
           <i class="fa fa-link fa-fw" aria-hidden="true"></i>
         </button>
-        <button md-button disableRipple class="secondary" tooltip="Analytics"
+        <button   class="secondary" tooltip="Analytics"
                 *ngIf="agenda.published" routerLink="/analytics/agenda/{{agendaId}}">
           <i class="fa fa-line-chart fa-fw" aria-hidden="true"></i>
         </button>
-        <button md-button disableRipple class="secondary" tooltip="Agenda Settings"
+        <button   class="secondary" tooltip="Agenda Settings"
                 (click)="showAgendaSettings()">
           <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
         </button>
-        <button md-button disableRipple class="warn" 
+        <button   class="warn" 
                 *ngIf="agenda.hasDirtySession" (click)="openDirtyModal()" tooltip="Notify Attendees">
           <i class="fa fa-bell fa-fw" aria-hidden="true"></i>
         </button>
@@ -120,7 +120,7 @@
     </div>
     
     <div class="modal-footer footer-buttons">
-      <button md-button class="secondary" (click)="dialogRef.close(true)">Close</button>
+      <button  class="secondary" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>
@@ -133,8 +133,8 @@
         Analytics page (only available after publishing).</p>
       
       <div class="bottom-buttons" *ngIf="!agenda.published">
-        <button md-button class="primary" (click)="setPublishedStatus(true)">Publish</button>
-        <button md-button class="secondary" (click)="dialogRef.close(true)">Cancel</button>
+        <button  class="primary" (click)="setPublishedStatus(true)">Publish</button>
+        <button  class="secondary" (click)="dialogRef.close(true)">Cancel</button>
       </div>
       
       <template [ngIf]="agenda.published">
@@ -152,8 +152,8 @@
         <p class="clipboard-status" *ngIf="clipboardStatus">{{ clipboardStatus }}</p>
         
         <div class="modal-footer bottom-buttons">
-          <button md-button disableRipple class="primary" (click)="dialogRef.close(true)">Ok</button>
-          <button md-button disableRipple class="secondary" (click)="setPublishedStatus(false)">Unpublish</button>
+          <button   class="primary" (click)="dialogRef.close(true)">Ok</button>
+          <button   class="secondary" (click)="setPublishedStatus(false)">Unpublish</button>
         </div>
       </template>
     </div>
@@ -172,9 +172,9 @@
     <dirty-session [agenda]="agenda"></dirty-session>
     
     <div class="footer-buttons footer-buttons">
-      <button md-button disableRipple type="button" class="primary" 
+      <button   type="button" class="primary" 
               (click)="sendViewerUpdate(dialogRef)">Send Emails</button>
-      <button class="secondary" md-button type="button" (click)="dialogRef.close(true)">Close</button>
+      <button class="secondary"  type="button" (click)="dialogRef.close(true)">Close</button>
     </div>
   </div>
 </template>

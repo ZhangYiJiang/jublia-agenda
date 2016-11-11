@@ -7,6 +7,7 @@
           <md-input placeholder="Email" required (focus)="clearSignUpErrors()" 
                     [(ngModel)]="registerEmail" 
                     type="email"
+                    name="username"
                     autocomplete="email">
             <md-hint class="form-error-hint" align="start">{{registerEmailError}}</md-hint>
           </md-input>
@@ -15,6 +16,7 @@
           <md-input placeholder="Password" required (focus)="clearSignUpErrors()" 
                     type="password" 
                     [(ngModel)]="registerPassword" 
+                    name="password"
                     autocomplete="new-password">
             <md-hint class="form-error-hint" align="start">{{registerPasswordError}}</md-hint>
           </md-input>
@@ -40,6 +42,7 @@
           <md-input (focus)="clearLoginErrors()" required 
                     placeholder="Email" 
                     [(ngModel)]="loginEmail" 
+                    name="email"
                     type="email"> 
             <md-hint class="form-error-hint" align="start">{{loginEmailError}}</md-hint>
           </md-input>
@@ -48,6 +51,7 @@
           <md-input (focus)="clearLoginErrors()" required 
                     placeholder="Password" 
                     type="password" 
+                    name="password"
                     [(ngModel)]="loginPassword"> 
             <md-hint class="form-error-hint" align="start">{{loginPasswordError}}</md-hint>
           </md-input>

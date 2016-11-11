@@ -11,7 +11,8 @@
   <button class="fab-add"  (click)="addingSessionWithStart=false;createSessionModal()" *ngIf="!isPublic">
     <md-icon>add</md-icon>
   </button>
-  <div #scheduleRef class="schedule" (scroll)="keepfix()">
+  <div #scheduleRef class="schedule" (scroll)="keepfix()"
+    [class.is-board-list]="isListView">
     <session-list *ngIf="isListView"
                   [sessions]="agenda.sessions"
                   [offsetDate]="offsetDate" [agenda]="agenda" [isPublic]="isPublic" [isAnalytics]="isAnalytics"

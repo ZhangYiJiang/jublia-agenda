@@ -1,7 +1,9 @@
 import random
+import string
 from datetime import timedelta
 
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from faker import Faker
 
 fake = Faker()
@@ -126,7 +128,7 @@ def viewer(data=None, full=False):
     }
 
     if full:
-        viewer['mobile'] = fake.phone_number()
+        viewer['mobile'] = '+65' + random.choice(('8', '9')) + get_random_string(length=7, allowed_chars=string.digits)
 
     return {**viewer, **data}
 

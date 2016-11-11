@@ -56,3 +56,8 @@ def createsuperuser():
 def seed(arguments=''):
     with virtualenv():
         run('./manage.py seed ' + arguments)
+
+
+def sendsms():
+    with virtualenv():
+        run('./manage.py sendsms')

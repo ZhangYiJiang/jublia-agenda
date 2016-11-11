@@ -1,9 +1,7 @@
 from django.apps import apps
-from django.conf import settings
 from django.utils.crypto import get_random_string
 from icalendar import Calendar
 from rest_framework_jwt.settings import api_settings
-from twilio.rest import Client
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -21,10 +19,6 @@ def calendar():
     cal.add('prodid', r'//Jublia//Jublia Agenda//EN')
 
     return cal
-
-
-def get_twilio_client():
-    return Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 
 class UniqueTokenGenerator:

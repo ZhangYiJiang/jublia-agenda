@@ -1,6 +1,7 @@
 import { Input, Component, OnInit, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 
 import { Session } from '../session/session';
 import { Agenda } from '../agenda/agenda';
@@ -45,6 +46,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     private sanitizer: DomSanitizer,
     private boardService: BoardService,
     public modal: Modal,
+    private titleService: Title
   ) { 
      this.subscription = boardService.openBookmarkModal$.subscribe(
       open => {
@@ -107,6 +109,10 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
       }     
     });
    
+  }
+
+  public setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
   }
 
   getEventTags(): Tag[] { // only from first (default) category for now
@@ -206,6 +212,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
         agenda => {
           if (!agenda.published) return;
           this.agenda = agenda;
+          this.setTitle(agenda.name);
           this.initTags();
           // Construct the iframe URL for the embedded Google Map
           if (agenda.location) {

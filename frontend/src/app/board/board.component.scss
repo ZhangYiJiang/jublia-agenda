@@ -44,6 +44,9 @@
     right: 0;
     bottom: 0;
     position: fixed;
+    &.is-board-list {
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
 .public .schedule, .analytics .schedule {

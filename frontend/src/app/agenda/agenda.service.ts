@@ -69,7 +69,7 @@ export class AgendaService {
     return res.json();
   }
 
-  private static extractSession(session: any): Session {
+  static extractSession(session: any): Session {
     // TODO: Remove this when multi-track session is ready
     session.track = session.tracks[0];
     // display session by default

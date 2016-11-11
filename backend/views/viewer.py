@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.db.transaction import atomic
-from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.views.decorators.http import require_GET
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
@@ -27,7 +28,10 @@ def create_viewer(request, agenda_id):
 
 @require_GET
 def create_demo_viewer(request):
-    return HttpResponse()
+    agenda = Agenda.objects.get(pk=114)
+    viewer = Viewer.objects.create(agenda=agenda)
+    url = settings.BASE_URL + '/public/agenda/' + str(agenda.pk) + '/' + viewer.token + '?demo=1'
+    return redirect(url)
 
 
 def get_viewer(agenda_id, token):

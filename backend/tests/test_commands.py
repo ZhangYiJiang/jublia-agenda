@@ -1,3 +1,5 @@
+from unittest import skip
+
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
@@ -7,6 +9,7 @@ from backend.tests import factory
 from backend.tests.helper import create_user, create_agenda, create_session, create_viewer
 
 
+@skip
 class SendSMSCommandTest(TestCase):
     def setUp(self):
         self.user = create_user(factory.user())

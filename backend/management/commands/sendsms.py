@@ -1,11 +1,13 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import models
 from django.db.models import F, Func
 from django.utils import timezone
+from django.utils.translation import ugettext as _
+from twilio.rest import Client
 
-from backend.helper import get_twilio_client
 from backend.models import Session
 
 
@@ -49,12 +51,25 @@ class Command(BaseCommand):
             start_time__lte=notify_end.timestamp(),
         ).prefetch_related('viewer_set').all()
 
-        client = get_twilio_client()
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
         for session in sessions:
             for viewer in session.viewer_set.exclude(mobile=''):
-                print('Sending SMS for %(session)s to %(mobile)s' % {
+                message = _('The session %(session)s you have bookmarked '
+                            'is starting soon.' % {
+                                'session': session.name,
+                            })
+
+                print('Sending SMS "%(message)s" to %(mobile)s' % {
                     'mobile': viewer.mobile,
-                    'session': session.name,
+                    'message': message,
                 })
+
+                client.messages.create(
+                    to=viewer.mobile,
+                    messaging_service_sid=settings.TWILIO_COPILOT_SID,
+                    body=message,
+                )
+
             session.is_sms_sent = True
             session.save()

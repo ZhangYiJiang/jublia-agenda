@@ -20,6 +20,17 @@ class ViewerSerializer(BaseSerializer):
     email = serializers.EmailField(required=True)
     sessions = AgendaPrimaryKeyRelatedField(klass='session', many=True, required=False)
 
+    def validate_mobile(self, mobile):
+        if mobile.startswith('65'):
+            mobile = '+' + mobile
+        elif not mobile.startswith('+'):
+            mobile = '+65' + mobile
+
+        if len(mobile) != 11 or mobile[3] not in ('8', '9'):
+            raise ValidationError(_('%s does not appear to be a Singaporean mobile '
+                                    'number' % mobile))
+        return mobile
+
     def validate_email(self, email):
         existing = Viewer.objects.filter(email=email, agenda=self.context['agenda']).first()
         if existing:

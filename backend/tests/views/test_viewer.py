@@ -49,6 +49,28 @@ class ViewerCreateTest(BaseAPITestCase):
         response = self.client.post(self.url, {})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_invalid_mobile(self):
+        response = self.client.post(self.url, factory.viewer({
+            'mobile': '12345678',
+        }))
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_valid_mobile(self):
+        response = self.client.post(self.url, factory.viewer({
+            'mobile': '+6581234567',
+        }))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.post(self.url, factory.viewer({
+            'mobile': '91234567',
+        }))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.post(self.url, factory.viewer({
+            'mobile': '6581234567',
+        }))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_multiple_agenda(self):
         viewer = factory.viewer()
         tokens = set()

@@ -14,6 +14,12 @@ import { AgendaService } from '../agenda/agenda.service';
 import { DOMUtilService } from '../util/dom.util.service';
 import { GlobalVariable } from '../globals';
 
+export interface ContainerData {
+  date: string;
+  startAt: number;
+  trackId: number;
+}
+
 export class Container {
   start_at: number;
   sessions: Session[];
@@ -26,9 +32,7 @@ export class Container {
 })
 export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   @Input() sessions: Session[];
-
-  @Input()
-  agenda: Agenda;
+  @Input() agenda: Agenda;
 
   // column's date
   @Input() day: Date;
@@ -44,8 +48,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
 
   @Input() token: string;
   @Input() interestedSessionIds: number[];
-  @Input()
-  analyticsData: {};
+  @Input() analyticsData: {};
 
   @Output() onSessionChanged = new EventEmitter<Session>();
   @Output() onSessionDeletedColumn = new EventEmitter<Session>();
@@ -56,17 +59,12 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   @Output() onVenueChanged = new EventEmitter<Venue>();
   @Output() onCreateSessionWithStart = new EventEmitter<[number,number,number]>();
   @Output() onVenueAdded2 = new EventEmitter<Venue>();
-
-
+  
   containers: Container[] = [];
 
   hours = GlobalVariable.HOURS;
 
   private PLACEHOLDER_DURATION: number = 15;
-  private DEFAULT_DAY_START_OFFSET_MIN: number = 8 * 60; // default start time for column is 8AM
-
-  // offset from start of the column's date to start of displayed time withn the date (8AM, etc)
-  private dayStartOffsetMin: number;
 
   // offset from event start date to column's date, in number of minutes 
   private eventStartOffsetMin: number;
@@ -75,8 +73,11 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
 
   dropSub: any;
 
-  constructor(private dragulaService: DragulaService, 
-    private domUtilService: DOMUtilService) {
+  constructor(
+    private dragulaService: DragulaService, 
+    private domUtilService: DOMUtilService,
+    private agendaService: AgendaService,
+  ) {
     this.dropSub = dragulaService.dropModel.subscribe((value: any) => {
       console.log('drop event in abs col');
       this.onDrop(value.slice(1));
@@ -147,96 +148,40 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   }
 
   private isInterestedInSession(session: Session): boolean {
-    if(!this.interestedSessionIds) {
+    if (!this.interestedSessionIds) {
       return false;
     } else {
       return this.interestedSessionIds.indexOf(session.id) !== -1;
     }
   }
 
-  private getColumnDate(el: HTMLElement): Date {
-    return new Date(el.getAttribute('data-date'));
-  }
+  private onDrop([e, el, source]: [HTMLElement, HTMLElement, HTMLElement]) {
+    if (el.dataset['columnType'] !== 'absolute') return;
+    
+    const data = this.domUtilService.getContainerData(el);
 
-  private getColumnTrack(el: HTMLElement): number {
-    return +el.getAttribute('data-track-id');
-  }
-
-  private isEventForAbsoluteColumn(el: HTMLElement): boolean {
-    let columnType = el.getAttribute('data-column-type');
-    return columnType === 'absolute';
-  }
-
-  private isEventForThisContainer(containerDate: Date, containerTrackId: number): boolean {
-    return containerDate.toISOString() === this.day.toISOString() && containerTrackId === this.track.id;
-  }
-
-  private onDrop(args: [HTMLElement, HTMLElement, HTMLElement]) {
-    let [e, el, source] = args;
-    if (this.isEventForAbsoluteColumn(el)) {
-      let containerDate = this.domUtilService.getContainerDate(el);
-      let containerTrackId = this.domUtilService.getContainerTrack(el);
-      if (this.isEventForThisContainer(containerDate, containerTrackId)) {
-        let sessionId = this.domUtilService.getSessionIdFromDOM(e);
-        console.log(sessionId + ' moved to:');
-        console.log(containerDate.toLocaleString());
-        let startAt = this.domUtilService.getContainerStartAt(el);
-        console.log(startAt);
-        this.handleSessionDropped(sessionId, containerTrackId, startAt);
+    if (data.date === this.day.toISOString() && data.trackId === this.track.id) {
+      const sessionId = this.domUtilService.getSessionIdFromDOM(e);
+      const movedSession = this.getSessionById(sessionId);
+      
+      console.log(sessionId + ' moved to:' + data.date);
+      
+      if (!movedSession) {
+        console.log('moved session ID ' + sessionId + ' cannot be found in board');
       }
-    }
-  }
-
-  private reCalculateSessionStartTime(sessionId: number): number {
-    let duration: number = 0;
-    for (var i = 0; i < this.displayedSessions.length; ++i) {
-      let session: Session = this.displayedSessions[i];
-      if (session.id === sessionId) {
-        break;
-      } else if (session.placeholder) {
-        duration += this.PLACEHOLDER_DURATION;
+      
+      const isFromPending = (movedSession.start_at == null);
+      
+      movedSession.start_at = data.startAt;
+      movedSession.track = data.trackId;
+      movedSession.duration = movedSession.duration || GlobalVariable.DEFAULT_NEW_DURATION;
+      
+      if (isFromPending) {
+        this.onSessionMovedFromPending.emit(movedSession);
       } else {
-        duration += session.duration;
+        this.onSessionChanged.emit(movedSession);
       }
     }
-    let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(duration);
-    return globalStartTime;
-  }
-
-  private handleSessionDropped(sessionId: number, trackId: number, startAt: number) {
-    let movedSession = this.getSessionById(sessionId);
-    if(movedSession) {
-      let globalStartTime = this.getGlobalStartTimeFromDisplayedStartTime(startAt);
-      this.updateDroppedSession(movedSession, globalStartTime, trackId);
-    } else {
-      console.log('moved session ID ' + sessionId + ' cannot be found in board');
-    }
-  }
-
-  private getGlobalStartTimeFromDisplayedStartTime(displayedStartTime: number) {
-    return displayedStartTime + this.dayStartOffsetMin + this.eventStartOffsetMin;
-  }
-
-  private updateDroppedSession(session: Session, newStartTime: number, trackId: number) {
-    let isFromPending = (session.start_at == null);
-    session.start_at = newStartTime;
-    if (session.duration == null) {
-      session.duration = GlobalVariable.DEFAULT_NEW_DURATION;
-    }
-    session.track = trackId;
-    if(isFromPending) {
-      this.onSessionMovedFromPending.emit(session);
-    } else {
-      this.onSessionChanged.emit(session);
-    }
-  }
-
-  // Get start minutes of session relative to start of the day
-  getRelativeStartMin(session: Session): number {
-    if (this.eventStartOffsetMin % 60 !== 0) {
-      console.error('offset date and current date diff is not exact multiple of days');
-    }
-    return session.start_at - this.eventStartOffsetMin - this.dayStartOffsetMin;
   }
 
   getSessionById(sessionId: number): Session {
@@ -260,19 +205,19 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   addNewSession(container: Container){
     console.log('public '+this.isPublic);
     console.log('analytics '+this.isAnalytics);
-    let startTime = this.dayStartOffsetMin+this.eventStartOffsetMin+container.start_at;
+    const startTime = this.eventStartOffsetMin + container.start_at;
     //console.log(startTime);
-    this.onCreateSessionWithStart.emit([startTime,this.dateIndex,this.trackIndex]);
+    this.onCreateSessionWithStart.emit([startTime, this.dateIndex, this.trackIndex]);
   }
 
   private generateContainers() {
     // mins are relative to start of the day i.e. 8AM
     this.containers = [];
-    // last container is 9PM
-    for (var mins = 0; mins <= 13 * 60; mins += this.PLACEHOLDER_DURATION) {
+    
+    for (let mins = this.hours[0] * 60, end = _.last(this.hours) * 60; mins < end; mins += this.PLACEHOLDER_DURATION) {
       this.containers.push({
-        start_at: mins,
-        sessions: this.getSessionByStartTime(mins)
+        start_at: mins + this.eventStartOffsetMin,
+        sessions: this.getSessionByStartTime(mins),
       });
     }
   }
@@ -281,16 +226,16 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
     if (this.displayedSessions.length === 0) {
       return [];
     }
-    let sessions: Session[] = [];
-    for (var i = 0; i < this.displayedSessions.length; i++) {
-      let delta = this.getRelativeStartMin(this.displayedSessions[i]) - start_time;
-      if (delta >= 0 && delta < this.PLACEHOLDER_DURATION) {
-        sessions.push(this.displayedSessions[i]);
-      }
-    }
+    
+    const sessions = this.displayedSessions.filter(session => {
+      const delta = session.start_at - start_time - this.eventStartOffsetMin;
+      return delta >= 0 && delta < this.PLACEHOLDER_DURATION;
+    });
+    
     if (sessions.length > 1) {
       console.warn('multiple sessions with same start time');
     }
+    
     return sessions;
   }
 
@@ -298,17 +243,22 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
     this.displayedSessions.push(session);
     this.generateContainers();
   }
+  
+  getContainerData(container: Container): ContainerData {
+    return {
+      startAt: container.start_at, 
+      trackId: this.track.id,
+      date: this.day.toISOString(),
+    }
+  }
 
   ngOnInit(): void {
     this.eventStartOffsetMin = moment(this.day).diff(moment(this.offsetDate), 'minutes', true);
-    if (this.sessions.length > 0) {
-      let firstSessionMins = this.getRelativeStartMin(this.sessions[0]);
-      if (firstSessionMins < this.DEFAULT_DAY_START_OFFSET_MIN) {
-        console.error('Earliest session before 8AM, session before 8AM will be hidden.');
-      }
-    }
-    this.dayStartOffsetMin = this.DEFAULT_DAY_START_OFFSET_MIN;
     this.displayedSessions = this.sessions;
+
+    if (this.isPublic) {
+      this.hours = this.agendaService.getEventHours(this.agenda.sessions);
+    }
 
     this.generateContainers();
 

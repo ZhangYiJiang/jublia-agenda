@@ -3,12 +3,12 @@
 .abs-col {
     background-color: rgba(242,242,242,0.5);
     overflow: hidden;
-    height: 1200px;
     width: 200px;
     margin-right: 10px;
+    
     .session-container-list {
         padding-top: 10px;
-        margin-top: 0px;
+        margin-top: 0;
         min-height: 100px;
     }
 }
@@ -21,6 +21,7 @@
     box-sizing: border-box;
     margin: 0 10px;
     height: $height-per-15-min;
+    
     .session-list {
         height: 100%;
     }

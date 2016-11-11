@@ -22,5 +22,5 @@ export const GlobalVariable = Object.freeze({
   TAG_INPUT_BTN_NO_TEXT : 'Enter tag name above',
   TAG_INPUT_BTN_WITH_TEXT : 'Create new tag',
   TAG_INPUT_BTN_EXIST_TAG : 'Tag already added',
-  HOURS: ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00']
+  HOURS: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
 });

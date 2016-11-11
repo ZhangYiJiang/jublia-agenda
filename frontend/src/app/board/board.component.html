@@ -30,7 +30,7 @@
     <div *ngIf="!isListView" class="scroll-container">
       <div class="timescale" [style.left]="scheduleLeft">
         <div class="hour" *ngFor="let hour of hours">
-        {{hour}}
+          {{ hour }}:00
         </div>
       </div>
       <div class="scroll">

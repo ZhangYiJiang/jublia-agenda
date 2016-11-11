@@ -68,9 +68,23 @@
             Show only bookmarked sessions
           </md-slide-toggle>
         </div>
-        <div class="footer-buttons">
-          <button class="secondary"  type="button" (click)="dialogRef.close(true)">Close</button>
-        </div>
+        <p *ngIf="isDemo"> Please verify your contact information below is correct. You will be notified if there is any change in your bookmarked sessions through Email, and receive SMS reminder before sessions start.</p>
+        <p *ngIf="!isDemo"> Please update your mobile phone number below to receive SMS reminders before bookmarked sessions start</p>
+        <form class="bookmark-form" (ngSubmit)="updateToken(dialogRef)">
+          <md-input *ngIf="!isDemo" placeholder="Email" (focus)="bookmarkError=undefined" [(ngModel)]="newEmail" name="email">
+            <md-hint class="form-error-hint" align="start">{{bookmarkError}}</md-hint>
+          </md-input>
+          <md-input placeholder="Mobile number" (focus)="mobileError=undefined" [(ngModel)]="newMobile" name="mobile">
+            <md-hint class="form-error-hint" align="start">{{mobileError}}</md-hint>
+          </md-input>
+          <div class="footer-buttons modal-footer">
+            <button [disabled]="bookmarkSubmitting" type="submit" class="primary">
+              <i *ngIf="bookmarkSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+              Update
+            </button>
+            <button class="secondary"  type="button" (click)="dialogRef.close(true)">Close</button>
+          </div>
+        </form>
       </div>
     </section>
   </div><!-- /.viewer -->

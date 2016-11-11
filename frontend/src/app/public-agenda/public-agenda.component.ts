@@ -59,6 +59,8 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   agenda: Agenda;
   email: string;
   mobile: string;
+  newEmail: string;
+  newMobile: string;
   agendaId: number;
   token : string;
   bookmarkError: string;
@@ -67,6 +69,7 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   eventTags: Tag[] = [];
 
   bookmarkSubmitting = false;
+  isDemo = false;
   
   @ViewChild('infoRef') public infoRef: TemplateRef<any>;
   @ViewChild('bookmarkRef') public bookmarkRef: TemplateRef<any>;
@@ -89,7 +92,19 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
       let token = params['token'];
       if (token) {
         this.getViewerByToken(token);
-      }      
+      } 
+      
+    });
+    this.route.queryParams.forEach((params: Params) => {
+      let demo = +params['demo'];
+      console.log('is demo '+ demo);
+      if (demo === 1) {
+        this.isDemo = true;
+        setTimeout(() => {
+          console.log('show book');
+          this.showBookmark();
+        }, 0);
+      }     
     });
    
   }
@@ -205,10 +220,10 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
   getViewerByToken(token: string) {
     this.publicAgendaService.getViewerByToken(this.agendaId, token).subscribe(
       (data: any) => {
-        this.email = data.email;
+        this.email = this.newEmail = data.email;
+        this.mobile = this.mobile = data.mobile;
         this.interestedSessionIds = data.sessions;
-        this.token = token;
-        this.mobile = data.mobile;
+        this.token  = token;
       },
       (error: any) => {
         this.location.go('/public/agenda/'+this.agendaId);
@@ -223,6 +238,8 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
         this.bookmarkSubmitting = false;
         this.router.navigate(['/public/agenda/' + this.agendaId + '/' + data.token])
         dialogRef.close();
+        this.newEmail = this.email;
+        this.newMobile = this.mobile;
       },
       (error: any) => {
         this.bookmarkSubmitting = false;
@@ -237,6 +254,42 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     );
   }
 
+  updateToken(dialogRef: any) {
+    console.log('mobile');
+    console.log(this.mobile);
+    console.log(this.newMobile);
+    if(this.newEmail == this.email && this.newMobile == this.mobile) {
+      this.mobileError = this.bookmarkError = 'No change';
+      return;
+    }
+    this.bookmarkSubmitting = true;
+    var fun: any;
+    if(this.newEmail == this.email) {
+      fun = this.publicAgendaService.updateToken(this.agendaId, this.token, undefined, this.newMobile);
+    }else if(this.newMobile == this.mobile) {
+      fun = this.publicAgendaService.updateToken(this.agendaId, this.token, this.newEmail, undefined);
+    }else {
+      fun = this.publicAgendaService.updateToken(this.agendaId, this.token, this.newEmail, this.newMobile);      
+    }
+    fun.subscribe(
+      (data: any) => {
+        this.email = this.newEmail;
+        this.mobile = this.newMobile;
+        this.bookmarkSubmitting = false;
+        dialogRef.close();
+      },
+      (error: any) => {
+        this.bookmarkSubmitting = false;
+        console.log(error)
+        if(error.email) {
+          this.bookmarkError = error.email;
+        }
+        if(error.mobile) {
+          this.mobileError = error.mobile;
+        }
+      }
+    );
+  }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }

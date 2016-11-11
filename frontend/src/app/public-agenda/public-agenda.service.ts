@@ -29,6 +29,23 @@ export class PublicAgendaService {
                     .catch(this.handleError);
   }
 
+  updateToken(agendaId: number, token: string, email?: string, mobile?:string) {
+    var detail={};
+    if (email) {
+      detail['email'] = email;
+    }
+    if (mobile) {
+      detail['mobile'] = mobile;
+    }
+    let body = JSON.stringify(detail);
+    console.log('mobile is'+mobile);
+        console.log(body);
+
+    return this.httpClient.patch(this.BASE_URL + '/' + agendaId + '/viewers/' + token, body)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
   createToken(agendaId: number, email: string, mobile:string) {
     console.log(email);
     let body = JSON.stringify({email: email, mobile: mobile});

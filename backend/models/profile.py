@@ -68,4 +68,4 @@ class Attachment(BaseModel):
     file = models.ImageField()
 
     def __str__(self):
-        return self.file.path
+        return settings.BASE_URL + self.file.url

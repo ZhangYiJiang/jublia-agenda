@@ -1,7 +1,7 @@
 @import '../../../public/css/variables';
 
 .toggled-off {
-    opacity: 0.55;
+    opacity: 0.4;
 }
 
 .agenda-menu {
@@ -9,6 +9,10 @@
     display: flex;
     height: $top-bar-height;
     overflow: auto;
+    
+    &.list-view {
+        box-shadow: 0 2px 6px rgba(#000, .3);
+    }
     
     h1 {
         color: $color-primary;

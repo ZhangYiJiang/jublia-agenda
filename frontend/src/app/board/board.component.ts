@@ -59,6 +59,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   @Input() token: string;
   @Input() interestedSessionIds: number[];
   @Input() analyticsData: {};
+  @Input() isListView: boolean;
 
   offsetDate: Date;
   eventDates: Date[];
@@ -183,45 +184,34 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   canContainerAcceptNewSession(sessionEl: HTMLElement, target: HTMLElement): boolean {
-    if(target.children.length !== 0) {
+    if (target.children.length !== 0) {
       return false;
-    } else {
-      let sessionId = this.domUtilService.getSessionIdFromDOM(sessionEl);
-      let containerTrackId = this.domUtilService.getContainerTrack(target);
-      let globalStartAt = this.domUtilService.getContainerGlobalStartAt(target);
-      return !this.isThereCollision(sessionId, globalStartAt, containerTrackId);
     }
-  }
+    
+    const sessionId = this.domUtilService.getSessionIdFromDOM(sessionEl);
+    const draggingSession = this.getSessionById(sessionId);
+    const container = this.domUtilService.getContainerData(target);
+    const draggingDuration = draggingSession.duration || GlobalVariable.DEFAULT_NEW_DURATION;
 
-  isThereCollision(draggingSessionId: number, startAt: number, trackId: number): boolean {
-    let draggingSession = this.getSessionById(draggingSessionId);
-    if(draggingSession == null) {
-      console.error('Session not found in board for id: ' + draggingSessionId);
+    if (draggingSession == null) {
+      console.error('Session not found in board for id: ' + sessionId);
     }
-    let draggingDuration = draggingSession.duration;
-    // use default new duration is session does not have duration
-    if(draggingDuration == null) {
-      draggingDuration = GlobalVariable.DEFAULT_NEW_DURATION;
-    }
-    for (var i = 0; i < this.allSessions.length; i++) {
-      // skip pending session
-      if(this.allSessions[i].start_at == null) {
-        continue;
-      }
-      // no collision with itself
-      if(this.allSessions[i].id !== draggingSessionId
-        // same track
-        && this.allSessions[i].track === trackId
+    
+    console.log(this.allSessions.filter(session => {
+      // Only check against sessions on the same track
+      return session.start_at && session.track === container.trackId;
+    }));
+    
+    return this.nonPendingSessions.filter(session => {
+      // Only check against sessions on the same track
+      return session.start_at && session.track === container.trackId;
+    }).every(session => {
+      return session.id === sessionId
         // existing session starts before the dragging session ends
-        && this.allSessions[i].start_at < (startAt + draggingDuration)
+        || (session.start_at + session.duration) <= container.startAt
         // existing session ends after the dragging session start
-        && (this.allSessions[i].start_at + this.allSessions[i].duration) > startAt) {
-        console.log('collision with');
-        console.log(this.allSessions[i]);
-        return true;
-      }
-    }
-    return false;
+        || session.start_at >= (container.startAt + draggingDuration)
+    });
   }
 
   onCreateSessionWithStart(event: [number,number,number]) {
@@ -322,11 +312,11 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   changeSessionToPending(sessionId: number) {
     let session: Session = this.getSessionById(sessionId);
-    if(session) {
+    if (session) {
       delete session.start_at;
       console.log('session to pending in board');
       console.log(session);
-      this.agendaService.updateSession(this.agenda.id, session);
+      this.agendaService.updateSession(this.agenda.id, session).subscribe();
     } else {
       console.error('Session not found for id=' + sessionId + '.');
     }
@@ -448,6 +438,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.allSessions = this.agenda.sessions;
     [this.nonPendingSessions, this.pendingSessions] = _.partition(this.allSessions, 
       (o:Session) => o.hasOwnProperty('start_at'));
+    
+    if (this.isPublic) {
+      this.hours = this.agendaService.getEventHours(this.agenda.sessions);
+    }
   }
 
   createSessionModal() {

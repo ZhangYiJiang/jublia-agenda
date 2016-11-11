@@ -27,6 +27,7 @@ import { VenueComponent } from './venue/venue.component.ts';
 import { VenueService } from './venue/venue.service.ts';
 import { SpeakerComponent } from './speaker/speaker.component.ts';
 import { SpeakerService } from './speaker/speaker.service.ts';
+import { SessionListComponent } from './session-list/session-list.component.ts';
 
 import { DOMUtilService } from './util/dom.util.service';
 import { HttpClient } from './util/http.util.service';
@@ -96,6 +97,7 @@ import { TooltipModule } from 'ng2-tooltip';
     AnalyticsComponent,
     VenueComponent,
     SpeakerComponent,
+    SessionListComponent,
     
     OrderBy,
     Where,

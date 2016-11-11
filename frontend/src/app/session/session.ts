@@ -16,5 +16,5 @@ export class Session {
   tags: number[];
   placeholder: boolean;
   order: number;
-  toggle: boolean;
+  toggle: boolean = true;
 }

@@ -64,7 +64,7 @@
       <div class="clearfix" *ngIf="token">
         <h2>Personal schedule for {{email}}</h2>
         <div class="interested-toggle">
-          <md-slide-toggle [color]="'black'" [(ngModel)]="interestToggleModel">
+          <md-slide-toggle color="black" [(ngModel)]="interestToggleModel">
             Show only bookmarked sessions
           </md-slide-toggle>
         </div>
@@ -98,7 +98,7 @@
 </div>
 
 <div *ngIf="agenda">
-  <div class="clearfix agenda-menu">
+  <div class="clearfix agenda-menu" [class.list-view]="isListView">
     <h1 class="agenda-title">{{agenda.name}}</h1>
     <div class="agenda-buttons">
       <button md-button disableRipple class="primary" (click)="toggleView()">
@@ -121,6 +121,7 @@
   </div>
   <board *ngIf="agenda" [agenda]="agenda" [isPublic]="true" [token]="token" 
          [interestedSessionIds]="interestedSessionIds" 
-         [class.hide-no-interest]="interestToggleModel">
+         [class.hide-no-interest]="interestToggleModel"
+         [isListView]="isListView">
   </board>
 </div>

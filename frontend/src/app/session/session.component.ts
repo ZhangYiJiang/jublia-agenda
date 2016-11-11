@@ -53,6 +53,8 @@ export class SessionComponent implements OnInit {
   @Input() analyticsData: {};
   @Input() isAnalytics: boolean;
 
+  @Input() isSessionInList: boolean = false;
+
   interestedButtonText: string;
   analyticsDataCombinedX: any[];
   analyticsDataCombinedY: any[];
@@ -73,8 +75,9 @@ export class SessionComponent implements OnInit {
 
   HEIGHT_PER_15_MINS = 20; // px
   VERTICAL_MARGIN = 4;
+  LIST_SESSION_HEIGHT = 'initial';
 
-  height: number;
+  height: number | string;
   color: string;
   useDarkTheme: boolean; // Dark if lightness < 75%, Light otherwise 
 
@@ -156,6 +159,7 @@ export class SessionComponent implements OnInit {
   }
 
   deleteSession() {
+    console.log('delete');
     this.onSessionDeleted.emit(this.session);
   }
 
@@ -414,6 +418,10 @@ export class SessionComponent implements OnInit {
   }
 
   updateHeight() {
+    if(this.isSessionInList) {
+      this.height = this.LIST_SESSION_HEIGHT;
+      return;
+    }
     this.height = Math.ceil(this.session.duration / 15) * this.HEIGHT_PER_15_MINS - this.VERTICAL_MARGIN;
   }
 

@@ -28,6 +28,7 @@ class UploadFileTest(BaseAPITestCase):
         response = self.try_upload('kitten.jpg')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('id', response.data)
+        self.assertIn('http', response.data['file'])
 
     def test_upload_non_image(self):
         response = self.try_upload('file.js')

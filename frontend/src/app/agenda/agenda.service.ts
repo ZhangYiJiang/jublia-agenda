@@ -184,4 +184,22 @@ export class AgendaService {
           err => console.error(err)
         );
   }
+
+  getEventHours(sessions: Session[]): number[] {
+    const hours: number[] = [];
+    const hoursBetween: number[] = [];
+
+    sessions.forEach((session) => {
+      if (!_.isNull(session.start_at)) {
+        hours.push(Math.floor(session.start_at % (24 * 60) / 60));
+        hours.push(Math.ceil((session.start_at + session.duration) % (24 * 60) / 60) + 1);
+      }
+    });
+
+    for (let hour = Math.min(...hours), max = Math.max(...hours); hour < max; hour++) {
+      hoursBetween.push(hour);
+    }
+
+    return hoursBetween;
+  }
 }

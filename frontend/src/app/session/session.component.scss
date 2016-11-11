@@ -12,7 +12,7 @@
     box-shadow: 0 2px 3px rgba(#000, 0.3), 
                 inset 0 1px 0 rgba(#000, 0.3);
     cursor: move;
-    
+
     &.dark {
         color: #fff;
 
@@ -48,11 +48,67 @@
         max-height: 32px;       /* fallback */
     }
     
-    .session-time, 
+    .session-time,
     .session-venue {
         font-size: 12px;
         color: #888;
     }
+
+    // Session list view
+    &.in-list {
+        text-align: left;
+        cursor: pointer;
+        padding: 20px 12px;
+        margin-bottom: 0;
+        
+        border-radius: 0;
+        box-shadow: none;
+        border: 1px solid rgba(#000, .2);
+        border-width: 0 0 1px 0;
+        transition: .2s background;
+
+        // Need to override inline styles which are used for 
+        // analytics view 
+        background: transparent !important;
+        
+        &:hover, &:focus {
+            background: rgba($color-primary, .1) !important;
+        }
+        
+        h2 {
+            margin: 0 0 4px;
+            font-size: 20px;
+        }
+        
+        p {
+            margin: 0 0 4px;
+        }
+    }
+    
+    .session-listview-description {
+        margin-top: 5px;
+        line-height: 1.4;
+    }
+    
+    .session-listview-subtitle {
+        color: #888;
+        font-size: 13px;
+    }
+    
+    .session-listview-speaker-list {
+        font-weight: bold;
+    }
+
+    .session-listview-speaker {
+        &:after {
+            content: ', ';
+        }
+
+        &:last-child:after {
+            content: '';
+        }
+    }
+
 }
 
 .interest-btn {
@@ -63,6 +119,7 @@
     .tooltip-inner {
         text-align: left;
         padding: 4px 12px;
+        width: 200px;
     }
     
     p {
@@ -211,6 +268,10 @@
         flex: 1 auto;
         margin-left: 20px;
         line-height: 1.4;
+        
+        h3, p {
+            margin: 0;
+        }
     }
 
     .session-add-speakers {

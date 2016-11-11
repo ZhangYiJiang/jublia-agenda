@@ -1,28 +1,17 @@
 import { Injectable } from '@angular/core';
+import {ContainerData} from "../absolute-column/absolute-column.component";
 
 @Injectable()
 export class DOMUtilService {
   hasClass(element: Element, cls: string): boolean {
-    return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    return element.classList.contains(cls);
   }
 
   getSessionIdFromDOM(el: HTMLElement): number {
-    return parseInt(el.getAttribute('data-session-id'))
+    return parseInt(el.dataset['sessionId']);
   }
-
-  getContainerStartAt(el: HTMLElement): number {
-    return parseInt(el.getAttribute('data-container-start-at'));
-  }
-
-  getContainerGlobalStartAt(el: HTMLElement): number {
-    return parseInt(el.getAttribute('data-container-global-start-at'));
-  }
-
-  getContainerTrack(el: HTMLElement): number {
-    return +el.getAttribute('data-track-id');
-  }
-
-  getContainerDate(el: HTMLElement): Date {
-    return new Date(el.getAttribute('data-date'));
+  
+  getContainerData(el: HTMLElement): ContainerData {
+    return JSON.parse(el.dataset['container']);
   }
 }

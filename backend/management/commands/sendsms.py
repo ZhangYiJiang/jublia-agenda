@@ -51,7 +51,7 @@ class Command(BaseCommand):
 
         for viewer in session.viewer_set.exclude(mobile=''):
             message = _('The session %(session)s you have bookmarked '
-                        'is starting soon.' % {
+                        'is starting soon - From A*genda (CS3216-02)' % {
                             'session': session.name,
                         })
 

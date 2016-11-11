@@ -106,14 +106,14 @@
         
         <div class="date-row">
           <div>
-            <md-input type="date" min="{{today}}" required formControlName="start" placeholder="Start Date">
+            <md-input type="date"(focus)="clearError('start')"  min="{{today}}" required formControlName="start" placeholder="Start Date">
               <md-hint class="form-error-hint" align="start">{{formErrors.start}}</md-hint>
             </md-input>
           </div>
           
           <div>
             <md-input type="number" formControlName="duration" max="9" min="1" placeholder="Duration (days, max 9)" 
-                      (focus)="clearError('duration ')">
+                      (focus)="clearError('duration')">
               <md-hint class="form-error-hint" align="start">{{formErrors.duration}}</md-hint>
             </md-input>
           </div>

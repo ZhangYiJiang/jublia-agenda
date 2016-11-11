@@ -28,7 +28,7 @@ def create_viewer(request, agenda_id):
 
 @require_GET
 def create_demo_viewer(request):
-    agenda = Agenda.objects.get(pk=139)
+    agenda = Agenda.objects.get(pk=114)
     viewer = Viewer.objects.create(agenda=agenda)
     url = settings.BASE_URL + '/public/agenda/' + str(agenda.pk) + '/' + viewer.token + '?demo=1'
     return redirect(url)

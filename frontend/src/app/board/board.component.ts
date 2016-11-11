@@ -197,11 +197,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       console.error('Session not found in board for id: ' + sessionId);
     }
     
-    console.log(this.allSessions.filter(session => {
-      // Only check against sessions on the same track
-      return session.start_at && session.track === container.trackId;
-    }));
-    
     return this.nonPendingSessions.filter(session => {
       // Only check against sessions on the same track
       return session.start_at && session.track === container.trackId;
@@ -277,10 +272,18 @@ export class BoardComponent implements OnInit, OnDestroy {
     // console.log('drop board');
     // console.log(e);
     // console.log(el);
-    let sessionId = e.getAttribute('data-session-id');
-    let columnType = el.getAttribute('data-column-type');
-    if(columnType === 'relative') {
-      this.changeSessionToPending(parseInt(sessionId));
+    if (el.dataset['columnType'] === 'relative') {
+      const sessionId = this.domUtilService.getSessionIdFromDOM(e);
+      const session = this.getSessionById(sessionId);
+      
+      if (session) {
+        delete session.start_at;
+        console.log('session to pending in board');
+        console.log(session);
+        this.agendaService.updateSession(this.agenda.id, session).subscribe();
+      } else {
+        console.error('Session not found for id=' + sessionId + '.');
+      }
     }
   }
 
@@ -308,18 +311,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     return day1.getUTCFullYear() === day2.getUTCFullYear() 
            && day1.getUTCMonth() === day2.getUTCMonth() 
            && day1.getUTCDate() === day2.getUTCDate();
-  }
-
-  changeSessionToPending(sessionId: number) {
-    let session: Session = this.getSessionById(sessionId);
-    if (session) {
-      delete session.start_at;
-      console.log('session to pending in board');
-      console.log(session);
-      this.agendaService.updateSession(this.agenda.id, session).subscribe();
-    } else {
-      console.error('Session not found for id=' + sessionId + '.');
-    }
   }
 
   getSessionById(sessionId: number): Session {

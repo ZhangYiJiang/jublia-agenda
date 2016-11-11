@@ -139,7 +139,7 @@
       
       <template [ngIf]="agenda.published">
         <div class="share-link">
-          <span class="share-link-url">{{publicUrl}}</span>
+          <a href="{{publicUrl}}" target="_blank" class="share-link-url">{{publicUrl}}</a>
           <button type="button" ngIIclipboard 
                   [cbContent]="publicUrl" 
                   (cbOnSuccess)="clipboardStatus = 'Link copied'" 

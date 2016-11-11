@@ -58,6 +58,6 @@ def seed(arguments=''):
         run('./manage.py seed ' + arguments)
 
 
-def sendsms():
+def sendsms(arguments=''):
     with virtualenv():
-        run('./manage.py sendsms')
+        run('./manage.py sendsms' + arguments)

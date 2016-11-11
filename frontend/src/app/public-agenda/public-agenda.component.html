@@ -72,10 +72,10 @@
         <p *ngIf="!isDemo"> Please verify your contact information below is correct. You will be notified if there is any change in your bookmarked sessions through Email, and receive SMS reminder before sessions start.</p>
         <p *ngIf="isDemo"> Please update your mobile phone number below to receive SMS reminders before bookmarked sessions start</p>
         <form class="bookmark-form" (ngSubmit)="updateToken(dialogRef)">
-          <md-input *ngIf="!isDemo" placeholder="Email" (focus)="bookmarkError=undefined" [(ngModel)]="newEmail" name="email">
+          <md-input *ngIf="!isDemo" placeholder="Email" (focus)="bookmarkError=undefined" [(ngModel)]="newEmail" name="email" type="email">
             <md-hint class="form-error-hint" align="start">{{bookmarkError}}</md-hint>
           </md-input>
-          <md-input placeholder="Mobile number" (focus)="mobileError=undefined" [(ngModel)]="newMobile" name="mobile">
+          <md-input placeholder="Mobile number" (focus)="mobileError=undefined" [(ngModel)]="newMobile" name="mobile" type="tel">
             <md-hint class="form-error-hint" align="start">{{mobileError}}</md-hint>
           </md-input>
           <div class="footer-buttons modal-footer">

@@ -3,14 +3,26 @@
     <h2>Register</h2>
     <form (ngSubmit)="signUp()" novalidate>
       <table>
-      <tr><md-input placeholder="Email" required (focus)="clearSignUpErrors()" [(ngModel)]="registerEmail" name="email" autocomplete="new-password">
-        <md-hint class="form-error-hint" align="start">{{registerEmailError}}</md-hint>
-      </md-input> </tr>
-      <tr><md-input placeholder="Password" required (focus)="clearSignUpErrors()" type="password" [(ngModel)]="registerPassword" name="password" autocomplete="new-password">
-        <md-hint class="form-error-hint" align="start">{{registerPasswordError}}</md-hint>
-      </md-input></tr>
-      <tr><md-input placeholder="Company Name" [(ngModel)]="organiser" name="organiser"> </md-input></tr>
-      <tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"> </md-input></tr>
+        <tr>
+          <md-input placeholder="Email" required (focus)="clearSignUpErrors()" 
+                    [(ngModel)]="registerEmail" 
+                    type="email"
+                    name="username"
+                    autocomplete="email">
+            <md-hint class="form-error-hint" align="start">{{registerEmailError}}</md-hint>
+          </md-input>
+        </tr>
+        <tr>
+          <md-input placeholder="Password" required (focus)="clearSignUpErrors()" 
+                    type="password" 
+                    [(ngModel)]="registerPassword" 
+                    name="password"
+                    autocomplete="new-password">
+            <md-hint class="form-error-hint" align="start">{{registerPasswordError}}</md-hint>
+          </md-input>
+        </tr>
+        <tr><md-input placeholder="Company Name" [(ngModel)]="organiser" name="organiser"></md-input></tr>
+        <tr><md-input placeholder="Event Name" [(ngModel)]="event" name="event"></md-input></tr>
       </table>
       <button [disabled]="registerSubmitting" class="primary" md-button type="submit" disableRipple>
       <i *ngIf="registerSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
@@ -26,17 +38,29 @@
       <h2>Log In</h2>
       <form (ngSubmit)="logIn()" novalidate>
         <table>
-        <tr><md-input (focus)="clearLoginErrors()" required placeholder="Email" [(ngModel)]="loginEmail" name="email"> 
-          <md-hint class="form-error-hint" align="start">{{loginEmailError}}</md-hint>
-        </md-input></tr>
-        <tr><md-input (focus)="clearLoginErrors()" required placeholder="Password" type="password" [(ngModel)]="loginPassword" name="password"> 
-          <md-hint class="form-error-hint" align="start">{{loginPasswordError}}</md-hint>
-        </md-input></tr>
+        <tr>
+          <md-input (focus)="clearLoginErrors()" required 
+                    placeholder="Email" 
+                    [(ngModel)]="loginEmail" 
+                    name="email"
+                    type="email"> 
+            <md-hint class="form-error-hint" align="start">{{loginEmailError}}</md-hint>
+          </md-input>
+        </tr>
+        <tr>
+          <md-input (focus)="clearLoginErrors()" required 
+                    placeholder="Password" 
+                    type="password" 
+                    name="password"
+                    [(ngModel)]="loginPassword"> 
+            <md-hint class="form-error-hint" align="start">{{loginPasswordError}}</md-hint>
+          </md-input>
+        </tr>
         </table>
         <button [disabled]="loginSubmitting" class="primary" md-button type="submit" disableRipple>
-        <i *ngIf="loginSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
-        Login
-        </button>  
+          <i *ngIf="loginSubmitting" class="submitting-spinner fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+          Login
+        </button>
       </form>
     </div>
     <div class="sign-up-card">

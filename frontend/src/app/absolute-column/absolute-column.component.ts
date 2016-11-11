@@ -205,7 +205,7 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   addNewSession(container: Container){
     console.log('public '+this.isPublic);
     console.log('analytics '+this.isAnalytics);
-    const startTime = this.eventStartOffsetMin + container.start_at;
+    const startTime = container.start_at;
     //console.log(startTime);
     this.onCreateSessionWithStart.emit([startTime, this.dateIndex, this.trackIndex]);
   }
@@ -223,10 +223,6 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   }
 
   private getSessionByStartTime(start_time: number): Session[] {
-    if (this.displayedSessions.length === 0) {
-      return [];
-    }
-    
     const sessions = this.displayedSessions.filter(session => {
       const delta = session.start_at - start_time - this.eventStartOffsetMin;
       return delta >= 0 && delta < this.PLACEHOLDER_DURATION;

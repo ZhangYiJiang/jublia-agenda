@@ -182,6 +182,10 @@
             <speaker-form [agenda]="agenda" (onSpeakerAdded)="onSpeakerAdded($event)"></speaker-form>
           </div>
         </template>
+        
+        <div *ngIf="isPublic && !isAnalytics">
+          <div class="fb-comments" [attr.data-href]="permalink()" [attr.data-numposts]="5"></div>
+        </div>
       </div><!-- /.session-main -->
       
       <div class="session-meta">

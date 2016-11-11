@@ -31,7 +31,7 @@
             ></my-session>
         </li>
       </ul>
-      <ul *ngIf="isPublic" class="session-list">
+      <ul *ngIf="isPublic && container.sessions" class="session-list">
         <li class="session-wrapper"
           *ngFor="let session of container.sessions"
           [class.placeholder]="session.placeholder">

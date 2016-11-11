@@ -62,14 +62,15 @@
       </div>
      
       <div class="clearfix" *ngIf="token">
-        <h2>Personal schedule for {{email}}</h2>
+        <h2 *ngIf="email">Personal schedule for {{email}}</h2>
+        <h2 *ngIf="!email">Your personal schedule</h2>
         <div class="interested-toggle">
           <md-slide-toggle color="black" [(ngModel)]="interestToggleModel">
             Show only bookmarked sessions
           </md-slide-toggle>
         </div>
-        <p *ngIf="isDemo"> Please verify your contact information below is correct. You will be notified if there is any change in your bookmarked sessions through Email, and receive SMS reminder before sessions start.</p>
-        <p *ngIf="!isDemo"> Please update your mobile phone number below to receive SMS reminders before bookmarked sessions start</p>
+        <p *ngIf="!isDemo"> Please verify your contact information below is correct. You will be notified if there is any change in your bookmarked sessions through Email, and receive SMS reminder before sessions start.</p>
+        <p *ngIf="isDemo"> Please update your mobile phone number below to receive SMS reminders before bookmarked sessions start</p>
         <form class="bookmark-form" (ngSubmit)="updateToken(dialogRef)">
           <md-input *ngIf="!isDemo" placeholder="Email" (focus)="bookmarkError=undefined" [(ngModel)]="newEmail" name="email">
             <md-hint class="form-error-hint" align="start">{{bookmarkError}}</md-hint>

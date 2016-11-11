@@ -158,13 +158,13 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
   private onDrop([e, el, source]: [HTMLElement, HTMLElement, HTMLElement]) {
     if (el.dataset['columnType'] !== 'absolute') return;
     
-    const data = this.domUtilService.getContainerData(el);
+    const container = this.domUtilService.getContainerData(el);
 
-    if (data.date === this.day.toISOString() && data.trackId === this.track.id) {
+    if (container.date === this.day.toISOString() && container.trackId === this.track.id) {
       const sessionId = this.domUtilService.getSessionIdFromDOM(e);
       const movedSession = this.getSessionById(sessionId);
       
-      console.log(sessionId + ' moved to:' + data.date);
+      console.log(sessionId + ' moved to:' + container.date);
       
       if (!movedSession) {
         console.log('moved session ID ' + sessionId + ' cannot be found in board');
@@ -172,8 +172,8 @@ export class AbsoluteColumnComponent implements OnInit, OnDestroy {
       
       const isFromPending = (movedSession.start_at == null);
       
-      movedSession.start_at = data.startAt;
-      movedSession.track = data.trackId;
+      movedSession.start_at = container.startAt;
+      movedSession.track = container.trackId;
       movedSession.duration = movedSession.duration || GlobalVariable.DEFAULT_NEW_DURATION;
       
       if (isFromPending) {

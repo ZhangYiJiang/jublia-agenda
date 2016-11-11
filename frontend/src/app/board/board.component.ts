@@ -196,7 +196,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     if (draggingSession == null) {
       console.error('Session not found in board for id: ' + sessionId);
     }
-    
+
     return this.nonPendingSessions.filter(session => {
       // Only check against sessions on the same track
       return session.start_at && session.track === container.trackId;
@@ -592,10 +592,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       data => { 
         this.formMsg = 'New session created!';
         this.allSessions.push(data);
-        if(!this.addingSessionWithStart){
-        this.pendingSessions.push(data);
-        }else{
-          this.absCol.toArray()[this.sessionDateIndex*this.eventTracks.length+this.sessionTrackIndex].addInNewSession(data);
+        if (!this.addingSessionWithStart) {
+          this.pendingSessions.push(data);
+        } else {
+          this.absCol.toArray()[this.sessionDateIndex * this.eventTracks.length + this.sessionTrackIndex].addInNewSession(data);
           this.addingSessionWithStart = false;
         }
       },

@@ -4,6 +4,8 @@ import { HttpClient } from '../util/http.util.service';
 import { GlobalVariable } from '../globals';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import {AgendaService} from "../agenda/agenda.service";
+import { Session } from "../session/session";
 
 export interface sessionRequest {
   name: string, 
@@ -32,7 +34,7 @@ export class BoardService {
   constructor (private httpClient: HttpClient) {
   }
 
-  createSession(agendaId: number, session: sessionRequest): Observable<any> {
+  createSession(agendaId: number, session: sessionRequest): Observable<Session> {
     // TODO: Remove when multi-track sessions is implemented
     if (session.track) {
       session.tracks = [session.track];
@@ -40,6 +42,7 @@ export class BoardService {
     
     return this.httpClient.post('/api/' + agendaId + '/sessions', JSON.stringify(session))
                     .map(this.extractData)
+                    .map(AgendaService.extractSession)
                     .catch(this.handleError);
   }
 

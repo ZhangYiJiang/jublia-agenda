@@ -16,6 +16,8 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 
+declare const FB: any;
+
 import {
   VEXBuiltInThemes,
   Modal,
@@ -349,6 +351,7 @@ export class SessionComponent implements OnInit {
     if(!firstOpen) {
       this.updateSessionFields();
     }
+    
     this.modal.open(
       this.templateRef, 
       overlayConfigFactory({ isBlocking: false }, VEXModalContext)
@@ -363,6 +366,8 @@ export class SessionComponent implements OnInit {
       // setTimeout here because we need to wait for the widgets in the modal to be 
       // rendered first
       setTimeout(() => {
+        FB.XFBML.parse();
+
         _.each(document.getElementsByTagName("ng2-dropdown-menu"), (el: HTMLElement) => {
           el.addEventListener('click', evt => evt.stopPropagation());
         });

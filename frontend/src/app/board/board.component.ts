@@ -212,9 +212,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   onCreateSessionWithStart(event: [number,number,number]) {
     //console.log('in board '+startTime);
     this.addingSessionWithStart = true;
-    this.sessionStartTime = event[0];
-    this.sessionDateIndex = event[1];
-    this.sessionTrackIndex = event[2];
+    [this.sessionStartTime, this.sessionDateIndex, this.sessionTrackIndex] = event;
     this.createSessionModal();
   }
 

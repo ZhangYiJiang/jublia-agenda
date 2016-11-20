@@ -78,7 +78,6 @@ export class DashBoardComponent implements OnInit {
       this.getAgendas();
     }
     
-    console.log(this.today);
     this.agendaForm = this._fb.group({
       //validators currently not in use
       name: ['', [<any>Validators.required]],
@@ -170,7 +169,6 @@ export class DashBoardComponent implements OnInit {
     this.agendaLoading = true;
     this.dashBoardService.getAgendas().subscribe(
       (data: Agenda[]) => {
-        console.log(data);
         this.agendaLoading = false;
         this.agendas = _.sortBy(data, agenda => -agenda.id);
       },
@@ -181,7 +179,6 @@ export class DashBoardComponent implements OnInit {
   }
 
   submitAgendaForm() {
-    console.log(this.agendaForm.value);
     if(this.checkAgendaForm()){
       this.createAgenda();
     }

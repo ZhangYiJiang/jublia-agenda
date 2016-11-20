@@ -99,11 +99,9 @@ export class PublicAgendaComponent implements OnInit, OnDestroy{
     });
     this.route.queryParams.forEach((params: Params) => {
       let demo = +params['demo'];
-      console.log('is demo '+ demo);
       if (demo === 1) {
         this.isDemo = true;
         setTimeout(() => {
-          console.log('show book');
           this.showBookmark();
         }, 0);
       }     

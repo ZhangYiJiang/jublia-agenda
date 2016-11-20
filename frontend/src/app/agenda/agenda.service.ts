@@ -90,7 +90,6 @@ export class AgendaService {
     const popularityCount = agenda.sessions.map((session: Session) => session.popularity);
     agenda.maxPopularity = _.max(popularityCount) || 0;
     agenda.minPopularity = _.min(popularityCount)|| 0;
-    console.log(agenda);
     
     return agenda;
   }
@@ -107,9 +106,6 @@ export class AgendaService {
     if (session.track) {
       session.tracks = [session.track];
     }
-  
-    console.log('updating agenda ' + agendaId + ' session ' + session.id);
-    console.log(JSON.stringify(session, null, 4));
 
     return this.httpClient
         .put(AgendaService.sessionEndpoint(agendaId, session.id), JSON.stringify(session))
@@ -119,14 +115,11 @@ export class AgendaService {
   }
 
   deleteSession(agendaId: number, session: Session) {
-    console.log('deleting agenda ' + agendaId + ' session ' + session.id);
-    console.log(JSON.stringify(session, null, 4));
     this.httpClient
         .delete(AgendaService.sessionEndpoint(agendaId, session.id))
         .catch(AgendaService.handleError)
         .subscribe(
           res => {
-            console.log('delete session successful');
             // console.log(res)
           },
           err => console.error(err)
@@ -134,9 +127,6 @@ export class AgendaService {
   }
 
   updateSessionInterest(agendaId: number, sessionId: number, interested: boolean, token: string) {
-    console.log('updating agenda ' + agendaId + ' session ' + sessionId);
-    console.log('interest changed to ' + interested);
-    
     const method = interested ? 'put' : 'delete';
     const url = AgendaService.agendaEndpoint(agendaId, ['viewers', token, sessionId].join('/'));
       
@@ -144,16 +134,13 @@ export class AgendaService {
         .catch(AgendaService.handleError)
         .subscribe(
             (res : any) => {
-              console.log('update session interest successful');
-              console.log(res);
+              // console.log(res);
             },
             (err : any) => console.error(err),
         );
   }
 
   updateSpeaker(agendaId: number, speaker: Speaker) {
-    console.log('updating speaker ' + agendaId + ' speaker ' + speaker.id);
-    console.log(JSON.stringify(speaker, null, 4));
     const url = AgendaService.agendaEndpoint(agendaId, 'speakers/' + speaker.id);
     
     this.httpClient
@@ -161,7 +148,6 @@ export class AgendaService {
         .catch(AgendaService.handleError)
         .subscribe(
           res => {
-            console.log('update speaker successful');
             // console.log(res)
           },
           err => console.error(err)
@@ -169,8 +155,6 @@ export class AgendaService {
   }
 
   updateVenue(agendaId: number, venue: Venue) {
-    console.log('updating venue ' + agendaId + ' venue ' + venue.id);
-    console.log(JSON.stringify(venue, null, 4));
     const url = AgendaService.agendaEndpoint(agendaId, 'venues/' + venue.id);
     
     this.httpClient
@@ -178,7 +162,6 @@ export class AgendaService {
         .catch(AgendaService.handleError)
         .subscribe(
           res => {
-            console.log('update venue successful');
             // console.log(res)
           },
           err => console.error(err)

@@ -28,7 +28,6 @@ export class DashBoardService {
   }
   
   signUp(email: string, password: string, company: string, event: string): Observable<number> {
-    console.log(email+'\n'+password+'\n'+company+'\n'+event);
     
     const body = JSON.stringify({ 
       username: email, 
@@ -91,7 +90,6 @@ export class DashBoardService {
       //console.log(data.token);
       localStorage.setItem(this.TOKEN_NAME,data.token);
       this.currentUser.authed = true;
-      console.log('token saved');
       return true;
     }else {
       this.currentUser.authed = false;
@@ -100,11 +98,9 @@ export class DashBoardService {
   };
   
   private extractStatus(res: Response) {
-    console.log(res.status);
     return res.status;
   }
   private extractData(res: Response) {
-    console.log(res.json());
     return res.json();
   }
   private handleError (error: any) {

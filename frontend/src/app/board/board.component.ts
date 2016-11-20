@@ -105,10 +105,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef, 
     private renderer: Renderer
   ) {
-    console.log('board constructor');
     this.dropSub = dragulaService.dropModel.subscribe((value: any) => {
-      console.log('drop event in board');
-      // console.log(`drop: ${value}`);
       this.dragging = false;
       this.onDrop(value.slice(1));
     });
@@ -169,7 +166,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('ondestroy board');
     this.dropSub.unsubscribe();
     this.dragSub.unsubscribe();
     this.cancelSub.unsubscribe();
@@ -210,15 +206,12 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   onCreateSessionWithStart(event: [number,number,number]) {
-    //console.log('in board '+startTime);
     this.addingSessionWithStart = true;
     [this.sessionStartTime, this.sessionDateIndex, this.sessionTrackIndex] = event;
     this.createSessionModal();
   }
 
   onSessionChanged(changedSession: Session) {
-    console.log('session changed in board');
-    console.log(changedSession);
     this.agendaService.updateSession(this.agenda.id, changedSession)
       .subscribe(session => {
         if (session.is_dirty) {
@@ -228,8 +221,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   onSessionDeletedColumn(deletedSession: Session) {
-    console.log('session delete in board');
-    console.log(deletedSession);
     this.agendaService.deleteSession(this.agenda.id, deletedSession);
     _.remove(this.allSessions, (s: Session) => s.id === deletedSession.id);
     if(deletedSession.start_at == null) {
@@ -240,26 +231,19 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   onSessionInterestChanged(event: [number, boolean]) {
-    console.log('session ' + event[0] + ' changed to ' + event[1]);
     this.agendaService.updateSessionInterest(this.agenda.id, event[0], event[1], this.token);
   }
 
   onSessionMovedFromPending(sessionFromPending: Session) {
-    console.log('session from pending in board');
-    console.log(sessionFromPending);
     this.agendaService.updateSession(this.agenda.id, sessionFromPending);
   }
 
   onSpeakerChanged(changedSpeaker: Speaker) {
-    console.log('speaker changed in board');
-    console.log(changedSpeaker);
     this.agendaService.updateSpeaker(this.agenda.id, changedSpeaker);
     this.eventSpeakersName = this.getEventSpeakersName();
   }
 
   onVenueChanged(changedVenue: Venue) {
-    console.log('venue changed in board');
-    console.log(changedVenue);
     this.agendaService.updateVenue(this.agenda.id, changedVenue);
     this.eventVenues = this.getEventVenues();
     this.eventVenuesName = this.getEventVenuesName();
@@ -267,17 +251,12 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private onDrop(args: [HTMLElement, HTMLElement]) {
     let [e, el] = args;
-    // console.log('drop board');
-    // console.log(e);
-    // console.log(el);
     if (el.dataset['columnType'] === 'relative') {
       const sessionId = this.domUtilService.getSessionIdFromDOM(e);
       const session = this.getSessionById(sessionId);
       
       if (session) {
         delete session.start_at;
-        console.log('session to pending in board');
-        console.log(session);
         this.agendaService.updateSession(this.agenda.id, session).subscribe();
       } else {
         console.error('Session not found for id=' + sessionId + '.');
@@ -324,19 +303,14 @@ export class BoardComponent implements OnInit, OnDestroy {
     let dates: Date[] = [];
     let endDate: Date;
     // duration has higher precedence of end_date
-    console.log(this.agenda);
     if(!(this.agenda.duration == null) && this.agenda.duration > 0) {
-      console.log('Using duration: ' + this.agenda.duration);
       endDate = moment.utc(this.agenda.start_at).add(this.agenda.duration - 1, 'd').toDate();
-      console.log('End date: ' + endDate.toISOString());
     } else if(this.agenda.end_at == null) {
-      console.log('No duration or end date, use 3 days default.');
       // initial deafult duration 3 days for empty agenda
       // endDate is the last day of the event
       endDate = moment.utc(this.agenda.start_at).add(2, 'd').toDate();
     } else {
-      endDate = moment.utc(this.agenda.end_at).toDate();  
-      console.log('Using end date: ' + endDate.toISOString());
+      endDate = moment.utc(this.agenda.end_at).toDate();
     }
     let tempDate: Date = moment.utc(this.agenda.start_at).toDate();
     
@@ -362,11 +336,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     if (!this.agenda.categories || this.agenda.categories.length === 0) {
       let defaultCategoryName: string = 'Tags';
       this.boardService.createCategory(this.agenda.id, defaultCategoryName).subscribe(
-        data => { 
-          console.log('created default category: ' + defaultCategoryName);
+        data => {
           return [data];
         },
-        error =>  console.log('error creating default category')
+        error => console.error('error creating default category')
       );
     } else {
       return this.agenda.categories;
@@ -434,7 +407,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   createSessionModal() {
-    console.log("session form");
     this.showVenueForm = false;
     this.eventTags = this.getEventTags(); // update autocomplete when tags are added through the session modal
     this.eventTagsName = this.getEventTagsName();
@@ -483,8 +455,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.formMsg = "Please fill in all required information.";
       return;
     }
-    
-    console.log(this.sessionForm);
 
     _.defaults(this.sessionForm.value, {
       existingSpeakers: [],
@@ -499,7 +469,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         .toPromise();
 
       request.then(data => {
-        console.log('new tag created: ' + data.name);
         this.eventTags.push(data);
         this.eventTagsName.push(data.name);
         if (!this.agenda.categories[0].tags) {
@@ -565,9 +534,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     const venueId: number[] = this.sessionForm.value.existingVenue
         .map((name: string) => _.find(this.eventVenues, {name}).id);
     
-    console.log(speakersId);
-    console.log(tagsId);
-    console.log(venueId);
     var request:Observable<any>;
 
     if (!this.sessionForm.value.duration) {
@@ -622,13 +588,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   onSpeakerAdded(newSpeaker: Speaker, isForm: boolean) {
-    console.log(isForm);
     this.agenda.speakers.push(newSpeaker);
     this.eventSpeakersName.push(newSpeaker.name);
     if (isForm) {
       this.sessionForm.value.existingSpeakers.push(newSpeaker.name);
     }
-    console.log('speakers');
-    console.log(this.agenda.speakers);
   }
 }

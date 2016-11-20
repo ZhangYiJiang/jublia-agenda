@@ -190,7 +190,7 @@ export class AgendaService {
     const hoursBetween: number[] = [];
 
     sessions.forEach((session) => {
-      if (!_.isNull(session.start_at)) {
+      if (session.start_at != null) {
         hours.push(Math.floor(session.start_at % (24 * 60) / 60));
         hours.push(Math.ceil((session.start_at + session.duration) % (24 * 60) / 60) + 1);
       }

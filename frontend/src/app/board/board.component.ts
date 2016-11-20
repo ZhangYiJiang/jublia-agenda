@@ -235,7 +235,13 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   onSessionMovedFromPending(sessionFromPending: Session) {
-    this.agendaService.updateSession(this.agenda.id, sessionFromPending);
+    this.agendaService.updateSession(this.agenda.id, sessionFromPending)
+      .subscribe(session => {
+        console.log(session);
+        if (session.is_dirty) {
+          this.agenda.hasDirtySession = true;
+        }
+      });
   }
 
   onSpeakerChanged(changedSpeaker: Speaker) {

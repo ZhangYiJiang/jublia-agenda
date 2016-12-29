@@ -1,6 +1,10 @@
-# Jublia Agenda 
+# A\*genda
 
 API Document: http://docs.jubliaagenda.apiary.io/ 
+
+## Frontend documentation 
+
+The frontend is written with Angular 2. See https://github.com/ZhangYiJiang/jublia-agenda/tree/master/frontend for more details. 
 
 ## Backend Setup 
 
